@@ -15,7 +15,7 @@ export default function RequireAuth({ children, viewAccess }) {
     }
 
     // If admin no need authorize view access, else check for access rights
-    if (user.role_name !== "Admin" && user.access_rights[`${viewAccess}`] == null) {
+    if (viewAccess && user.role_name !== "Admin" && user.access_rights[`${viewAccess}`] == null) {
       return <Navigate to="/" state={{ from: location }} replace />;
     }
   

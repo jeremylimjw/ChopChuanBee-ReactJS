@@ -16,7 +16,7 @@ ReactDOM.render(
         <Layout style={{ minHeight: '100vh' }}>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/" element={<App />}>
+            <Route path="/" element={<RequireAuth><App /></RequireAuth>}>
               <Route path='/customers' element={<RequireAuth viewAccess="CRM"><div>Customers Component</div></RequireAuth>} />
               <Route path='/suppliers' element={<RequireAuth viewAccess="SCM"><div>Suppliers Component</div></RequireAuth>} />
               <Route path='/human-resource/' element={<RequireAuth viewAccess="HR"><div>Human resource Component</div></RequireAuth>} />
