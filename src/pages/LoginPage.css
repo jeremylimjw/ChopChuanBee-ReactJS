@@ -1,0 +1,25 @@
+.container {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form {
+    width: 300px;
+    max-height: 500px;
+    display: flex;
+    flex-direction: column;
+}
+
+.input {
+    border-radius: 20px;
+    margin: 5px 0;
+    width: 100%;
+}
+
+.button, .image {
+    margin: 5px 0;
+    align-self: center;
+}
+
