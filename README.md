@@ -2,7 +2,7 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-### `yarn install`
+### `yarn install` 
 Installs the required dependencies to run the web application
 
 ### `yarn start`
