@@ -1,14 +1,21 @@
 import React from 'react'
 import { Layout, Menu } from 'antd'
 import { Link } from 'react-router-dom'
+import { useApp } from '../../providers/AppProvider'
 
 const Sidebar = () => {
+  const { hasViewAccessTo } = useApp()
+
   const { Sider } = Layout
   const { SubMenu } = Menu
   return (
     <Sider theme='light'>
       <Menu defaultSelectedKeys={['1']} mode='inline'>
-        <SubMenu key='adminSub' title='Admin'>
+        <SubMenu
+          key='adminSub'
+          title='Admin'
+          style={{ marginBottom: '10px', borderBottom: 'solid black 1px' }}
+        >
           <Menu.Item key='1'>
             <Link to='/admin/accounts'>Manage Accounts</Link>
           </Menu.Item>
@@ -16,24 +23,26 @@ const Sidebar = () => {
             <Link to='/admin/logs'>Logs</Link>
           </Menu.Item>
         </SubMenu>
-
-        <SubMenu key='hrSub' title='Human Resource'>
-          <Menu.Item key='3'>
-            <Link to='/human-resource/employees'>Manage Employees</Link>
-          </Menu.Item>
-          <Menu.Item key='4'>
-            <Link to='/human-resource/employees'>Leaves</Link>
-          </Menu.Item>
-        </SubMenu>
-
-        <SubMenu key='supplierSub' title='Suppliers'>
-          <Menu.Item key='5'>
-            <Link to='/suppliers'>Manage Suppliers</Link>
-          </Menu.Item>
-          <Menu.Item key='6'>
-            <Link to='/suppliers/accounts'>Accounts Payable</Link>
-          </Menu.Item>
-        </SubMenu>
+        {hasViewAccessTo('HR') && (
+          <SubMenu key='hrSub' title='Human Resource'>
+            <Menu.Item key='3'>
+              <Link to='/human-resource/employees'>Manage Employees</Link>
+            </Menu.Item>
+            <Menu.Item key='4'>
+              <Link to='/human-resource/employees'>Leaves</Link>
+            </Menu.Item>
+          </SubMenu>
+        )}
+        {hasViewAccessTo('SCM') && (
+          <SubMenu key='supplierSub' title='Suppliers'>
+            <Menu.Item key='5'>
+              <Link to='/suppliers'>Manage Suppliers</Link>
+            </Menu.Item>
+            <Menu.Item key='6'>
+              <Link to='/suppliers/accounts'>Accounts Payable</Link>
+            </Menu.Item>
+          </SubMenu>
+        )}
 
         <SubMenu key='invSub' title='Inventory'>
           <Menu.Item key='7'>
@@ -47,14 +56,16 @@ const Sidebar = () => {
           </Menu.Item>
         </SubMenu>
 
-        <SubMenu key='custSub' title='Customers'>
-          <Menu.Item key='10'>
-            <Link to='/customers'>Manage Customers</Link>
-          </Menu.Item>
-          <Menu.Item key='11'>
-            <Link to='/customers/accounts'>Accounts Receivables</Link>
-          </Menu.Item>
-        </SubMenu>
+        {hasViewAccessTo('CRM') && (
+          <SubMenu key='custSub' title='Customers'>
+            <Menu.Item key='10'>
+              <Link to='/customers'>Manage Customers</Link>
+            </Menu.Item>
+            <Menu.Item key='11'>
+              <Link to='/customers/accounts'>Accounts Receivables</Link>
+            </Menu.Item>
+          </SubMenu>
+        )}
         <Menu.Item key='logoutMenu'>
           <Link to='/'>Logout</Link>
         </Menu.Item>
