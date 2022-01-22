@@ -10,7 +10,7 @@ const Sidebar = () => {
       <Menu defaultSelectedKeys={['1']} mode='inline'>
         <SubMenu key='adminSub' title='Admin'>
           <Menu.Item key='1'>
-            <Link to='/admin/accounts'>Accounts</Link>
+            <Link to='/admin/accounts'>Manage Accounts</Link>
           </Menu.Item>
           <Menu.Item key='2'>
             <Link to='/admin/logs'>Logs</Link>
@@ -19,7 +19,7 @@ const Sidebar = () => {
 
         <SubMenu key='hrSub' title='Human Resource'>
           <Menu.Item key='3'>
-            <Link to='/human-resource/employees'>Employees</Link>
+            <Link to='/human-resource/employees'>Manage Employees</Link>
           </Menu.Item>
           <Menu.Item key='4'>
             <Link to='/human-resource/employees'>Leaves</Link>
@@ -28,7 +28,7 @@ const Sidebar = () => {
 
         <SubMenu key='supplierSub' title='Suppliers'>
           <Menu.Item key='5'>
-            <Link to='/suppliers'>Suppliers</Link>
+            <Link to='/suppliers'>Manage Suppliers</Link>
           </Menu.Item>
           <Menu.Item key='6'>
             <Link to='/suppliers/accounts'>Accounts Payable</Link>
@@ -37,24 +37,27 @@ const Sidebar = () => {
 
         <SubMenu key='invSub' title='Inventory'>
           <Menu.Item key='7'>
-            <Link to='/inventory'>Inventory</Link>
+            <Link to='/inventory'>Manage Inventory</Link>
           </Menu.Item>
           <Menu.Item key='8'>
-            <Link to='/inventory/supplier-invoices'>Inventory</Link>
+            <Link to='/inventory/supplier-invoices'>Supplier Invoices</Link>
           </Menu.Item>
           <Menu.Item key='9'>
-            <Link to='/products'>Products</Link>
+            <Link to='/products'>Manage Products</Link>
           </Menu.Item>
         </SubMenu>
 
         <SubMenu key='custSub' title='Customers'>
           <Menu.Item key='10'>
-            <Link to='/customers'>Customers</Link>
+            <Link to='/customers'>Manage Customers</Link>
           </Menu.Item>
           <Menu.Item key='11'>
             <Link to='/customers/accounts'>Accounts Receivables</Link>
           </Menu.Item>
         </SubMenu>
+        <Menu.Item key='logoutMenu'>
+          <Link to='/'>Logout</Link>
+        </Menu.Item>
       </Menu>
     </Sider>
   )
