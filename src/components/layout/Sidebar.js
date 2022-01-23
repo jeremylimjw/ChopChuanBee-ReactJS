@@ -9,6 +9,7 @@ const Sidebar = () => {
   const { Sider } = Layout
   const { SubMenu } = Menu
   return (
+
     <Sider theme='light'>
       <Menu defaultSelectedKeys={['1']} mode='inline'>
         <SubMenu
@@ -44,7 +45,7 @@ const Sidebar = () => {
           </SubMenu>
         )}
 
-        <SubMenu key='invSub' title='Inventory'>
+        <SubMenu key='purchaseSub' title='Purchases'>
           <Menu.Item key='7'>
             <Link to='/inventory'>Manage Inventory</Link>
           </Menu.Item>
@@ -66,6 +67,11 @@ const Sidebar = () => {
             </Menu.Item>
           </SubMenu>
         )}
+        <SubMenu key='salesSub' title='Sales'>
+          <Menu.Item key='12'>
+            <Link to='/sales'>Manage Sales</Link>
+          </Menu.Item>
+        </SubMenu>
         <Menu.Item key='logoutMenu'>
           <Link to='/'>Logout</Link>
         </Menu.Item>
