@@ -5,7 +5,9 @@ const ContentContainer = (props) => {
   const { Content } = Layout;
   return (
     <Layout>
-      <Content>{props.children}</Content>;
+      <Content
+        style={{ margin: '20px' }}
+      >{props.children}</Content>;
     </Layout>
   );
 };

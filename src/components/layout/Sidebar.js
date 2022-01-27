@@ -32,7 +32,7 @@ const Sidebar = () => {
               <Link to='/human-resource/employees'>Manage Employees</Link>
             </Menu.Item>
             <Menu.Item key='4'>
-              <Link to='/human-resource/employees'>Leaves</Link>
+              <Link to='/human-resource/leaves'>Leaves</Link>
             </Menu.Item>
           </SubMenu>
         )}

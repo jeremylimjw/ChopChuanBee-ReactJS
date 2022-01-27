@@ -12,7 +12,7 @@ import { httpExample } from './api/example'
 
 function App() {
   const { user, logout, removeSession } = useApp();
-  
+
   const [loading, setLoading] = useState(false)
 
   async function exampleHttpRequest() {
@@ -45,13 +45,13 @@ function App() {
       <Layout>
         <Sidebar />
         <ContentContainer>
-          {user && 
+          {/* {user && 
             <div>
               <i>This is just to show where and how to access the logged in user. Remove this whenever</i>
               <pre>{JSON.stringify(user, null, 2)}</pre>
               <Button type="primary" onClick={logout}>Logout</Button>
               <Button onClick={exampleHttpRequest}>{loading ? <Spin /> : "Example API request" }</Button>
-            </div>}
+            </div>} */}
           <Outlet />
         </ContentContainer>
       </Layout>

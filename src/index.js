@@ -8,7 +8,7 @@ import { Layout } from 'antd'
 import LoginPage from './pages/LoginPage';
 import { AppProvider } from './providers/AppProvider';
 import RequireAuth from './auth/RequireAuth';
-import LeaveForm from './components/leaveModule/LeaveForm';
+import HRLeavePage from './pages/HRLeavePage'
 
 ReactDOM.render(
   <React.StrictMode>
@@ -21,7 +21,8 @@ ReactDOM.render(
               <Route path='/customers' element={<RequireAuth viewAccess="CRM"><div>Customers Component</div></RequireAuth>} />
               <Route path='/suppliers' element={<RequireAuth viewAccess="SCM"><div>Suppliers Component</div></RequireAuth>} />
               <Route path='/human-resource/' element={<RequireAuth viewAccess="HR"><div>Human resource Component</div></RequireAuth>} />
-              <Route path='/testform' element={<LeaveForm />} />
+              <Route path='/human-resource/leaves' element={<HRLeavePage />} />
+
               {/* <Route path='/accounting/create/expense' element={<div />} />
               <Route path='/accounting/create/income' element={<div />} />
               <Route path='/accounting/pnl' element={<div />} />
