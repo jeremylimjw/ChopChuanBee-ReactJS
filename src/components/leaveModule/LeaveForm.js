@@ -8,7 +8,6 @@ const LeaveForm = () => {
 
   // values is a JSON object that contains the form input values
   const handleFinish = (values) => {
-    console.log(values)
   }
 
   useEffect(() => {
@@ -36,7 +35,6 @@ const LeaveForm = () => {
     <Form form={leaveForm} onFinish={handleFinish}>
       <Form.Item
         rules={[{ required: true, message: 'Select a leave type!' }]}
-        onFinish={handleFinish}
         label='Select leave type...'
         name='leaveType'
       >
