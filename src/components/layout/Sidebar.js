@@ -11,18 +11,20 @@ const Sidebar = () => {
   return (
     <Sider theme='light'>
       <Menu defaultSelectedKeys={['1']} mode='inline'>
-        <SubMenu
-          key='adminSub'
-          title='Admin'
-          style={{ marginBottom: '10px', borderBottom: 'solid black 1px' }}
-        >
-          <Menu.Item key='1'>
-            <Link to='/admin/accounts'>Manage Accounts</Link>
-          </Menu.Item>
-          <Menu.Item key='2'>
-            <Link to='/admin/logs'>Logs</Link>
-          </Menu.Item>
-        </SubMenu>
+        {hasViewAccessTo('Admin') && 
+          <SubMenu
+            key='adminSub'
+            title='Admin'
+            style={{ marginBottom: '10px', borderBottom: 'solid black 1px' }}
+          >
+            <Menu.Item key='1'>
+              <Link to='/admin/accounts'>Manage Accounts</Link>
+            </Menu.Item>
+            <Menu.Item key='2'>
+              <Link to='/admin/logs'>Logs</Link>
+            </Menu.Item>
+          </SubMenu>
+        }
         {hasViewAccessTo('HR') && (
           <SubMenu key='hrSub' title='Human Resource'>
             <Menu.Item key='3'>
