@@ -5,6 +5,13 @@ import { MoreOutlined } from '@ant-design/icons/lib/icons';
 
 
 const LeaveTable = (props) => {
+  const leavesDataSource = props.leavesDataSource
+  const [dataSource, setDataSource] = useState([])
+
+  useEffect(() => {
+    setDataSource(leavesDataSource)
+  }, [])
+
   // Array list of objects to be placed inside table
   const updateLeaveStatus = (leaveId, status) => {
     console.log(leaveId)
@@ -35,6 +42,15 @@ const LeaveTable = (props) => {
 
   const handleDelete = (leaveId) => {
     console.log(`${leaveId} del`)
+  }
+
+  const handleSearch = (str) => {
+    str = str.toLowerCase()
+    let filteredArr = leavesDataSource.filter((value) => {
+      let name = value.name.toLowerCase()
+      return name.includes(str)
+    })
+    setDataSource(filteredArr)
   }
 
   const tableColumns = [
@@ -81,10 +97,14 @@ const LeaveTable = (props) => {
   ]
 
   return <div>
-    <Input></Input>
-    <Table dataSource={props.leavesDataSource} columns={tableColumns} />
-
-
+    <Input
+      style={{
+        width: '25%',
+        marginBottom: '20px'
+      }}
+      onChange={(e) => handleSearch(e.target.value)}
+      placeholder='Search by employee name...'></Input>
+    <Table dataSource={dataSource} columns={tableColumns} />
   </div>;
 };
 
