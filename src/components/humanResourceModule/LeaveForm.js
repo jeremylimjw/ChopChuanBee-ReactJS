@@ -1,13 +1,14 @@
 import { Form, Select, DatePicker, Button, Modal, Input } from 'antd'
 import React, { useEffect, useState } from 'react'
 
-const LeaveForm = () => {
+const LeaveForm = (props) => {
   const [leaveForm] = Form.useForm()
   const dateFormat = ''
   const { RangePicker } = DatePicker
 
   // values is a JSON object that contains the form input values
   const handleFinish = (values) => {
+    //props.submitLeaveForm(values)
   }
 
   useEffect(() => {
