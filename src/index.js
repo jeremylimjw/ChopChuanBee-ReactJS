@@ -3,24 +3,66 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import { Layout } from 'antd'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Layout } from 'antd';
 import LoginPage from './pages/LoginPage';
 import { AppProvider } from './providers/AppProvider';
 import RequireAuth from './auth/RequireAuth';
+import AccountTable from './components/adminModule/AccountTable';
+import NewAccountForm from './components/adminModule/NewAccountForm';
+import AdminAccountPage from './pages/AdminAccountPage';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Router>
-      <AppProvider>
-        <Layout style={{ minHeight: '100vh' }}>
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/" element={<RequireAuth><App /></RequireAuth>}>
-              <Route path='/customers' element={<RequireAuth viewAccess="CRM"><div>Customers Component</div></RequireAuth>} />
-              <Route path='/suppliers' element={<RequireAuth viewAccess="SCM"><div>Suppliers Component</div></RequireAuth>} />
-              <Route path='/human-resource/' element={<RequireAuth viewAccess="HR"><div>Human resource Component</div></RequireAuth>} />
-              {/* <Route path='/accounting/create/expense' element={<div />} />
+    <React.StrictMode>
+        <Router>
+            <AppProvider>
+                <Layout style={{ minHeight: '100vh' }}>
+                    <Routes>
+                        <Route path='/login' element={<LoginPage />} />
+                        {/* <Route path='/admin/logs' element={<div />} />
+                        <Route path='/admin/accounts/:accountId' element={<div />} />
+                        <Route path='/admin/accounts/create' element={<NewAccountForm />} />
+                        <Route path='/admin/accounts/' element={<AccountTable />} /> */}
+                        <Route
+                            path='/'
+                            element={
+                                <RequireAuth>
+                                    <App />
+                                </RequireAuth>
+                            }
+                        >
+                            <Route
+                                path='/customers'
+                                element={
+                                    <RequireAuth viewAccess='CRM'>
+                                        <div>Customers Component</div>
+                                    </RequireAuth>
+                                }
+                            />
+                            <Route
+                                path='/suppliers'
+                                element={
+                                    <RequireAuth viewAccess='SCM'>
+                                        <div>Suppliers Component</div>
+                                    </RequireAuth>
+                                }
+                            />
+                            <Route
+                                path='/human-resource/'
+                                element={
+                                    <RequireAuth viewAccess='HR'>
+                                        <div>Human resource Component</div>
+                                    </RequireAuth>
+                                }
+                            />
+
+                            <Route path='/admin/logs' element={<div />} />
+                            <Route path='/admin/accounts/:accountId' element={<div />} />
+                            <Route path='/admin/accounts/create' element={<NewAccountForm />} />
+                            <Route path='/admin/accounts/' element={<AccountTable />} />
+                            {/* <Route path='/admin/accounts/' element={<AdminAccountPage />} /> */}
+
+                            {/* <Route path='/accounting/create/expense' element={<div />} />
               <Route path='/accounting/create/income' element={<div />} />
               <Route path='/accounting/pnl' element={<div />} />
               <Route path='/accounting' element={<div>Accounting</div>} />
@@ -67,13 +109,13 @@ ReactDOM.render(
               <Route path='/home' element={<div />} />
               <Route path='/resetPassword' element={<div />} />
               <Route path='/settings' element={<div />} /> */}
-            </Route>
-          </Routes>
-        </Layout>
-      </AppProvider>
-    </Router>
-  </React.StrictMode>,
-  document.getElementById('root')
+                        </Route>
+                    </Routes>
+                </Layout>
+            </AppProvider>
+        </Router>
+    </React.StrictMode>,
+    document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function
