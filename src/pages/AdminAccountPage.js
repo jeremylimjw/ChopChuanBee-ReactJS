@@ -1,11 +1,56 @@
-import { Button, Modal, Typography } from 'antd';
 import { format } from 'date-fns';
 import React, { useState, useEffect } from 'react';
-// import { axiosObject } from '../api/axiosWrapper';
 import NewAccountForm from '../components/adminModule/NewAccountForm';
 import AccountTable from './../components/adminModule/AccountTable';
+import axios from 'axios';
+import { useApp } from '../providers/AppProvider';
+import { Button, Typography } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import EmployeeAccount from './../components/adminModule/EmployeeAccount';
 
 const AdminAccountPage = () => {
+    const { user, logout, removeSession } = useApp();
+    // const [data, setData] = useState([]);
+    const [accountDataSource, setAccountDataSource] = useState([]);
+    const [isNewAccountModalVisible, setIsNewAccountModalVisible] = useState(false);
+
+    const handleNewAccountModalOk = () => {
+        setIsNewAccountModalVisible(false);
+    };
+
+    const handleNewAccountModalCancel = () => {
+        setIsNewAccountModalVisible(false);
+    };
+
+    // useEffect(() => {
+    //     getAccountDataSource();
+    // }, []);
+
+    useEffect(() => {
+        console.log(user);
+        //pull Account from DB
+        axios
+            .get(`${process.env.REACT_APP_API_URL}/employee`, { withCredentials: true })
+            .then((response) => {
+                setAccountDataSource(response.data);
+            })
+            .catch(function (error) {
+                if (error.response) {
+                    if (error.response.status === 333) {
+                        removeSession();
+                    }
+                    console.log(error.response.data);
+                    console.log(error.response.status);
+                    console.log(error.response.headers);
+                } else if (error.request) {
+                    console.log(error.request);
+                } else {
+                    console.log('Error', error.message);
+                }
+                console.log(error.config);
+            });
+    }, []);
+
     const sampleAccountData = [
         {
             userId: 1,
@@ -265,8 +310,6 @@ const AdminAccountPage = () => {
         },
     ];
 
-    const [accountDataSource, setAccountDataSource] = useState([]);
-
     const getAccountDataSource = () => {
         let dataSource = sampleAccountData.map((value) => {
             return {
@@ -275,11 +318,22 @@ const AdminAccountPage = () => {
         });
         setAccountDataSource(dataSource);
     };
-    useEffect(() => {
-        getAccountDataSource();
-    }, []);
 
-    return <></>;
+    return (
+        <>
+            <Typography.Title>Admin</Typography.Title>
+            <Button icon={<PlusOutlined />} onClick={() => setIsNewAccountModalVisible(true)}>
+                Create a new account
+                {/* <Link to='/admin/accounts/create'> Create a new account</Link> */}
+            </Button>
+            <AccountTable accountDataSource={accountDataSource} user={user} />
+            <NewAccountForm
+                isNewAccountModalVisible={isNewAccountModalVisible}
+                handleNewAccountModalOk={handleNewAccountModalOk}
+                handleNewAccountModalCancel={handleNewAccountModalCancel}
+            />
+        </>
+    );
 };
 
 export default AdminAccountPage;

@@ -1,37 +1,20 @@
-import React from 'react';
-import Navbar from '../layout/Navbar';
-import Sidebar from '../layout/Sidebar';
-import ContentContainer from '../layout/ContentContainer';
-import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { React, useState } from 'react';
 import { compareDesc, format } from 'date-fns';
+import { Button, Table, Dropdown, Menu, Modal } from 'antd';
+import { MoreOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import EmployeeAccount from './EmployeeAccount';
 
-import { Layout, Card, Avatar, Row, Col, Space, Button, Typography, Table, Dropdown, Menu, Modal } from 'antd';
-import { useEffect } from 'react';
-import { MoreOutlined, PlusOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
-
-const AccountTable = () => {
-    useEffect(() => {
-        //pull Account from DB
-        axios
-            .get(`${process.env.REACT_APP_API_URL}/employee`)
-            .then((res) => console.log(res.data))
-            .catch(function (error) {
-                if (error.response) {
-                    console.log(error.response.data);
-                    console.log(error.response.status);
-                    console.log(error.response.headers);
-                } else if (error.request) {
-                    console.log('e4', error.request);
-                } else {
-                    console.log('Error', error.message);
-                }
-                console.log(error.config);
-            });
-    }, []);
-
-    const { Title } = Typography;
+const AccountTable = ({ accountDataSource, user }) => {
     const { confirm } = Modal;
+    const [isAccountModalVisible, setIsAccountModalVisible] = useState(false);
+
+    const handleAccountModalOk = () => {
+        setIsAccountModalVisible(false);
+    };
+
+    const handleAccountModalCancel = () => {
+        setIsAccountModalVisible(false);
+    };
 
     const handleMenuClick = (e) => {
         console.log('click', e);
@@ -55,7 +38,9 @@ const AccountTable = () => {
     const menu = (text) => (
         <Menu onClick={handleMenuClick}>
             <Menu.Item key={1}>
-                <Button type='text'>View account</Button>
+                <Button type='text' onClick={() => setIsAccountModalVisible(true)}>
+                    View account
+                </Button>
             </Menu.Item>
             <Menu.Item key={2}>
                 <Button
@@ -356,33 +341,33 @@ const AccountTable = () => {
         {
             title: 'Username',
             dataIndex: 'username',
-            key: 'userId',
+            // key: 'userId',
         },
         {
             title: 'Created',
-            dataIndex: 'createdAt',
-            key: 'userId',
-            sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
+            dataIndex: 'created_at',
+            // key: 'userId',
+            sorter: (a, b) => new Date(a.created_at) - new Date(b.created_at),
             sortDirections: ['ascend', 'descend', 'ascend'],
         },
         {
             title: 'Last Active',
-            dataIndex: 'dischargeDate',
-            key: 'userId',
-            sorter: (a, b) => new Date(a.dischargeDate) - new Date(b.dischargeDate),
+            dataIndex: 'updated_at',
+            // key: 'userId',
+            sorter: (a, b) => new Date(a.updated_at) - new Date(b.updated_at),
             sortDirections: ['ascend', 'descend', 'ascend'],
         },
         {
             title: 'Last Activity',
             dataIndex: 'lastActive',
-            key: 'userId',
+            // key: 'userId',
             filters: [{ text: 'Login', value: 'Login' }],
             onFilter: (value, record) => record.lastActive.indexOf(value) === 0,
         },
 
         {
             title: '',
-            key: 'userId',
+            // key: 'userId',
             render: (text, record) => (
                 <Dropdown.Button trigger={['click']} overlay={menu(text)} icon={<MoreOutlined />} />
             ),
@@ -391,17 +376,24 @@ const AccountTable = () => {
 
     return (
         <>
-            {/* <Navbar />
-            <Layout>
-                <Sidebar /> */}
-            <ContentContainer>
-                <Title level={2}>Admin {'>'} Manage all accounts</Title>
-                <Button icon={<PlusOutlined />}>
-                    <Link to='/admin/accounts/create'> Create a new account</Link>
-                </Button>
-                <Table dataSource={accounts} columns={tableColumns}></Table>
-            </ContentContainer>
-            {/* </Layout> */}
+            <Table
+                dataSource={accountDataSource}
+                columns={tableColumns}
+                // onRow={(record, rowIndex) => {
+                //     return {
+                //         onClick: (event) => {
+                //             // console.log(record);
+                //             setIsAccountModalVisible(true);
+                //         },
+                //     };
+                // }}
+            ></Table>
+            <EmployeeAccount
+                user={user}
+                isAccountModalVisible={isAccountModalVisible}
+                handleAccountModalOk={handleAccountModalOk}
+                handleAccountModalCancel={handleAccountModalCancel}
+            />
         </>
     );
 };

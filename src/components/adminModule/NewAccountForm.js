@@ -1,14 +1,9 @@
 import React from 'react';
-import Navbar from '../layout/Navbar';
-import Sidebar from '../layout/Sidebar';
-import ContentContainer from '../layout/ContentContainer';
-import { Link } from 'react-router-dom';
-import { format } from 'date-fns';
 
-import { Layout, Form, Select, DatePicker, Button, Modal, Input, Checkbox, Typography, Row, Col } from 'antd';
-import { useEffect, useState } from 'react';
+import { Form, Button, Modal, Input, Checkbox, Typography, Row, Col, Radio } from 'antd';
+import { useEffect } from 'react';
 
-const NewAccountForm = () => {
+const NewAccountForm = ({ isNewAccountModalVisible, handleNewAccountModalOk, handleNewAccountModalCancel }) => {
     const { Title } = Typography;
     const [accountForm] = Form.useForm();
 
@@ -19,8 +14,8 @@ const NewAccountForm = () => {
 
     useEffect(() => {}, []);
 
-    const checked = () => {
-        console.log('checked');
+    const onReset = () => {
+        accountForm.resetFields();
     };
 
     const onFinishFailed = (errorInfo) => {
@@ -53,21 +48,29 @@ const NewAccountForm = () => {
 
     return (
         <>
-            {/* <Navbar />
-            <Layout>
-                <Sidebar /> */}
-            <ContentContainer>
-                <Title level={2}>
-                    Admin {'>'} Manage all accounts {'>'} Create a new account
-                </Title>
+            <Modal
+                visible={isNewAccountModalVisible}
+                onOk={handleNewAccountModalOk}
+                onCancel={handleNewAccountModalCancel}
+                footer={[
+                    <Button onClick={onReset}>Reset</Button>,
+                    <Button type='primary' htmlType='submit'>
+                        submit
+                    </Button>,
+                ]}
+            >
+                <Title level={2}>Create a new account</Title>
 
-                <Form name='accountForm' layout='vertical' onFinish={handleFinish} onFinishFailed={onFinishFailed}>
+                <Form
+                    form={accountForm}
+                    name='accountForm'
+                    layout='vertical'
+                    onFinish={handleFinish}
+                    onFinishFailed={onFinishFailed}
+                >
                     <Row>
                         <Col span={11}>
                             <Form.Item
-                                // style={{
-                                //     width: '50%',
-                                // }}
                                 label='Full name'
                                 name='name'
                                 rules={[
@@ -85,9 +88,6 @@ const NewAccountForm = () => {
                             <Form.Item
                                 label='Username'
                                 name='username'
-                                // style={{
-                                //     width: '50%',
-                                // }}
                                 rules={[
                                     {
                                         required: true,
@@ -115,7 +115,8 @@ const NewAccountForm = () => {
                                     },
                                 ]}
                             >
-                                <Checkbox.Group options={roleOptions} onChange={roleOnChange} />
+                                {/* <Checkbox.Group options={roleOptions} onChange={roleOnChange} /> */}
+                                <Radio.Group onChange={roleOnChange} options={roleOptions}></Radio.Group>
                             </Form.Item>
                         </Col>
                         <Col span={2} />
@@ -140,31 +141,13 @@ const NewAccountForm = () => {
 
                     <Row>
                         <Col span={11}>
-                            <Form.Item
-                                label='Email Address'
-                                name='email'
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Required',
-                                    },
-                                ]}
-                            >
+                            <Form.Item label='Email Address' name='email'>
                                 <Input />
                             </Form.Item>
                         </Col>
                         <Col span={2} />
                         <Col span={11}>
-                            <Form.Item
-                                label='Contact Number'
-                                name='contactNumber'
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Required',
-                                    },
-                                ]}
-                            >
+                            <Form.Item label='Contact Number' name='contactNumber'>
                                 <Input />
                             </Form.Item>
                         </Col>
@@ -172,31 +155,13 @@ const NewAccountForm = () => {
 
                     <Row>
                         <Col span={11}>
-                            <Form.Item
-                                label='Postal Code'
-                                name='postalCode'
-                                // rules={[
-                                //     {
-                                //         required: true,
-                                //         message: 'Required',
-                                //     },
-                                // ]}
-                            >
+                            <Form.Item label='Postal Code' name='postalCode'>
                                 <Input />
                             </Form.Item>
                         </Col>
                         <Col span={2} />
                         <Col span={11}>
-                            <Form.Item
-                                label='Address'
-                                name='address'
-                                // rules={[
-                                //     {
-                                //         required: true,
-                                //         message: 'Required',
-                                //     },
-                                // ]}
-                            >
+                            <Form.Item label='Address' name='address'>
                                 <Input />
                             </Form.Item>
                         </Col>
@@ -204,54 +169,19 @@ const NewAccountForm = () => {
 
                     <Row>
                         <Col span={11}>
-                            <Form.Item
-                                label='Next-Of-Kin Name'
-                                name='nokName'
-                                // rules={[
-                                //     {
-                                //         required: true,
-                                //         message: 'Required',
-                                //     },
-                                // ]}
-                            >
+                            <Form.Item label='Next-Of-Kin Name' name='nokName'>
                                 <Input />
                             </Form.Item>
                         </Col>
                         <Col span={2} />
                         <Col span={11}>
-                            <Form.Item
-                                label='Next-Of-Kin Number'
-                                name='nokNumber'
-                                // rules={[
-                                //     {
-                                //         required: true,
-                                //         message: 'Required',
-                                //     },
-                                // ]}
-                            >
+                            <Form.Item label='Next-Of-Kin Number' name='nokNumber'>
                                 <Input />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-
-                    <Row>
-                        <Col>
-                            <Form.Item>
-                                <Button type='primary' htmlType='submit'>
-                                    submit
-                                </Button>
-                            </Form.Item>
-                        </Col>
-                        <Col span={1}></Col>
-                        <Col>
-                            <Form.Item>
-                                <Button onClick={checked}>Reset</Button>
                             </Form.Item>
                         </Col>
                     </Row>
                 </Form>
-            </ContentContainer>
-            {/* </Layout> */}
+            </Modal>
         </>
     );
 };

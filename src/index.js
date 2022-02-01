@@ -8,8 +8,6 @@ import { Layout } from 'antd';
 import LoginPage from './pages/LoginPage';
 import { AppProvider } from './providers/AppProvider';
 import RequireAuth from './auth/RequireAuth';
-import AccountTable from './components/adminModule/AccountTable';
-import NewAccountForm from './components/adminModule/NewAccountForm';
 import AdminAccountPage from './pages/AdminAccountPage';
 
 ReactDOM.render(
@@ -56,11 +54,7 @@ ReactDOM.render(
                                 }
                             />
 
-                            <Route path='/admin/logs' element={<div />} />
-                            <Route path='/admin/accounts/:accountId' element={<div />} />
-                            <Route path='/admin/accounts/create' element={<NewAccountForm />} />
-                            <Route path='/admin/accounts/' element={<AccountTable />} />
-                            {/* <Route path='/admin/accounts/' element={<AdminAccountPage />} /> */}
+                            <Route path='/admin/accounts/' element={<AdminAccountPage />} />
 
                             {/* <Route path='/accounting/create/expense' element={<div />} />
               <Route path='/accounting/create/income' element={<div />} />
