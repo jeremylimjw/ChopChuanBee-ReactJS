@@ -1,11 +1,11 @@
 import { CalendarOutlined, TableOutlined } from '@ant-design/icons/lib/icons';
-import { Button, Modal, Spin, Switch, Typography } from 'antd'
+import { Button, Input, Modal, Spin, Switch, Typography } from 'antd'
 import { format } from 'date-fns';
 import React, { useState, useEffect } from 'react'
-import { axiosObject } from '../api/axiosWrapper';
 import LeaveCalendarView from '../components/humanResourceModule/LeaveCalendarView';
 import LeaveForm from '../components/humanResourceModule/LeaveForm'
 import LeaveTable from '../components/humanResourceModule/LeaveTable'
+import moment from 'moment';
 import '../css/LeavePage.css'
 
 const HRLeavePage = () => {
@@ -13,43 +13,44 @@ const HRLeavePage = () => {
     {
       leaveId: '1',
       name: 'John Tan',
-      startDate: format(new Date(2022, 2, 20), 'yyyy-MM-dd'),
-      endDate: format(new Date(2022, 3, 3), 'yyyy-MM-dd'),
-      leaveDays: 12,
+      startDate: moment('2022-02-27').format('ll'),
+      endDate: moment('2022-03-04').format('ll'),
+      leaveDays: 5,
       leaveType: 'Annual',
       leaveStatus: 'Pending'
     },
     {
       leaveId: '2',
       name: 'Bobby Koh',
-      startDate: format(new Date(2022, 2, 20), 'yyyy-MM-dd'),
-      endDate: format(new Date(2022, 3, 3), 'yyyy-MM-dd'),
-      leaveDays: 12,
+      startDate: moment('2022-02-27').format('ll'),
+      endDate: moment('2022-03-04').format('ll'),
+      leaveDays: 5,
       leaveType: 'Annual',
       leaveStatus: 'Pending'
     },
     {
       leaveId: '3',
       name: 'Alice Ng',
-      startDate: format(new Date(2022, 2, 20), 'yyyy-MM-dd'),
-      endDate: format(new Date(2022, 3, 3), 'yyyy-MM-dd'),
-      leaveDays: 12,
+      startDate: moment('2022-02-27').format('ll'),
+      endDate: moment('2022-03-04').format('ll'),
+      leaveDays: 5,
       leaveType: 'Maternal',
-      leaveStatus: 'Pending'
+      leaveStatus: 'Rejected'
     },
     {
       leaveId: '4',
       name: 'Lim Ah Ming',
-      startDate: format(new Date(2022, 2, 20), 'yyyy-MM-dd'),
-      endDate: format(new Date(2022, 3, 3), 'yyyy-MM-dd'),
-      leaveDays: 12,
+      startDate: moment('2022-02-27').format('ll'),
+      endDate: moment('2022-03-04').format('ll'),
+      leaveDays: 5,
       leaveType: 'Sick',
-      leaveStatus: 'Pending'
+      leaveStatus: 'Accepted'
     }
   ]
   const [modalVisibility, setModalVisibility] = useState(false)
   const [leavesDataSource, setLeavesDataSource] = useState([])
   const [viewMode, setViewMode] = useState()
+  const [currView, setCurrView] = useState('TABLE')
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -57,7 +58,7 @@ const HRLeavePage = () => {
       toggleViewMode()
       initializeLeavesDataSrc()
     } else {
-      toggleViewMode(false)
+      toggleViewMode('TABLE')
     }
   }, [loading]);
 
@@ -82,13 +83,19 @@ const HRLeavePage = () => {
    * @param {String} view - 'TABLE' for table view || 'CALENDAR' for calendar view
    */
   const toggleViewMode = (view) => {
+    setCurrView(view)
     switch (view) {
-      case false:
+      case 'TABLE':
         setViewMode(<LeaveTable
           leavesDataSource={leavesDataSource}
-        />)
+        />
+        )
+        // setViewMode(<LeaveTable
+        //   leavesDataSource={leavesDataSource}
+        //   handleSearch = {handleSearch}
+        // />)
         break
-      case true:
+      case 'CALENDAR':
         setViewMode(<LeaveCalendarView />)
         break
       default:
@@ -97,11 +104,23 @@ const HRLeavePage = () => {
     }
   }
 
+  const handleSearch = (str) => {
+    str = str.toLowerCase()
+    let filteredArr = leavesDataSource.filter((value) => {
+      let name = value.name.toLowerCase()
+      return name.includes(str)
+    })
+    setViewMode(<LeaveTable
+      leavesDataSource={filteredArr}
+    />
+    )
+    // setSearchResults(filteredArr)
+    // setLeavesDataSource(filteredArr)
+  }
+
   const formatDuration = (startDate, endDate) => {
     return `From ${startDate} to ${endDate}`
   }
-
-
 
   return <div>
     <Typography.Title>Leave Management</Typography.Title>
@@ -125,11 +144,18 @@ const HRLeavePage = () => {
         <TableOutlined style={{ marginRight: '10px' }} />
         <Switch
           className='view-toggle-button'
-          onClick={toggleViewMode}
+          onClick={() => currView === 'TABLE' ? toggleViewMode('CALENDAR') : toggleViewMode('TABLE')}
         />
         <CalendarOutlined style={{ marginLeft: '10px' }} />
       </span>
     </div>
+    <Input
+      style={{
+        width: '25%',
+        marginBottom: '20px'
+      }}
+      onChange={(e) => handleSearch(e.target.value)}
+      placeholder='Search by employee name...' />
     {viewMode}
   </div>
 }

@@ -9,6 +9,8 @@ import LoginPage from './pages/LoginPage';
 import { AppProvider } from './providers/AppProvider';
 import RequireAuth from './auth/RequireAuth';
 import HRLeavePage from './pages/HRLeavePage'
+import HREmployeeManagementPage from './pages/HREmployeeManagementPage';
+import ViewEmployeePage from './pages/ViewEmployeePage';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -22,7 +24,8 @@ ReactDOM.render(
               <Route path='/suppliers' element={<RequireAuth viewAccess="SCM"><div>Suppliers Component</div></RequireAuth>} />
               <Route path='/human-resource/' element={<RequireAuth viewAccess="HR"><div>Human resource Component</div></RequireAuth>} />
               <Route path='/human-resource/leaves' element={<HRLeavePage />} />
-
+              <Route path='/human-resource/employees' element={<HREmployeeManagementPage />} />
+              <Route path='/human-resource/employees/:employeeId' element={<ViewEmployeePage />} />
               {/* <Route path='/accounting/create/expense' element={<div />} />
               <Route path='/accounting/create/income' element={<div />} />
               <Route path='/accounting/pnl' element={<div />} />

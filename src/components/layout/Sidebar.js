@@ -29,7 +29,7 @@ const Sidebar = () => {
         {hasViewAccessTo('HR') && (
           <SubMenu key='hrSub' title='Human Resource'>
             <Menu.Item key='3'>
-              <Link to='/human-resource/employees'>Manage Employees</Link>
+              <Link to='/human-resource/employees'>Employees</Link>
             </Menu.Item>
             <Menu.Item key='4'>
               <Link to='/human-resource/leaves'>Leaves</Link>

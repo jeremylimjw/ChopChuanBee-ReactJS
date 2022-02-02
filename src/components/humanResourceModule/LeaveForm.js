@@ -6,6 +6,11 @@ const LeaveForm = (props) => {
   const dateFormat = ''
   const { RangePicker } = DatePicker
 
+  const layout = {
+    labelCol: { span: 8 },
+    wrapperCol: { span: 16 },
+  }
+
   // values is a JSON object that contains the form input values
   const handleFinish = (values) => {
     //props.submitLeaveForm(values)
@@ -33,7 +38,11 @@ const LeaveForm = (props) => {
   }
 
   return (
-    <Form form={leaveForm} onFinish={handleFinish}>
+    <Form
+
+      layout='vertical'
+      form={leaveForm}
+      onFinish={handleFinish}>
       <Form.Item
         rules={[{ required: true, message: 'Select a leave type!' }]}
         label='Select leave type...'
@@ -57,6 +66,7 @@ const LeaveForm = (props) => {
       </Form.Item>
       <Form.Item>
         <Button
+          style={{ float: 'right' }}
           type='primary'
           htmlType='submit'>
           Submit
