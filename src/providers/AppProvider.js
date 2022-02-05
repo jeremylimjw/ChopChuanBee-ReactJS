@@ -43,6 +43,32 @@ export function AppProvider({ children }) {
             removeSession();
         })
     }
+    
+    /**
+     * Wrapper to handle HTTP errors
+     */
+    function handleHttpError(error) {
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            if (error.response.status === 333) {
+                removeSession();
+                message.error('Login session timed out. Please login again.');
+            } else {
+                message.error(error.response.data);
+            }
+        } else if (error.request) {
+            // The request was made but no response was received
+            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+            // http.ClientRequest in node.js
+            console.log(error.request);
+            message.error('The request was made but no response was received.')
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            console.log(error.message);
+            message.error('Something happened in setting up the request that triggered an Error.')
+        }
+    }
 
     /**
      * Checks if logged in user has view access to this view
@@ -66,7 +92,7 @@ export function AppProvider({ children }) {
         return false;
     }
 
-    const value = { user, setUser, logout, removeSession, hasViewAccessTo, hasWriteAccessTo }
+    const value = { user, setUser, logout, removeSession, hasViewAccessTo, hasWriteAccessTo, handleHttpError }
 
     return (
         <AppContext.Provider 
