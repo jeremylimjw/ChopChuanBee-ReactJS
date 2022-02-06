@@ -3,7 +3,12 @@ import React from 'react';
 import { Form, Button, Modal, Input, Checkbox, Typography, Row, Col, Radio } from 'antd';
 import { useEffect } from 'react';
 
-const NewAccountForm = ({ isNewAccountModalVisible, handleNewAccountModalOk, handleNewAccountModalCancel }) => {
+const NewAccountForm = ({
+    isNewAccountModalVisible,
+    handleNewAccountModalOk,
+    handleNewAccountModalCancel,
+    createAccount,
+}) => {
     const { Title } = Typography;
     const [accountForm] = Form.useForm();
 
@@ -58,9 +63,11 @@ const NewAccountForm = ({ isNewAccountModalVisible, handleNewAccountModalOk, han
                         submit
                     </Button>,
                 ]}
+                bodyStyle={{ height: 450, overflowY: 'scroll' }}
+                title='Create a new account'
+                centered='true'
+                confirmLoading='true'
             >
-                <Title level={2}>Create a new account</Title>
-
                 <Form
                     form={accountForm}
                     name='accountForm'
@@ -141,7 +148,16 @@ const NewAccountForm = ({ isNewAccountModalVisible, handleNewAccountModalOk, han
 
                     <Row>
                         <Col span={11}>
-                            <Form.Item label='Email Address' name='email'>
+                            <Form.Item
+                                label='Email Address'
+                                name='email'
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Required',
+                                    },
+                                ]}
+                            >
                                 <Input />
                             </Form.Item>
                         </Col>

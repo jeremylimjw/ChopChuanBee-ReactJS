@@ -33,6 +33,7 @@ const AdminAccountPage = () => {
             .get(`${process.env.REACT_APP_API_URL}/employee`, { withCredentials: true })
             .then((response) => {
                 setAccountDataSource(response.data);
+                console.log(response);
             })
             .catch(function (error) {
                 if (error.response) {
@@ -319,6 +320,10 @@ const AdminAccountPage = () => {
         setAccountDataSource(dataSource);
     };
 
+    const createAccount = (accountInfo) => {
+        axios.post(`${process.env.REACT_APP_API_URL}/employee`, { accountInfo });
+    };
+
     return (
         <>
             <Typography.Title>Admin</Typography.Title>
@@ -331,6 +336,7 @@ const AdminAccountPage = () => {
                 isNewAccountModalVisible={isNewAccountModalVisible}
                 handleNewAccountModalOk={handleNewAccountModalOk}
                 handleNewAccountModalCancel={handleNewAccountModalCancel}
+                createAccount={createAccount}
             />
         </>
     );
