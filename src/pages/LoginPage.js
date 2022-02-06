@@ -9,7 +9,7 @@ import { message as antMessage } from 'antd';
 const LoginPage = () => {
   const navigate = useNavigate();
   const location =  useLocation();
-  const { setUser } = useApp();
+  const { setUser, handleHttpError } = useApp();
     
   const [form, setForm] = useState({
       username: "",
@@ -29,22 +29,18 @@ const LoginPage = () => {
     setLoading(true);
     
     httpLogin(username, password)
-      .then(user => {
+      .then(response => {
         // Set the user in session
-        sessionStorage.setItem("user", JSON.stringify(user));
-        setUser(user);
+        sessionStorage.setItem("user", JSON.stringify(response.data));
+        setUser(response.data);
         
         // Redirect to dashboard or any previously entered url
         const from = location.state?.from?.pathname || "/";
         navigate(from, { replace: true });
       })
-      .catch(err => {
-          if (err.text) {
-            err.text().then(message => antMessage.error(message));
-          } else {
-            antMessage.error("An unexpected error has occured");
-          }
-          setLoading(false);
+      .catch(handleHttpError)
+      .catch((err) => {
+        setLoading(false)
       })
   }
 
