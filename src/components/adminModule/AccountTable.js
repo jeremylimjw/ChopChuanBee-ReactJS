@@ -1,12 +1,13 @@
 import { React, useState } from 'react';
 import { compareDesc, format } from 'date-fns';
-import { Button, Table, Dropdown, Menu, Modal } from 'antd';
+import { Button, Table, Dropdown, Menu, Modal, Tag } from 'antd';
 import { MoreOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import EmployeeAccount from './EmployeeAccount';
 
 const AccountTable = ({ accountDataSource, user }) => {
     const { confirm } = Modal;
     const [isAccountModalVisible, setIsAccountModalVisible] = useState(false);
+    // console.log(accountDataSource[0].access_rights[0].view_id);
 
     const handleAccountModalOk = () => {
         setIsAccountModalVisible(false);
@@ -17,7 +18,7 @@ const AccountTable = ({ accountDataSource, user }) => {
     };
 
     const handleMenuClick = (e) => {
-        console.log('click', e);
+        // console.log('click', e);
     };
 
     const showPromiseConfirm = (e) => {
@@ -36,9 +37,17 @@ const AccountTable = ({ accountDataSource, user }) => {
     };
 
     const menu = (text) => (
-        <Menu onClick={handleMenuClick}>
+        <Menu
+        // onClick={handleMenuClick}
+        >
             <Menu.Item key={1}>
-                <Button type='text' onClick={() => setIsAccountModalVisible(true)}>
+                <Button
+                    type='text'
+                    onClick={() => {
+                        // setIsAccountModalVisible(true);
+                        console.log(text);
+                    }}
+                >
                     View account
                 </Button>
             </Menu.Item>
@@ -55,265 +64,6 @@ const AccountTable = ({ accountDataSource, user }) => {
         </Menu>
     );
 
-    const accounts = [
-        {
-            userId: 1,
-            username: 'Test1_Admin',
-            email: 'test1@gmail.com',
-            password: 'test1Password',
-            name: 'test ',
-            role: 'ADMIN',
-            contactNumber: 123345678,
-            nokName: 'test1Nok',
-            nokNumber: 23456789,
-            address: 600268,
-            unitNumber: '#16-49',
-            dischargeDate: format(new Date(2022, 2, 20), 'yyyy-MM-dd'),
-            createdAt: format(new Date(2022, 2, 20), 'yyyy-MM-dd'),
-            lastActive: 'Login',
-        },
-        {
-            userId: 2,
-            username: 'Test2_Staff',
-            email: 'test2@gmail.com',
-            password: 'test2Password',
-            name: 'test 2',
-            role: 'STAFF',
-            contactNumber: 123345678,
-            nokName: 'test2Nok',
-            nokNumber: 23456789,
-            address: 600268,
-            unitNumber: '#16-47',
-            dischargeDate: format(new Date(2022, 1, 20), 'yyyy-MM-dd'),
-            createdAt: format(new Date(2022, 1, 20), 'yyyy-MM-dd'),
-            lastActive: 'Login',
-        },
-        {
-            userId: 3,
-            username: 'Test3_Admin',
-            email: 'test3@gmail.com',
-            password: 'test3Password',
-            name: 'test 3',
-            role: 'DRIVER',
-            contactNumber: 123345678,
-            nokName: 'test3Nok',
-            nokNumber: 23456789,
-            address: 600268,
-            unitNumber: '#16-49',
-            dischargeDate: format(new Date(2021, 2, 20), 'yyyy-MM-dd'),
-            createdAt: format(new Date(2021, 2, 20), 'yyyy-MM-dd'),
-            lastActive: 'Login',
-        },
-        {
-            userId: 4,
-            username: 'Test4_Staff',
-            email: 'test4@gmail.com',
-            password: 'test4Password',
-            name: 'test 4',
-            role: 'STAFF',
-            contactNumber: 123345678,
-            nokName: 'test4Nok',
-            nokNumber: 23456789,
-            address: 600268,
-            unitNumber: '#16-47',
-            dischargeDate: format(new Date(2021, 2, 20), 'yyyy-MM-dd'),
-            createdAt: format(new Date(2021, 2, 20), 'yyyy-MM-dd'),
-            lastActive: 'Login',
-        },
-        {
-            userId: 5,
-            username: 'Test5_Admin',
-            email: 'test5@gmail.com',
-            password: 'test5Password',
-            name: 'test 5',
-            role: 'ADMIN',
-            contactNumber: 123345678,
-            nokName: 'test5Nok',
-            nokNumber: 23456789,
-            address: 600268,
-            unitNumber: '#16-49',
-            dischargeDate: format(new Date(2022, 2, 20), 'yyyy-MM-dd'),
-            createdAt: format(new Date(2022, 2, 20), 'yyyy-MM-dd'),
-            lastActive: 'Login',
-        },
-        {
-            userId: 6,
-            username: 'Test6_Staff',
-            email: 'test6@gmail.com',
-            password: 'test6Password',
-            name: 'test 6',
-            role: 'DRIVER',
-            contactNumber: 123345678,
-            nokName: 'test6Nok',
-            nokNumber: 23456789,
-            address: 600268,
-            unitNumber: '#16-47',
-            dischargeDate: format(new Date(2022, 2, 20), 'yyyy-MM-dd'),
-            createdAt: format(new Date(2022, 2, 20), 'yyyy-MM-dd'),
-            lastActive: 'Login',
-        },
-        {
-            userId: 7,
-            username: 'Test7_Admin',
-            email: 'test7@gmail.com',
-            password: 'test7Password',
-            name: 'test 7',
-            role: 'ADMIN',
-            contactNumber: 123345678,
-            nokName: 'test7Nok',
-            nokNumber: 23456789,
-            address: 600268,
-            unitNumber: '#16-49',
-            dischargeDate: format(new Date(2022, 2, 20), 'yyyy-MM-dd'),
-            createdAt: format(new Date(2022, 2, 20), 'yyyy-MM-dd'),
-            lastActive: 'Login',
-        },
-        {
-            userId: 8,
-            username: 'Test8_Staff',
-            email: 'test8@gmail.com',
-            password: 'test8Password',
-            name: 'test 8',
-            role: 'STAFF',
-            contactNumber: 123345678,
-            nokName: 'test8Nok',
-            nokNumber: 23456789,
-            address: 600268,
-            unitNumber: '#16-47',
-            dischargeDate: format(new Date(2022, 2, 20), 'yyyy-MM-dd'),
-            createdAt: format(new Date(2022, 2, 20), 'yyyy-MM-dd'),
-            lastActive: 'Login',
-        },
-        {
-            userId: 9,
-            username: 'Test9_Admin',
-            email: 'test9@gmail.com',
-            password: 'test9Password',
-            name: 'test 9',
-            role: 'DRIVER',
-            contactNumber: 123345678,
-            nokName: 'test9Nok',
-            nokNumber: 23456789,
-            address: 600268,
-            unitNumber: '#16-49',
-            dischargeDate: format(new Date(2022, 2, 20), 'yyyy-MM-dd'),
-            createdAt: format(new Date(2022, 2, 20), 'yyyy-MM-dd'),
-            lastActive: 'Login',
-        },
-        {
-            userId: 10,
-            username: 'Test10_Staff',
-            email: 'test10@gmail.com',
-            password: 'test10Password',
-            name: 'test 10',
-            role: 'STAFF',
-            contactNumber: 123345678,
-            nokName: 'test2Nok',
-            nokNumber: 23456789,
-            address: 600268,
-            unitNumber: '#16-47',
-            dischargeDate: format(new Date(2022, 2, 20), 'yyyy-MM-dd'),
-            createdAt: format(new Date(2022, 2, 20), 'yyyy-MM-dd'),
-            lastActive: 'Login',
-        },
-        {
-            userId: 11,
-            username: 'Test11_Admin',
-            email: 'test11@gmail.com',
-            password: 'test11Password',
-            name: 'test 11',
-            role: 'ADMIN',
-            contactNumber: 123345678,
-            nokName: 'test11Nok',
-            nokNumber: 23456789,
-            address: 600268,
-            unitNumber: '#16-49',
-            dischargeDate: format(new Date(2022, 2, 20), 'yyyy-MM-dd'),
-            createdAt: format(new Date(2022, 2, 20), 'yyyy-MM-dd'),
-            lastActive: 'Login',
-        },
-        {
-            userId: 12,
-            username: 'Test12_Staff',
-            email: 'test12@gmail.com',
-            password: 'test12Password',
-            name: 'test 12',
-            role: 'DRIVER',
-            contactNumber: 123345678,
-            nokName: 'test12Nok',
-            nokNumber: 23456789,
-            address: 600268,
-            unitNumber: '#16-47',
-            dischargeDate: format(new Date(2022, 2, 20), 'yyyy-MM-dd'),
-            createdAt: format(new Date(2022, 2, 20), 'yyyy-MM-dd'),
-            lastActive: 'Login',
-        },
-        {
-            userId: 13,
-            username: 'Test13_Admin',
-            email: 'test13@gmail.com',
-            password: 'test13Password',
-            name: 'test 13',
-            role: 'ADMIN',
-            contactNumber: 123345678,
-            nokName: 'test13Nok',
-            nokNumber: 23456789,
-            address: 600268,
-            unitNumber: '#16-49',
-            dischargeDate: format(new Date(2022, 2, 20), 'yyyy-MM-dd'),
-            createdAt: format(new Date(2022, 2, 20), 'yyyy-MM-dd'),
-            lastActive: 'Login',
-        },
-        {
-            userId: 14,
-            username: 'Test14_Staff',
-            email: 'test14@gmail.com',
-            password: 'test14Password',
-            name: 'test 14',
-            role: 'STAFF',
-            contactNumber: 123345678,
-            nokName: 'test14Nok',
-            nokNumber: 23456789,
-            address: 600268,
-            unitNumber: '#16-47',
-            dischargeDate: format(new Date(2022, 2, 20), 'yyyy-MM-dd'),
-            createdAt: format(new Date(2022, 2, 20), 'yyyy-MM-dd'),
-            lastActive: 'Login',
-        },
-        {
-            userId: 15,
-            username: 'Test15_Admin',
-            email: 'test1@gmail.com',
-            password: 'test15Password',
-            name: 'test 15',
-            role: 'ADMIN',
-            contactNumber: 123345678,
-            nokName: 'test15Nok',
-            nokNumber: 23456789,
-            address: 600268,
-            unitNumber: '#16-49',
-            dischargeDate: format(new Date(2022, 2, 20), 'yyyy-MM-dd'),
-            createdAt: format(new Date(2022, 2, 20), 'yyyy-MM-dd'),
-            lastActive: 'Login',
-        },
-        {
-            userId: 16,
-            username: 'Test16_Staff',
-            email: 'test16@gmail.com',
-            password: 'test16Password',
-            name: 'test 16',
-            role: 'STAFF',
-            contactNumber: 123345678,
-            nokName: 'test16Nok',
-            nokNumber: 23456789,
-            address: 600268,
-            unitNumber: '#16-47',
-            dischargeDate: format(new Date(2022, 2, 20), 'yyyy-MM-dd'),
-            createdAt: format(new Date(2022, 2, 20), 'yyyy-MM-dd'),
-            lastActive: 'Login',
-        },
-    ];
-
     const tableColumns = [
         {
             title: 'Staff Name',
@@ -324,19 +74,50 @@ const AccountTable = ({ accountDataSource, user }) => {
         },
         {
             title: 'Access Right',
-            dataIndex: 'role',
-            key: 'userId',
+            // key: 'userId',
             filters: [
-                { text: 'Admin', value: 'ADMIN' },
-                { text: 'Staff', value: 'STAFF' },
-                { text: 'Human Resource', value: 'HumanResource' },
-                { text: 'Customer Relationship', value: 'CustomerRelationship' },
-                { text: 'Supplier Relationship', value: 'SupplierRelationship' },
-                { text: 'Purchases', value: 'Purchases' },
-                { text: 'Sales', value: 'Sales' },
-                { text: 'Accounting', value: 'Accounting' },
+                { text: 'Human Resource', value: 1 },
+                { text: 'Customer Relationship', value: 2 },
+                { text: 'Supplier Relationship', value: 3 },
+                { text: 'Purchases', value: 4 },
+                { text: 'Sales', value: 5 },
+                { text: 'Accounting', value: 6 },
+                { text: 'Admin', value: 7 },
+                { text: 'General', value: 8 },
+                { text: 'Catalogue', value: 9 },
+                { text: 'Driver', value: 10 },
             ],
-            onFilter: (value, record) => record.role.indexOf(value) === 0,
+            onFilter: (value, record) => record.access_rights.view_id.indexOf(value) === 0,
+            render: (text, record) => (
+                <>
+                    {record.access_rights.map((ar) => {
+                        let temp;
+                        // console.log(ar.view_id);
+                        if (ar.view_id === 1) {
+                            temp = 'HR';
+                        } else if (ar.view_id === 2) {
+                            temp = 'CRM';
+                        } else if (ar.view_id === 3) {
+                            temp = 'SRM';
+                        } else if (ar.view_id === 4) {
+                            temp = 'Purchases';
+                        } else if (ar.view_id === 5) {
+                            temp = 'Sales';
+                        } else if (ar.view_id === 6) {
+                            temp = 'Accounting';
+                        } else if (ar.view_id === 7) {
+                            temp = 'Admin';
+                        } else if (ar.view_id === 8) {
+                            temp = 'General';
+                        } else if (ar.view_id === 9) {
+                            temp = 'Catalogue';
+                        } else if (ar.view_id === 10) {
+                            temp = 'Driver';
+                        }
+                        return <Tag>{temp}</Tag>;
+                    })}
+                </>
+            ),
         },
         {
             title: 'Username',
@@ -382,8 +163,8 @@ const AccountTable = ({ accountDataSource, user }) => {
                 // onRow={(record, rowIndex) => {
                 //     return {
                 //         onClick: (event) => {
-                //             // console.log(record);
-                //             setIsAccountModalVisible(true);
+                //             console.log(record);
+                //             // setIsAccountModalVisible(true);
                 //         },
                 //     };
                 // }}

@@ -4,14 +4,17 @@ import { Button, Modal, Form, Row, Col, Input, Checkbox, Radio, Typography } fro
 const EmployeeAccount = ({ user, isAccountModalVisible, handleAccountModalOk, handleAccountModalCancel }) => {
     // console.log(user);
     const [edit, setEdit] = useState(false);
-
+    // console.log(user.role_id);
     const accessRightOptions = [
         { label: 'Human Resource', value: 'HumanResource' },
         { label: 'Customer Relationship', value: 'CustomerRelationship' },
         { label: 'Supplier Relationship', value: 'SupplierRelationship' },
-        { label: 'Purchases', value: 'Purchases' },
+        { label: 'Inventory', value: 'Inventory' },
         { label: 'Sales', value: 'Sales' },
         { label: 'Accounting', value: 'Accounting' },
+        { label: 'Administration', value: 'Administration' },
+        { label: 'General', value: 'General' },
+        { label: 'Dispatch', value: 'Dispatch' },
         { label: 'Catalogue', value: 'Catalogue' },
     ];
 
@@ -22,11 +25,11 @@ const EmployeeAccount = ({ user, isAccountModalVisible, handleAccountModalOk, ha
     ];
 
     const accessRightOnChange = (checkedValues) => {
-        console.log('checked = ', checkedValues);
+        // console.log('checked = ', checkedValues);
     };
 
     const roleOnChange = (checkedValues) => {
-        console.log('checked = ', checkedValues);
+        // console.log('checked = ', checkedValues);
     };
 
     return (
@@ -38,10 +41,10 @@ const EmployeeAccount = ({ user, isAccountModalVisible, handleAccountModalOk, ha
                 onCancel={handleAccountModalCancel}
                 footer={
                     edit ? (
-                        <Button onClick={() => setEdit(false)}>Edit</Button>
+                        <Button onClick={() => setEdit(false)}>Save</Button>
                     ) : (
                         <Button type='primary' onClick={() => setEdit(true)}>
-                            Save
+                            Edit
                         </Button>
                     )
                 }
@@ -64,7 +67,7 @@ const EmployeeAccount = ({ user, isAccountModalVisible, handleAccountModalOk, ha
                                 ]}
                                 initialValue={user.name}
                             >
-                                {edit ? <Typography>{user.name}</Typography> : <Input />}
+                                {edit ? <Input /> : <Typography>{user.name}</Typography>}
                             </Form.Item>
                         </Col>
                         <Col span={2} />
@@ -80,48 +83,43 @@ const EmployeeAccount = ({ user, isAccountModalVisible, handleAccountModalOk, ha
                                 ]}
                                 initialValue={user.username}
                             >
-                                {edit ? <Typography>{user.username}</Typography> : <Input />}
+                                {edit ? <Input /> : <Typography>{user.username}</Typography>}
                             </Form.Item>
                         </Col>
                     </Row>
 
                     <Row>
-                        <Col span={11}>
-                            <Form.Item
-                                label='Roles'
-                                name='role'
-                                wrapperCol={{
-                                    span: 16,
-                                }}
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Required',
-                                    },
-                                ]}
-                            >
-                                {/* <Checkbox.Group options={roleOptions} onChange={roleOnChange} /> */}
-                                <Radio.Group onChange={roleOnChange} options={roleOptions}></Radio.Group>
-                            </Form.Item>
-                        </Col>
-                        <Col span={2} />
-                        <Col span={11}>
-                            <Form.Item
-                                label='Access Rights'
-                                name='accessRights'
-                                wrapperCol={{
-                                    span: 16,
-                                }}
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Required',
-                                    },
-                                ]}
-                            >
-                                <Checkbox.Group options={accessRightOptions} onChange={accessRightOnChange} />
-                            </Form.Item>
-                        </Col>
+                        <Form.Item
+                            label='Roles'
+                            name='role'
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Required',
+                                },
+                            ]}
+                        >
+                            <Radio.Group
+                                onChange={roleOnChange}
+                                options={roleOptions}
+                                defaultValue={user.role_id}
+                                disabled={edit ? false : true}
+                            ></Radio.Group>
+                        </Form.Item>
+                    </Row>
+                    <Row>
+                        <Form.Item
+                            label='Access Rights'
+                            name='accessRights'
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Required',
+                                },
+                            ]}
+                        >
+                            <Checkbox.Group options={accessRightOptions} onChange={accessRightOnChange} />
+                        </Form.Item>
                     </Row>
 
                     {/* <Row>
