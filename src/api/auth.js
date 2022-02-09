@@ -1,23 +1,9 @@
-export const httpLogin = async function(username, password) {
-    
-    const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include', // This is IMPORTANT for cookies to work
-        body: JSON.stringify({ username: username, password: password})
-    };
+import { axiosObject } from "./axiosWrapper";
 
-    return fetch(`${process.env.REACT_APP_API_URL}/auth`, requestOptions)
-        .then(response => {
-            if (!response.ok) throw response;
-            return response.json();
-        })
+export const httpLogin = async function(username, password) {
+    return axiosObject.post(`/auth`, { username: username, password: password});
 }
 
 export const httpLogout = async function() {
-    return fetch(`${process.env.REACT_APP_API_URL}/auth/logout`, { credentials: 'include' }) // This is IMPORTANT for cookies to work
-        .then(response => {
-            if (!response.ok) throw response;
-            return response.json();
-        })
+    return axiosObject.get(`/auth/logout`);
 }
