@@ -4,7 +4,6 @@ import { Button, Input, Spin } from 'antd';
 import { useNavigate, useLocation } from "react-router-dom";
 import './LoginPage.css'
 import { useApp } from '../providers/AppProvider';
-import { message as antMessage } from 'antd';
 
 const LoginPage = () => {
   const navigate = useNavigate();

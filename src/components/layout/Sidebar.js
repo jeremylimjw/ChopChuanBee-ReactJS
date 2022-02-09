@@ -66,13 +66,14 @@ const Sidebar = () => {
         { menu.map((menuItem, index) => {
           if (hasViewAccessTo(menuItem.role)) {
             return <Menu.SubMenu key={index} title={menuItem.title} icon={menuItem.icon}>
-              { menuItem.items.map((subMenu, index2) => {
+              { menuItem.items.map((subMenu, index2) => 
                 <Menu.Item key={`${index}_${index2}`}>
                   <Link to={subMenu.route}>{subMenu.name}</Link>
                 </Menu.Item>
-              })}
+              )}
             </Menu.SubMenu>
           }
+          return null;
         })}
 
         <Menu.Item key='logoutMenu' icon={<UserOutlined />}>

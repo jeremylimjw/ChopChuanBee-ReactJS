@@ -1,7 +1,6 @@
 import { BellOutlined, LineChartOutlined, UserOutlined } from '@ant-design/icons/lib/icons'
-import { Menu, Layout, Button } from 'antd'
+import { Menu, Layout } from 'antd'
 import React from 'react'
-import { Link } from 'react-router-dom'
 
 const Navbar = () => {
   const { Header } = Layout
