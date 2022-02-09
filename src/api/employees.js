@@ -8,9 +8,13 @@ export class EmployeeApiHelper {
             })
         return result
     }
+
+    static async getEmployeeById(id) {
+        let result = axiosObject.get('/employee', { params: { id: id } })
+            .then((res) => {
+                return res.data
+            })
+        return result
+    }
 }
 
-// export const getAllEmployees = axiosObject.get('/employee')
-//     .then((res) => {
-//         return res
-//     })

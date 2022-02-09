@@ -1,49 +1,54 @@
-import { CalendarOutlined, TableOutlined } from '@ant-design/icons/lib/icons';
-import { Button, Input, Modal, Spin, Switch, Typography } from 'antd'
-import { format } from 'date-fns';
+import { CalendarOutlined, PlusOutlined, TableOutlined } from '@ant-design/icons/lib/icons';
+import { Button, Input, message, Modal, Spin, Switch, Typography } from 'antd'
 import React, { useState, useEffect } from 'react'
 import LeaveCalendarView from '../components/humanResourceModule/LeaveCalendarView';
 import LeaveForm from '../components/humanResourceModule/LeaveForm'
 import LeaveTable from '../components/humanResourceModule/LeaveTable'
 import moment from 'moment';
 import '../css/LeavePage.css'
+import { HRApiHelper } from '../api/humanResource';
+import { EmployeeApiHelper } from '../api/employees';
 
 const HRLeavePage = () => {
   const sampleLeaveData = [
     {
-      leaveId: '1',
+      id: '67214447-c743-4ea0-8767-842b4464ff6c',
       name: 'John Tan',
-      startDate: moment('2022-02-27').format('ll'),
-      endDate: moment('2022-03-04').format('ll'),
-      leaveDays: 5,
+      start_date: moment('2022-02-27').format('ll'),
+      end_date: moment('2022-03-04').format('ll'),
+      num_days: 5,
       leaveType: 'Annual',
+      leave_status_id: 1,
       leaveStatus: 'Pending'
     },
     {
-      leaveId: '2',
+      id: '2',
       name: 'Bobby Koh',
-      startDate: moment('2022-02-27').format('ll'),
-      endDate: moment('2022-03-04').format('ll'),
-      leaveDays: 5,
+      start_date: moment('2022-02-27').format('ll'),
+      end_date: moment('2022-03-04').format('ll'),
+      num_days: 5,
       leaveType: 'Annual',
+      leave_status_id: 2,
       leaveStatus: 'Pending'
     },
     {
-      leaveId: '3',
+      id: '3',
       name: 'Alice Ng',
-      startDate: moment('2022-02-27').format('ll'),
-      endDate: moment('2022-03-04').format('ll'),
-      leaveDays: 5,
+      start_date: moment('2022-02-27').format('ll'),
+      end_date: moment('2022-03-04').format('ll'),
+      num_days: 5,
       leaveType: 'Maternal',
+      leave_status_id: 3,
       leaveStatus: 'Rejected'
     },
     {
-      leaveId: '4',
+      id: '4',
       name: 'Lim Ah Ming',
-      startDate: moment('2022-02-27').format('ll'),
-      endDate: moment('2022-03-04').format('ll'),
-      leaveDays: 5,
+      start_date: moment('2022-02-27').format('ll'),
+      end_date: moment('2022-03-04').format('ll'),
+      num_days: 5,
       leaveType: 'Sick',
+      leave_status_id: 4,
       leaveStatus: 'Accepted'
     }
   ]
@@ -52,22 +57,29 @@ const HRLeavePage = () => {
   const [viewMode, setViewMode] = useState()
   const [currView, setCurrView] = useState('TABLE')
   const [loading, setLoading] = useState(true)
+  const [employeeList, setEmployeeList] = useState([])
+  const [leaveAccounts, setLeaveAccounts] = useState([])
+
 
   useEffect(() => {
     if (loading) {
       toggleViewMode()
       initializeLeavesDataSrc()
+      initializeEmployeeList()
+      setLoading(false)
     } else {
       toggleViewMode('TABLE')
     }
   }, [loading]);
 
-  const submitLeaveForm = () => {
+  const submitLeaveApplicationForm = (leaveApplication) => {
     // API call to submit leave form to DB
+    HRApiHelper.createNewLeaveApplication(leaveApplication)
+      .then((res) => res.status === 200 ? message.success('Leave application success!') : message.error('Leave application failed'))
     setModalVisibility(false)
   }
 
-  const initializeLeavesDataSrc = () => {
+  const initializeLeavesDataSrc = async () => {
     let dataSrc = sampleLeaveData.map((value) => {
       return {
         ...value,
@@ -75,7 +87,13 @@ const HRLeavePage = () => {
       }
     })
     setLeavesDataSource(dataSrc)
-    setLoading(false)
+    let leaveAcctData = await HRApiHelper.getAllLeaveAccounts()
+    setLeaveAccounts(leaveAcctData.data)
+  }
+
+  const initializeEmployeeList = async () => {
+    let result = await EmployeeApiHelper.getAllEmployees()
+    setEmployeeList(result)
   }
 
   /**
@@ -90,10 +108,6 @@ const HRLeavePage = () => {
           leavesDataSource={leavesDataSource}
         />
         )
-        // setViewMode(<LeaveTable
-        //   leavesDataSource={leavesDataSource}
-        //   handleSearch = {handleSearch}
-        // />)
         break
       case 'CALENDAR':
         setViewMode(<LeaveCalendarView />)
@@ -128,7 +142,7 @@ const HRLeavePage = () => {
       <Button
         style={{ marginBottom: '20px' }}
         onClick={() => setModalVisibility(true)}
-      >Create Leave Application</Button>
+      ><PlusOutlined />Create Leave Application</Button>
       <Modal
         title='Create Leave'
         visible={modalVisibility}
@@ -137,7 +151,9 @@ const HRLeavePage = () => {
         width={600}
       >
         <LeaveForm
-          submitLeaveForm={submitLeaveForm}
+          submitLeaveApplicationForm={submitLeaveApplicationForm}
+          leaveAccounts={leaveAccounts}
+          employeeList={employeeList}
         />
       </Modal>
       <span>
