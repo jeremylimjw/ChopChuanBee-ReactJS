@@ -3,9 +3,10 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import { Layout } from 'antd'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Layout } from 'antd';
 import LoginPage from './pages/LoginPage';
+import ProfilePage from './pages/ProfilePage';
 import { AppProvider } from './providers/AppProvider';
 import RequireAuth from './auth/RequireAuth';
 import HRLeavePage from './pages/HRLeavePage'
@@ -26,6 +27,8 @@ ReactDOM.render(
               <Route path='/human-resource/leaves' element={<HRLeavePage />} />
               <Route path='/human-resource/employees' element={<HREmployeeManagementPage />} />
               <Route path='/human-resource/employees/:employeeId' element={<ViewEmployeePage />} />
+              <Route path='/user/profile' element={<ProfilePage />} />
+
               {/* <Route path='/accounting/create/expense' element={<div />} />
               <Route path='/accounting/create/income' element={<div />} />
               <Route path='/accounting/pnl' element={<div />} />
@@ -68,7 +71,6 @@ ReactDOM.render(
 
               <Route path='/user/leave/apply' element={<div />} />
               <Route path='/user/leave' element={<div />} />
-              <Route path='/user/profile' element={<div />} />
 
               <Route path='/home' element={<div />} />
               <Route path='/resetPassword' element={<div />} />

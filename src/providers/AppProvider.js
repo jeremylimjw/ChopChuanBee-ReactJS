@@ -80,7 +80,7 @@ export function AppProvider({ children }) {
      */
     function hasViewAccessTo(view) {
         if (user == null) return false;
-        if (user.role.name === 'Admin' || user.access_rights[view] != null) return true;
+        if (user.role_name === 'Admin' || user.access_rights[view] != null) return true;
         return false;
     }
 
