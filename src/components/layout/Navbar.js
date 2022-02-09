@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 const Navbar = () => {
   const { Header } = Layout
   return (
-    <Header>
+    <Header style={styles.header}>
       <Menu mode='horizontal' theme='dark' style={{ float: 'right' }}>
         <Menu.Item key='1'>
           <UserOutlined style={{ fontSize: '16px' }} />
@@ -23,3 +23,10 @@ const Navbar = () => {
 }
 
 export default Navbar
+
+const styles = {
+  header: {
+    height: 48,
+    lineHeight: '48px',
+  }
+}

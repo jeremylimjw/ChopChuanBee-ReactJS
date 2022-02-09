@@ -8,6 +8,27 @@ import { Layout } from 'antd'
 import LoginPage from './pages/LoginPage';
 import { AppProvider } from './providers/AppProvider';
 import RequireAuth from './auth/RequireAuth';
+import MyTemplate from './pages/MyTemplate';
+import MyLayout from './components/layout/MyLayout';
+
+
+// Add on more routes here
+const routes = [
+  {
+    path: '/',
+    bannerPath: ['Employee', 'Leave'],
+    bannerTitle: 'Template',
+    component: <MyTemplate />,
+  },
+  {
+    path: '/customers',
+    bannerPath: ['Customer'],
+    bannerTitle: 'Customers Component',
+    component: <div>Customers Component</div>,
+    viewAccess: "CRM",
+  },
+
+]
 
 ReactDOM.render(
   <React.StrictMode>
@@ -17,10 +38,20 @@ ReactDOM.render(
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/" element={<RequireAuth><App /></RequireAuth>}>
-              <Route path='/customers' element={<RequireAuth viewAccess="CRM"><div>Customers Component</div></RequireAuth>} />
-              <Route path='/suppliers' element={<RequireAuth viewAccess="SCM"><div>Suppliers Component</div></RequireAuth>} />
+
+              { routes.map((route, index) => <Route path={route.path} key={index}
+                element={
+                  <RequireAuth viewAccess={route.viewAccess}>
+                    <MyLayout bannerPath={route.bannerPath} bannerTitle={route.bannerTitle}>
+                      {route.component}
+                    </MyLayout>
+                  </RequireAuth>} />)
+              }
+
+              {/* --- Please do not write this way anymore! --- */}
+              {/* <Route path='/suppliers' element={<RequireAuth viewAccess="SCM"><div>Suppliers Component</div></RequireAuth>} />
               <Route path='/human-resource/' element={<RequireAuth viewAccess="HR"><div>Human resource Component</div></RequireAuth>} />
-              {/* <Route path='/accounting/create/expense' element={<div />} />
+              <Route path='/accounting/create/expense' element={<div />} />
               <Route path='/accounting/create/income' element={<div />} />
               <Route path='/accounting/pnl' element={<div />} />
               <Route path='/accounting' element={<div>Accounting</div>} />

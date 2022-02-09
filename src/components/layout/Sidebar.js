@@ -2,77 +2,85 @@ import React from 'react'
 import { Layout, Menu } from 'antd'
 import { Link } from 'react-router-dom'
 import { useApp } from '../../providers/AppProvider'
+import { UserOutlined } from '@ant-design/icons/lib/icons'
+
+
+// Add on more menu items here
+const menu = [
+  {
+    role: 'Admin',
+    title: 'Admin',
+    icon: <UserOutlined />,
+    items: [
+      { route: '/admin/accounts', name: 'Manage Accounts' },
+      { route: '/admin/logs', name: 'Logs' },
+    ]
+  },
+  {
+    role: 'HR',
+    title: 'Human Resource',
+    icon: <UserOutlined />,
+    items: [
+      { route: '/human-resource/employees', name: 'Manage Employees' },
+      { route: '/human-resource/employees', name: 'Leaves' },
+    ]
+  },
+  {
+    role: 'SCM',
+    title: 'Suppliers',
+    icon: <UserOutlined />,
+    items: [
+      { route: '/suppliers', name: 'Manage Suppliers' },
+      { route: '/suppliers/accounts', name: 'Accounts Payable' },
+    ]
+  },
+  {
+    role: 'Inventory',
+    title: 'Inventory',
+    icon: <UserOutlined />,
+    items: [
+      { route: '/inventory', name: 'Manage Inventory' },
+      { route: '/inventory/supplier-invoices', name: 'Supplier Invoices' },
+      { route: '/products', name: 'Manage Products' },
+    ]
+  },
+  {
+    role: 'CRM',
+    title: 'Customers',
+    icon: <UserOutlined />,
+    items: [
+      { route: '/customers', name: 'Manage Customers' },
+      { route: '/customers/accounts', name: 'Accounts Receivables' },
+    ]
+  },
+]
 
 const Sidebar = () => {
   const { hasViewAccessTo } = useApp()
 
-  const { Sider } = Layout
-  const { SubMenu } = Menu
   return (
-    <Sider theme='light'>
+    <Layout.Sider theme='light' width={210} style={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}>
+
       <Menu defaultSelectedKeys={['1']} mode='inline'>
-        {hasViewAccessTo('Admin') && 
-          <SubMenu
-            key='adminSub'
-            title='Admin'
-            style={{ marginBottom: '10px', borderBottom: 'solid black 1px' }}
-          >
-            <Menu.Item key='1'>
-              <Link to='/admin/accounts'>Manage Accounts</Link>
-            </Menu.Item>
-            <Menu.Item key='2'>
-              <Link to='/admin/logs'>Logs</Link>
-            </Menu.Item>
-          </SubMenu>
-        }
-        {hasViewAccessTo('HR') && (
-          <SubMenu key='hrSub' title='Human Resource'>
-            <Menu.Item key='3'>
-              <Link to='/human-resource/employees'>Manage Employees</Link>
-            </Menu.Item>
-            <Menu.Item key='4'>
-              <Link to='/human-resource/employees'>Leaves</Link>
-            </Menu.Item>
-          </SubMenu>
-        )}
-        {hasViewAccessTo('SCM') && (
-          <SubMenu key='supplierSub' title='Suppliers'>
-            <Menu.Item key='5'>
-              <Link to='/suppliers'>Manage Suppliers</Link>
-            </Menu.Item>
-            <Menu.Item key='6'>
-              <Link to='/suppliers/accounts'>Accounts Payable</Link>
-            </Menu.Item>
-          </SubMenu>
-        )}
 
-        <SubMenu key='invSub' title='Inventory'>
-          <Menu.Item key='7'>
-            <Link to='/inventory'>Manage Inventory</Link>
-          </Menu.Item>
-          <Menu.Item key='8'>
-            <Link to='/inventory/supplier-invoices'>Supplier Invoices</Link>
-          </Menu.Item>
-          <Menu.Item key='9'>
-            <Link to='/products'>Manage Products</Link>
-          </Menu.Item>
-        </SubMenu>
+        { menu.map((menuItem, index) => {
+          if (hasViewAccessTo(menuItem.role)) {
+            return <Menu.SubMenu key={index} title={menuItem.title} icon={menuItem.icon}>
+              { menuItem.items.map((subMenu, index2) => {
+                <Menu.Item key={`${index}_${index2}`}>
+                  <Link to={subMenu.route}>{subMenu.name}</Link>
+                </Menu.Item>
+              })}
+            </Menu.SubMenu>
+          }
+        })}
 
-        {hasViewAccessTo('CRM') && (
-          <SubMenu key='custSub' title='Customers'>
-            <Menu.Item key='10'>
-              <Link to='/customers'>Manage Customers</Link>
-            </Menu.Item>
-            <Menu.Item key='11'>
-              <Link to='/customers/accounts'>Accounts Receivables</Link>
-            </Menu.Item>
-          </SubMenu>
-        )}
-        <Menu.Item key='logoutMenu'>
+        <Menu.Item key='logoutMenu' icon={<UserOutlined />}>
           <Link to='/'>Logout</Link>
         </Menu.Item>
+
       </Menu>
-    </Sider>
+    </Layout.Sider>
   )
 }
 
