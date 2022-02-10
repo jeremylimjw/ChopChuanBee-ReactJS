@@ -2,7 +2,7 @@ import React from 'react'
 import { Layout, Menu } from 'antd'
 import { Link } from 'react-router-dom'
 import { useApp } from '../../providers/AppProvider'
-import { UserOutlined } from '@ant-design/icons/lib/icons'
+import { HomeOutlined, UserOutlined } from '@ant-design/icons/lib/icons'
 
 
 // Add on more menu items here
@@ -69,7 +69,9 @@ const Sidebar = () => {
   return (
     <Layout.Sider theme='light' width={210} style={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}>
 
-      <Menu defaultSelectedKeys={['1']} mode='inline'>
+      <Menu mode='inline'>
+
+        <Menu.Item key="home" icon={<HomeOutlined />}><Link to="/">Home</Link></Menu.Item>
 
         { menu.map((menuItem, index) => {
           if (hasViewAccessTo(menuItem.role)) {

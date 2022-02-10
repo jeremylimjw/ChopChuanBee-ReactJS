@@ -9,21 +9,19 @@ import LoginPage from './pages/LoginPage';
 import { AppProvider } from './providers/AppProvider';
 import RequireAuth from './auth/RequireAuth';
 import MyTemplate from './pages/MyTemplate';
-import MyLayout from './components/layout/MyLayout';
+import ManagePurchaseOrdersPage from './pages/ManagePurchaseOrdersPage';
+import NewPurchaseOrderPage from './pages/NewPurchaseOrderPage';
+import ViewPurchaseOrderPage from './pages/ViewPurchaseOrderPage';
 
 
 // Add on more routes here
 const routes = [
   {
     path: '/',
-    bannerPath: ['Employee', 'Leave'],
-    bannerTitle: 'Template',
     component: <MyTemplate />,
   },
   {
     path: '/customers',
-    bannerPath: ['Customer'],
-    bannerTitle: 'Customers Component',
     component: <div>Customers Component</div>,
     viewAccess: "CRM",
   },
@@ -33,23 +31,17 @@ const routes = [
     childRoutes: [
       { 
         path: '', 
-        bannerPath: ['Purchases', 'Orders'], 
-        bannerTitle: 'Purchase Orders', 
-        component: <></>,
+        component: <ManagePurchaseOrdersPage />,
         viewAccess: "CRM",
       },
       { 
         path: 'new', 
-        bannerPath: ['Purchases', 'Orders', 'New'], 
-        bannerTitle: 'Create New Purchase Order', 
-        component: <></>,
+        component: <NewPurchaseOrderPage />,
         viewAccess: "CRM",
       },
       { 
         path: ':id', 
-        bannerPath: ['Purchases', 'Orders', 'View'], 
-        bannerTitle: 'View Purchase Order', 
-        component: <></>,
+        component: <ViewPurchaseOrderPage />,
         viewAccess: "CRM",
       },
     ]
@@ -62,9 +54,7 @@ function renderRoute(route, index) {
     return (
       <Route path={route.path} key={index} element={
         <RequireAuth viewAccess={route.viewAccess}>
-          <MyLayout bannerPath={route.bannerPath} bannerTitle={route.bannerTitle}>
-            {route.component}
-          </MyLayout>
+          {route.component}
         </RequireAuth>}>
       </Route>);
 
@@ -72,9 +62,7 @@ function renderRoute(route, index) {
     const childRoutes = route.childRoutes.map((childRoute, index2) => 
       <Route path={childRoute.path} key={index2} element={
         <RequireAuth viewAccess={childRoute.viewAccess}>
-          <MyLayout bannerPath={childRoute.bannerPath} bannerTitle={childRoute.bannerTitle}>
-            {childRoute.component}
-          </MyLayout>
+          {childRoute.component}
         </RequireAuth>}>
       </Route>);
 
