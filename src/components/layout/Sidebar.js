@@ -36,6 +36,14 @@ const menu = [
   },
   {
     role: 'Inventory',
+    title: 'Purchases',
+    icon: <UserOutlined />,
+    items: [
+      { route: '/purchases/orders', name: 'Manage Orders' },
+    ]
+  },
+  {
+    role: 'Inventory',
     title: 'Inventory',
     icon: <UserOutlined />,
     items: [

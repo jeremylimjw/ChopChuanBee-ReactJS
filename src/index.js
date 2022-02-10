@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom'
 import { Layout } from 'antd'
 import LoginPage from './pages/LoginPage';
 import { AppProvider } from './providers/AppProvider';
@@ -27,8 +27,64 @@ const routes = [
     component: <div>Customers Component</div>,
     viewAccess: "CRM",
   },
+  {
+    path: '/purchases/orders',
+    component: <Outlet />,
+    childRoutes: [
+      { 
+        path: '', 
+        bannerPath: ['Purchases', 'Orders'], 
+        bannerTitle: 'Purchase Orders', 
+        component: <></>,
+        viewAccess: "CRM",
+      },
+      { 
+        path: 'new', 
+        bannerPath: ['Purchases', 'Orders', 'New'], 
+        bannerTitle: 'Create New Purchase Order', 
+        component: <></>,
+        viewAccess: "CRM",
+      },
+      { 
+        path: ':id', 
+        bannerPath: ['Purchases', 'Orders', 'View'], 
+        bannerTitle: 'View Purchase Order', 
+        component: <></>,
+        viewAccess: "CRM",
+      },
+    ]
+  },
 
 ]
+
+function renderRoute(route, index) {
+  if (route.childRoutes == null) {
+    return (
+      <Route path={route.path} key={index} element={
+        <RequireAuth viewAccess={route.viewAccess}>
+          <MyLayout bannerPath={route.bannerPath} bannerTitle={route.bannerTitle}>
+            {route.component}
+          </MyLayout>
+        </RequireAuth>}>
+      </Route>);
+
+  } else {
+    const childRoutes = route.childRoutes.map((childRoute, index2) => 
+      <Route path={childRoute.path} key={index2} element={
+        <RequireAuth viewAccess={childRoute.viewAccess}>
+          <MyLayout bannerPath={childRoute.bannerPath} bannerTitle={childRoute.bannerTitle}>
+            {childRoute.component}
+          </MyLayout>
+        </RequireAuth>}>
+      </Route>);
+
+    return (
+      <Route path={route.path} key={index} element={<RequireAuth viewAccess={route.viewAccess}><Outlet /></RequireAuth>}>
+        {childRoutes}
+      </Route>);
+  }
+
+}
 
 ReactDOM.render(
   <React.StrictMode>
@@ -39,14 +95,7 @@ ReactDOM.render(
             <Route path="/login" element={<LoginPage />} />
             <Route path="/" element={<RequireAuth><App /></RequireAuth>}>
 
-              { routes.map((route, index) => <Route path={route.path} key={index}
-                element={
-                  <RequireAuth viewAccess={route.viewAccess}>
-                    <MyLayout bannerPath={route.bannerPath} bannerTitle={route.bannerTitle}>
-                      {route.component}
-                    </MyLayout>
-                  </RequireAuth>} />)
-              }
+              {routes.map((route, index) => renderRoute(route, index))}
 
               {/* --- Please do not write this way anymore! --- */}
               {/* <Route path='/suppliers' element={<RequireAuth viewAccess="SCM"><div>Suppliers Component</div></RequireAuth>} />
