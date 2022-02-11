@@ -1,4 +1,4 @@
-import { Typography } from 'antd';
+import { Space, Typography } from 'antd';
 import React from 'react'
 
 export default function MyToolbar({ children, title, style }) {
@@ -20,7 +20,9 @@ export default function MyToolbar({ children, title, style }) {
         <div style={styles.container}>
             <Typography.Title level={5} style={styles.title}>{title}</Typography.Title>
             <div style={styles.right}>
-                {children}
+                <Space size="middle">
+                    {children}
+                </Space>
             </div>
         </div>
     );
