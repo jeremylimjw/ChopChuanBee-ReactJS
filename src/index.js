@@ -85,7 +85,6 @@ ReactDOM.render(
 
               {routes.map((route, index) => renderRoute(route, index))}
 
-              {/* --- Please do not write this way anymore! --- */}
               {/* <Route path='/suppliers' element={<RequireAuth viewAccess="SCM"><div>Suppliers Component</div></RequireAuth>} />
               <Route path='/human-resource/' element={<RequireAuth viewAccess="HR"><div>Human resource Component</div></RequireAuth>} />
               <Route path='/accounting/create/expense' element={<div />} />

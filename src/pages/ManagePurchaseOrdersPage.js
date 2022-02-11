@@ -1,5 +1,5 @@
-import { PlusOutlined } from '@ant-design/icons/lib/icons';
-import { Button, Progress, Table, Tag } from 'antd';
+import { PlusOutlined, SearchOutlined } from '@ant-design/icons/lib/icons';
+import { Button, Input, Progress, Table, Tag } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
@@ -7,8 +7,8 @@ import { PurchaseOrderApiHelper } from '../api/purchaseOrder';
 import MyCard from '../components/layout/MyCard';
 import MyLayout from '../components/layout/MyLayout';
 import MyToolbar from '../components/layout/MyToolbar';
+import { getPaymentTerm, getStatus, transformPurchaseOrder } from '../components/purchaseModule/helpers';
 import { useApp } from '../providers/AppProvider';
-import { getOrderTotal, getPaymentsTotal } from '../utilities/purchaseOrder';
 
 const breadcrumbs = [
   { url: '/purchases/orders', name: 'Purchases' },
@@ -19,14 +19,18 @@ export default function ManagePurchaseOrdersPage() {
 
     const { handleHttpError } = useApp();
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
     const [purchaseOrders, setPurchaseOrders] = useState([])
 
     useEffect(() => {
+        setLoading(true);
         PurchaseOrderApiHelper.getAll()
             .then(results => {
-                setPurchaseOrders(results);
+                setPurchaseOrders(transformPurchaseOrder(results));
+                setLoading(false);
             })
-            .catch(handleHttpError);
+            .catch(handleHttpError)
+            .catch(() => setLoading(false));
     }, [handleHttpError]);
 
     return (
@@ -34,9 +38,10 @@ export default function ManagePurchaseOrdersPage() {
 
             <MyCard>
                 <MyToolbar title="All Purchase Orders">
+                    <Input placeholder="Search Order ID" addonAfter={<SearchOutlined />} />
                     <Button type="primary" icon={<PlusOutlined />} onClick={() => navigate('./new')}>New Order</Button>
                 </MyToolbar>
-                <Table dataSource={purchaseOrders} columns={tableColumns} rowKey="id" />
+                <Table dataSource={purchaseOrders} columns={tableColumns} rowKey="id" loading={loading} />
             </MyCard>
             
         </MyLayout>
@@ -47,58 +52,21 @@ const tableColumns = [
     { title: 'Date', dataIndex: 'created_at', key: 'created_at' },
     { title: 'Order ID', dataIndex: 'id', key: 'id' },
     { title: 'Supplier', dataIndex: 'supplier', key: 'supplier', render: (supplier) => supplier.company_name },
-    { title: 'Payment Term', dataIndex: 'payment_term', key: 'payment_term', align: 'center', render: (payment_term) => {
-        switch (payment_term?.id) {
-            case 1:
-                return (<Tag color='green'>{payment_term.name}</Tag>)
-            case 2:
-                return (<Tag color='geekblue'>{payment_term.name}</Tag>)
-            default:
-                return '-';
-        }
-     } },
-    { title: 'Total Amount', dataIndex: 'totalAmount', key: 'totalAmount', align: 'center', render: (_, record) => {
-        const total = getOrderTotal(record);
-        return total == 0 ? '-': `$${total.toFixed(2)}`;
-    } },
-    { title: 'Paid', dataIndex: 'payments', key: 'payments', align: 'center', render: (payments, record) => {
-        if (record.purchase_order_status_id !== 2) {
-            return '-';
-        }
-
-        if (record.payment_term_id === 1) { // If payment by cash, always fully paid
-            return <Progress type="circle" percent={100} width={40} />
-        } else { // If made in credit, create AP
-            const orderTotal = getOrderTotal(record);
-            const percentage = getPaymentsTotal(record)/orderTotal;
-    
-            return <Progress type="circle" percent={percentage*100} width={40} />
-        }
-    } },
+    { title: 'Payment Term', dataIndex: 'payment_term_id', key: 'payment_term_id', align: 'center', render: (payment_term_id) => 
+        <Tag color={getPaymentTerm(payment_term_id)?.color}>{getPaymentTerm(payment_term_id)?.name}</Tag>
+    },
+    { title: 'Total Amount', dataIndex: 'total', key: 'total', align: 'center', render: (total) => 
+        total == 0 ? '-': `$${total.toFixed(2)}` 
+    },
+    { title: 'Paid', dataIndex: 'payments_total', key: 'payments_total', align: 'center', render: (payments_total, record) => 
+        <Progress type="circle" percent={payments_total/record.total*100} width={40} /> 
+    },
     { title: 'Delivery', dataIndex: '', key: 'delivery', align: 'center', render: (_, record) => {
-        if (record.purchase_order_status_id !== 2) {
-            return '-';
-        }
-
-        // TODO: logic for delivery
-        return <Progress type="circle" percent={0} width={40} />
+        return <Progress type="circle" percent={record.quantities_received/record.quantities_total*100} width={40} />
     } },
-    { title: 'Status', dataIndex: 'purchase_order_status', key: 'purchase_order_status', align: 'center', render: (purchase_order_status) => {
-        switch (purchase_order_status.id) {
-            case 1:
-                return (<Tag color='orange'>{purchase_order_status.name}</Tag>)
-            case 2:
-                return (<Tag color='green'>{purchase_order_status.name}</Tag>)
-            case 3:
-                return (<Tag color='volcano'>{purchase_order_status.name}</Tag>)
-            case 4:
-                return (<Tag color='geekblue'>{purchase_order_status.name}</Tag>)
-            case 5:
-                return (<Tag color='volcano'>{purchase_order_status.name}</Tag>)
-            default:
-                return <></>
-        }
-    } },
+    { title: 'Status', dataIndex: 'purchase_order_status_id', key: 'purchase_order_status_id', align: 'center', render: (purchase_order_status_id) => 
+        <Tag color={getStatus(purchase_order_status_id)?.color}>{getStatus(purchase_order_status_id)?.name}</Tag> 
+    },
     { dataIndex: "id", title: "", key: "link", render: (id) => {
         return (<Link to={`./${id}`}>View</Link>);
       }

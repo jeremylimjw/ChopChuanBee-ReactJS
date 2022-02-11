@@ -10,7 +10,7 @@ export default function ConfirmOrderTab({ selectedSupplier, selectedProducts, st
   return (
     <div style={{ display: 'flex'}}>
 
-      <MyCard style={{ width: 400, margin: '0 12px 24px 24px' }}>
+      <MyCard title="Supplier Details" style={{ width: 400, margin: '0 12px 24px 24px' }}>
         <Typography.Title level={4}>{supplier.company_name}</Typography.Title>
         
         <Space direction='vertical' style={{ marginTop: 10 }}>
@@ -23,7 +23,7 @@ export default function ConfirmOrderTab({ selectedSupplier, selectedProducts, st
         
       </MyCard>
 
-      <MyCard style={{ flexGrow: 1, margin: '0 12px 24px 24px' }}>
+      <MyCard title="Order Items" style={{ flexGrow: 1, margin: '0 12px 24px 24px' }}>
         <Table columns={columns} dataSource={selectedProducts.filter(x => x.quantity !== 0)} rowKey="id" />
         <MyToolbar style={{ marginTop: 15 }}>
           <Button onClick={() => setStep(step-1)}>Back</Button>

@@ -1,7 +1,6 @@
-import { DeleteOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons/lib/icons";
-import { Button, Input, Popconfirm, Table, Form } from "antd";
+import { DeleteOutlined, PlusOutlined } from "@ant-design/icons/lib/icons";
+import { Button, Popconfirm, Table } from "antd";
 import { useEffect, useState } from "react";
-import { ProductApiHelper } from "../../../api/product";
 import { SupplierApiHelper } from "../../../api/supplier";
 import { useApp } from "../../../providers/AppProvider";
 import EditableCell from "../../general/EditableCell";
@@ -66,10 +65,15 @@ export default function SupplierMenuTable({ selectedSupplier, selectedProducts, 
         render: (product) => product.unit,
       },
       {
+        title: 'Lastest Price',
+        dataIndex: 'product',
+        render: (product) => '-',
+      },
+      {
         title: '* Quantity',
         dataIndex: 'quantity',
         align: 'center',
-        onCell: (record) => ({ editable: true, record, dataIndex: 'quantity', inputType: 'number', handleSave })
+        onCell: (record) => ({ editable: true, isToggleable: true, record, dataIndex: 'quantity', inputType: 'number', handleSave })
       },
       {
         align: 'center',
@@ -81,7 +85,7 @@ export default function SupplierMenuTable({ selectedSupplier, selectedProducts, 
     return (
       <>
         <MyToolbar title="Supplier's Menu">
-          <Button type="primary" icon={<PlusOutlined />} disabled={loading}>New</Button>
+          <Button icon={<PlusOutlined />} disabled={loading}>New Item</Button>
         </MyToolbar>
         
         <Table loading={loading}

@@ -5,12 +5,19 @@ export class PurchaseOrderApiHelper {
         return axiosObject.post(`/purchaseOrder`, purchaseOrder)
             .then(res => res.data);
     }
+
     static async getAll() {
         return axiosObject.get(`/purchaseOrder`)
             .then(res => res.data);
     }
+
     static async getById(id) {
         return axiosObject.get(`/purchaseOrder?id=${id}`)
+            .then(res => res.data);
+    }
+    
+    static async update(purchaseOrder) {
+        return axiosObject.put(`/purchaseOrder`, purchaseOrder)
             .then(res => res.data);
     }
 }

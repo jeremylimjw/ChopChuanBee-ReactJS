@@ -1,13 +1,18 @@
 import { Form, Input, InputNumber } from "antd";
 import { useEffect, useRef, useState } from "react";
 
-export default function EditableCell({ children, dataIndex, editable, inputType, record, handleSave, ...restProps }) {
+export default function EditableCell({ children, dataIndex, editable, inputType, record, handleSave, isToggleable, ...restProps }) {
     const [value, setValue] = useState();
     const [editing, setEditing] = useState(false);
     const inputRef = useRef(null);
+
+    useEffect(() => {
+      if (record)
+        setValue(record[dataIndex])
+    }, [record])
     
     useEffect(() => {
-        if (editing) inputRef.current.focus();
+      if (isToggleable && editing) inputRef.current.focus();
     }, [editing]);
 
     function toggleEdit() {
@@ -30,15 +35,22 @@ export default function EditableCell({ children, dataIndex, editable, inputType,
     let node = children;
   
     if (editable) {
-      node =  editing ? (
-        <Form.Item style={{ margin: 0 }}>
-          {renderFormItem()}
-        </Form.Item>
-      ) : (
-        <div style={{ padding: '5px 12px', cursor: 'pointer' }} onClick={toggleEdit}>
-          {children}
-        </div>
-        )
+      if (isToggleable) {
+        node =  editing ? (
+          <Form.Item style={{ margin: 0 }}>
+            {renderFormItem()}
+          </Form.Item>
+        ) : (
+          <div style={{ padding: '5px 12px', cursor: 'pointer' }} onClick={toggleEdit}>
+            {children}
+          </div>
+          )
+      } else {
+        node = (
+          <Form.Item style={{ margin: 0 }}>
+            {renderFormItem()}
+          </Form.Item>)
+      }
     }
 
     return <td {...restProps}>{node}</td>;

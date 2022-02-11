@@ -3,7 +3,6 @@ import React from 'react'
 import Banner from './Banner'
 
 export default function MyLayout({ children, breadcrumbs, bannerTitle }) {
-
   return (
     <Layout>
       <Banner breadcrumbs={breadcrumbs} title={bannerTitle} />
