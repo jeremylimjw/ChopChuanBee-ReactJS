@@ -29,24 +29,16 @@ export default function SupplierTable({ selectedSupplier, setSelectedSupplier })
     return (
         <>
             <MyToolbar title="All Suppliers">
-                <Form layout='inline'>
-                    <Form.Item label="Company Name">
-                        <Input placeholder="Enter Search String" addonAfter={<SearchOutlined />} />
-                    </Form.Item>
-                    <Form.Item label="Name">
-                        <Input placeholder="Enter Search String" addonAfter={<SearchOutlined />} />
-                    </Form.Item>
-                    <Form.Item>
-                        <Button>Reset</Button>
-                    </Form.Item>
-                </Form>
+              <Input placeholder="Search Company Name" addonAfter={<SearchOutlined />} />
+              <Input placeholder="Search Name" addonAfter={<SearchOutlined />} />
+              <Button>Reset</Button>
             </MyToolbar>
 
             <Table loading={loading}
-                rowSelection={{ type: 'radio', onChange: (_, selectedRows) => setSelectedSupplier(selectedRows) }}
-                columns={columns}
-                dataSource={dataSource}
-                rowKey="id"
+              rowSelection={{ type: 'radio', onChange: (_, selectedRows) => setSelectedSupplier(selectedRows) }}
+              columns={columns}
+              dataSource={dataSource}
+              rowKey="id"
             />
         </>
     )

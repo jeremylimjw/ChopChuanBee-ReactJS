@@ -32,7 +32,7 @@ export default function ViewPurchaseOrderPage() {
     }, []);
 
     return (
-        <MyLayout breadcrumbs={breadcrumbs} bannerTitle={`Purchase Order ID ${purchaseOrder?.id.toString().padStart(8, "0")}`}>
-        </MyLayout>
+      <MyLayout breadcrumbs={breadcrumbs} bannerTitle={`Purchase Order ID ${purchaseOrder?.id.toString().padStart(8, "0")}`}>
+      </MyLayout>
     )
 }

@@ -1,5 +1,5 @@
-import { PlusOutlined, SearchOutlined } from '@ant-design/icons/lib/icons'
-import { Button, Form, Input, InputNumber, Table } from 'antd'
+import { DownOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons/lib/icons'
+import { Button, Dropdown, Form, Input, InputNumber, Menu, Table } from 'antd'
 import React from 'react'
 import MyToolbar from '../components/layout/MyToolbar'
 import MyCard from '../components/layout/MyCard'
@@ -15,21 +15,35 @@ export default function MyTemplate() {
 
       <MyCard>
 
-        <MyToolbar title="View All Customers">
-          <Form layout='inline'>
-            <Form.Item label="Name">
-              <Input placeholder="Enter Search String" addonAfter={<SearchOutlined />} />
-            </Form.Item>
-            <Form.Item label="Address">
-              <Input placeholder="Enter Search String" addonAfter={<SearchOutlined />} />
-            </Form.Item>
-            <Form.Item>
-              <Button>Reset</Button>
-            </Form.Item>
-            <Form.Item>
-              <Button type="primary" icon={<PlusOutlined />}>New</Button>
-            </Form.Item>
-          </Form>
+        <MyToolbar title="Simple Table">
+          <Input placeholder="Search Name" addonAfter={<SearchOutlined />} />
+          <Input placeholder="Search Address" addonAfter={<SearchOutlined />} />
+          <Button>Reset</Button>
+          <Button type="primary" icon={<PlusOutlined />}>New</Button>
+        </MyToolbar>
+
+        <Table dataSource={dataSource} columns={columns} />
+        
+      </MyCard>
+
+      <MyCard>
+
+        <MyToolbar title="Extreme Table">
+          <Input style={{ width: 180 }} placeholder="Search Name" addonAfter={<SearchOutlined />} />
+          <Input style={{ width: 180 }} placeholder="Search Start Date" addonAfter={<SearchOutlined />} />
+          <Input style={{ width: 180 }} placeholder="Search End Date" addonAfter={<SearchOutlined />} />
+          <Button>Reset</Button>
+          
+          <Dropdown.Button
+            type="primary"
+            icon={<DownOutlined />}
+            overlay={<Menu>
+                <Menu.Item key="1" icon={<PlusOutlined />}>Add Refund</Menu.Item>
+                <Menu.Item key="2" icon={<PlusOutlined />}>Add Damaged</Menu.Item>
+              </Menu>}
+          >
+            New Item
+          </Dropdown.Button>
         </MyToolbar>
 
         <Table dataSource={dataSource} columns={columns} />

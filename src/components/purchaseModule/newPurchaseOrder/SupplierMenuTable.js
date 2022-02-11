@@ -81,19 +81,9 @@ export default function SupplierMenuTable({ selectedSupplier, selectedProducts, 
     return (
       <>
         <MyToolbar title="Supplier's Menu">
-            <Form layout='inline'>
-              <Form.Item label="Company Name">
-                <Input placeholder="Enter Search String" addonAfter={<SearchOutlined />} />
-              </Form.Item>
-              <Form.Item label="Name">
-                <Input placeholder="Enter Search String" addonAfter={<SearchOutlined />} />
-              </Form.Item>
-              <Form.Item>
-                <Button>Reset</Button>
-              </Form.Item>
-            </Form>
-            <Button type="primary" icon={<PlusOutlined />} disabled={loading}>New</Button>
+          <Button type="primary" icon={<PlusOutlined />} disabled={loading}>New</Button>
         </MyToolbar>
+        
         <Table loading={loading}
           rowSelection={{ onChange: (_, selectedRows) => setSelectedProducts(selectedRows) }}
           columns={columns}

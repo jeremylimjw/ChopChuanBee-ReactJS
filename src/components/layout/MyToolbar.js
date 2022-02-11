@@ -20,7 +20,7 @@ export default function MyToolbar({ children, title, style }) {
         <div style={styles.container}>
             <Typography.Title level={5} style={styles.title}>{title}</Typography.Title>
             <div style={styles.right}>
-                <Space>
+                <Space size="middle">
                     {children}
                 </Space>
             </div>
