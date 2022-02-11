@@ -53,10 +53,10 @@ const tableColumns = [
     { title: 'Order ID', dataIndex: 'id', key: 'id' },
     { title: 'Supplier', dataIndex: 'supplier', key: 'supplier', render: (supplier) => supplier.company_name },
     { title: 'Payment Term', dataIndex: 'payment_term_id', key: 'payment_term_id', align: 'center', render: (payment_term_id) => 
-        <Tag color={getPaymentTerm(payment_term_id)?.color}>{getPaymentTerm(payment_term_id)?.name}</Tag>
+        payment_term_id ? <Tag color={getPaymentTerm(payment_term_id)?.color}>{getPaymentTerm(payment_term_id)?.name}</Tag> : '-'
     },
     { title: 'Total Amount', dataIndex: 'total', key: 'total', align: 'center', render: (total) => 
-        total == 0 ? '-': `$${total.toFixed(2)}` 
+        `$${total.toFixed(2)}` 
     },
     { title: 'Paid', dataIndex: 'payments_total', key: 'payments_total', align: 'center', render: (payments_total, record) => 
         <Progress type="circle" percent={payments_total/record.total*100} width={40} /> 

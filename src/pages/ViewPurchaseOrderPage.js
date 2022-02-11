@@ -1,5 +1,5 @@
 import { FileDoneOutlined, FileExcelOutlined, FileTextOutlined, PlusOutlined, SaveOutlined, SendOutlined, StopOutlined } from '@ant-design/icons/lib/icons';
-import { Button, message, Space } from 'antd';
+import { Button, message, Popconfirm, Space } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router';
 import { PurchaseOrderApiHelper } from '../api/purchaseOrder';
@@ -51,6 +51,30 @@ export default function ViewPurchaseOrderPage() {
         .catch(() => setLoading(false));
     }
 
+    function cancelOrder() {
+      setLoading(true);
+      PurchaseOrderApiHelper.cancelOrder(purchaseOrder)
+        .then(() => {
+          message.success("Purchase Order successfully cancelled!");
+          setPurchaseOrder({...purchaseOrder, purchase_order_status_id: Status.CANCELLED.id })
+          setLoading(false);
+        })
+        .catch(handleHttpError)
+        .catch(() => setLoading(false));
+    }
+
+    function closeOrder() {
+      setLoading(true);
+      PurchaseOrderApiHelper.closeOrder(purchaseOrder)
+        .then(() => {
+          message.success("Purchase Order successfully cancelled!");
+          setPurchaseOrder({...purchaseOrder, purchase_order_status_id: Status.CLOSED.id })
+          setLoading(false);
+        })
+        .catch(handleHttpError)
+        .catch(() => setLoading(false));
+    }
+
 
 
     return (
@@ -78,28 +102,27 @@ export default function ViewPurchaseOrderPage() {
 
           <OrderItemsTable purchaseOrder={purchaseOrder} setPurchaseOrder={setPurchaseOrder} />
 
-          { isStatus(purchaseOrder, Status.PENDING, Status.SENT) && 
           <div style={{ display: 'flex', marginTop: 30 }}>
 
-            <Button icon={<SendOutlined />} disabled={loading}>Send Order</Button>
+            <Button icon={<SendOutlined />} disabled={loading || !isStatus(purchaseOrder, Status.PENDING)}>Send Order</Button>
 
             <div style={{ marginLeft: 'auto' }}>
               <Space size="middle">
-                <Button icon={<StopOutlined />} disabled={loading}>Cancel Order</Button>
-                <Button icon={<SaveOutlined />} disabled={loading} onClick={saveForLater}>Save for later</Button>
-                <Button type="primary" icon={<FileTextOutlined />} disabled={loading}>Convert to Invoice</Button>
+                
+                <Popconfirm title="Are you sure? This action cannot be undone." onConfirm={cancelOrder} disabled={loading || !isStatus(purchaseOrder, Status.PENDING, Status.ACCEPTED)}>
+                  <Button icon={<StopOutlined />} disabled={loading || !isStatus(purchaseOrder, Status.PENDING, Status.ACCEPTED)}>Cancel Order</Button>
+                </Popconfirm>
+                <Button icon={<SaveOutlined />} disabled={loading || !isStatus(purchaseOrder, Status.PENDING, Status.ACCEPTED)} onClick={saveForLater}>Save for later</Button>
+                { isStatus(purchaseOrder, Status.PENDING) && 
+                  <Button type="primary" icon={<FileTextOutlined />} disabled={loading}>Convert to Invoice</Button>
+                }
+                { isStatus(purchaseOrder, Status.ACCEPTED) && 
+                  <Button type="primary" icon={<FileDoneOutlined />} disabled={loading} onClick={closeOrder}>Close Invoice</Button>
+                }
               </Space>
             </div>
 
           </div>
-          }
-
-          { isStatus(purchaseOrder, Status.ACCEPTED) && 
-          <MyToolbar style={{ marginTop: 30 }}>
-            <Button icon={<StopOutlined />} disabled={loading}>Cancel Order</Button>
-            <Button type="primary" icon={<FileDoneOutlined />} disabled={loading}>Close Invoice</Button>
-          </MyToolbar>
-          }
 
         </MyCard>
 
