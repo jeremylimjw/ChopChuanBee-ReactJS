@@ -3,12 +3,59 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
 import { Layout } from 'antd';
 import LoginPage from './pages/LoginPage';
 import { AppProvider } from './providers/AppProvider';
 import RequireAuth from './auth/RequireAuth';
-import AdminAccountPage from './pages/AdminAccountPage';
+import MyTemplate from './pages/MyTemplate';
+
+// Add on more routes here
+const routes = [
+    {
+        path: '/',
+        component: <MyTemplate />,
+    },
+    {
+        path: '/customers',
+        component: <div>Customers Component</div>,
+        viewAccess: 'CRM',
+    },
+];
+
+function renderRoute(route, index) {
+    if (route.childRoutes == null) {
+        return (
+            <Route
+                path={route.path}
+                key={index}
+                element={<RequireAuth viewAccess={route.viewAccess}>{route.component}</RequireAuth>}
+            ></Route>
+        );
+    } else {
+        const childRoutes = route.childRoutes.map((childRoute, index2) => (
+            <Route
+                path={childRoute.path}
+                key={index2}
+                element={<RequireAuth viewAccess={childRoute.viewAccess}>{childRoute.component}</RequireAuth>}
+            ></Route>
+        ));
+
+        return (
+            <Route
+                path={route.path}
+                key={index}
+                element={
+                    <RequireAuth viewAccess={route.viewAccess}>
+                        <Outlet />
+                    </RequireAuth>
+                }
+            >
+                {childRoutes}
+            </Route>
+        );
+    }
+}
 
 ReactDOM.render(
     <React.StrictMode>
@@ -17,10 +64,6 @@ ReactDOM.render(
                 <Layout style={{ minHeight: '100vh' }}>
                     <Routes>
                         <Route path='/login' element={<LoginPage />} />
-                        {/* <Route path='/admin/logs' element={<div />} />
-                        <Route path='/admin/accounts/:accountId' element={<div />} />
-                        <Route path='/admin/accounts/create' element={<NewAccountForm />} />
-                        <Route path='/admin/accounts/' element={<AccountTable />} /> */}
                         <Route
                             path='/'
                             element={
@@ -29,34 +72,11 @@ ReactDOM.render(
                                 </RequireAuth>
                             }
                         >
-                            <Route
-                                path='/customers'
-                                element={
-                                    <RequireAuth viewAccess='CRM'>
-                                        <div>Customers Component</div>
-                                    </RequireAuth>
-                                }
-                            />
-                            <Route
-                                path='/suppliers'
-                                element={
-                                    <RequireAuth viewAccess='SCM'>
-                                        <div>Suppliers Component</div>
-                                    </RequireAuth>
-                                }
-                            />
-                            <Route
-                                path='/human-resource/'
-                                element={
-                                    <RequireAuth viewAccess='HR'>
-                                        <div>Human resource Component</div>
-                                    </RequireAuth>
-                                }
-                            />
+                            {routes.map((route, index) => renderRoute(route, index))}
 
-                            <Route path='/admin/accounts/' element={<AdminAccountPage />} />
-
-                            {/* <Route path='/accounting/create/expense' element={<div />} />
+                            {/* <Route path='/suppliers' element={<RequireAuth viewAccess="SCM"><div>Suppliers Component</div></RequireAuth>} />
+              <Route path='/human-resource/' element={<RequireAuth viewAccess="HR"><div>Human resource Component</div></RequireAuth>} />
+              <Route path='/accounting/create/expense' element={<div />} />
               <Route path='/accounting/create/income' element={<div />} />
               <Route path='/accounting/pnl' element={<div />} />
               <Route path='/accounting' element={<div>Accounting</div>} />
