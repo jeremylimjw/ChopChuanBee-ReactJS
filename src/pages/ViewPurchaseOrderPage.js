@@ -51,12 +51,25 @@ export default function ViewPurchaseOrderPage() {
         .catch(() => setLoading(false));
     }
 
+    function convertToInvoice() {
+      setLoading(true);
+      PurchaseOrderApiHelper.update(purchaseOrder)
+        .then(() => {
+          message.success("Purchase Order successfully updated!");
+          setLoading(false);
+        })
+        .catch(handleHttpError)
+        .catch(() => setLoading(false));
+
+    }
+
     function cancelOrder() {
       setLoading(true);
-      PurchaseOrderApiHelper.cancelOrder(purchaseOrder)
+      const newPurchaseOrder = {...purchaseOrder, purchase_order_status_id: Status.CANCELLED.id };
+      PurchaseOrderApiHelper.updateStatusOnly(newPurchaseOrder)
         .then(() => {
           message.success("Purchase Order successfully cancelled!");
-          setPurchaseOrder({...purchaseOrder, purchase_order_status_id: Status.CANCELLED.id })
+          setPurchaseOrder(newPurchaseOrder)
           setLoading(false);
         })
         .catch(handleHttpError)
@@ -65,10 +78,11 @@ export default function ViewPurchaseOrderPage() {
 
     function closeOrder() {
       setLoading(true);
-      PurchaseOrderApiHelper.closeOrder(purchaseOrder)
+      const newPurchaseOrder = {...purchaseOrder, purchase_order_status_id: Status.CLOSED.id };
+      PurchaseOrderApiHelper.updateStatusOnly(newPurchaseOrder)
         .then(() => {
           message.success("Purchase Order successfully cancelled!");
-          setPurchaseOrder({...purchaseOrder, purchase_order_status_id: Status.CLOSED.id })
+          setPurchaseOrder(newPurchaseOrder)
           setLoading(false);
         })
         .catch(handleHttpError)
