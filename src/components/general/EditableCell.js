@@ -1,7 +1,7 @@
 import { Form, Input, InputNumber } from "antd";
 import { useEffect, useRef, useState } from "react";
 
-export default function EditableCell({ children, dataIndex, editable, inputType, record, handleSave, isToggleable, ...restProps }) {
+export default function EditableCell({ children, dataIndex, editable, inputType, record, handleSave, isToggleable, displayType, ...restProps }) {
     const [value, setValue] = useState();
     const [editing, setEditing] = useState(false);
     const inputRef = useRef(null);
@@ -33,6 +33,13 @@ export default function EditableCell({ children, dataIndex, editable, inputType,
     }
 
     let node = children;
+
+    // Workaround to display in currency field
+    if (displayType === 'currency' && children.length >= 2) {
+      const copy = [...children];
+      copy[1] = "$"+parseFloat(copy[1] || 0)?.toFixed(2);
+      node = copy;
+    }
   
     if (editable) {
       if (isToggleable) {

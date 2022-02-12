@@ -1,7 +1,7 @@
 export const Status = {
     PENDING: { id: 1, name: "Pending", color: "orange" },
-    ACCEPTED: { id: 2, name: "Accepted", color: "green" },
-    CLOSED: { id: 3, name: "Closed", color: "volcano" },
+    ACCEPTED: { id: 2, name: "Accepted", color: "yellow" },
+    CLOSED: { id: 3, name: "Closed", color: "green" },
     REJECTED: { id: 4, name: "Rejected", color: "red" },
     SENT: { id: 5, name: "Sent", color: "geekblue" },
     CANCELLED: { id: 6, name: "Cancelled", color: "red" },
@@ -64,7 +64,12 @@ export function sumItemSubtotals(purchaseOrder) {
 }
 
 export function getOrderTotal(purchaseOrder) {
-    const total = sumItemSubtotals(purchaseOrder) * (1+purchaseOrder.gst_rate/100) - purchaseOrder.offset;
+    // If GST inclusive, ignore gst_rate
+    if (purchaseOrder.has_gst === 2) {
+        const total = sumItemSubtotals(purchaseOrder) + +purchaseOrder.offset;
+        return Math.floor(total*100)/100; // Truncate trailing decimals
+    }
+    const total = sumItemSubtotals(purchaseOrder) * (1+purchaseOrder.gst_rate/100) + +purchaseOrder.offset;
     return Math.floor(total*100)/100; // Truncate trailing decimals
 }
 

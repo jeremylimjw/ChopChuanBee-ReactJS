@@ -6,7 +6,7 @@ import { PurchaseOrderApiHelper } from '../api/purchaseOrder';
 import MyCard from '../components/layout/MyCard';
 import MyLayout from '../components/layout/MyLayout'
 import MyToolbar from '../components/layout/MyToolbar';
-import { Status, isStatus } from '../components/purchaseModule/helpers';
+import { Status, isStatus, getOrderTotal } from '../components/purchaseModule/helpers';
 import OrderItemsTable from '../components/purchaseModule/viewPurchaseOrder/OrderItemsTable';
 import PurchaseOrderForm from '../components/purchaseModule/viewPurchaseOrder/PurchaseOrderForm';
 import SupplierInfo from '../components/purchaseModule/viewPurchaseOrder/SupplierInfo';
@@ -53,9 +53,30 @@ export default function ViewPurchaseOrderPage() {
 
     function convertToInvoice() {
       setLoading(true);
-      PurchaseOrderApiHelper.update(purchaseOrder)
+
+      const newPurchaseOrder = {...purchaseOrder, purchase_order_status_id: Status.ACCEPTED.id };
+
+      const total = getOrderTotal(newPurchaseOrder);
+
+      if (newPurchaseOrder.has_gst == 1) { // No GST
+        newPurchaseOrder.gst_rate = 0;
+      } else if (newPurchaseOrder.has_gst == 2) { // GST Inclusive
+        // Convert items to GST exclusive
+        newPurchaseOrder.has_gst = 3;
+        newPurchaseOrder.purchase_order_items = newPurchaseOrder.purchase_order_items.map(item => ({...item, unit_cost: (item.unit_cost/(1+newPurchaseOrder.gst_rate/100)) }))
+      }
+      
+      newPurchaseOrder.payments = [...purchaseOrder.payments]
+      if (newPurchaseOrder.payment_term_id === 1) { // Cash
+        newPurchaseOrder.payments.push({ amount: -total, movement_type_id: 1, payment_method_id: newPurchaseOrder.payment_method_id });
+      } else { // Credit
+        newPurchaseOrder.payments.push({ amount: total, movement_type_id: 1, accounting_type_id: 1 });
+      }
+
+      PurchaseOrderApiHelper.update(newPurchaseOrder)
         .then(() => {
           message.success("Purchase Order successfully updated!");
+          setPurchaseOrder(newPurchaseOrder)
           setLoading(false);
         })
         .catch(handleHttpError)
@@ -81,7 +102,7 @@ export default function ViewPurchaseOrderPage() {
       const newPurchaseOrder = {...purchaseOrder, purchase_order_status_id: Status.CLOSED.id };
       PurchaseOrderApiHelper.updateStatusOnly(newPurchaseOrder)
         .then(() => {
-          message.success("Purchase Order successfully cancelled!");
+          message.success("Purchase Order successfully closed!");
           setPurchaseOrder(newPurchaseOrder)
           setLoading(false);
         })
@@ -128,7 +149,7 @@ export default function ViewPurchaseOrderPage() {
                 </Popconfirm>
                 <Button icon={<SaveOutlined />} disabled={loading || !isStatus(purchaseOrder, Status.PENDING, Status.ACCEPTED)} onClick={saveForLater}>Save for later</Button>
                 { isStatus(purchaseOrder, Status.PENDING) && 
-                  <Button type="primary" icon={<FileTextOutlined />} disabled={loading}>Convert to Invoice</Button>
+                  <Button type="primary" icon={<FileTextOutlined />} disabled={loading} onClick={convertToInvoice}>Convert to Invoice</Button>
                 }
                 { isStatus(purchaseOrder, Status.ACCEPTED) && 
                   <Button type="primary" icon={<FileDoneOutlined />} disabled={loading} onClick={closeOrder}>Close Invoice</Button>
