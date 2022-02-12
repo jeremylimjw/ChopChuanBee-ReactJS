@@ -18,7 +18,11 @@ export default function NewPaymentModal({ purchaseOrder, setPurchaseOrder, isMod
 
     useEffect(() => {
         if (purchaseOrder != null) {
-            setForm({...form, amount: purchaseOrder.getOrderTotal() - purchaseOrder.getPaymentsTotal() })
+            const remaining_total = purchaseOrder.getOrderTotal() - purchaseOrder.getPaymentsTotal();
+            setForm({ 
+                amount: remaining_total > 0 ? remaining_total : 0, 
+                payment_method_id: 1 
+            })
         }
     }, [purchaseOrder])
 
@@ -51,16 +55,17 @@ export default function NewPaymentModal({ purchaseOrder, setPurchaseOrder, isMod
             .then(newPayment => {
                 const newPayments = [...purchaseOrder.payments];
                 newPayments.push(newPayment);
-                setPurchaseOrder(new PurchaseOrder({...purchaseOrder, payments: newPayments}));
                 setLoading(false);
+                setIsModalVisible(0);
                 
                 if (isModalVisible === 1) { // Make payment
                     message.success("Payment successfully registered!");
                 } else if (isModalVisible === 2) { // Make refund
                     message.success("Refund successfully registered!");
                 }
+                
+                setPurchaseOrder(new PurchaseOrder({...purchaseOrder, payments: newPayments}));
 
-                setIsModalVisible(0);
             })
             .catch(handleHttpError)
             .catch(() => setLoading(false));

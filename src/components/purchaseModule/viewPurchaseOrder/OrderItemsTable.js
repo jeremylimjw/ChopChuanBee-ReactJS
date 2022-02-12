@@ -52,7 +52,7 @@ export default function OrderItemsTable({ purchaseOrder, setPurchaseOrder, loadi
         <Table
             pagination={{ position: ['none', 'none'] }}
             columns={columns}
-            dataSource={purchaseOrder?.purchase_order_items}
+            dataSource={purchaseOrder.purchase_order_items}
             rowKey="id"
             components={{ body: { cell: EditableCell } }}
             summary={pageData => {

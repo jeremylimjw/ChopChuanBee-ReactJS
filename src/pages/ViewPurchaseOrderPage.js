@@ -23,6 +23,8 @@ export default function ViewPurchaseOrderPage() {
   
     const [loading, setLoading] = useState(false);
     const [purchaseOrder, setPurchaseOrder] = useState(null)
+    
+    const [isDeliveryModalVisible, setIsDeliveryModalVisible] = useState(0);
 
     const breadcrumbs = [
       { url: '/purchases/orders', name: 'Purchases' },
@@ -65,9 +67,19 @@ export default function ViewPurchaseOrderPage() {
           // Add new payment
           let payment;
           if (newPurchaseOrder.payment_term_id === 1) { // Cash
-            payment = { purchase_order_id: purchaseOrder.id, amount: -newPurchaseOrder.getOrderTotal(), payment_method_id: newPurchaseOrder.payment_method_id };
+            payment = { 
+              purchase_order_id: purchaseOrder.id, 
+              movement_type_id: 1,
+              amount: -newPurchaseOrder.getOrderTotal(), 
+              payment_method_id: newPurchaseOrder.payment_method_id,
+            };
           } else { // Credit
-            payment = { purchase_order_id: purchaseOrder.id, amount: newPurchaseOrder.getOrderTotal(), accounting_type_id: 1 };
+            payment = { 
+              purchase_order_id: purchaseOrder.id, 
+              movement_type_id: 1,
+              amount: newPurchaseOrder.getOrderTotal(), 
+              accounting_type_id: 1,
+            };
           }
           return PurchaseOrderApiHelper.createPayment(payment);
         })
@@ -76,7 +88,7 @@ export default function ViewPurchaseOrderPage() {
           newPurchaseOrder.payments.push(newPayment);
           setPurchaseOrder(new PurchaseOrder({...newPurchaseOrder}))
           setLoading(false);
-
+          setIsDeliveryModalVisible(1);
         })
         .catch(handleHttpError)
         .catch(() => setLoading(false));
@@ -134,7 +146,7 @@ export default function ViewPurchaseOrderPage() {
 
               <div style={{ marginTop: 25 }}>
                 <Typography.Title level={4} style={{ textAlign: 'center' }}>Deliveries</Typography.Title>
-                <Progress type="circle" percent={89} /> 
+                <Progress type="circle" percent={Math.round(purchaseOrder.getTotalReceivedQuantities()/purchaseOrder.getTotalQuantities()*100)} /> 
               </div>
             </Space>
           </MyCard>
@@ -158,12 +170,16 @@ export default function ViewPurchaseOrderPage() {
 
                 <Button icon={<SaveOutlined />} disabled={loading || !purchaseOrder.isStatus(purchaseOrder, POStatus.PENDING, POStatus.ACCEPTED)} onClick={saveForLater}>Save for later</Button>
                 
-                { purchaseOrder?.isStatus(POStatus.PENDING) && 
-                  <Button type="primary" icon={<FileTextOutlined />} disabled={loading} onClick={convertToInvoice}>Convert to Invoice</Button>
+                { purchaseOrder.isStatus(POStatus.PENDING) && 
+                  <Popconfirm title="Are you sure?" onConfirm={convertToInvoice} disabled={loading}>
+                    <Button type="primary" icon={<FileTextOutlined />} disabled={loading}>Convert to Invoice</Button>
+                  </Popconfirm>
                 }
                 
-                { purchaseOrder?.isStatus(POStatus.ACCEPTED) && 
-                  <Button type="primary" icon={<FileDoneOutlined />} disabled={loading} onClick={closeOrder}>Close Invoice</Button>
+                { purchaseOrder.isStatus(POStatus.ACCEPTED) && 
+                  <Popconfirm title="Are you sure?" onConfirm={closeOrder} disabled={loading}>
+                    <Button type="primary" icon={<FileDoneOutlined />} disabled={loading}>Close Invoice</Button>
+                  </Popconfirm>
                 }
               </Space>
             </div>
@@ -176,7 +192,7 @@ export default function ViewPurchaseOrderPage() {
         <div style={{ display: 'flex'}}>
 
           <PaymentsTable purchaseOrder={purchaseOrder} setPurchaseOrder={setPurchaseOrder} loading={loading} />
-          <DeliveriesTable purchaseOrder={purchaseOrder} setPurchaseOrder={setPurchaseOrder} loading={loading} />
+          <DeliveriesTable purchaseOrder={purchaseOrder} setPurchaseOrder={setPurchaseOrder} loading={loading} isModalVisible={isDeliveryModalVisible} setIsModalVisible={setIsDeliveryModalVisible} />
 
         </div>
         }

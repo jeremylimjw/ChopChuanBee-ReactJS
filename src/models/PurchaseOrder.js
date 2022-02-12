@@ -80,14 +80,13 @@ export class PurchaseOrder {
     }
 
     getTotalQuantities() {
-        // function sumInventoryMovements(purchaseOrder) {
-        //     const data = { quantities_received: 0, quantities_total: 0 };
-        //     purchaseOrder.purchase_order_items.forEach(x => {
-        //         data.quantities_total += x.quantity;
-        //         x.inventory_movements.forEach(y => data.quantities_received += y.quantity);
-        //     })
-        //     return data;
-        // }
+        return this.purchase_order_items.reduce((prev, current) => prev + current.quantity, 0)
+    }
+
+    getTotalReceivedQuantities() {
+        return this.purchase_order_items.reduce((prev, current) => {
+            return prev + current.inventory_movements.reduce((prev2, current2) => prev2 + current2.quantity, 0);
+        }, 0)
     }
 
     convertToInvoice() {

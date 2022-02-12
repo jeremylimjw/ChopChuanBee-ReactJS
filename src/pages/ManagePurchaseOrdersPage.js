@@ -58,7 +58,7 @@ const tableColumns = [
         <Progress type="circle" percent={Math.round(record.getPaymentsTotal()/record.getOrderTotal()*100)} width={40} /> 
     },
     { title: 'Delivery', dataIndex: '', key: 'delivery', align: 'center', render: (_, record) => {
-        return <Progress type="circle" percent={record.quantities_received/record.quantities_total*100} width={40} />
+        return <Progress type="circle" percent={Math.round(record.getTotalReceivedQuantities()/record.getTotalQuantities()*100)} width={40} />
     } },
     { title: 'Status', key: 'purchase_order_status_id', align: 'center', render: (_, record) => record.getStatusTag() },
     { dataIndex: "id", title: "", key: "link", render: (id) => <Link to={`./${id}`}>View</Link> }
