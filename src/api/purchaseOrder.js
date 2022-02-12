@@ -1,4 +1,3 @@
-import { Status } from "../components/purchaseModule/helpers";
 import { axiosObject } from "./axiosWrapper";
 
 export class PurchaseOrderApiHelper {
@@ -23,7 +22,24 @@ export class PurchaseOrderApiHelper {
     }
     
     static async updateStatusOnly(purchaseOrder) {
-        return axiosObject.put(`/purchaseOrder`, { id: purchaseOrder.id, purchase_order_status_id: purchaseOrder.purchase_order_status_id })
+        return axiosObject.put(`/purchaseOrder`, { 
+            id: purchaseOrder.id, 
+            purchase_order_status_id: purchaseOrder.purchase_order_status_id 
+        })
+        .then(res => res.data);
+    }
+    
+    static async closeOrder(purchaseOrder) {
+        return axiosObject.put(`/purchaseOrder`, { 
+            id: purchaseOrder.id, 
+            purchase_order_status_id: purchaseOrder.purchase_order_status_id, 
+            closed_on: purchaseOrder.closed_on
+        })
+        .then(res => res.data);
+    }
+
+    static async createPayment(payment) {
+        return axiosObject.post(`/purchaseOrder/payment`, payment)
             .then(res => res.data);
     }
 }

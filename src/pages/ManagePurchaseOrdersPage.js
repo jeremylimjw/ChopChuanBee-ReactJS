@@ -1,5 +1,5 @@
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons/lib/icons';
-import { Button, Input, Progress, Table, Tag } from 'antd';
+import { Button, Input, Progress, Table } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
@@ -7,7 +7,7 @@ import { PurchaseOrderApiHelper } from '../api/purchaseOrder';
 import MyCard from '../components/layout/MyCard';
 import MyLayout from '../components/layout/MyLayout';
 import MyToolbar from '../components/layout/MyToolbar';
-import { getPaymentTerm, getStatus, transformPurchaseOrder } from '../components/purchaseModule/helpers';
+import { PurchaseOrder } from '../models/PurchaseOrder';
 import { useApp } from '../providers/AppProvider';
 
 const breadcrumbs = [
@@ -26,7 +26,7 @@ export default function ManagePurchaseOrdersPage() {
         setLoading(true);
         PurchaseOrderApiHelper.getAll()
             .then(results => {
-                setPurchaseOrders(transformPurchaseOrder(results));
+                setPurchaseOrders(results.map(x => new PurchaseOrder(x)));
                 setLoading(false);
             })
             .catch(handleHttpError)
@@ -52,23 +52,14 @@ const tableColumns = [
     { title: 'Date', dataIndex: 'created_at', key: 'created_at' },
     { title: 'Order ID', dataIndex: 'id', key: 'id' },
     { title: 'Supplier', dataIndex: 'supplier', key: 'supplier', render: (supplier) => supplier.company_name },
-    { title: 'Payment Term', dataIndex: 'payment_term_id', key: 'payment_term_id', align: 'center', render: (payment_term_id) => 
-        payment_term_id ? <Tag color={getPaymentTerm(payment_term_id)?.color}>{getPaymentTerm(payment_term_id)?.name}</Tag> : '-'
-    },
-    { title: 'Total Amount', dataIndex: 'total', key: 'total', align: 'center', render: (total) => 
-        `$${total.toFixed(2)}` 
-    },
-    { title: 'Paid', dataIndex: 'payments_total', key: 'payments_total', align: 'center', render: (payments_total, record) => 
-        <Progress type="circle" percent={payments_total/record.total*100} width={40} /> 
+    { title: 'Payment Term', key: 'payment_term', align: 'center', render: (_, record) => record.getPaymentTermTag() },
+    { title: 'Total Amount', key: 'total', align: 'center', render: (_, record) => `$${record.getOrderTotal().toFixed(2)}` },
+    { title: 'Paid', key: 'payments_total', align: 'center', render: (_, record) => 
+        <Progress type="circle" percent={record.getPaymentsTotal()/record.getOrderTotal()*100} width={40} /> 
     },
     { title: 'Delivery', dataIndex: '', key: 'delivery', align: 'center', render: (_, record) => {
         return <Progress type="circle" percent={record.quantities_received/record.quantities_total*100} width={40} />
     } },
-    { title: 'Status', dataIndex: 'purchase_order_status_id', key: 'purchase_order_status_id', align: 'center', render: (purchase_order_status_id) => 
-        <Tag color={getStatus(purchase_order_status_id)?.color}>{getStatus(purchase_order_status_id)?.name}</Tag> 
-    },
-    { dataIndex: "id", title: "", key: "link", render: (id) => {
-        return (<Link to={`./${id}`}>View</Link>);
-      }
-    }
+    { title: 'Status', key: 'purchase_order_status_id', align: 'center', render: (_, record) => record.getStatusTag() },
+    { dataIndex: "id", title: "", key: "link", render: (id) => <Link to={`./${id}`}>View</Link> }
 ]
