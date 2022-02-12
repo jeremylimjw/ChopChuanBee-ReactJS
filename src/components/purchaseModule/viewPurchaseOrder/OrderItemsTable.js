@@ -84,9 +84,10 @@ export default function OrderItemsTable({ purchaseOrder, setPurchaseOrder, loadi
                       { purchaseOrder.isStatus(POStatus.PENDING) 
                         ?
                         <InputNumber value={purchaseOrder.offset} style={{ width: 80 }} prefix="$"
-                          onChange={(value) => setPurchaseOrder(new PurchaseOrder({...purchaseOrder, offset: value }))} />
+                          onChange={(value) => setPurchaseOrder(new PurchaseOrder({...purchaseOrder, offset: value }))} 
+                        />
                         :
-                        <Typography.Text strong>${purchaseOrder.offset || 0}</Typography.Text>
+                        <Typography.Text strong>${(+purchaseOrder.offset).toFixed(2) || 0}</Typography.Text>
                       }
                     </Table.Summary.Cell>
                   </Table.Summary.Row>

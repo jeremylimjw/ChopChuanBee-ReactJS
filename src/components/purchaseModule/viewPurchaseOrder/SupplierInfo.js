@@ -1,18 +1,21 @@
-import { Space, Typography } from 'antd'
+import { Descriptions, Space, Typography } from 'antd'
 import React from 'react'
 
 export default function SupplierInfo({ purchaseOrder }) {
   return (
     <>
-        <Typography.Title level={4}>{purchaseOrder?.supplier.company_name}</Typography.Title>
-        
-        <Space direction='vertical' style={{ marginTop: 10 }}>
-            <Typography.Text>Name: {purchaseOrder?.supplier.s1_name}</Typography.Text>
-            <Typography.Text>Contact: {purchaseOrder?.supplier.s1_phone_number}</Typography.Text>
-            <Typography.Text style={{ width: 340 }} ellipsis>Address: {purchaseOrder?.supplier.address}</Typography.Text>
-            <Typography.Text>Postal Code: {purchaseOrder?.supplier.postal_code}</Typography.Text>
-            <Typography.Text>Email: {purchaseOrder?.supplier.email || 'None'}</Typography.Text>
-        </Space>
+      {purchaseOrder != null &&
+      <>
+        <Descriptions bordered size="small" layout='horizontal' column={1}>
+          <Descriptions.Item label="Company">{purchaseOrder.supplier.company_name}</Descriptions.Item>
+          <Descriptions.Item label="Name">{purchaseOrder.supplier.s1_name}</Descriptions.Item>
+          <Descriptions.Item label="Contact">{purchaseOrder.supplier.s1_phone_number}</Descriptions.Item>
+          <Descriptions.Item label="Address">{purchaseOrder.supplier.address}</Descriptions.Item>
+          <Descriptions.Item label="Postal Code">{purchaseOrder.supplier.postal_code}</Descriptions.Item>
+          <Descriptions.Item label="Email">{purchaseOrder.supplier.email || '-'}</Descriptions.Item>
+        </Descriptions>
+      </>
+      }
     </>
   )
 }
