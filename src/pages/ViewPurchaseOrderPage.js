@@ -1,4 +1,4 @@
-import { FileDoneOutlined, FileExcelOutlined, FileTextOutlined, PlusOutlined, SaveOutlined, SendOutlined, StopOutlined } from '@ant-design/icons/lib/icons';
+import { FileDoneOutlined, FileTextOutlined, PlusOutlined, SaveOutlined, SendOutlined, StopOutlined } from '@ant-design/icons/lib/icons';
 import { Button, message, Popconfirm, Space } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router';
@@ -38,7 +38,7 @@ export default function ViewPurchaseOrderPage() {
           setPurchaseOrder(result[0]);
         })
         .catch(handleHttpError)
-    }, []);
+    }, [id, handleHttpError, navigate]);
 
     function saveForLater() {
       setLoading(true);
@@ -58,9 +58,9 @@ export default function ViewPurchaseOrderPage() {
 
       const total = getOrderTotal(newPurchaseOrder);
 
-      if (newPurchaseOrder.has_gst == 1) { // No GST
+      if (newPurchaseOrder.has_gst === 1) { // No GST
         newPurchaseOrder.gst_rate = 0;
-      } else if (newPurchaseOrder.has_gst == 2) { // GST Inclusive
+      } else if (newPurchaseOrder.has_gst === 2) { // GST Inclusive
         // Convert items to GST exclusive
         newPurchaseOrder.has_gst = 3;
         newPurchaseOrder.purchase_order_items = newPurchaseOrder.purchase_order_items.map(item => ({...item, unit_cost: (item.unit_cost/(1+newPurchaseOrder.gst_rate/100)) }))
@@ -128,14 +128,8 @@ export default function ViewPurchaseOrderPage() {
         </div>
 
         <MyCard style={{ marginTop: 12 }} title={!isStatus(purchaseOrder, Status.PENDING, Status.SENT) ? 'Order Items': null}>
-          
-          { isStatus(purchaseOrder, Status.PENDING, Status.SENT) && 
-            <MyToolbar title="Order Items">
-                <Button icon={<PlusOutlined />} disabled={loading}>Add Item</Button>
-            </MyToolbar>
-          }
 
-          <OrderItemsTable purchaseOrder={purchaseOrder} setPurchaseOrder={setPurchaseOrder} />
+          <OrderItemsTable purchaseOrder={purchaseOrder} setPurchaseOrder={setPurchaseOrder} loading={loading} />
 
           <div style={{ display: 'flex', marginTop: 30 }}>
 
@@ -160,6 +154,26 @@ export default function ViewPurchaseOrderPage() {
           </div>
 
         </MyCard>
+
+        { !isStatus(purchaseOrder, Status.PENDING) && 
+        <div style={{ display: 'flex'}}>
+          
+          <MyCard style={{ flexGrow: 1, margin: '0 12px 24px 24px' }} title={ !isStatus(purchaseOrder, Status.ACCEPTED) ? "Past Payment History" : "" }>
+
+            { isStatus(purchaseOrder, Status.ACCEPTED) && 
+              <MyToolbar title="Payments">
+                  <Button icon={<PlusOutlined />} disabled={loading}>Add Item</Button>
+              </MyToolbar>
+            }
+
+          </MyCard>
+
+          <MyCard style={{ flexGrow: 1, margin: '0 24px 24px 12px' }} title="Past Deliveries">
+              Bill is a cat.
+          </MyCard>
+
+        </div>
+        }
 
       </MyLayout>
     )

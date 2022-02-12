@@ -9,11 +9,11 @@ export default function EditableCell({ children, dataIndex, editable, inputType,
     useEffect(() => {
       if (record)
         setValue(record[dataIndex])
-    }, [record])
+    }, [record, dataIndex])
     
     useEffect(() => {
       if (isToggleable && editing) inputRef.current.focus();
-    }, [editing]);
+    }, [editing, isToggleable]);
 
     function toggleEdit() {
         setEditing(!editing);
