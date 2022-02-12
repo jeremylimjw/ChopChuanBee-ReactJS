@@ -55,7 +55,7 @@ const tableColumns = [
     { title: 'Payment Term', key: 'payment_term', align: 'center', render: (_, record) => record.getPaymentTermTag() },
     { title: 'Total Amount', key: 'total', align: 'center', render: (_, record) => `$${record.getOrderTotal().toFixed(2)}` },
     { title: 'Paid', key: 'payments_total', align: 'center', render: (_, record) => 
-        <Progress type="circle" percent={record.getPaymentsTotal()/record.getOrderTotal()*100} width={40} /> 
+        <Progress type="circle" percent={Math.round(record.getPaymentsTotal()/record.getOrderTotal()*100)} width={40} /> 
     },
     { title: 'Delivery', dataIndex: '', key: 'delivery', align: 'center', render: (_, record) => {
         return <Progress type="circle" percent={record.quantities_received/record.quantities_total*100} width={40} />

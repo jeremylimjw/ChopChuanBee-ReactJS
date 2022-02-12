@@ -1,12 +1,16 @@
 import { PlusOutlined, UndoOutlined } from '@ant-design/icons/lib/icons'
 import { Button, Table, Typography } from 'antd'
-import React from 'react'
+import React, { useState } from 'react'
 import { POStatus } from '../../../enums/PurchaseOrderStatus'
 import MyCard from '../../layout/MyCard'
 import MyToolbar from '../../layout/MyToolbar'
 import { getPaymentMethodTag } from '../../../enums/PaymentMethod'
+import NewPaymentModal from './NewPaymentModal'
 
 export default function PaymentsTable({ purchaseOrder, setPurchaseOrder, loading }) {
+    
+    const [isModalVisible, setIsModalVisible] = useState(0);
+
     return (
         <>
         { purchaseOrder != null && 
@@ -14,8 +18,8 @@ export default function PaymentsTable({ purchaseOrder, setPurchaseOrder, loading
         
             { purchaseOrder.isStatus(POStatus.ACCEPTED) && 
                 <MyToolbar title="Payments">
-                    <Button icon={<UndoOutlined />} disabled={loading}>Refund</Button>
-                    <Button type="primary" icon={<PlusOutlined />} disabled={loading}>Add Payment</Button>
+                    <Button icon={<UndoOutlined />} disabled={loading} onClick={() => setIsModalVisible(2)}>Refund</Button>
+                    <Button type="primary" icon={<PlusOutlined />} disabled={loading} onClick={() => setIsModalVisible(1)}>Add Payment</Button>
                 </MyToolbar>
             }
         
@@ -39,12 +43,13 @@ export default function PaymentsTable({ purchaseOrder, setPurchaseOrder, loading
         
             </MyCard>
         }
+        <NewPaymentModal purchaseOrder={purchaseOrder} setPurchaseOrder={setPurchaseOrder} isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} />
         </>
     )
 }
   
 const columns = [
-  { title: 'No', dataIndex: '', align: 'center', render: (_, record, index) => index+1 },
+  { title: 'No', dataIndex: '', render: (_, record, index) => index+1 },
   { title: 'Date', dataIndex: 'created_at', align: 'center' },
   { title: 'Payment Method', dataIndex: 'payment_method_id', align: 'center', render: (payment_method_id) => getPaymentMethodTag(payment_method_id) },
   { title: 'Amount', dataIndex: 'amount', align: 'center', render: (amount) => `$${(+amount).toFixed(2)}` },

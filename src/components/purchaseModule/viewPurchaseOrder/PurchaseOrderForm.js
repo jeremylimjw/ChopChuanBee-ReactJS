@@ -8,14 +8,14 @@ export default function PurchaseOrderForm({ purchaseOrder, setPurchaseOrder }) {
     return (
         <>
             { purchaseOrder != null &&
-            <Form layout='horizontal' labelCol={{ span: 6 }} wrapperCol={{ span: 16 }}>
+            <Form layout='horizontal' labelCol={{ span: 5 }} wrapperCol={{ span: 16 }}>
 
-                <Form.Item label="Order Status">
+                <Form.Item label="Order Status" width={3000}>
                     {purchaseOrder.getStatusTag()}
                 </Form.Item>
 
 
-                <Form.Item label="Supplier Invoice ID">
+                <Form.Item label="Invoice ID">
                     <Input 
                         value={purchaseOrder.supplier_invoice_id}
                         onChange={(e) => setPurchaseOrder(new PurchaseOrder({...purchaseOrder, supplier_invoice_id: e.target.value }))}

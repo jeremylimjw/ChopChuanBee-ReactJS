@@ -17,8 +17,17 @@ export class PurchaseOrderApiHelper {
     }
     
     static async update(purchaseOrder) {
-        return axiosObject.put(`/purchaseOrder`, purchaseOrder)
-            .then(res => res.data);
+        return axiosObject.put(`/purchaseOrder`, {
+            id: purchaseOrder.id,
+            gst_rate: purchaseOrder.gst_rate,
+            offset: purchaseOrder.offset,
+            supplier_invoice_id: purchaseOrder.supplier_invoice_id,
+            remarks: purchaseOrder.remarks,
+            payment_term_id: purchaseOrder.payment_term_id,
+            purchase_order_items: purchaseOrder.purchase_order_items,
+            purchase_order_status_id: purchaseOrder.purchase_order_status_id, 
+        })
+        .then(res => res.data);
     }
     
     static async updateStatusOnly(purchaseOrder) {

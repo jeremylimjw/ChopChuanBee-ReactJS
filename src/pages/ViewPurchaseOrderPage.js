@@ -1,5 +1,5 @@
 import { FileDoneOutlined, FileTextOutlined, SaveOutlined, SendOutlined, StopOutlined } from '@ant-design/icons/lib/icons';
-import { Button, message, Popconfirm, Space } from 'antd';
+import { Button, message, Popconfirm, Progress, Space, Typography } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router';
 import { PurchaseOrderApiHelper } from '../api/purchaseOrder';
@@ -111,35 +111,50 @@ export default function ViewPurchaseOrderPage() {
 
 
     return (
-      <MyLayout breadcrumbs={breadcrumbs} bannerTitle={`Purchase Order ID ${purchaseOrder?.idToString()}`}>
-
+      <>
+      { purchaseOrder != null &&
+      <MyLayout breadcrumbs={breadcrumbs} bannerTitle={`Purchase Order ID ${purchaseOrder.idToString()}`}>
         <div style={{ display: 'flex', marginTop: 24 }}>
           
-          <MyCard title="Supplier Details" style={{ width: 400, margin: '0 12px 12px 24px' }}>
+          <MyCard title="Supplier Details" style={{ width: 350, margin: '0 12px 12px 24px' }}>
             <SupplierInfo purchaseOrder={purchaseOrder} />
           </MyCard>
 
-          <MyCard title="Order Details" style={{ width: 600, margin: '0 12px 12px 24px' }}>
+          <MyCard title="Order Details" style={{ flexGrow: 1, margin: '0 12px 12px 24px' }}>
             <PurchaseOrderForm purchaseOrder={purchaseOrder} setPurchaseOrder={setPurchaseOrder} />
+          </MyCard>
+
+          <MyCard style={{ width: 250, margin: '0 24px 12px 24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Space direction='vertical'>
+              <div>
+                <Typography.Title level={4} style={{ textAlign: 'center' }}>Payments</Typography.Title>
+                <Progress type="circle" percent={Math.round(purchaseOrder.getPaymentsTotal()/purchaseOrder.getOrderTotal()*100)} /> 
+              </div>
+
+              <div style={{ marginTop: 25 }}>
+                <Typography.Title level={4} style={{ textAlign: 'center' }}>Deliveries</Typography.Title>
+                <Progress type="circle" percent={89} /> 
+              </div>
+            </Space>
           </MyCard>
 
         </div>
 
-        <MyCard style={{ marginTop: 12 }} title={purchaseOrder?.isStatus(POStatus.PENDING, POStatus.SENT) ? 'Order Items': null}>
+        <MyCard style={{ marginTop: 12 }} title={purchaseOrder.isStatus(POStatus.PENDING, POStatus.SENT) ? 'Order Items': null}>
 
           <OrderItemsTable purchaseOrder={purchaseOrder} setPurchaseOrder={setPurchaseOrder} loading={loading} />
 
           <div style={{ display: 'flex', marginTop: 30 }}>
 
-            <Button icon={<SendOutlined />} disabled={loading || !purchaseOrder?.isStatus(POStatus.PENDING)}>Send Order</Button>
+            <Button icon={<SendOutlined />} disabled={loading || !purchaseOrder.isStatus(POStatus.PENDING)}>Send Order</Button>
 
             <div style={{ marginLeft: 'auto' }}>
               <Space size="middle">
                 
-                <Popconfirm title="Are you sure? This action cannot be undone." onConfirm={cancelOrder} disabled={loading || !purchaseOrder?.isStatus(POStatus.PENDING, POStatus.ACCEPTED)}>
-                  <Button icon={<StopOutlined />} disabled={loading || !purchaseOrder?.isStatus(POStatus.PENDING, POStatus.ACCEPTED)}>Cancel Order</Button>
+                <Popconfirm title="Are you sure? This action cannot be undone." onConfirm={cancelOrder} disabled={loading || !purchaseOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED)}>
+                  <Button icon={<StopOutlined />} disabled={loading || !purchaseOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED)}>Cancel Order</Button>
                 </Popconfirm>
-                <Button icon={<SaveOutlined />} disabled={loading || !purchaseOrder?.isStatus(purchaseOrder, POStatus.PENDING, POStatus.ACCEPTED)} onClick={saveForLater}>Save for later</Button>
+                <Button icon={<SaveOutlined />} disabled={loading || !purchaseOrder.isStatus(purchaseOrder, POStatus.PENDING, POStatus.ACCEPTED)} onClick={saveForLater}>Save for later</Button>
                 { purchaseOrder?.isStatus(POStatus.PENDING) && 
                   <Button type="primary" icon={<FileTextOutlined />} disabled={loading} onClick={convertToInvoice}>Convert to Invoice</Button>
                 }
@@ -153,7 +168,7 @@ export default function ViewPurchaseOrderPage() {
 
         </MyCard>
 
-        { !purchaseOrder?.isStatus(POStatus.PENDING) && 
+        { !purchaseOrder.isStatus(POStatus.PENDING) && 
         <div style={{ display: 'flex'}}>
 
           <PaymentsTable purchaseOrder={purchaseOrder} setPurchaseOrder={setPurchaseOrder} loading={loading} />
@@ -166,5 +181,7 @@ export default function ViewPurchaseOrderPage() {
         }
 
       </MyLayout>
+      }
+      </>
     )
 }
