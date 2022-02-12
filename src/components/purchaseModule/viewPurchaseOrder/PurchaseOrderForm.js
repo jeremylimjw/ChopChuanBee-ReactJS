@@ -1,10 +1,11 @@
-import { Form, Input, InputNumber, Radio, Select } from 'antd'
+import { SaveOutlined } from '@ant-design/icons/lib/icons'
+import { Button, Form, Input, InputNumber, Radio, Select } from 'antd'
 import TextArea from 'antd/lib/input/TextArea'
 import React from 'react'
 import { POStatus } from '../../../enums/PurchaseOrderStatus'
 import { PurchaseOrder } from '../../../models/PurchaseOrder'
 
-export default function PurchaseOrderForm({ purchaseOrder, setPurchaseOrder }) {
+export default function PurchaseOrderForm({ purchaseOrder, setPurchaseOrder, loading, saveForLater }) {
     return (
         <>
             { purchaseOrder != null &&
@@ -79,6 +80,11 @@ export default function PurchaseOrderForm({ purchaseOrder, setPurchaseOrder }) {
                         disabled={!purchaseOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED)} 
                     />
                 </Form.Item>
+
+                <Form.Item wrapperCol={{  offset: 5 }}>
+                    <Button icon={<SaveOutlined />} disabled={loading || !purchaseOrder.isStatus(purchaseOrder, POStatus.PENDING, POStatus.ACCEPTED)} onClick={saveForLater}>Save for later</Button>
+                </Form.Item>
+                
 
             </Form>
             }

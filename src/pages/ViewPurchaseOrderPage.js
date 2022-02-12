@@ -5,6 +5,7 @@ import { useNavigate, useParams } from 'react-router';
 import { PurchaseOrderApiHelper } from '../api/purchaseOrder';
 import MyCard from '../components/layout/MyCard';
 import MyLayout from '../components/layout/MyLayout'
+import DeliveriesTable from '../components/purchaseModule/viewPurchaseOrder/DeliveriesTable';
 import OrderItemsTable from '../components/purchaseModule/viewPurchaseOrder/OrderItemsTable';
 import PaymentsTable from '../components/purchaseModule/viewPurchaseOrder/PaymentsTable';
 import PurchaseOrderForm from '../components/purchaseModule/viewPurchaseOrder/PurchaseOrderForm';
@@ -121,7 +122,7 @@ export default function ViewPurchaseOrderPage() {
           </MyCard>
 
           <MyCard title="Order Details" style={{ flexGrow: 1, margin: '0 12px 12px 24px' }}>
-            <PurchaseOrderForm purchaseOrder={purchaseOrder} setPurchaseOrder={setPurchaseOrder} />
+            <PurchaseOrderForm purchaseOrder={purchaseOrder} setPurchaseOrder={setPurchaseOrder} loading={loading} saveForLater={saveForLater} />
           </MyCard>
 
           <MyCard style={{ width: 250, margin: '0 24px 12px 24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -140,7 +141,7 @@ export default function ViewPurchaseOrderPage() {
 
         </div>
 
-        <MyCard style={{ marginTop: 12 }} title={purchaseOrder.isStatus(POStatus.PENDING, POStatus.SENT) ? 'Order Items': null}>
+        <MyCard style={{ marginTop: 12 }} title={!purchaseOrder.isStatus(POStatus.PENDING, POStatus.SENT) ? 'Order Items': null}>
 
           <OrderItemsTable purchaseOrder={purchaseOrder} setPurchaseOrder={setPurchaseOrder} loading={loading} />
 
@@ -154,10 +155,13 @@ export default function ViewPurchaseOrderPage() {
                 <Popconfirm title="Are you sure? This action cannot be undone." onConfirm={cancelOrder} disabled={loading || !purchaseOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED)}>
                   <Button icon={<StopOutlined />} disabled={loading || !purchaseOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED)}>Cancel Order</Button>
                 </Popconfirm>
+
                 <Button icon={<SaveOutlined />} disabled={loading || !purchaseOrder.isStatus(purchaseOrder, POStatus.PENDING, POStatus.ACCEPTED)} onClick={saveForLater}>Save for later</Button>
+                
                 { purchaseOrder?.isStatus(POStatus.PENDING) && 
                   <Button type="primary" icon={<FileTextOutlined />} disabled={loading} onClick={convertToInvoice}>Convert to Invoice</Button>
                 }
+                
                 { purchaseOrder?.isStatus(POStatus.ACCEPTED) && 
                   <Button type="primary" icon={<FileDoneOutlined />} disabled={loading} onClick={closeOrder}>Close Invoice</Button>
                 }
@@ -172,10 +176,7 @@ export default function ViewPurchaseOrderPage() {
         <div style={{ display: 'flex'}}>
 
           <PaymentsTable purchaseOrder={purchaseOrder} setPurchaseOrder={setPurchaseOrder} loading={loading} />
-
-          <MyCard style={{ flexGrow: 1, margin: '0 24px 24px 12px' }} title="Past Deliveries">
-            Bill is a cat.
-          </MyCard>
+          <DeliveriesTable purchaseOrder={purchaseOrder} setPurchaseOrder={setPurchaseOrder} loading={loading} />
 
         </div>
         }
