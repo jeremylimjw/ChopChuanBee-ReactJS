@@ -1,4 +1,4 @@
-import { Descriptions, Space, Typography } from 'antd'
+import { Descriptions } from 'antd'
 import React from 'react'
 
 export default function SupplierInfo({ purchaseOrder }) {

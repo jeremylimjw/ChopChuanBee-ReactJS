@@ -1,4 +1,4 @@
-import { Input, message, Table } from 'antd'
+import { Input, message, Table, Button } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { useApp } from '../../providers/AppProvider';
 import MyToolbar from '../layout/MyToolbar'
@@ -6,6 +6,10 @@ import { ProductApiHelper } from '../../api/product'
 import { SearchOutlined } from '@ant-design/icons/lib/icons';
 import Modal from 'antd/lib/modal/Modal';
 import { SupplierApiHelper } from '../../api/supplier';
+
+const initialSearchForm = {
+  name: '',
+};
 
 export default function NewSupplierMenuModal({ supplier, addToTable, isModalVisible, setIsModalVisible, disabledProductsMap }) {
 
@@ -15,9 +19,7 @@ export default function NewSupplierMenuModal({ supplier, addToTable, isModalVisi
     const [dataSource, setDataSource] = useState([]);
     const [selectedProducts, setSelectedProducts] = useState([]);
 
-    const [searchForm, setSearchForm] = useState({
-      name: '',
-    });
+    const [searchForm, setSearchForm] = useState({...initialSearchForm});
   
     useEffect(() => {
       if (isModalVisible === true) {
@@ -53,7 +55,8 @@ export default function NewSupplierMenuModal({ supplier, addToTable, isModalVisi
     return (
       <Modal title="Add to Supplier Menu" visible={isModalVisible} onOk={handleOk} onCancel={() => setIsModalVisible(false)} width={800}>
         <MyToolbar title="Products">
-            <Input placeholder="Search Name" addonAfter={<SearchOutlined />} value={searchForm.name} onChange={(e) => setSearchForm({...searchForm, name: e.target.value })} />
+          <Input placeholder="Search Name" addonAfter={<SearchOutlined />} value={searchForm.name} onChange={(e) => setSearchForm({...searchForm, name: e.target.value })} />
+          <Button onClick={() => setSearchForm({...initialSearchForm})}>Reset</Button>
         </MyToolbar>
             
         <Table loading={loading}

@@ -1,9 +1,14 @@
 import { SearchOutlined } from '@ant-design/icons/lib/icons';
-import { Button, Form, Input, Table } from 'antd';
+import { Button, Input, Table } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { SupplierApiHelper } from '../../../api/supplier';
 import { useApp } from '../../../providers/AppProvider';
 import MyToolbar from '../../layout/MyToolbar';
+
+const initialSearchForm = {
+  company_name: '',
+  name: '',
+}
 
 export default function SupplierTable({ selectedSupplier, setSelectedSupplier }) {
 
@@ -11,6 +16,21 @@ export default function SupplierTable({ selectedSupplier, setSelectedSupplier })
   
     const [loading, setLoading] = useState(false);
     const [dataSource, setDataSource] = useState([]);
+
+    const [searchForm, setSearchForm] = useState({...initialSearchForm});
+
+    useEffect(() => {
+      setLoading(true);
+          
+      SupplierApiHelper.search(searchForm.company_name, searchForm.name)
+        .then(results => {
+          setDataSource(results);
+          setLoading(false);
+        })
+        .catch(handleHttpError)
+        .catch(() => setLoading(false));
+
+    }, [handleHttpError, searchForm, setSelectedSupplier]);
   
     useEffect(() => {
       setSelectedSupplier([]);
@@ -24,14 +44,14 @@ export default function SupplierTable({ selectedSupplier, setSelectedSupplier })
         .catch(handleHttpError)
         .catch(() => setLoading(false))
   
-    }, [handleHttpError])
+    }, [handleHttpError, setSelectedSupplier])
 
     return (
         <>
             <MyToolbar title="All Suppliers">
-              <Input placeholder="Search Company Name" addonAfter={<SearchOutlined />} />
-              <Input placeholder="Search Name" addonAfter={<SearchOutlined />} />
-              <Button>Reset</Button>
+              <Input placeholder="Search Company Name" addonAfter={<SearchOutlined />} value={searchForm.company_name} onChange={(e) => setSearchForm({...searchForm, company_name: e.target.value })} />
+              <Input placeholder="Search Name" addonAfter={<SearchOutlined />} value={searchForm.name} onChange={(e) => setSearchForm({...searchForm, name: e.target.value })} />
+              <Button onClick={() => setSearchForm({...initialSearchForm})}>Reset</Button>
             </MyToolbar>
 
             <Table loading={loading}

@@ -14,6 +14,9 @@ const breadcrumbs = [
   { url: '/purchases/orders', name: 'Purchases' },
   { url: '/purchases/orders', name: 'Orders' },
 ]
+const initialSearchForm = {
+  id: '',
+};
 
 export default function ManagePurchaseOrdersPage() {
 
@@ -22,9 +25,7 @@ export default function ManagePurchaseOrdersPage() {
     const [loading, setLoading] = useState(false);
     const [purchaseOrders, setPurchaseOrders] = useState([])
 
-    const [searchForm, setSearchForm] = useState({
-      id: '',
-    });
+    const [searchForm, setSearchForm] = useState({...initialSearchForm});
 
     useEffect(() => {
         setLoading(true);
@@ -49,7 +50,8 @@ export default function ManagePurchaseOrdersPage() {
 
             <MyCard>
                 <MyToolbar title="All Purchase Orders">
-                    <Input placeholder="Search Order ID" addonAfter={<SearchOutlined />} value={searchForm.id} onChange={(e) => setSearchForm({...searchForm, id: e.target.value })}  />
+                    <Input placeholder="Search Order ID" addonAfter={<SearchOutlined />} value={searchForm.id} onChange={(e) => setSearchForm({...searchForm, id: e.target.value })} />
+                    <Button onClick={() => setSearchForm({...initialSearchForm})}>Reset</Button>
                     <Button type="primary" icon={<PlusOutlined />} onClick={() => navigate('./new')}>New Order</Button>
                 </MyToolbar>
                 <Table dataSource={purchaseOrders} columns={tableColumns} rowKey="id" loading={loading} />

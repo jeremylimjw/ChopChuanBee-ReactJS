@@ -28,7 +28,7 @@ export default function SupplierMenuTable({ selectedSupplier, selectedProducts, 
         .catch(handleHttpError)
         .catch(() => setLoading(false))
   
-    }, [handleHttpError])
+    }, [handleHttpError, selectedSupplier, setSelectedProducts])
 
     function addToTable(products) {
       const newDataSource = [...dataSource];

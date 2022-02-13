@@ -1,8 +1,8 @@
 import { axiosObject } from "./axiosWrapper";
 
 export class SupplierApiHelper {
-    static async getByName(name) {
-        return axiosObject.get(`/supplier?company_name=${name}`)
+    static async search(company_name, name) {
+        return axiosObject.get(`/supplier?company_name_like=${company_name}&s1_name_like=${name}`)
             .then(res => res.data);
     }
     static async getAll() {
