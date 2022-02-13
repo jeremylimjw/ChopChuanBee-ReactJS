@@ -22,23 +22,34 @@ export default function ManagePurchaseOrdersPage() {
     const [loading, setLoading] = useState(false);
     const [purchaseOrders, setPurchaseOrders] = useState([])
 
+    const [searchForm, setSearchForm] = useState({
+      id: '',
+    });
+
     useEffect(() => {
         setLoading(true);
-        PurchaseOrderApiHelper.getAll()
-            .then(results => {
-                setPurchaseOrders(results.map(x => new PurchaseOrder(x)));
-                setLoading(false);
-            })
-            .catch(handleHttpError)
-            .catch(() => setLoading(false));
-    }, [handleHttpError]);
+
+        let promise;
+        if (searchForm.id === '')
+            promise = PurchaseOrderApiHelper.getAll();
+        else
+            promise = PurchaseOrderApiHelper.getById(searchForm.id);
+            
+        promise.then(results => {
+            setPurchaseOrders(results.map(x => new PurchaseOrder(x)));
+            setLoading(false);
+        })
+        .catch(handleHttpError)
+        .catch(() => setLoading(false));
+
+    }, [handleHttpError, searchForm]);
 
     return (
         <MyLayout breadcrumbs={breadcrumbs} bannerTitle="Manage Purchase Orders">
 
             <MyCard>
                 <MyToolbar title="All Purchase Orders">
-                    <Input placeholder="Search Order ID" addonAfter={<SearchOutlined />} />
+                    <Input placeholder="Search Order ID" addonAfter={<SearchOutlined />} value={searchForm.id} onChange={(e) => setSearchForm({...searchForm, id: e.target.value })}  />
                     <Button type="primary" icon={<PlusOutlined />} onClick={() => navigate('./new')}>New Order</Button>
                 </MyToolbar>
                 <Table dataSource={purchaseOrders} columns={tableColumns} rowKey="id" loading={loading} />

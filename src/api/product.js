@@ -5,8 +5,8 @@ export class ProductApiHelper {
         return axiosObject.get(`/product`)
             .then(res => res.data);
     }
-    static async getByName(name) {
-        return axiosObject.get(`/product?name=${name}`)
+    static async searchByName(name) {
+        return axiosObject.get(`/product?name_like=${name}`)
             .then(res => res.data);
     }
 }
