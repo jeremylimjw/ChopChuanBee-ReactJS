@@ -154,7 +154,7 @@ export default function ViewPurchaseOrderPage() {
 
         <MyCard style={{ marginTop: 12 }} title={!purchaseOrder.isStatus(POStatus.PENDING, POStatus.SENT) ? 'Order Items': null}>
 
-          <OrderItemsTable purchaseOrder={purchaseOrder} setPurchaseOrder={setPurchaseOrder} loading={loading} />
+          <OrderItemsTable purchaseOrder={purchaseOrder} setPurchaseOrder={setPurchaseOrder} loading={loading} setLoading={setLoading} />
 
           <div style={{ display: 'flex', marginTop: 30 }}>
 

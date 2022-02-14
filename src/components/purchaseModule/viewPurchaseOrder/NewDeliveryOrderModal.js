@@ -123,7 +123,8 @@ export default function NewDeliveryOrderModal({ purchaseOrder, setPurchaseOrder,
             <Table dataSource={items} columns={tableColumns} 
                 components={{ body: { cell: EditableCell } }}
                 pagination={{ position: ['none', 'none'] }} 
-                rowKey="id"/>
+                rowKey={(_, index) => index}
+            />
 
         </Modal>
     )

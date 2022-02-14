@@ -11,7 +11,7 @@ const initialSearchForm = {
   name: '',
 }
 
-export default function SupplierTable({ selectedSupplier, setSelectedSupplier }) {
+export default function SupplierTable({ setSelectedSupplier }) {
 
     const { handleHttpError } = useApp();
   
@@ -34,7 +34,7 @@ export default function SupplierTable({ selectedSupplier, setSelectedSupplier })
     }, [handleHttpError, searchForm, setSelectedSupplier]);
   
     useEffect(() => {
-      setSelectedSupplier([]);
+      setSelectedSupplier({});
       setLoading(true);
   
       SupplierApiHelper.getAll()
@@ -56,10 +56,10 @@ export default function SupplierTable({ selectedSupplier, setSelectedSupplier })
             </MyToolbar>
 
             <Table loading={loading}
-              rowSelection={{ type: 'radio', onChange: (_, selectedRows) => setSelectedSupplier(selectedRows) }}
+              rowSelection={{ type: 'radio', onChange: (_, selectedRows) => setSelectedSupplier(selectedRows[0]) }}
               columns={columns}
               dataSource={dataSource}
-              rowKey="id"
+              rowKey={(_, index) => index}
             />
         </>
     )

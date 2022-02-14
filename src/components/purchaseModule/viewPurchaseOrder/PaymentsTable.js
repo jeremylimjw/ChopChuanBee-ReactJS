@@ -24,23 +24,24 @@ export default function PaymentsTable({ purchaseOrder, setPurchaseOrder, loading
                 </MyToolbar>
             }
         
-            <Table columns={columns} dataSource={purchaseOrder.getPayments()} rowKey="id"
-            summary={pageData => {
-                return (
-                    <>
-                        <Table.Summary.Row>
-                        <Table.Summary.Cell colSpan={3}>
-                            <Typography.Text strong>Total</Typography.Text>
-                        </Table.Summary.Cell>
-                        <Table.Summary.Cell align='center'>
-                            <Typography.Text strong>
-                            {`$${purchaseOrder.getPaymentsTotal().toFixed(2)}`}
-                            </Typography.Text>
-                        </Table.Summary.Cell>
-                        </Table.Summary.Row>
-                    </>
-                );
-            }} />
+            <Table 
+                columns={columns} dataSource={purchaseOrder.getPayments()} 
+                rowKey={(_, index) => index}
+                summary={pageData => (
+                <>
+                    <Table.Summary.Row>
+                    <Table.Summary.Cell colSpan={3}>
+                        <Typography.Text strong>Total</Typography.Text>
+                    </Table.Summary.Cell>
+                    <Table.Summary.Cell align='center'>
+                        <Typography.Text strong>
+                        {`$${purchaseOrder.getPaymentsTotal().toFixed(2)}`}
+                        </Typography.Text>
+                    </Table.Summary.Cell>
+                    </Table.Summary.Row>
+                </>
+                )} 
+            />
         
             </MyCard>
         }

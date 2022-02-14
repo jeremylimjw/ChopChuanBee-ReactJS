@@ -32,9 +32,6 @@ export default function ManagePurchaseOrdersPage() {
 
     useEffect(() => {
         setLoading(true);
-        console.log(searchForm.month?.month())
-        console.log(searchForm.month?.year())
-        console.log(searchForm.year?.year())
 
         let promise;
         if (searchForm.id === '')
@@ -58,7 +55,7 @@ export default function ManagePurchaseOrdersPage() {
                 <MyToolbar title="Procurements">
                     <Input placeholder="Search Order ID" suffix={<SearchOutlined className='grey' />} value={searchForm.id} onChange={(e) => setSearchForm({...searchForm, id: e.target.value })} />
                     <DatePicker placeholder="Filter Month" picker="month" value={searchForm.month} onChange={(value) => setSearchForm({...searchForm, month: value })} />
-                    <DatePicker picker="Filter Year" picker="year" value={searchForm.year} onChange={(value) => setSearchForm({...searchForm, year: value })} />
+                    <DatePicker placeholder="Filter Year" picker="year" value={searchForm.year} onChange={(value) => setSearchForm({...searchForm, year: value })} />
                     <Button onClick={() => setSearchForm({...initialSearchForm})}>Reset</Button>
                     <Button type="primary" icon={<PlusOutlined />} onClick={() => navigate('./new')}>New Order</Button>
                 </MyToolbar>

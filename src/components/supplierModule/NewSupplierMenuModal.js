@@ -11,7 +11,7 @@ const initialSearchForm = {
   name: '',
 };
 
-export default function NewSupplierMenuModal({ supplier, addToTable, isModalVisible, setIsModalVisible, disabledProductsMap }) {
+export default function NewSupplierMenuModal({ supplier, addToTable, isModalVisible, setIsModalVisible, disabledProductsMap = {} }) {
 
     const { handleHttpError } = useApp();
   
@@ -62,8 +62,11 @@ export default function NewSupplierMenuModal({ supplier, addToTable, isModalVisi
         <Table loading={loading}
             columns={columns}
             dataSource={dataSource}
-            rowSelection={{ onChange: (_, selectedRows) => setSelectedProducts(selectedRows), getCheckboxProps: (record) => ({ disabled: disabledProductsMap[record.id] }) }}
-            rowKey="id"
+            rowSelection={{ 
+              onChange: (_, selectedRows) => setSelectedProducts(selectedRows), 
+              getCheckboxProps: (record) => ({ disabled: disabledProductsMap[record.id] }) 
+            }}
+            rowKey={(_, index) => index}
             pagination={{ pageSize: 6 }}
         />
       </Modal>

@@ -5,20 +5,18 @@ import MyToolbar from '../../layout/MyToolbar';
 
 export default function ConfirmOrderTab({ selectedSupplier, selectedProducts, step, setStep, handleSubmitEvent }) {
 
-  const supplier = selectedSupplier[0];
-
   return (
     <div style={{ display: 'flex'}}>
 
       <MyCard title="Supplier Details" style={{ width: 400, margin: '0 12px 24px 24px' }}>
         
         <Descriptions bordered size="small" layout='horizontal' column={1}>
-          <Descriptions.Item label="Company">{supplier.company_name}</Descriptions.Item>
-          <Descriptions.Item label="Name">{supplier.s1_name}</Descriptions.Item>
-          <Descriptions.Item label="Contact">{supplier.s1_phone_number}</Descriptions.Item>
-          <Descriptions.Item label="Address">{supplier.address}</Descriptions.Item>
-          <Descriptions.Item label="Postal Code">{supplier.postal_code}</Descriptions.Item>
-          <Descriptions.Item label="Email">{supplier.email || '-'}</Descriptions.Item>
+          <Descriptions.Item label="Company">{selectedSupplier.company_name}</Descriptions.Item>
+          <Descriptions.Item label="Name">{selectedSupplier.s1_name}</Descriptions.Item>
+          <Descriptions.Item label="Contact">{selectedSupplier.s1_phone_number}</Descriptions.Item>
+          <Descriptions.Item label="Address">{selectedSupplier.address}</Descriptions.Item>
+          <Descriptions.Item label="Postal Code">{selectedSupplier.postal_code}</Descriptions.Item>
+          <Descriptions.Item label="Email">{selectedSupplier.email || '-'}</Descriptions.Item>
         </Descriptions>
         
       </MyCard>

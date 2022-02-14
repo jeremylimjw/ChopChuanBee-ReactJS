@@ -8,7 +8,7 @@ import EditableCell from "../../general/EditableCell";
 import MyToolbar from "../../layout/MyToolbar";
 import NewSupplierMenuModal from "../../supplierModule/NewSupplierMenuModal";
 
-export default function SupplierMenuTable({ selectedSupplier, selectedProducts, setSelectedProducts }) {
+export default function SupplierMenuTable({ selectedSupplier, selectedProducts, setSelectedProducts, disabledProductsMap = {} }) {
 
     const { handleHttpError } = useApp();
   
@@ -18,16 +18,18 @@ export default function SupplierMenuTable({ selectedSupplier, selectedProducts, 
     const [isModalVisible, setIsModalVisible] = useState(false);
   
     useEffect(() => {
-      setSelectedProducts([]);
-      setLoading(true);
-  
-      SupplierApiHelper.getSupplierMenu(selectedSupplier[0].id)
-        .then(results => {
-          setDataSource(results.map(x => ({...x, quantity: 0, id: Math.random() })));
-          setLoading(false);
-        })
-        .catch(handleHttpError)
-        .catch(() => setLoading(false))
+      if (selectedSupplier != null) {
+        setSelectedProducts([]);
+        setLoading(true);
+        
+        SupplierApiHelper.getSupplierMenu(selectedSupplier.id)
+          .then(results => {
+            setDataSource(results.map(x => ({...x, quantity: 0, id: Math.random() })));
+            setLoading(false);
+          })
+          .catch(handleHttpError)
+          .catch(() => setLoading(false))
+      }
   
     }, [handleHttpError, selectedSupplier, setSelectedProducts])
 
@@ -37,7 +39,7 @@ export default function SupplierMenuTable({ selectedSupplier, selectedProducts, 
         newDataSource.push({ 
           id: Math.random(), 
           quantity: 0, 
-          supplier_id: selectedSupplier[0]?.id, 
+          supplier_id: selectedSupplier?.id, 
           product_id: product.id,
           product: product 
         })
@@ -47,7 +49,7 @@ export default function SupplierMenuTable({ selectedSupplier, selectedProducts, 
   
     function handleDelete(record) {
       setLoading(true);
-      SupplierApiHelper.deleteSupplierMenuItem(selectedSupplier[0].id, record.product_id)
+      SupplierApiHelper.deleteSupplierMenuItem(selectedSupplier.id, record.product_id)
         .then(() => {
           message.success(`${record.product.name} successfully removed!`)
           setDataSource(dataSource.filter((item) => item.id !== record.id));
@@ -123,15 +125,18 @@ export default function SupplierMenuTable({ selectedSupplier, selectedProducts, 
         </MyToolbar>
         
         <Table loading={loading}
-          rowSelection={{ onChange: (_, selectedRows) => setSelectedProducts(selectedRows) }}
+          rowSelection={{ 
+            onChange: (_, selectedRows) => setSelectedProducts(selectedRows),
+            getCheckboxProps: (record) => ({ disabled: disabledProductsMap[record.product_id] }) 
+          }}
           columns={columns}
           dataSource={dataSource}
-          rowKey="id"
+          rowKey={(_, index) => index}
           components={{ body: { cell: EditableCell } }}
         />
 
         <NewSupplierMenuModal 
-          supplier={selectedSupplier[0]}
+          supplier={selectedSupplier}
           addToTable={addToTable}
           isModalVisible={isModalVisible} 
           setIsModalVisible={setIsModalVisible} 

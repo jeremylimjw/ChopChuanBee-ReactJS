@@ -21,13 +21,13 @@ export default function NewPurchaseOrderPage() {
   const navigate = useNavigate();
 
   const [step, setStep] = useState(0)
-  const [selectedSupplier, setSelectedSupplier] = useState([]);
+  const [selectedSupplier, setSelectedSupplier] = useState({});
   const [selectedProducts, setSelectedProducts] = useState([]);
 
   // Handles purchase order creation
   function handleSubmitEvent() {
     const purchaseOrder = {
-      supplier_id: selectedSupplier[0].id,
+      supplier_id: selectedSupplier.id,
       purchase_order_status_id: 1,
       purchase_order_items: selectedProducts.filter(x => x.quantity !== 0).map(x => ({ product_id: x.product_id, quantity: x.quantity })),
     }
@@ -54,7 +54,7 @@ export default function NewPurchaseOrderPage() {
 
       { step === 0 &&
         <MyCard>
-          <SupplierTable selectedSupplier={selectedSupplier} setSelectedSupplier={setSelectedSupplier} />
+          <SupplierTable setSelectedSupplier={setSelectedSupplier} />
           <MyToolbar style={{ marginTop: 15 }}>
             <Button type="primary" onClick={() => setStep(step+1)} disabled={selectedSupplier.length === 0}>Next</Button>
           </MyToolbar>
