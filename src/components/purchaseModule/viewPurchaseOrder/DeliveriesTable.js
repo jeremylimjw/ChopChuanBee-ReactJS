@@ -1,4 +1,4 @@
-import { ArrowDownOutlined, ArrowUpOutlined, PlusOutlined, UndoOutlined } from '@ant-design/icons/lib/icons'
+import { MinusOutlined, PlusOutlined, UndoOutlined } from '@ant-design/icons/lib/icons'
 import { Avatar, Button, Collapse, List, Tag } from 'antd'
 import React from 'react'
 import { POStatus } from '../../../enums/PurchaseOrderStatus'
@@ -38,7 +38,7 @@ export default function DeliveriesTable({ purchaseOrder, setPurchaseOrder, loadi
                                 return (
                                     <List.Item>
                                         <List.Item.Meta
-                                        avatar={<Avatar icon={<ArrowUpOutlined />} style={{ background: "#389e0d" }} />}
+                                        avatar={<Avatar icon={<PlusOutlined />} style={{ background: "#389e0d" }} />}
                                         title={movement.created_at}
                                         description={`Received ${movement.quantity} unit`}
                                         />
@@ -47,7 +47,7 @@ export default function DeliveriesTable({ purchaseOrder, setPurchaseOrder, loadi
                                 return (
                                     <List.Item>
                                         <List.Item.Meta
-                                        avatar={<Avatar icon={<ArrowDownOutlined />} style={{ background: "#cf1322" }} />}
+                                        avatar={<Avatar icon={<MinusOutlined />} style={{ background: "#cf1322" }} />}
                                         title={movement.created_at}
                                         description={`Refunded ${-movement.quantity} unit`}
                                         />

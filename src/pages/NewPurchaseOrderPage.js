@@ -11,9 +11,8 @@ import SupplierTable from '../components/purchaseModule/newPurchaseOrder/Supplie
 import { useApp } from '../providers/AppProvider';
 
 const breadcrumbs = [
-  { url: '/purchases/orders', name: 'Purchases' },
-  { url: '/purchases/orders', name: 'Orders' },
-  { url: '/purchases/orders/new', name: 'New' },
+  { url: '/procurements', name: 'Procurements' },
+  { url: '/procurements/new', name: 'New' },
 ]
 
 export default function NewPurchaseOrderPage() {
@@ -36,7 +35,7 @@ export default function NewPurchaseOrderPage() {
     PurchaseOrderApiHelper.create(purchaseOrder)
       .then(result => {
         message.success(`Invoice with ID ${result.id} successfully created!`);
-        navigate(`/purchases/orders/${result.id}`);
+        navigate(`../${result.id}`);
       })
       .catch(handleHttpError);
 
@@ -48,7 +47,7 @@ export default function NewPurchaseOrderPage() {
       <MyCard>
         <Steps current={step}>
             <Steps.Step title="Supplier" description="Select a supplier" />
-            <Steps.Step title="Select Items" description="Browse their menu" />
+            <Steps.Step title="Select Items" description="Create your order" />
             <Steps.Step title="Review" description="Confirm your order" />
           </Steps>
       </MyCard>

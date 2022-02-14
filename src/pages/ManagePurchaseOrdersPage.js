@@ -11,8 +11,7 @@ import { PurchaseOrder } from '../models/PurchaseOrder';
 import { useApp } from '../providers/AppProvider';
 
 const breadcrumbs = [
-  { url: '/purchases/orders', name: 'Purchases' },
-  { url: '/purchases/orders', name: 'Orders' },
+  { url: '/procurements', name: 'Procurements' },
 ]
 const initialSearchForm = {
   id: '',
@@ -46,10 +45,10 @@ export default function ManagePurchaseOrdersPage() {
     }, [handleHttpError, searchForm]);
 
     return (
-        <MyLayout breadcrumbs={breadcrumbs} bannerTitle="Manage Purchase Orders">
+        <MyLayout breadcrumbs={breadcrumbs} bannerTitle="Manage Procurements">
 
             <MyCard>
-                <MyToolbar title="All Purchase Orders">
+                <MyToolbar title="Procurements">
                     <Input placeholder="Search Order ID" addonAfter={<SearchOutlined />} value={searchForm.id} onChange={(e) => setSearchForm({...searchForm, id: e.target.value })} />
                     <Button onClick={() => setSearchForm({...initialSearchForm})}>Reset</Button>
                     <Button type="primary" icon={<PlusOutlined />} onClick={() => navigate('./new')}>New Order</Button>

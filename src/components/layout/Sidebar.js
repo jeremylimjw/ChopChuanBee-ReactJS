@@ -39,7 +39,7 @@ const menu = [
     title: 'Purchases',
     icon: <UserOutlined />,
     items: [
-      { route: '/purchases/orders', name: 'Manage Orders' },
+      { route: '/procurements', name: 'Manage Procurements' },
     ]
   },
   {

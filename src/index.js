@@ -26,7 +26,7 @@ const routes = [
     viewAccess: "CRM",
   },
   {
-    path: '/purchases/orders',
+    path: '/procurements',
     component: <Outlet />,
     childRoutes: [
       { 

@@ -27,9 +27,8 @@ export default function ViewPurchaseOrderPage() {
     const [isDeliveryModalVisible, setIsDeliveryModalVisible] = useState(0);
 
     const breadcrumbs = [
-      { url: '/purchases/orders', name: 'Purchases' },
-      { url: '/purchases/orders', name: 'Orders' },
-      { url: `/purchases/orders/${purchaseOrder?.id}`, name: purchaseOrder?.idToString() },
+      { url: '/procurements', name: 'Procurement' },
+      { url: `/procurements/${purchaseOrder?.id}`, name: purchaseOrder?.idToString() },
     ]
   
     useEffect(() => {
