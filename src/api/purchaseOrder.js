@@ -7,7 +7,7 @@ export class PurchaseOrderApiHelper {
     }
 
     static async getAll() {
-        return axiosObject.get(`/purchaseOrder`)
+        return axiosObject.get(`/purchaseOrder?order_by=created_at_desc`)
             .then(res => res.data);
     }
 

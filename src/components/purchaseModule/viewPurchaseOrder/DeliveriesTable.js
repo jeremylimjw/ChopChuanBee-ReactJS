@@ -53,7 +53,7 @@ function renderItem(movement) {
         return (
             <List.Item>
                 <List.Item.Meta
-                avatar={<Avatar icon={<PlusOutlined />} style={{ background: "#389e0d" }} />}
+                avatar={<Avatar icon={<PlusOutlined />} style={{ background: "#3CB371" }} />}
                 title={`Received ${movement.quantity} unit`}
                 description={parseDate(movement.created_at)}
                 />
@@ -62,7 +62,7 @@ function renderItem(movement) {
         return (
             <List.Item>
                 <List.Item.Meta
-                avatar={<Avatar icon={<MinusOutlined />} style={{ background: "#cf1322" }} />}
+                avatar={<Avatar icon={<MinusOutlined />} style={{ background: "#FA8072" }} />}
                 title={`Refunded ${-movement.quantity} unit`}
                 description={parseDate(movement.created_at)}
                 />
