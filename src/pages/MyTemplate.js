@@ -1,9 +1,10 @@
-import { DownOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons/lib/icons'
-import { Button, Dropdown, Form, Input, InputNumber, Menu, Table } from 'antd'
+import { DownOutlined, FileDoneOutlined, FileTextOutlined, PlusOutlined, SaveOutlined, SearchOutlined, SendOutlined, StopOutlined } from '@ant-design/icons/lib/icons'
+import { Button, DatePicker, Dropdown, Form, Input, InputNumber, Menu, Select, Space, Table } from 'antd'
 import React from 'react'
 import MyToolbar from '../components/layout/MyToolbar'
 import MyCard from '../components/layout/MyCard'
 import MyLayout from '../components/layout/MyLayout'
+import moment from 'moment';
 
 const breadcrumbs = [
   { url: '/', name: 'Customers' },
@@ -16,8 +17,8 @@ export default function MyTemplate() {
       <MyCard>
 
         <MyToolbar title="Simple Table">
-          <Input placeholder="Search Name" addonAfter={<SearchOutlined />} />
-          <Input placeholder="Search Address" addonAfter={<SearchOutlined />} />
+          <Input placeholder="Search Name" addonBefore={<SearchOutlined />} />
+          <Input placeholder="Search Address" addonBefore={<SearchOutlined />} />
           <Button>Reset</Button>
           <Button type="primary" icon={<PlusOutlined />}>New</Button>
         </MyToolbar>
@@ -29,9 +30,15 @@ export default function MyTemplate() {
       <MyCard>
 
         <MyToolbar title="Extreme Table">
-          <Input style={{ width: 180 }} placeholder="Search Name" addonAfter={<SearchOutlined />} />
-          <Input style={{ width: 180 }} placeholder="Search Start Date" addonAfter={<SearchOutlined />} />
-          <Input style={{ width: 180 }} placeholder="Search End Date" addonAfter={<SearchOutlined />} />
+          <Input style={{ width: 180 }} placeholder="Search Name" suffix={<SearchOutlined className='grey' />} />
+          <Input style={{ width: 180 }} placeholder="Search Descripton" suffix={<SearchOutlined className='grey' />} />
+          <DatePicker style={{ width: 180 }} placeholder='Start date' suffix={<SearchOutlined className='grey' />} />
+          <Select style={{ width: 180 }} placeholder="Filter by Name">
+            <Select.Option value="lucy">Lucy</Select.Option>
+            <Select.Option value="lucy">Alice</Select.Option>
+            <Select.Option value="lucy">Bob</Select.Option>
+            <Select.Option value="lucy">Charlie</Select.Option>
+          </Select>
           <Button>Reset</Button>
           
           <Dropdown.Button
@@ -47,12 +54,19 @@ export default function MyTemplate() {
         </MyToolbar>
 
         <Table dataSource={dataSource} columns={columns} />
+
+        <MyToolbar style={{marginTop: 10}}>
+          <Button icon={<StopOutlined />}>Cancel Order</Button>
+          <Button icon={<SaveOutlined />}>Save for later</Button>
+          <Button type="primary" icon={<FileTextOutlined />}>Convert to Invoice</Button>
+          <Button type="primary" icon={<FileDoneOutlined />}>Close Invoice</Button>
+        </MyToolbar>
         
       </MyCard>
 
-      <div style={{ display: 'flex'}}>
+      <div className='flex-side-by-side'>
         
-          <MyCard style={{ flexGrow: 1, margin: '0 12px 24px 24px' }} title="Past Payment History">
+          <MyCard title="Past Payment History">
 
             <Form labelCol={{ span: 4 }} wrapperCol={{ span: 10 }}>
               <Form.Item label="Name"><Input /></Form.Item>
@@ -67,7 +81,7 @@ export default function MyTemplate() {
 
           </MyCard>
 
-          <MyCard style={{ flexGrow: 1, margin: '0 24px 24px 12px' }} title="Past Deliveries">
+          <MyCard title="Past Deliveries">
               Bill is a cat.
           </MyCard>
 
@@ -79,6 +93,18 @@ export default function MyTemplate() {
 
 
 const columns = [
+  {
+    title: 'Created At',
+    dataIndex: 'created_at',
+    key: 'created_at',
+    render: (created_at) => moment(created_at).format('lll')
+  },
+  {
+    title: 'Date',
+    dataIndex: 'date',
+    key: 'date',
+    render: (_) => moment(new Date()).format('ll')
+  },
   {
     title: 'Name',
     dataIndex: 'name',
@@ -102,11 +128,13 @@ const dataSource = [
       name: 'Mike',
       age: 32,
       address: '10 Downing Street',
+      created_at: new Date(),
     },
     {
       key: '2',
       name: 'John',
       age: 42,
       address: '10 Downing Street',
+      created_at: new Date(),
     },
   ];

@@ -1,1 +1,20 @@
+.grey {
+    color: rgba(0,0,0, 0.45);
+}
 
+.flex-side-by-side {
+    display: flex;
+}
+
+.flex-side-by-side > .ant-card {
+    flex-grow: 1;
+    margin: 0 12px 0 12px !important;
+}
+
+.flex-side-by-side .ant-card:first-child {
+    margin: 0 12px 24px 24px !important;
+}
+
+.flex-side-by-side .ant-card:last-child {
+    margin: 0 24px 24px 12px !important;
+}
