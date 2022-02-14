@@ -3,6 +3,7 @@ import { Button, message, Popconfirm, Table } from "antd";
 import { useEffect, useState } from "react";
 import { SupplierApiHelper } from "../../../api/supplier";
 import { useApp } from "../../../providers/AppProvider";
+import { sortByString } from "../../../utilities/sorters";
 import EditableCell from "../../general/EditableCell";
 import MyToolbar from "../../layout/MyToolbar";
 import NewSupplierMenuModal from "../../supplierModule/NewSupplierMenuModal";
@@ -77,28 +78,36 @@ export default function SupplierMenuTable({ selectedSupplier, selectedProducts, 
       {
         title: 'Name',
         dataIndex: 'product',
+        width: '20%', 
         render: (product) => product.name,
+        sorter: (a, b) => sortByString(a.product.name, b.product.name),
       },
       {
         title: 'Description',
         dataIndex: 'product',
         render: (product) => product.description || '-',
+        sorter: (a, b) => sortByString(a.product.description, b.product.description),
       },
       {
         title: 'Unit',
         dataIndex: 'product',
+        width: '11%', 
         render: (product) => product.unit,
+        sorter: (a, b) => sortByString(a.product.unit, b.product.unit),
       },
       {
         title: 'Lastest Price',
         dataIndex: 'product',
+        width: '11%', 
         render: (product) => '-',
+        sorter: (a, b) => sortByString(a.product.unit, b.product.unit),
       },
       {
         title: '* Quantity',
         dataIndex: 'quantity',
         align: 'center',
-        onCell: (record) => ({ editable: true, isToggleable: true, record, dataIndex: 'quantity', inputType: 'number', handleSave })
+        width: '11%', 
+        onCell: (record) => ({ editable: true, record, dataIndex: 'quantity', inputType: 'number', handleSave }),
       },
       {
         align: 'center',

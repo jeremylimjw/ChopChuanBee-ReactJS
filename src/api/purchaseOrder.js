@@ -19,6 +19,7 @@ export class PurchaseOrderApiHelper {
     static async update(purchaseOrder) {
         return axiosObject.put(`/purchaseOrder`, {
             id: purchaseOrder.id,
+            has_gst: purchaseOrder.has_gst,
             gst_rate: purchaseOrder.gst_rate,
             offset: purchaseOrder.offset,
             supplier_invoice_id: purchaseOrder.supplier_invoice_id,

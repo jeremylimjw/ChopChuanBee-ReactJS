@@ -1,4 +1,4 @@
-import { Button, Table, Typography, Space } from 'antd';
+import { Button, Table, Descriptions } from 'antd';
 import React from 'react'
 import MyCard from '../../layout/MyCard';
 import MyToolbar from '../../layout/MyToolbar';
@@ -11,15 +11,15 @@ export default function ConfirmOrderTab({ selectedSupplier, selectedProducts, st
     <div style={{ display: 'flex'}}>
 
       <MyCard title="Supplier Details" style={{ width: 400, margin: '0 12px 24px 24px' }}>
-        <Typography.Title level={4}>{supplier.company_name}</Typography.Title>
         
-        <Space direction='vertical' style={{ marginTop: 10 }}>
-          <Typography.Text>Name: {supplier.s1_name}</Typography.Text>
-          <Typography.Text>Contact: {supplier.s1_phone_number}</Typography.Text>
-          <Typography.Text style={{ width: 340 }} ellipsis>Address: {supplier.address}</Typography.Text>
-          <Typography.Text>Postal Code: {supplier.postal_code}</Typography.Text>
-          <Typography.Text>Email: {supplier.email || 'None'}</Typography.Text>
-        </Space>
+        <Descriptions bordered size="small" layout='horizontal' column={1}>
+          <Descriptions.Item label="Company">{supplier.company_name}</Descriptions.Item>
+          <Descriptions.Item label="Name">{supplier.s1_name}</Descriptions.Item>
+          <Descriptions.Item label="Contact">{supplier.s1_phone_number}</Descriptions.Item>
+          <Descriptions.Item label="Address">{supplier.address}</Descriptions.Item>
+          <Descriptions.Item label="Postal Code">{supplier.postal_code}</Descriptions.Item>
+          <Descriptions.Item label="Email">{supplier.email || '-'}</Descriptions.Item>
+        </Descriptions>
         
       </MyCard>
 

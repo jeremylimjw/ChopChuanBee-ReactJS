@@ -6,6 +6,7 @@ import MyCard from '../../layout/MyCard'
 import MyToolbar from '../../layout/MyToolbar'
 import { getPaymentMethodTag } from '../../../enums/PaymentMethod'
 import NewPaymentModal from './NewPaymentModal'
+import { parseDate } from '../../../utilities/datetime'
 
 export default function PaymentsTable({ purchaseOrder, setPurchaseOrder, loading }) {
     
@@ -14,7 +15,7 @@ export default function PaymentsTable({ purchaseOrder, setPurchaseOrder, loading
     return (
         <>
         { purchaseOrder != null && 
-            <MyCard style={{ flexGrow: 1, margin: '0 12px 24px 24px' }} title={ !purchaseOrder.isStatus(POStatus.ACCEPTED) ? "Past Payment History" : "" }>
+            <MyCard title={ !purchaseOrder.isStatus(POStatus.ACCEPTED) ? "Past Payment History" : "" }>
         
             { purchaseOrder.isStatus(POStatus.ACCEPTED) && 
                 <MyToolbar title="Payments">
@@ -49,8 +50,27 @@ export default function PaymentsTable({ purchaseOrder, setPurchaseOrder, loading
 }
   
 const columns = [
-  { title: 'No', dataIndex: '', render: (_, record, index) => index+1 },
-  { title: 'Date', dataIndex: 'created_at', align: 'center' },
-  { title: 'Payment Method', dataIndex: 'payment_method_id', align: 'center', render: (payment_method_id) => getPaymentMethodTag(payment_method_id) },
-  { title: 'Amount', dataIndex: 'amount', align: 'center', render: (amount) => `$${(+amount).toFixed(2)}` },
+    { 
+        title: 'No', 
+        dataIndex: '', 
+        render: (_, record, index) => index+1 
+    },
+    { 
+        title: 'Date', 
+        dataIndex: 'created_at', 
+        align: 'center',
+        render: (created_at) => parseDate(created_at),
+    },
+    { 
+        title: 'Payment Method', 
+        dataIndex: 'payment_method_id', 
+        align: 'center', 
+        render: (payment_method_id) => getPaymentMethodTag(payment_method_id) 
+    },
+    { 
+        title: 'Amount', 
+        dataIndex: 'amount', 
+        align: 'center', 
+        render: (amount) => amount >= 0 ? `$${(+amount).toFixed(2)}` : `-$${(-amount).toFixed(2)}`
+    },
 ];

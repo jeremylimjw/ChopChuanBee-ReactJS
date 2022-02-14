@@ -55,7 +55,7 @@ export default function NewSupplierMenuModal({ supplier, addToTable, isModalVisi
     return (
       <Modal title="Add to Supplier Menu" visible={isModalVisible} onOk={handleOk} onCancel={() => setIsModalVisible(false)} width={800}>
         <MyToolbar title="Products">
-          <Input placeholder="Search Name" addonAfter={<SearchOutlined />} value={searchForm.name} onChange={(e) => setSearchForm({...searchForm, name: e.target.value })} />
+          <Input placeholder="Search Name" suffix={<SearchOutlined className='grey' />} value={searchForm.name} onChange={(e) => setSearchForm({...searchForm, name: e.target.value })} />
           <Button onClick={() => setSearchForm({...initialSearchForm})}>Reset</Button>
         </MyToolbar>
             

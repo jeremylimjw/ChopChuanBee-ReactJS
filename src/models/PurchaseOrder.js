@@ -1,5 +1,5 @@
 import { PaymentMethod } from "../enums/PaymentMethod";
-import { getPaymentTerm, getPaymentTermTag, PaymentTerm } from "../enums/PaymentTerm";
+import { getPaymentTerm, getPaymentTermTag } from "../enums/PaymentTerm";
 import { getPurchaseOrderStatus, getPurchaseOrderStatusTag, POStatus } from "../enums/PurchaseOrderStatus";
 
 export class PurchaseOrder {
@@ -8,9 +8,9 @@ export class PurchaseOrder {
 
         // Default values
         this.payment_method_id = this.payment_method_id || PaymentMethod.CASH.id;
-        this.payment_term_id = this.payment_term_id || PaymentTerm.CASH.id;
-        this.has_gst = this.has_gst || 1;
         this.gst_rate = this.gst_rate || 0;
+        // this.payment_term_id = this.payment_term_id || PaymentTerm.CASH.id;
+        // this.has_gst = this.has_gst || 1;
     }
 
     idToString() {
@@ -43,6 +43,10 @@ export class PurchaseOrder {
     getPaymentsTotal() {
         // Need +current to parse string to number
         return this.getPayments().reduce((prev, current) => prev += +current.amount, 0);
+    }
+
+    getPaymentProgress() {
+        return Math.round(this.getPaymentsTotal()/this.getOrderTotal()*100);
     }
     
     getStatus() {
@@ -87,6 +91,10 @@ export class PurchaseOrder {
         return this.purchase_order_items.reduce((prev, current) => {
             return prev + current.inventory_movements.reduce((prev2, current2) => prev2 + current2.quantity, 0);
         }, 0)
+    }
+
+    getQuantityProgress() {
+        return Math.round(this.getTotalReceivedQuantities()/this.getTotalQuantities()*100)
     }
 
     convertToInvoice() {

@@ -140,12 +140,12 @@ export default function ViewPurchaseOrderPage() {
             <Space direction='vertical'>
               <div>
                 <Typography.Title level={4} style={{ textAlign: 'center' }}>Payments</Typography.Title>
-                <Progress type="circle" percent={Math.round(purchaseOrder.getPaymentsTotal()/purchaseOrder.getOrderTotal()*100)} /> 
+                <Progress type="circle" percent={purchaseOrder.getPaymentProgress()} /> 
               </div>
 
               <div style={{ marginTop: 25 }}>
                 <Typography.Title level={4} style={{ textAlign: 'center' }}>Deliveries</Typography.Title>
-                <Progress type="circle" percent={Math.round(purchaseOrder.getTotalReceivedQuantities()/purchaseOrder.getTotalQuantities()*100)} /> 
+                <Progress type="circle" percent={purchaseOrder.getQuantityProgress()} /> 
               </div>
             </Space>
           </MyCard>
@@ -188,7 +188,7 @@ export default function ViewPurchaseOrderPage() {
         </MyCard>
 
         { !purchaseOrder.isStatus(POStatus.PENDING) && 
-        <div style={{ display: 'flex'}}>
+        <div className='flex-side-by-side'>
 
           <PaymentsTable purchaseOrder={purchaseOrder} setPurchaseOrder={setPurchaseOrder} loading={loading} />
           <DeliveriesTable purchaseOrder={purchaseOrder} setPurchaseOrder={setPurchaseOrder} loading={loading} isModalVisible={isDeliveryModalVisible} setIsModalVisible={setIsDeliveryModalVisible} />

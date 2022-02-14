@@ -64,8 +64,8 @@ export default function OrderItemsTable({ purchaseOrder, setPurchaseOrder, loadi
                     <Table.Summary.Row>
                       <Table.Summary.Cell colSpan={7}>
                         <Typography.Text strong>
-                          {purchaseOrder.has_gst === 2 && 'GST (Inclusive)'}
-                          {purchaseOrder.has_gst === 3 && 'GST (Exclusive)'}
+                          {purchaseOrder.has_gst === 2 && `GST ${purchaseOrder.gst_rate}% (Inclusive)`}
+                          {purchaseOrder.has_gst === 3 && `GST ${purchaseOrder.gst_rate}% (Exclusive)`}
                         </Typography.Text>
                       </Table.Summary.Cell>
                       <Table.Summary.Cell align='center'>
