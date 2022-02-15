@@ -9,6 +9,8 @@ import LoginPage from './pages/LoginPage';
 import { AppProvider } from './providers/AppProvider';
 import RequireAuth from './auth/RequireAuth';
 import MyTemplate from './pages/MyTemplate';
+import { View } from './enums/view';
+import ViewLogs from './pages/Log/ViewLogs';
 
 
 // Add on more routes here
@@ -20,7 +22,12 @@ const routes = [
   {
     path: '/customers',
     component: <div>Customers Component</div>,
-    viewAccess: "CRM",
+    viewAccess: View.CRM.name,
+  },
+  {
+    path: '/logs',
+    component: <ViewLogs />,
+    viewAccess: View.ADMIN.name,
   },
 
 ]
