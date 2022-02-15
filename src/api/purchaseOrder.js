@@ -6,8 +6,12 @@ export class PurchaseOrderApiHelper {
             .then(res => res.data);
     }
 
-    static async getAll() {
-        return axiosObject.get(`/purchaseOrder?order_by=created_at_desc`)
+    static async getAll(from, to) {
+        let queryString = "";
+        if (from && to) {
+            queryString += `&created_at_from=${from.toISOString()}&created_at_to=${to.toISOString()}`;
+        }
+        return axiosObject.get(`/purchaseOrder?order_by=created_at_desc${queryString}`)
             .then(res => res.data);
     }
 

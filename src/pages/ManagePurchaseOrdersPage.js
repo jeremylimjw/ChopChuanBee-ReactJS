@@ -11,6 +11,7 @@ import { PurchaseOrder } from '../models/PurchaseOrder';
 import { useApp } from '../providers/AppProvider';
 import { parseDateTime } from '../utilities/datetime';
 import { sortByDate, sortByNumber, sortByString } from '../utilities/sorters';
+import moment from 'moment';
 
 const breadcrumbs = [
   { url: '/procurements', name: 'Procurements' },
@@ -34,10 +35,21 @@ export default function ManagePurchaseOrdersPage() {
         setLoading(true);
 
         let promise;
-        if (searchForm.id === '')
-            promise = PurchaseOrderApiHelper.getAll();
-        else
+        if (searchForm.id === '') {
+            if (searchForm.month != null) {
+                const startDate = searchForm.month.set({ date: 1, hour: 0, minute: 0, second: 0, milisecond: 0 }).toDate();
+                const endDate = moment(startDate).add(1, 'month').toDate();
+                promise = PurchaseOrderApiHelper.getAll(startDate, endDate);
+            } else if (searchForm.year != null) {
+                const startDate = searchForm.year.set({ date: 1, month: 1, hour: 0, minute: 0, second: 0, milisecond: 0 }).toDate();
+                const endDate = moment(startDate).add(1, 'year').toDate();
+                promise = PurchaseOrderApiHelper.getAll(startDate, endDate);
+            } else {
+                promise = PurchaseOrderApiHelper.getAll();
+            }
+        } else {
             promise = PurchaseOrderApiHelper.getById(searchForm.id);
+        }
             
         promise.then(results => {
             setPurchaseOrders(results.map(x => new PurchaseOrder(x)));
