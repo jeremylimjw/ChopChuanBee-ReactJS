@@ -1,5 +1,5 @@
-import { DeleteOutlined, PlusOutlined } from "@ant-design/icons/lib/icons";
-import { Button, message, Popconfirm, Table } from "antd";
+import { DeleteOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons/lib/icons";
+import { Button, Input, message, Popconfirm, Table } from "antd";
 import { useEffect, useState } from "react";
 import { SupplierApiHelper } from "../../../api/supplier";
 import { useApp } from "../../../providers/AppProvider";
@@ -7,6 +7,10 @@ import { sortByString } from "../../../utilities/sorters";
 import EditableCell from "../../general/EditableCell";
 import MyToolbar from "../../layout/MyToolbar";
 import NewSupplierMenuModal from "../../supplierModule/NewSupplierMenuModal";
+
+const initialSearchForm = {
+  name: '',
+};
 
 export default function SupplierMenuTable({ selectedSupplier, selectedProducts, setSelectedProducts, disabledProductsMap = {} }) {
 
@@ -16,12 +20,13 @@ export default function SupplierMenuTable({ selectedSupplier, selectedProducts, 
     const [dataSource, setDataSource] = useState([]);
 
     const [isModalVisible, setIsModalVisible] = useState(false);
+
+    const [searchForm, setSearchForm] = useState({...initialSearchForm});
   
     useEffect(() => {
       if (selectedSupplier != null) {
         setSelectedProducts([]);
         setLoading(true);
-        
         SupplierApiHelper.getSupplierMenu(selectedSupplier.id)
           .then(results => {
             setDataSource(results.map(x => ({...x, quantity: 0, id: Math.random() })));
@@ -31,7 +36,7 @@ export default function SupplierMenuTable({ selectedSupplier, selectedProducts, 
           .catch(() => setLoading(false))
       }
   
-    }, [handleHttpError, selectedSupplier, setSelectedProducts])
+    }, [handleHttpError, searchForm, selectedSupplier, setSelectedProducts, disabledProductsMap])
 
     function addToTable(products) {
       const newDataSource = [...dataSource];
@@ -52,8 +57,9 @@ export default function SupplierMenuTable({ selectedSupplier, selectedProducts, 
       SupplierApiHelper.deleteSupplierMenuItem(selectedSupplier.id, record.product_id)
         .then(() => {
           message.success(`${record.product.name} successfully removed!`)
-          setDataSource(dataSource.filter((item) => item.id !== record.id));
-          setSelectedProducts(selectedProducts.filter(item => item.id !== record.id));
+          const newData = dataSource.filter((item) => item.id !== record.id);
+          setDataSource(newData);
+          setSelectedProducts(newData.filter(x => x.quantity > 0))
           setLoading(false);
         })
         .catch(handleHttpError)
@@ -67,16 +73,16 @@ export default function SupplierMenuTable({ selectedSupplier, selectedProducts, 
         newData.splice(index, 1, { ...newData[index], ...record });
         setDataSource(newData);
       }
-  
-      const newSelectedProducts = [...selectedProducts];
-      const selectedProductIndex = newSelectedProducts.findIndex((item) => record.id === item.id);
-      if (selectedProductIndex >= 0) {
-        newSelectedProducts.splice(selectedProductIndex, 1, { ...newSelectedProducts[selectedProductIndex], ...record });
-        setSelectedProducts(newSelectedProducts);
-      }
+
+      setSelectedProducts(newData.filter(x => x.quantity > 0))
     };
   
     const columns = [
+      { 
+        align: '',
+        width: 50, 
+        render: (_, record, index) => index+1 
+      },
       {
         title: 'Name',
         dataIndex: 'product',
@@ -121,14 +127,11 @@ export default function SupplierMenuTable({ selectedSupplier, selectedProducts, 
     return (
       <>
         <MyToolbar title="Supplier's Menu">
-          <Button icon={<PlusOutlined />} disabled={loading} onClick={() => setIsModalVisible(true)}>New Item</Button>
+          <Input placeholder="Search Name" suffix={<SearchOutlined className='grey' />} value={searchForm.name} onChange={(e) => setSearchForm({...searchForm, name: e.target.value })} />
+          <Button icon={<PlusOutlined />} disabled={loading} onClick={() => setIsModalVisible(true)}>Add Item</Button>
         </MyToolbar>
         
         <Table loading={loading}
-          rowSelection={{ 
-            onChange: (_, selectedRows) => setSelectedProducts(selectedRows),
-            getCheckboxProps: (record) => ({ disabled: disabledProductsMap[record.product_id] }) 
-          }}
           columns={columns}
           dataSource={dataSource}
           rowKey={(_, index) => index}

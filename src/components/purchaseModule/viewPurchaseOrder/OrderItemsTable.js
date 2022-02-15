@@ -26,9 +26,7 @@ export default function OrderItemsTable({ purchaseOrder, setPurchaseOrder, loadi
   };
 
   const columns = [
-    { align: 'center', width: 100, render: (_, record, index) => 
-      purchaseOrder.isStatus(POStatus.PENDING) ? <Button shape="circle" icon={<DeleteOutlined />} onClick={() => handleDelete(record)} /> : index+1
-    },
+    { width: 50, render: (_, record, index) => index+1 },
     { title: 'Name', dataIndex: 'product', render: (product) => product.name },
     { title: 'Description', dataIndex: 'product',  render: (product) => product.description || '-' },
     { title: 'Unit', dataIndex: 'product', render: (product) => product.unit },
@@ -40,6 +38,9 @@ export default function OrderItemsTable({ purchaseOrder, setPurchaseOrder, loadi
       ({ editable: purchaseOrder.isStatus(POStatus.PENDING), record, dataIndex: 'unit_cost', inputType: 'number', displayType: 'currency', handleSave })
     },
     { title: 'Subtotal', dataIndex: '', key: 'subtotal', render: (_, record) => `$${(record.quantity*record.unit_cost).toFixed(2)}`, align: 'center' },
+    { align: 'center', width: 50, render: (_, record) => 
+      <Button shape="circle" icon={<DeleteOutlined />} onClick={() => handleDelete(record)} disabled={!purchaseOrder.isStatus(POStatus.PENDING)} />
+    },
   ];
 
   return (
@@ -48,7 +49,7 @@ export default function OrderItemsTable({ purchaseOrder, setPurchaseOrder, loadi
         <>
         { purchaseOrder.isStatus(POStatus.PENDING, POStatus.SENT) && 
           <MyToolbar title="Order Items">
-              <Button icon={<PlusOutlined />} disabled={loading} onClick={() => setIsNewOrderItemModalVisible(true)}>Add Item</Button>
+              <Button icon={<PlusOutlined />} disabled={loading} onClick={() => setIsNewOrderItemModalVisible(true)}>Add More Items</Button>
           </MyToolbar>
         }
 
@@ -76,6 +77,7 @@ export default function OrderItemsTable({ purchaseOrder, setPurchaseOrder, loadi
                           ${purchaseOrder.getGstAmount().toFixed(2)}
                         </Typography.Text>
                       </Table.Summary.Cell>
+                      <Table.Summary.Cell />
                     </Table.Summary.Row>
                   }
 
@@ -93,6 +95,7 @@ export default function OrderItemsTable({ purchaseOrder, setPurchaseOrder, loadi
                         <Typography.Text strong>${(+purchaseOrder.offset).toFixed(2) || 0}</Typography.Text>
                       }
                     </Table.Summary.Cell>
+                    <Table.Summary.Cell />
                   </Table.Summary.Row>
 
                   <Table.Summary.Row>
@@ -104,6 +107,7 @@ export default function OrderItemsTable({ purchaseOrder, setPurchaseOrder, loadi
                         {`$${purchaseOrder.getOrderTotal().toFixed(2)}`}
                       </Typography.Text>
                     </Table.Summary.Cell>
+                    <Table.Summary.Cell />
                   </Table.Summary.Row>
                 </>
               );

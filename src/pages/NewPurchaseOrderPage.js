@@ -56,7 +56,7 @@ export default function NewPurchaseOrderPage() {
         <MyCard>
           <SupplierTable setSelectedSupplier={setSelectedSupplier} />
           <MyToolbar style={{ marginTop: 15 }}>
-            <Button type="primary" onClick={() => setStep(step+1)} disabled={selectedSupplier.length === 0}>Next</Button>
+            <Button type="primary" onClick={() => setStep(step+1)} disabled={selectedSupplier.id == null}>Next</Button>
           </MyToolbar>
         </MyCard>
       }
@@ -66,7 +66,7 @@ export default function NewPurchaseOrderPage() {
 
           <MyToolbar style={{ marginTop: 15 }}>
             <Button onClick={() => setStep(step-1)}>Back</Button>
-            <Button type="primary" onClick={() => setStep(step+1)} disabled={selectedProducts.filter(x => x.quantity !== 0).length === 0}>Next</Button>
+            <Button type="primary" onClick={() => setStep(step+1)} disabled={selectedProducts.length === 0}>Next</Button>
           </MyToolbar>
         </MyCard>
       }
