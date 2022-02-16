@@ -55,10 +55,11 @@ export function AppProvider({ children }) {
             if (error.response.status === 333) {
                 removeSession();
                 message.error('Login session timed out. Please login again.');
-                throw 'Login session timed out. Please login again.';
+                throw Error('Login session timed out. Please login again.');
             } else {
-                message.error(error.response.data);
-                throw error.response.data;
+                console.log(error.response.data)
+                message.error(JSON.stringify(error.response.data));
+                throw Error(error.response.data);
             }
         } else if (error.request) {
             // The request was made but no response was received
