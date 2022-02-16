@@ -14,28 +14,23 @@ const breadcrumbs = [
   { url: '/logs', name: 'Logs' },
 ]
 
-const initialSearchForm = {
-    view_id: null,
-    date: null,
-}
-
 export default function ViewLogs() {
 
     const { handleHttpError } = useApp();
 
     const [loading, setLoading] = useState(false);
     const [logs, setLogs] = useState([]);
-    const [searchForm, setSearchForm] = useState(initialSearchForm);
+    const [form] = Form.useForm();
 
     useEffect(() => {
-        LogApiHelper.get(searchForm.view_id)
+        LogApiHelper.get()
             .then(results => {
                 setLogs(results);
                 setLoading(false);
             })
             .catch(handleHttpError)
             .catch(() => setLoading(false))
-    }, [setLoading, searchForm])
+    }, [handleHttpError, setLoading])
 
 
     function onValuesChange(_, form) {
@@ -52,6 +47,11 @@ export default function ViewLogs() {
             .catch(handleHttpError)
             .catch(() => setLoading(false))
     }
+
+    function resetForm() {
+        form.resetFields();
+        onValuesChange(null, form.getFieldsValue());
+    }
     
 
     return (
@@ -60,7 +60,7 @@ export default function ViewLogs() {
             <MyCard>
 
                 <MyToolbar title="Logs">
-                    <Form onValuesChange={onValuesChange} layout='inline'>
+                    <Form form={form} onValuesChange={onValuesChange} layout='inline' autoComplete='off'>
                         <Form.Item name="name">
                             <Input placeholder='Search Name' />
                         </Form.Item>
@@ -72,7 +72,7 @@ export default function ViewLogs() {
                                 { Object.keys(View).map(key => <Select.Option value={View[key].id}>{View[key].name}</Select.Option>) }
                             </Select>
                         </Form.Item>
-                        <Button onClick={() => setSearchForm({...initialSearchForm})}>Reset</Button>
+                        <Button onClick={resetForm}>Reset</Button>
                     </Form>
                 </MyToolbar>
 
@@ -98,8 +98,8 @@ const columns = [
     dataIndex: 'employee',
     key: 'employee',
     width: '15%',
-    render: (employee) => employee.name,
-    sorter: (a, b) => sortByString(a.employee.name, b.employee.name),
+    render: (employee) => employee?.name,
+    sorter: (a, b) => sortByString(a.employee?.name, b.employee?.name),
   },
   {
     title: 'Event',
