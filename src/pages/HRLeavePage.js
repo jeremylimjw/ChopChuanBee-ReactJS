@@ -4,54 +4,13 @@ import React, { useState, useEffect } from 'react'
 import LeaveCalendarView from '../components/humanResourceModule/LeaveCalendarView';
 import LeaveForm from '../components/humanResourceModule/LeaveForm'
 import LeaveTable from '../components/humanResourceModule/LeaveTable'
-import moment from 'moment';
 import '../css/LeavePage.css'
 import { HRApiHelper } from '../api/humanResource';
 import { EmployeeApiHelper } from '../api/employees';
+import { useApp } from '../providers/AppProvider';
+import moment from 'moment';
 
 const HRLeavePage = () => {
-  const sampleLeaveData = [
-    {
-      id: '67214447-c743-4ea0-8767-842b4464ff6c',
-      name: 'John Tan',
-      start_date: moment('2022-02-27').format('ll'),
-      end_date: moment('2022-03-04').format('ll'),
-      num_days: 5,
-      leaveType: 'Annual',
-      leave_status_id: 1,
-      leaveStatus: 'Pending'
-    },
-    {
-      id: '2',
-      name: 'Bobby Koh',
-      start_date: moment('2022-02-27').format('ll'),
-      end_date: moment('2022-03-04').format('ll'),
-      num_days: 5,
-      leaveType: 'Annual',
-      leave_status_id: 2,
-      leaveStatus: 'Pending'
-    },
-    {
-      id: '3',
-      name: 'Alice Ng',
-      start_date: moment('2022-02-27').format('ll'),
-      end_date: moment('2022-03-04').format('ll'),
-      num_days: 5,
-      leaveType: 'Maternal',
-      leave_status_id: 3,
-      leaveStatus: 'Rejected'
-    },
-    {
-      id: '4',
-      name: 'Lim Ah Ming',
-      start_date: moment('2022-02-27').format('ll'),
-      end_date: moment('2022-03-04').format('ll'),
-      num_days: 5,
-      leaveType: 'Sick',
-      leave_status_id: 4,
-      leaveStatus: 'Accepted'
-    }
-  ]
   const [modalVisibility, setModalVisibility] = useState(false)
   const [leavesDataSource, setLeavesDataSource] = useState([])
   const [viewMode, setViewMode] = useState()
@@ -59,41 +18,52 @@ const HRLeavePage = () => {
   const [loading, setLoading] = useState(true)
   const [employeeList, setEmployeeList] = useState([])
   const [leaveAccounts, setLeaveAccounts] = useState([])
+  const { handleHttpError } = useApp()
 
 
   useEffect(() => {
     if (loading) {
       toggleViewMode()
       initializeLeavesDataSrc()
-      initializeEmployeeList()
-      setLoading(false)
     } else {
       toggleViewMode('TABLE')
     }
   }, [loading]);
 
-  const submitLeaveApplicationForm = (leaveApplication) => {
+  const submitLeaveApplicationForm = async (leaveApplication) => {
     // API call to submit leave form to DB
     HRApiHelper.createNewLeaveApplication(leaveApplication)
-      .then((res) => res.status === 200 ? message.success('Leave application success!') : message.error('Leave application failed'))
-    setModalVisibility(false)
+      // .then((res) => res.status === 200 ? HRApiHelper.updateLeaveApplicationStatus({
+      //   id: res.data.id,
+      //   leave_status_id: 2
+      // }) : message.error('Leave application failed'))
+      .then(() => {
+        setLoading(true)
+        setModalVisibility(false)
+      })
   }
 
   const initializeLeavesDataSrc = async () => {
-    let dataSrc = sampleLeaveData.map((value) => {
-      return {
-        ...value,
-        duration: formatDuration(value.startDate, value.endDate)
-      }
+    let dataSrc = await HRApiHelper.getAllLeaveApplications()
+      .then((res) => res.map((value) => {
+        return {
+          ...value,
+          name: value.leave_account.employee.name,
+          leave_type_id: value.leave_account.leave_type_id
+        }
+      }))
+      .catch(handleHttpError)
+    dataSrc.sort((a, b) => {
+      return moment(b.created_at) - moment(a.created_at)
     })
     setLeavesDataSource(dataSrc)
     let leaveAcctData = await HRApiHelper.getAllLeaveAccounts()
+      .catch(handleHttpError)
     setLeaveAccounts(leaveAcctData.data)
-  }
-
-  const initializeEmployeeList = async () => {
-    let result = await EmployeeApiHelper.getAllEmployees()
-    setEmployeeList(result)
+    let employeeData = await EmployeeApiHelper.getAllEmployees()
+      .catch(handleHttpError)
+    setEmployeeList(employeeData)
+    setLoading(false)
   }
 
   /**
@@ -106,6 +76,7 @@ const HRLeavePage = () => {
       case 'TABLE':
         setViewMode(<LeaveTable
           leavesDataSource={leavesDataSource}
+          setLoading={setLoading}
         />
         )
         break
@@ -126,14 +97,9 @@ const HRLeavePage = () => {
     })
     setViewMode(<LeaveTable
       leavesDataSource={filteredArr}
+      setLoading={setLoading}
     />
     )
-    // setSearchResults(filteredArr)
-    // setLeavesDataSource(filteredArr)
-  }
-
-  const formatDuration = (startDate, endDate) => {
-    return `From ${startDate} to ${endDate}`
   }
 
   return <div>
@@ -177,3 +143,47 @@ const HRLeavePage = () => {
 }
 
 export default HRLeavePage
+
+
+// const sampleLeaveData = [
+//   {
+//     id: '67214447-c743-4ea0-8767-842b4464ff6c',
+//     name: 'John Tan',
+//     start_date: moment('2022-02-27').format('ll'),
+//     end_date: moment('2022-03-04').format('ll'),
+//     num_days: 5,
+//     leaveType: 'Annual',
+//     leave_status_id: 1,
+//     leaveStatus: 'Pending'
+//   },
+//   {
+//     id: '2',
+//     name: 'Bobby Koh',
+//     start_date: moment('2022-02-27').format('ll'),
+//     end_date: moment('2022-03-04').format('ll'),
+//     num_days: 5,
+//     leaveType: 'Annual',
+//     leave_status_id: 2,
+//     leaveStatus: 'Pending'
+//   },
+//   {
+//     id: '3',
+//     name: 'Alice Ng',
+//     start_date: moment('2022-02-27').format('ll'),
+//     end_date: moment('2022-03-04').format('ll'),
+//     num_days: 5,
+//     leaveType: 'Maternal',
+//     leave_status_id: 3,
+//     leaveStatus: 'Rejected'
+//   },
+//   {
+//     id: '4',
+//     name: 'Lim Ah Ming',
+//     start_date: moment('2022-02-27').format('ll'),
+//     end_date: moment('2022-03-04').format('ll'),
+//     num_days: 5,
+//     leaveType: 'Sick',
+//     leave_status_id: 4,
+//     leaveStatus: 'Accepted'
+//   }
+// ]

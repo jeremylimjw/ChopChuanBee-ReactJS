@@ -4,8 +4,10 @@ import { leaveTypeFilter } from '../../utilities/TableFilters';
 import { CheckOutlined, CloseOutlined, MoreOutlined } from '@ant-design/icons/lib/icons';
 import { HRApiHelper } from '../../api/humanResource';
 import moment from 'moment';
+import { useApp } from '../../providers/AppProvider';
 
 const EmployeeLeaveTable = (props) => {
+    let { user } = useApp()
     const [dataSource, setDataSource] = useState([])
 
     useEffect(() => {
@@ -16,6 +18,7 @@ const EmployeeLeaveTable = (props) => {
         const leaveTypes = ['Annual', 'Compassionate', 'Maternity/Paternity', 'Sick', 'Childcare']
         return leaveTypes[type]
     }
+
 
     const processTags = (status) => {
         switch (status) {
@@ -33,14 +36,18 @@ const EmployeeLeaveTable = (props) => {
     }
 
     const renderActionButtons = (record) => {
-        switch (record.leave_status_id) {
-            case 1:
-                return <Space size="middle">
-                    <Button onClick={() => updateLeaveStatus(record, true)}>Accept</Button>
-                    <Button onClick={() => updateLeaveStatus(record, false)}>Reject</Button>
-                </Space>
-            default:
-                return <div />
+        if (record.leave_status_id === 1) {
+            switch (props.viewMode) {
+                case 'MY_LEAVES':
+                    return <Button onClick={() => updateLeaveStatus(record, 'CANCEL')}>Cancel Application</Button>
+                case 'HR_LEAVES':
+                    return <Space size="middle">
+                        <Button onClick={() => updateLeaveStatus(record, 'ACCEPT')}>Accept</Button>
+                        <Button onClick={() => updateLeaveStatus(record, 'REJECT')}>Reject</Button>
+                    </Space>
+                default:
+                    break
+            }
         }
     }
 
@@ -50,10 +57,10 @@ const EmployeeLeaveTable = (props) => {
     }
 
     // Array list of objects to be placed inside table
-    const updateLeaveStatus = async (record, status) => {
+    const updateLeaveStatus = async (record, action) => {
         let updatedDataSrc = [...dataSource]
-        switch (status) {
-            case true:
+        switch (action) {
+            case 'ACCEPT':
                 // Accept Leave  
                 await HRApiHelper.updateLeaveApplicationStatus({
                     id: record.id,
@@ -66,7 +73,7 @@ const EmployeeLeaveTable = (props) => {
                 setDataSource(updatedDataSrc)
                 message.success('Leave Approved!')
                 break
-            case false:
+            case 'REJECT':
                 // Reject Leave
                 await HRApiHelper.updateLeaveApplicationStatus({
                     id: record.id,
@@ -79,9 +86,20 @@ const EmployeeLeaveTable = (props) => {
                 setDataSource(updatedDataSrc)
                 message.success('Leave Rejected!')
                 break
+            case 'CANCEL':
+                // Cancel Leave
+                await HRApiHelper.cancelLeaveApplication(record.id)
+                updatedDataSrc[record] = {
+                    ...record,
+                    leave_status_id: 4
+                }
+                setDataSource(updatedDataSrc)
+                message.success('Leave cancelled!')
+                break
             default:
                 break
         }
+        props.setLoading(true)
     }
 
     const tableColumns = [
@@ -99,8 +117,8 @@ const EmployeeLeaveTable = (props) => {
         },
         {
             title: 'Type',
-            dataIndex: 'leave_account',
             filters: leaveTypeFilter,
+            dataIndex: 'leave_account',
             render: (value) => value.leave_type.name,
             onFilter: (value, record) => record.leaveType === value
         },
@@ -112,6 +130,12 @@ const EmployeeLeaveTable = (props) => {
             title: 'Status',
             dataIndex: 'leave_status_id',
             render: (value) => processTags(value)
+        },
+        {
+            title: 'Creation Date',
+            dataIndex: 'created_at',
+            render: (value) => moment(value).format('ll'),
+            sorter: (a, b) => moment(a.created_at) - moment(b.created_at)
         },
         {
             title: 'Action',

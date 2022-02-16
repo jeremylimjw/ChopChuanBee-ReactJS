@@ -5,12 +5,23 @@ import React, { useEffect, useState } from 'react'
 const LeaveForm = (props) => {
   const [leaveForm] = Form.useForm()
   const employeeList = props.employeeList || []
-  const [selectedLeaveBal, setSelectedLeaveBal] = useState()
+  const [selectedLeaveBal, setSelectedLeaveBal] = useState(0)
+  const [selectedLeaveAccounts, setSelectedLeaveAccounts] = useState([])
   const { RangePicker } = DatePicker
   const layout = {
     labelCol: { span: 8 },
     wrapperCol: { span: 16 },
   }
+
+  useEffect(() => {
+    employeeList.length === 0 ? setSelectedLeaveAccounts(props.leaveAccounts) : setSelectedLeaveAccounts([])
+  }, [])
+
+  // Updates current leave balance in situations where user 
+  // changes the selected employee after choosing an employee AND the leave type
+  useEffect(() => {
+    renderLeaveBalance(leaveForm.getFieldValue('leaveTypeId'))
+  }, [selectedLeaveAccounts])
 
   const leaveTypeList = {
     1: 'Annual',
@@ -39,6 +50,7 @@ const LeaveForm = (props) => {
     }
     props.submitLeaveApplicationForm(leaveApplication)
     leaveForm.resetFields()
+    setSelectedLeaveBal(0)
   }
 
   const mapLeaveAccountId = (employeeId, leaveTypeId) => {
@@ -70,8 +82,19 @@ const LeaveForm = (props) => {
     return leaveTypeOptions
   }
 
+  const filterEmployeeLeaveAccounts = (employee_id) => {
+    let filteredArr = props.leaveAccounts.filter((element) => element.employee_id === employee_id)
+    setSelectedLeaveAccounts(filteredArr)
+  }
+
   const renderLeaveBalance = (value) => {
-    console.log(props)
+    let balance = selectedLeaveAccounts.filter((element) => element.leave_type.id === parseInt(value))
+    if (balance.length > 0) {
+      setSelectedLeaveBal(balance[0].entitled_days)
+    } else {
+      setSelectedLeaveBal(0)
+    }
+    leaveForm.setFieldsValue({ leaveTypeId: value })
   }
 
   return (
@@ -91,12 +114,16 @@ const LeaveForm = (props) => {
             showSearch={true}
             placeholder='Select employee...'
             optionFilterProp="children"
+            onSelect={(e) => filterEmployeeLeaveAccounts(e)}
             filterOption={(input, option) =>
               option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
             }
           >
             {employeeList.map((value) => {
-              return (<Select.Option value={value.id}>{value.name}</Select.Option>)
+              return (<Select.Option
+                value={value.id}>
+                {value.name}
+              </Select.Option>)
             })}
           </Select>
         }
@@ -107,15 +134,11 @@ const LeaveForm = (props) => {
         label='Select leave type...'
         name='leaveTypeId'
       >
+        <p>Current Leave Balance: {selectedLeaveBal}</p>
         <Select
-          onSelect={e => renderLeaveBalance(e)}
-        >{processLeaveTypeOptions()}
+          onSelect={e => renderLeaveBalance(e)}>
+          {processLeaveTypeOptions()}
         </Select>
-        <InputNumber
-          value={selectedLeaveBal}
-          style={{ marginTop: '10px' }}
-          disabled={true}
-          addonBefore="Balance" />
 
       </Form.Item>
       <Form.Item
@@ -124,6 +147,7 @@ const LeaveForm = (props) => {
       >
         <RangePicker
           placeholder={['Start Date', 'End Date']}
+          rules={[{ required: true, message: 'Select a date!' }]}
           disabledDate={(prev) => (prev < moment().startOf('day'))}
         />
       </Form.Item>

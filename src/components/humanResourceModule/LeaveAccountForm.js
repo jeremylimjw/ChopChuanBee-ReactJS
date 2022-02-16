@@ -24,7 +24,6 @@ const LeaveAccountForm = (props) => {
         [value.leave_type.id]: `${value.entitled_days}`
       }
     })
-    console.log(props.leaveAccountList)
     return initialValues
   }
 

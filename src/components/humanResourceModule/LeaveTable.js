@@ -3,16 +3,18 @@ import { Button, Dropdown, Input, Menu, message, Modal, Space, Table, Tag } from
 import { leaveTypeFilter } from '../../utilities/TableFilters';
 import { CheckOutlined, CloseOutlined, MoreOutlined } from '@ant-design/icons/lib/icons';
 import { HRApiHelper } from '../../api/humanResource';
+import moment from 'moment';
 
 const LeaveTable = (props) => {
+  console.log(props.leavesDataSource[0])
   const leavesDataSource = props.leavesDataSource
   const [dataSource, setDataSource] = useState([])
-  const [confirmationVisibility, setConfirmationVisibility] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const leaveTypes = ['', 'Annual', 'Compassionate', 'Maternity/Paternity', 'Sick', 'Childcare']
 
   useEffect(() => {
     setDataSource(leavesDataSource)
   }, [leavesDataSource])
+
 
   // Array list of objects to be placed inside table
   const updateLeaveStatus = async (record, status) => {
@@ -46,7 +48,8 @@ const LeaveTable = (props) => {
         break
       default:
         break
-    }
+      }
+      props.setLoading(true)
   }
 
   const processTags = (status) => {
@@ -83,17 +86,22 @@ const LeaveTable = (props) => {
     },
     {
       title: 'Start Date',
-      dataIndex: 'start_date'
-    },
-    {
+      dataIndex: 'start_date',
+      render: (value) => moment(value).format('ll'),
+      sorter: (a, b) => moment(a.start_date) - moment(b.start_date)
+  },
+  {
       title: 'End Date',
-      dataIndex: 'end_date'
-    },
+      dataIndex: 'end_date',
+      render: (value) => moment(value).format('ll'),
+      sorter: (a, b) => moment(a.end_date) - moment(b.end_date)
+  },
     {
       title: 'Type',
-      dataIndex: 'leaveType',
+      dataIndex: 'leave_type_id',
       filters: leaveTypeFilter,
-      onFilter: (value, record) => record.leaveType === value
+      render: (value) => leaveTypes[value],
+      onFilter: (value, record) => record.leave_type_id === value
     },
     {
       title: 'Requested Days',
@@ -105,12 +113,21 @@ const LeaveTable = (props) => {
       render: (value) => processTags(value)
     },
     {
+      title:'Creation Date',
+      dataIndex: 'created_at',
+      render:(value) => moment(value).format('ll')
+    },
+    {
+      title:'Remarks',
+      dataIndex: 'remarks'
+    },
+    {
       title: 'Action',
       dataIndex: 'leaveId',
       render: (value, record) => (
         renderActionButtons(record)
       ),
-    }
+    },
   ]
 
   return <div>
