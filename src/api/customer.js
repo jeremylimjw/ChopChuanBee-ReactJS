@@ -16,6 +16,11 @@ export class CustomerApiHelper {
             .then(res => res.data);
     }
 
+    static async create(customer) {
+        return axiosObject.post(`/customer`, customer)
+            .then(res => res.data);
+    }
+
     static async update(customer) {
         return axiosObject.put(`/customer`, {
             id: customer.id, 

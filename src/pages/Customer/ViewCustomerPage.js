@@ -2,9 +2,10 @@ import { Row, Col } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router';
 import { CustomerApiHelper } from '../../api/customer';
-import C1Form from '../../components/customerModule/NewCustomer/C1Form';
-import C2Menu from '../../components/customerModule/NewCustomer/C2Menu';
-import C3AccountReceivable from '../../components/customerModule/NewCustomer/C3AccountReceivable';
+import C1Form from '../../components/customerModule/ViewCustomer/C1Form';
+import C2Menu from '../../components/customerModule/ViewCustomer/C2Menu';
+import C3AccountReceivable from '../../components/customerModule/ViewCustomer/C3AccountReceivable';
+import C4History from '../../components/customerModule/ViewCustomer/C4History';
 import MyCard from '../../components/layout/MyCard';
 import MyLayout from '../../components/layout/MyLayout';
 import { useApp } from '../../providers/AppProvider';
@@ -61,6 +62,10 @@ export default function ViewCustomerPage() {
 
           <MyCard style={{ marginTop: 0 }}>
             <C3AccountReceivable />
+          </MyCard>
+
+          <MyCard>
+            <C4History />
           </MyCard>
         
         </MyLayout>

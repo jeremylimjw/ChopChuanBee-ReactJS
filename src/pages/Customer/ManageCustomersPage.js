@@ -9,6 +9,7 @@ import MyToolbar from '../../components/layout/MyToolbar';
 import { sortByDate, sortByNumber, sortByString } from '../../utilities/sorters';
 import { Link } from 'react-router-dom';
 import { getActiveTag } from '../../enums/ActivationStatus';
+import NewCustomerModal from '../../components/customerModule/NewCustomer/NewCustomerModal';
 
 const breadcrumbs = [
   { url: '/customers', name: 'Customers' },
@@ -18,14 +19,15 @@ export default function ManageCustomersPage() {
 
     const { handleHttpError } = useApp();
 
+    const [isModalVisible, setIsModalVisible] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [logs, setLogs] = useState([]);
+    const [customers, setCustomers] = useState([]);
     const [form] = Form.useForm();
 
     useEffect(() => {
         CustomerApiHelper.get()
             .then(results => {
-                setLogs(results);
+                setCustomers(results);
                 setLoading(false);
             })
             .catch(handleHttpError)
@@ -36,7 +38,7 @@ export default function ManageCustomersPage() {
     function onValuesChange(_, form) {
         CustomerApiHelper.get(form.company_name, form.s1_name)
             .then(results => {
-                setLogs(results);
+                setCustomers(results);
                 setLoading(false);
             })
             .catch(handleHttpError)
@@ -63,12 +65,14 @@ export default function ManageCustomersPage() {
                         </Form.Item>
                         <Button onClick={resetForm}>Reset</Button>
                     </Form>
-                    <Button type='primary' onClick={resetForm}>New</Button>
+                    <Button type='primary' onClick={() => setIsModalVisible(true)}>New</Button>
                 </MyToolbar>
 
-                <Table dataSource={logs} columns={columns} loading={loading} rowKey="id" />
+                <Table dataSource={customers} columns={columns} loading={loading} rowKey="id" />
                 
             </MyCard>
+
+            <NewCustomerModal customers={customers} setCustomers={setCustomers} isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} />
         
         </MyLayout>
     )

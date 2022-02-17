@@ -1,10 +1,10 @@
 import { Button, DatePicker, Select, Table } from 'antd'
-import React, { useState } from 'react'
+import React from 'react'
 import MyToolbar from '../../layout/MyToolbar'
 
 export default function C3AccountReceivable() {
-    const [loading, setLoading] = useState(false);
-    const [items, setItems] = useState([]);
+    // const [loading, setLoading] = useState(false);
+    // const [items, setItems] = useState([]);
 
     return (
         <>
@@ -16,7 +16,7 @@ export default function C3AccountReceivable() {
                 </Select>
                 <Button>Reset</Button>
             </MyToolbar>
-            <Table dataSource={items} columns={columns} loading={loading} rowKey={() => Math.random()} />
+            <Table dataSource={[]} columns={columns} loading={false} rowKey={() => Math.random()} />
         </>
     )
 }

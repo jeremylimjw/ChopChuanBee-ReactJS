@@ -1,4 +1,4 @@
-import { EditOutlined, MinusOutlined, PlusOutlined, SaveOutlined, UserAddOutlined, UserDeleteOutlined } from '@ant-design/icons/lib/icons';
+import { EditOutlined, SaveOutlined, UserAddOutlined, UserDeleteOutlined } from '@ant-design/icons/lib/icons';
 import { Button, Divider, Form, Input, message, Modal, Radio, Typography } from 'antd'
 import React, { useState } from 'react'
 import { CustomerApiHelper } from '../../../api/customer';
@@ -53,11 +53,11 @@ export default function C1Form({ customer, setCustomer }) {
                 <MyToolbar title="Customer Details">
                     <Form.Item>
                         { customer.deactivated_date == null ? 
-                            <Button onClick={() => setIsModalVisible(true)} disabled={loading}>
+                            <Button onClick={() => setIsModalVisible(true)} loading={loading}>
                                 <UserDeleteOutlined style={{ fontSize: "16px", color: "red" }}/>Deactivate
                             </Button>
                         :
-                            <Button onClick={() => setIsModalVisible(true)} disabled={loading}>
+                            <Button onClick={() => setIsModalVisible(true)} loading={loading}>
                                 <UserAddOutlined style={{ fontSize: "16px", color: "green" }}/>Activate
                             </Button>
                         }
@@ -65,7 +65,7 @@ export default function C1Form({ customer, setCustomer }) {
 
                     <Form.Item>
                         { editing ? 
-                            <Button onClick={() => onFinish(form.getFieldsValue())} disabled={loading}>
+                            <Button onClick={() => onFinish(form.getFieldsValue())} loading={loading}>
                                 <SaveOutlined style={{ fontSize: "16px" }} /> Save
                             </Button>
                             :

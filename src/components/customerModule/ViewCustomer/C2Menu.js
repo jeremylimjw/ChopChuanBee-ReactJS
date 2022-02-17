@@ -5,7 +5,7 @@ import { CustomerApiHelper } from '../../../api/customer'
 import { useApp } from '../../../providers/AppProvider';
 import { sortByString } from '../../../utilities/sorters';
 import MyToolbar from '../../layout/MyToolbar'
-import NewCustomerMenuModal from '../NewCustomerMenuModal';
+import NewCustomerMenuModal from './NewCustomerMenuModal';
 
 export default function C2Menu({ customer }) {
 
@@ -71,7 +71,7 @@ export default function C2Menu({ customer }) {
       },
       { align: 'center', width: 50, render: (_, record) => 
         <Popconfirm title="Confirm delete?" onConfirm={() => handleDelete(record)} disabled={loading}>
-          <Button shape="circle" icon={<DeleteOutlined />} disabled={loading} />
+          <Button shape="circle" icon={<DeleteOutlined />} loading={loading} />
         </Popconfirm>
       },
     ]

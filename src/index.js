@@ -13,7 +13,6 @@ import { View } from './enums/View';
 import ViewLogs from './pages/Log/ViewLogs';
 import ManageCustomersPage from './pages/Customer/ManageCustomersPage';
 import ViewCustomerPage from './pages/Customer/ViewCustomerPage';
-import NewCustomerPage from './pages/Customer/NewCustomerPage';
 
 
 // Add on more routes here
@@ -29,11 +28,6 @@ const routes = [
       { 
         path: '', 
         component: <ManageCustomersPage />,
-        viewAccess: "CRM",
-      },
-      { 
-        path: 'new', 
-        component: <NewCustomerPage />,
         viewAccess: "CRM",
       },
       { 

@@ -1,12 +1,12 @@
 import { message, Table, Button } from 'antd'
 import React, { useEffect, useState } from 'react'
-import { useApp } from '../../providers/AppProvider';
-import MyToolbar from '../layout/MyToolbar'
-import { ProductApiHelper } from '../../api/product'
+import { useApp } from '../../../providers/AppProvider';
+import MyToolbar from '../../layout/MyToolbar'
+import { ProductApiHelper } from '../../../api/product'
 import { DeleteOutlined } from '@ant-design/icons/lib/icons';
 import Modal from 'antd/lib/modal/Modal';
-import { CustomerApiHelper } from '../../api/customer';
-import { RenderCell } from '../general/TableCell';
+import { CustomerApiHelper } from '../../../api/customer';
+import { RenderCell } from '../../general/TableCell';
 
 
 export default function NewCustomerMenuModal({ customer, addToTable, isModalVisible, setIsModalVisible }) {
