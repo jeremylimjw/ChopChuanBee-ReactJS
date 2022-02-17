@@ -2,7 +2,7 @@ import React from 'react'
 import { Layout, Menu } from 'antd'
 import { Link } from 'react-router-dom'
 import { useApp } from '../../providers/AppProvider'
-import { HomeOutlined, UserOutlined } from '@ant-design/icons/lib/icons'
+import { HomeOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons/lib/icons'
 
 
 // Add on more menu items here
@@ -55,10 +55,9 @@ const menu = [
   {
     role: 'CRM',
     title: 'Customers',
-    icon: <UserOutlined />,
+    icon: <TeamOutlined />,
     items: [
       { route: '/customers', name: 'Manage Customers' },
-      { route: '/customers/accounts', name: 'Accounts Receivables' },
     ]
   },
 ]

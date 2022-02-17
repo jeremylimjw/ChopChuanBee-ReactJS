@@ -5,8 +5,11 @@ export class ProductApiHelper {
         return axiosObject.get(`/product`)
             .then(res => res.data);
     }
-    static async getByName(name) {
-        return axiosObject.get(`/product?name=${name}`)
+    static async get(name) {
+        let query = '';
+        if (name)
+            query += `&name_like=${name}`
+        return axiosObject.get(`/product?order_by=name${query}`)
             .then(res => res.data);
     }
 }

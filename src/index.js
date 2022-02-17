@@ -11,6 +11,9 @@ import RequireAuth from './auth/RequireAuth';
 import MyTemplate from './pages/MyTemplate';
 import { View } from './enums/view';
 import ViewLogs from './pages/Log/ViewLogs';
+import ManageCustomersPage from './pages/Customer/ManageCustomersPage';
+import ViewCustomerPage from './pages/Customer/ViewCustomerPage';
+import NewCustomerPage from './pages/Customer/NewCustomerPage';
 
 
 // Add on more routes here
@@ -21,13 +24,29 @@ const routes = [
   },
   {
     path: '/customers',
-    component: <div>Customers Component</div>,
-    viewAccess: View.CRM.name,
+    component: <Outlet />,
+    childRoutes: [
+      { 
+        path: '', 
+        component: <ManageCustomersPage />,
+        viewAccess: "CRM",
+      },
+      { 
+        path: 'new', 
+        component: <NewCustomerPage />,
+        viewAccess: "CRM",
+      },
+      { 
+        path: ':id', 
+        component: <ViewCustomerPage />,
+        viewAccess: "CRM",
+      },
+    ]
   },
   {
     path: '/logs',
     component: <ViewLogs />,
-    viewAccess: View.ADMIN.name,
+    viewAccess: View.CRM.name,
   },
 
 ]

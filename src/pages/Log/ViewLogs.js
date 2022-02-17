@@ -23,6 +23,7 @@ export default function ViewLogs() {
     const [form] = Form.useForm();
 
     useEffect(() => {
+        setLoading(true);
         LogApiHelper.get()
             .then(results => {
                 setLogs(results);
@@ -69,14 +70,14 @@ export default function ViewLogs() {
                         </Form.Item>
                         <Form.Item name="view_id">
                             <Select style={{ width: 150 }} placeholder="Filter by View" >
-                                { Object.keys(View).map(key => <Select.Option value={View[key].id}>{View[key].name}</Select.Option>) }
+                                { Object.keys(View).map((key, index) => <Select.Option key={index} value={View[key].id}>{View[key].name}</Select.Option>) }
                             </Select>
                         </Form.Item>
                         <Button onClick={resetForm}>Reset</Button>
                     </Form>
                 </MyToolbar>
 
-                <Table dataSource={logs} columns={columns} loading={loading} />
+                <Table dataSource={logs} columns={columns} loading={loading} rowKey="id" />
                 
             </MyCard>
         
@@ -99,7 +100,7 @@ const columns = [
     key: 'employee',
     width: '15%',
     render: (employee) => employee?.name,
-    sorter: (a, b) => sortByString(a.employee?.name, b.employee?.name),
+    sorter: (a, b) => sortByString(a.employee.name, b.employee.name),
   },
   {
     title: 'Event',
