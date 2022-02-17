@@ -51,7 +51,7 @@ export default function C2Menu({ customer }) {
         title: 'Alias',
         dataIndex: 'product_alias',
         key: 'product_alias',
-        width: 250,
+        width: 150,
         sorter: (a, b) => sortByString(a.product_alias, b.product_alias),
       },
       {
@@ -67,7 +67,7 @@ export default function C2Menu({ customer }) {
         key: 'id',
         align: 'center',
         width: 150,
-        render: (view_id) => '-',
+        render: (id) => '-',
       },
       { align: 'center', width: 50, render: (_, record) => 
         <Popconfirm title="Confirm delete?" onConfirm={() => handleDelete(record)} disabled={loading}>
@@ -79,7 +79,7 @@ export default function C2Menu({ customer }) {
     return (
         <>
             <MyToolbar title={`Customer's Menu`}>
-                <Button type='primary' onClick={() => setIsModalVisible(true)}>Add New Item</Button>
+                <Button type='primary' onClick={() => setIsModalVisible(true)}>Add New Items</Button>
             </MyToolbar>
             <Table dataSource={items} columns={columns} loading={loading} rowKey={() => Math.random()} />
 

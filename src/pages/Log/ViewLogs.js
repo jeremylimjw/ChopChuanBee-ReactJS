@@ -4,7 +4,7 @@ import { LogApiHelper } from '../../api/log';
 import MyCard from '../../components/layout/MyCard';
 import MyLayout from '../../components/layout/MyLayout';
 import MyToolbar from '../../components/layout/MyToolbar';
-import { getViewTag, View } from '../../enums/view';
+import { getViewTag, View } from '../../enums/View';
 import { useApp } from '../../providers/AppProvider';
 import { parseDateTime } from '../../utilities/datetime';
 import { sortByDate, sortByNumber, sortByString } from '../../utilities/sorters';

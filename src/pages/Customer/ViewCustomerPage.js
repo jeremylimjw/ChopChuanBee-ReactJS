@@ -1,9 +1,10 @@
-import { Typography } from 'antd';
+import { Row, Col } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router';
 import { CustomerApiHelper } from '../../api/customer';
 import C1Form from '../../components/customerModule/NewCustomer/C1Form';
 import C2Menu from '../../components/customerModule/NewCustomer/C2Menu';
+import C3AccountReceivable from '../../components/customerModule/NewCustomer/C3AccountReceivable';
 import MyCard from '../../components/layout/MyCard';
 import MyLayout from '../../components/layout/MyLayout';
 import { useApp } from '../../providers/AppProvider';
@@ -15,7 +16,6 @@ export default function ViewCustomerPage() {
 
     const { handleHttpError } = useApp();
   
-    const [loading, setLoading] = useState(false);
     const [customer, setCustomer] = useState(null)
 
     const breadcrumbs = [
@@ -36,27 +36,35 @@ export default function ViewCustomerPage() {
     }, [id, handleHttpError, navigate]);
 
     return (
-        <MyLayout breadcrumbs={breadcrumbs} bannerTitle="View Customer">
+      <>
+      {customer != null && 
+        <MyLayout breadcrumbs={breadcrumbs} bannerTitle={`Customer ${customer.company_name}`}>
+          
+          <Row>
+            <Col xl={12} xs={24}>
 
-            <div className='flex-side-by-side' style={{ marginTop: 24 }}>
+              <MyCard>
+                  <C1Form customer={customer} setCustomer={setCustomer} />
+              </MyCard>
+            </Col>
 
-                <MyCard style={{ flexGrow: 0, width: '550px' }} title="Customer Details">
-                    <C1Form customer={customer} setCustomer={setCustomer} />
-                </MyCard>
+            <Col xl={12} xs={24}>
+              <MyCard title="Quick View">
+                Customer owes you $0.00.
+              </MyCard>
 
-                <div className='flex-stack' style={{ flexGrow: 1 }}>
+              <MyCard>
+                <C2Menu customer={customer} />
+              </MyCard>
+            </Col>
+          </Row>
 
-                  <MyCard style={{ flexGrow: 0, width: 250 }} title="Amount Owed">
-                    <Typography.Title level={4}>$100.00</Typography.Title>
-                  </MyCard>
-
-                  <MyCard style={{ flexGrow: 0 }}>
-                      <C2Menu customer={customer} />
-                  </MyCard>
-                </div>
-
-            </div>
+          <MyCard style={{ marginTop: 0 }}>
+            <C3AccountReceivable />
+          </MyCard>
         
         </MyLayout>
+      }
+      </>
     )
 }

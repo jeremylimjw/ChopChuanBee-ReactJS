@@ -6,8 +6,9 @@ import { parseDateTime } from '../../utilities/datetime';
 import MyCard from '../../components/layout/MyCard';
 import MyLayout from '../../components/layout/MyLayout';
 import MyToolbar from '../../components/layout/MyToolbar';
-import { sortByDate, sortByString } from '../../utilities/sorters';
+import { sortByDate, sortByNumber, sortByString } from '../../utilities/sorters';
 import { Link } from 'react-router-dom';
+import { getActiveTag } from '../../enums/ActivationStatus';
 
 const breadcrumbs = [
   { url: '/customers', name: 'Customers' },
@@ -116,11 +117,18 @@ const columns = [
     render: (email) => email || '-',
     sorter: (a, b) => sortByString(a.email, b.email),
   },
+  {
+    title: 'Status',
+    dataIndex: 'deactivated_date',
+    key: 'deactivated_date',
+    render: (deactivated_date) => getActiveTag(deactivated_date),
+    sorter: (a, b) => sortByNumber(a.deactivated_date ? 1 : 0, b.deactivated_date ? 1 : 0),
+  },
   { 
-      dataIndex: "id", 
-      title: "", 
-      key: "link", 
-      width: '8%', 
-      render: (id) => <Link to={`./${id}`}>View</Link> 
+    dataIndex: "id", 
+    title: "", 
+    key: "link", 
+    width: '8%', 
+    render: (id) => <Link to={`./${id}`}>View</Link> 
   }
 ]

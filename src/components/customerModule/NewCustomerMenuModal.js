@@ -1,9 +1,9 @@
-import { Input, message, Table, Button, Form, AutoComplete, Select } from 'antd'
+import { message, Table, Button } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { useApp } from '../../providers/AppProvider';
 import MyToolbar from '../layout/MyToolbar'
 import { ProductApiHelper } from '../../api/product'
-import { DeleteOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons/lib/icons';
+import { DeleteOutlined } from '@ant-design/icons/lib/icons';
 import Modal from 'antd/lib/modal/Modal';
 import { CustomerApiHelper } from '../../api/customer';
 import { RenderCell } from '../general/TableCell';
@@ -53,8 +53,6 @@ export default function NewCustomerMenuModal({ customer, addToTable, isModalVisi
             product_alias: x.product_alias 
         }))
 
-        console.log(newMenuItems)
-
         setLoading(true);
         CustomerApiHelper.createMenu(newMenuItems)
             .then(() => {
@@ -68,7 +66,7 @@ export default function NewCustomerMenuModal({ customer, addToTable, isModalVisi
     }
 
     return (
-        <Modal title="Add to Customer Menu" visible={isModalVisible} onOk={handleOk} onCancel={() => setIsModalVisible(false)} width={1200}>
+        <Modal title="Add New Items" visible={isModalVisible} onOk={handleOk} onCancel={() => setIsModalVisible(false)} width={800}>
 
             <MyToolbar title="Selected Products">
                 <Button type='primary' onClick={() => addRow()}>Add New Row</Button>

@@ -9,7 +9,7 @@ import LoginPage from './pages/LoginPage';
 import { AppProvider } from './providers/AppProvider';
 import RequireAuth from './auth/RequireAuth';
 import MyTemplate from './pages/MyTemplate';
-import { View } from './enums/view';
+import { View } from './enums/View';
 import ViewLogs from './pages/Log/ViewLogs';
 import ManageCustomersPage from './pages/Customer/ManageCustomersPage';
 import ViewCustomerPage from './pages/Customer/ViewCustomerPage';
