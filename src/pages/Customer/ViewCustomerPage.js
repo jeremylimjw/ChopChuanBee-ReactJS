@@ -68,7 +68,7 @@ export default function ViewCustomerPage() {
     return (
       <>
       {customer != null && 
-        <MyLayout breadcrumbs={breadcrumbs} bannerTitle={`${customer.company_name}`} bannerRight={renderDeactivateButton()}>
+        <MyLayout breadcrumbs={breadcrumbs} bannerTitle={`${customer.company_name} ${ customer.deactivated_date == null ? '' : '(Deactivated)' }`} bannerRight={renderDeactivateButton()}>
           
           <Row>
             <Col xl={10} xs={24}>

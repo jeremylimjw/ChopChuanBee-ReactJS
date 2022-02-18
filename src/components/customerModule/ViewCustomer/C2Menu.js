@@ -80,7 +80,6 @@ export default function C2Menu({ customer }) {
   )
 }
 
-
 const columns = [
   {
       title: 'No',
