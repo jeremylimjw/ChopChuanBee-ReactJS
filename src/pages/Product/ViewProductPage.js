@@ -1,4 +1,5 @@
-import { Row, Col } from 'antd';
+import { UserAddOutlined, UserDeleteOutlined } from '@ant-design/icons/lib/icons';
+import { Row, Col, Popconfirm, Button, message } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router';
 import { ProductApiHelper } from '../../api/product';
@@ -15,6 +16,7 @@ export default function ViewProductPage() {
     const { handleHttpError } = useApp();
   
     const [product, setProduct] = useState(null)
+    const [loading, setLoading] = useState(false);
 
     const breadcrumbs = [
       { url: '/products', name: 'Products' },
@@ -33,10 +35,38 @@ export default function ViewProductPage() {
         .catch(handleHttpError)
     }, [id, handleHttpError, navigate]);
 
+    function handleDeactivate() {
+        setLoading(true);
+        const promise = product.deactivated_date == null ? ProductApiHelper.deactivate(product.id) : ProductApiHelper.activate(product.id);
+        promise.then(newFields => {
+            setLoading(false);
+            setProduct({...product, ...newFields });
+            message.success(`Product successfully ${product.deactivated_date == null ? 'deactivated' : 'activated' }!`);
+        })
+        .catch(handleHttpError)
+        .catch(() => setLoading(false));
+    }
+
+    function renderDeactivateButton() {
+        return (
+            <>
+                { product.deactivated_date == null ? 
+                    <Popconfirm title="Confirm deactivate?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading}>
+                        <Button type="danger" loading={loading} icon={<UserDeleteOutlined />} style={{ width: 120 }}>Deactivate</Button>
+                    </Popconfirm>
+                    :
+                    <Popconfirm title="Confirm activate?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading}>
+                        <Button type="primary" loading={loading} icon={<UserAddOutlined />} style={{ width: 120 }}>Activate</Button>
+                    </Popconfirm>
+                }
+            </>
+        )
+    }
+
     return (
         <>
         {product != null && 
-          <MyLayout breadcrumbs={breadcrumbs} bannerTitle={`${product.name}`}>
+            <MyLayout breadcrumbs={breadcrumbs} bannerTitle={`${product.name}`} bannerRight={renderDeactivateButton()}>
             
             <Row>
               <Col xl={10} xs={24}>

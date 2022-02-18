@@ -1,5 +1,5 @@
-import { EditOutlined, SaveOutlined, UserAddOutlined, UserDeleteOutlined } from '@ant-design/icons/lib/icons';
-import { Button, Form, Input, InputNumber, message, Popconfirm, Typography } from 'antd'
+import { EditOutlined, SaveOutlined } from '@ant-design/icons/lib/icons';
+import { Button, Form, Input, InputNumber, message, Typography } from 'antd'
 import React, { useState } from 'react'
 import { ProductApiHelper } from '../../../api/product';
 import { useApp } from '../../../providers/AppProvider';
@@ -27,48 +27,16 @@ export default function P1Form({ product, setProduct }) {
             .catch(() => setLoading(false));
     }
 
-    function handleDeactivate() {
-        setLoading(true);
-        const promise = product.deactivated_date == null ? ProductApiHelper.deactivate(product.id) : ProductApiHelper.activate(product.id);
-        promise.then(newFields => {
-            setLoading(false);
-            setProduct({...product, ...newFields });
-            message.success(`Product successfully ${product.deactivated_date == null ? 'deactivated' : 'activated' }!`);
-        })
-        .catch(handleHttpError)
-        .catch(() => setLoading(false));
-    }
-
     return (
         <>
         { product != null &&
             <>
                 <MyToolbar title="Details">
                     <Form.Item>
-                        { product.deactivated_date == null ? 
-                            <Popconfirm title="Confirm deactivate?" onConfirm={handleDeactivate} disabled={loading}>
-                                <Button type="danger" loading={loading}>
-                                    <UserDeleteOutlined style={{ fontSize: "16px" }}/>Deactivate
-                                </Button>
-                            </Popconfirm>
-                        :
-                            <Popconfirm title="Confirm activate?" onConfirm={handleDeactivate} disabled={loading}>
-                                <Button type="primary" loading={loading}>
-                                    <UserAddOutlined style={{ fontSize: "16px" }}/>Activate
-                                </Button>
-                            </Popconfirm>
-                        }
-                    </Form.Item>
-
-                    <Form.Item>
                         { editing ? 
-                            <Button onClick={() => onFinish(form.getFieldsValue())} loading={loading}>
-                                <SaveOutlined style={{ fontSize: "16px" }} /> Save
-                            </Button>
+                            <Button type="primary" onClick={() => onFinish(form.getFieldsValue())} icon={<SaveOutlined />} loading={loading} style={{ width: 85 }}>Save</Button>
                             :
-                            <Button onClick={() => setEditing(true)}>
-                                <EditOutlined style={{ fontSize: "16px" }} /> Edit
-                            </Button>
+                            <Button onClick={() => setEditing(true)} icon={<EditOutlined />} style={{ width: 85 }}>Edit</Button>
                         }
                     </Form.Item>
                 </MyToolbar>

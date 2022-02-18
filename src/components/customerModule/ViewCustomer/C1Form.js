@@ -28,48 +28,16 @@ export default function C1Form({ customer, setCustomer }) {
             .catch(() => setLoading(false));
     }
 
-    function handleDeactivate() {
-        setLoading(true);
-        const promise = customer.deactivated_date == null ? CustomerApiHelper.deactivate(customer.id) : CustomerApiHelper.activate(customer.id);
-        promise.then(newFields => {
-            setLoading(false);
-            setCustomer({...customer, ...newFields });
-            message.success(`Customer successfully ${customer.deactivated_date == null ? 'deactivated' : 'activated' }!`);
-        })
-        .catch(handleHttpError)
-        .catch(() => setLoading(false));
-    }
-
     return (
         <>
         { customer != null &&
             <>
                 <MyToolbar title="Details">
                     <Form.Item>
-                        { customer.deactivated_date == null ? 
-                            <Popconfirm title="Confirm deactivate?" onConfirm={handleDeactivate} disabled={loading}>
-                                <Button type="danger" loading={loading}>
-                                    <UserDeleteOutlined style={{ fontSize: "16px" }}/>Deactivate
-                                </Button>
-                            </Popconfirm>
-                        :
-                            <Popconfirm title="Confirm activate?" onConfirm={handleDeactivate} disabled={loading}>
-                                <Button type="primary" loading={loading}>
-                                    <UserAddOutlined style={{ fontSize: "16px" }}/>Activate
-                                </Button>
-                            </Popconfirm>
-                        }
-                    </Form.Item>
-
-                    <Form.Item>
                         { editing ? 
-                            <Button onClick={() => onFinish(form.getFieldsValue())} loading={loading}>
-                                <SaveOutlined style={{ fontSize: "16px" }} /> Save
-                            </Button>
+                            <Button type="primary" onClick={() => onFinish(form.getFieldsValue())} icon={<SaveOutlined />} loading={loading} style={{ width: 85 }}>Save</Button>
                             :
-                            <Button onClick={() => setEditing(true)}>
-                                <EditOutlined style={{ fontSize: "16px" }} /> Edit
-                            </Button>
+                            <Button onClick={() => setEditing(true)} icon={<EditOutlined />} style={{ width: 85 }}>Edit</Button>
                         }
                     </Form.Item>
                 </MyToolbar>

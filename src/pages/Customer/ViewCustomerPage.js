@@ -1,4 +1,5 @@
-import { Row, Col } from 'antd';
+import { UserAddOutlined, UserDeleteOutlined } from '@ant-design/icons/lib/icons';
+import { Row, Col, Popconfirm, Button, message } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router';
 import { CustomerApiHelper } from '../../api/customer';
@@ -17,6 +18,7 @@ export default function ViewCustomerPage() {
     const { handleHttpError } = useApp();
   
     const [customer, setCustomer] = useState(null)
+    const [loading, setLoading] = useState(false);
 
     const breadcrumbs = [
       { url: '/customers', name: 'Customers' },
@@ -35,10 +37,38 @@ export default function ViewCustomerPage() {
         .catch(handleHttpError)
     }, [id, handleHttpError, navigate]);
 
+    function handleDeactivate() {
+        setLoading(true);
+        const promise = customer.deactivated_date == null ? CustomerApiHelper.deactivate(customer.id) : CustomerApiHelper.activate(customer.id);
+        promise.then(newFields => {
+            setLoading(false);
+            setCustomer({...customer, ...newFields });
+            message.success(`Customer successfully ${customer.deactivated_date == null ? 'deactivated' : 'activated' }!`);
+        })
+        .catch(handleHttpError)
+        .catch(() => setLoading(false));
+    }
+
+    function renderDeactivateButton() {
+      return (
+        <>
+          { customer.deactivated_date == null ? 
+            <Popconfirm title="Confirm deactivate?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading}>
+              <Button type="danger" loading={loading} icon={<UserDeleteOutlined />} style={{ width: 120 }}>Deactivate</Button>
+            </Popconfirm>
+            :
+            <Popconfirm title="Confirm activate?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading}>
+              <Button type="primary" loading={loading} icon={<UserAddOutlined />} style={{ width: 120 }}>Activate</Button>
+            </Popconfirm>
+          }
+        </>
+      )
+    }
+
     return (
       <>
       {customer != null && 
-        <MyLayout breadcrumbs={breadcrumbs} bannerTitle={`${customer.company_name}`}>
+        <MyLayout breadcrumbs={breadcrumbs} bannerTitle={`${customer.company_name}`} bannerRight={renderDeactivateButton()}>
           
           <Row>
             <Col xl={10} xs={24}>
