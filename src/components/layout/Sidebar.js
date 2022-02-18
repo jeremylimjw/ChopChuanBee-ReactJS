@@ -47,9 +47,9 @@ const menu = [
     title: 'Inventory',
     icon: <UserOutlined />,
     items: [
+      { route: '/products', name: 'Manage Products' },
       { route: '/inventory', name: 'Manage Inventory' },
       { route: '/inventory/supplier-invoices', name: 'Supplier Invoices' },
-      { route: '/products', name: 'Manage Products' },
     ]
   },
   {

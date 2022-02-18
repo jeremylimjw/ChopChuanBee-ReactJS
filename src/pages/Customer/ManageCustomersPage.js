@@ -2,7 +2,7 @@ import { Button, Form, Input, Select, Table } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { CustomerApiHelper } from '../../api/customer';
 import { useApp } from '../../providers/AppProvider';
-import { parseDateTime } from '../../utilities/datetime';
+import { parseDate } from '../../utilities/datetime';
 import MyCard from '../../components/layout/MyCard';
 import MyLayout from '../../components/layout/MyLayout';
 import MyToolbar from '../../components/layout/MyToolbar';
@@ -37,7 +37,6 @@ export default function ManageCustomersPage() {
 
 
     function onValuesChange(_, form) {
-
       CustomerApiHelper.get(form.company_name, form.p1_name, form.status)
           .then(results => {
               setCustomers(results);
@@ -92,8 +91,8 @@ const columns = [
     title: 'Created At',
     dataIndex: 'created_at',
     key: 'created_at',
-    width: '16%',
-    render: (created_at) => parseDateTime(created_at),
+    width: 150,
+    render: (created_at) => parseDate(created_at),
     sorter: (a, b) => sortByDate(a.created_at, b.created_at),
   },
   {

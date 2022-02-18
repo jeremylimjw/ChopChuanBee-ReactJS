@@ -4,10 +4,8 @@ import React, { useState } from 'react'
 import { CustomerApiHelper } from '../../../api/customer';
 import { getChargedUnderTag } from '../../../enums/ChargedUnder';
 import { useApp } from '../../../providers/AppProvider';
+import { EMAIL, REQUIRED } from '../../../utilities/form';
 import MyToolbar from '../../layout/MyToolbar';
-
-const REQUIRED = { required: true, message: 'This field is required.' };
-const EMAIL = { type: 'email', message: 'This email is invalid.' };
 
 export default function C1Form({ customer, setCustomer }) {
 

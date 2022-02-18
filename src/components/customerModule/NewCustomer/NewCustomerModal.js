@@ -4,9 +4,7 @@ import Modal from 'antd/lib/modal/Modal'
 import React, { useState } from 'react'
 import { CustomerApiHelper } from '../../../api/customer';
 import { useApp } from '../../../providers/AppProvider';
-
-const REQUIRED = { required: true, message: 'This field is required.' };
-const EMAIL = { type: 'email', message: 'This email is invalid.' };
+import { EMAIL, REQUIRED } from '../../../utilities/form';
 
 export default function NewCustomerModal({ isModalVisible, setIsModalVisible, customers, setCustomers }) {
 

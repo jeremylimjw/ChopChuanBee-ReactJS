@@ -1,5 +1,5 @@
 import { DeleteOutlined } from '@ant-design/icons/lib/icons';
-import { Button, message, Popconfirm, Table } from 'antd'
+import { Button, message, Table } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { CustomerApiHelper } from '../../../api/customer'
 import { ProductApiHelper } from '../../../api/product';
@@ -30,10 +30,10 @@ export default function C2Menu({ customer }) {
       .catch(handleHttpError)
       .catch(() => setLoading(false))
     }
-  }, [customer, setLoading])
+  }, [customer, setLoading, handleHttpError])
 
   useEffect(() => {
-    ProductApiHelper.get()
+    ProductApiHelper.getOrderByName()
       .then(results => {
           setProducts(results);
       })
@@ -91,13 +91,13 @@ const columns = [
     title: 'Alias',
     dataIndex: 'product_alias',
     key: 'product_alias',
-    width: 220,
     sorter: (a, b) => sortByString(a.product_alias, b.product_alias),
   },
   {
     title: 'Product Name',
     dataIndex: 'product',
     key: 'product',
+    width: 280,
     render: (product) => product?.name,
     sorter: (a, b) => sortByString(a.product?.name, b.product?.name),
   },
@@ -106,7 +106,7 @@ const columns = [
     dataIndex: 'id',
     key: 'id',
     align: 'center',
-    width: 150,
+    width: 120,
     render: (id) => '-',
     sorter: (a, b) => sortByString(a.product?.name, b.product?.name),
   },

@@ -14,7 +14,7 @@ export function RenderInput({ field, items, setItems, record, ...restProps }) {
 
     useEffect(() => {
         setValue(record[`${field}`])
-    }, [record])
+    }, [record, field])
 
     function save() {
         const newItems = [...items]
@@ -54,7 +54,7 @@ export function RenderProductSelect({ field, items, setItems, record, products, 
         setValue(record[`${field}`]?.name)
       }
       setOptions(products.map(x => ({ label: x.name, value: x.id, product: x })).splice(0, LIMIT));
-    }, [record, products])
+    }, [record, products, field])
 
     function onChange(_, option) {
         setValue(option[`${field}`].name); 
@@ -83,7 +83,7 @@ export function RenderProductSelect({ field, items, setItems, record, products, 
 
     return (
         <td {...restProps}>
-            <Select showSearch style={{width: '100%'}}
+            <Select showSearch style={{ width: 280 }}
                 value={value}
                 options={options}
                 placeholder="Select Product" 

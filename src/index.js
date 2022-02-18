@@ -13,6 +13,8 @@ import { View } from './enums/View';
 import ViewLogs from './pages/Log/ViewLogs';
 import ManageCustomersPage from './pages/Customer/ManageCustomersPage';
 import ViewCustomerPage from './pages/Customer/ViewCustomerPage';
+import ManageProductsPage from './pages/Product/ManageProductsPage';
+import ViewProductPage from './pages/Product/ViewProductPage';
 
 
 // Add on more routes here
@@ -28,19 +30,35 @@ const routes = [
       { 
         path: '', 
         component: <ManageCustomersPage />,
-        viewAccess: "CRM",
+        viewAccess: View.CRM.name,
       },
       { 
         path: ':id', 
         component: <ViewCustomerPage />,
-        viewAccess: "CRM",
+        viewAccess: View.CRM.name,
+      },
+    ]
+  },
+  {
+    path: '/products',
+    component: <Outlet />,
+    childRoutes: [
+      { 
+        path: '', 
+        component: <ManageProductsPage />,
+        viewAccess: View.INVENTORY.name,
+      },
+      { 
+        path: ':id', 
+        component: <ViewProductPage />,
+        viewAccess: View.INVENTORY.name,
       },
     ]
   },
   {
     path: '/logs',
     component: <ViewLogs />,
-    viewAccess: View.CRM.name,
+    viewAccess: View.ADMIN.name,
   },
 
 ]
