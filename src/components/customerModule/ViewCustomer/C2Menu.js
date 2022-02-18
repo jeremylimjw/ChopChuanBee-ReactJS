@@ -21,8 +21,16 @@ export default function C2Menu({ customer }) {
   columns[4].render = (_, record) => <Button shape="circle" icon={<DeleteOutlined />} onClick={() => handleDeleteRow(record)} loading={loading} />;
 
   useEffect(() => {
-    setItems(customer?.customer_menus);
-  }, [customer, setItems])
+    setLoading(true);
+    if (customer) {
+      CustomerApiHelper.getMenu(customer.id).then(results => {
+        setItems(results);
+        setLoading(false);
+      })
+      .catch(handleHttpError)
+      .catch(() => setLoading(false))
+    }
+  }, [customer, setLoading])
 
   useEffect(() => {
     ProductApiHelper.getAll()

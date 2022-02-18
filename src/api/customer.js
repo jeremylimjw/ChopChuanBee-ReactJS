@@ -17,7 +17,7 @@ export class CustomerApiHelper {
     }
 
     static async getById(id) {
-        return axiosObject.get(`/customer?id=${id}&include=customer_menu&customer_menu_include=product&customer_menu_order_by=product_alias`)
+        return axiosObject.get(`/customer?id=${id}`)
             .then(res => res.data);
     }
 
@@ -52,6 +52,11 @@ export class CustomerApiHelper {
 
     static async deactivate(id) {
         return axiosObject.post(`/customer/deactivate`, { id: id })
+            .then(res => res.data);
+    }
+
+    static async getMenu(id) {
+        return axiosObject.get(`/customer/menu?customer_id=${id}&include=product&order_by=product_alias`)
             .then(res => res.data);
     }
 
