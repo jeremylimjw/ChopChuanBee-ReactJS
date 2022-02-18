@@ -38,19 +38,19 @@ export default function ViewCustomerPage() {
     return (
       <>
       {customer != null && 
-        <MyLayout breadcrumbs={breadcrumbs} bannerTitle={`Customer ${customer.company_name}`}>
+        <MyLayout breadcrumbs={breadcrumbs} bannerTitle={`${customer.company_name}`}>
           
           <Row>
-            <Col xl={12} xs={24}>
+            <Col xl={10} xs={24}>
 
               <MyCard>
                   <C1Form customer={customer} setCustomer={setCustomer} />
               </MyCard>
             </Col>
 
-            <Col xl={12} xs={24}>
+            <Col xl={14} xs={24}>
               <MyCard title="Quick View">
-                Customer owes you $0.00.
+                {customer.company_name} has outstanding account receivables of $0.00.
               </MyCard>
 
               <MyCard>

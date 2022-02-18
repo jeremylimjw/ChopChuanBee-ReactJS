@@ -1,10 +1,6 @@
 import { axiosObject } from "./axiosWrapper";
 
 export class ProductApiHelper {
-    static async getAll() {
-        return axiosObject.get(`/product`)
-            .then(res => res.data);
-    }
     static async get(name) {
         let query = '';
         if (name)

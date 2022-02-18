@@ -46,7 +46,7 @@ export default function C1Form({ customer, setCustomer }) {
         <>
         { customer != null &&
             <>
-                <MyToolbar title="Customer Details">
+                <MyToolbar title="Details">
                     <Form.Item>
                         { customer.deactivated_date == null ? 
                             <Popconfirm title="Confirm deactivate?" onConfirm={handleDeactivate} disabled={loading}>

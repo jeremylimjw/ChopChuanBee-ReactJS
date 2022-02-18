@@ -19,6 +19,8 @@ const styles = {
     background: '#fff',
     height: 'auto',
     padding: '15px 25px',
+    boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+    border: 'none',
   },
   breadcrumb: {
     marginTop: 8,

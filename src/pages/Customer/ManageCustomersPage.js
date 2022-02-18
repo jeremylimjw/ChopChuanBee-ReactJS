@@ -58,15 +58,16 @@ export default function ManageCustomersPage() {
         <MyCard>
 
           <MyToolbar title="Customers">
-              <Form form={form} onValuesChange={onValuesChange} layout='inline' autoComplete='off'>
+              <Form form={form} onValuesChange={onValuesChange} layout='inline' autoComplete='off' initialValues={{ status: null }}>
                   <Form.Item name="company_name">
                       <Input placeholder='Search Company' />
                   </Form.Item>
                   <Form.Item name="p1_name">
-                      <Input placeholder='Search Person' />
+                      <Input placeholder='Search Person Name' />
                   </Form.Item>
                   <Form.Item name="status">
-                    <Select style={{ width: 180 }} placeholder="Filter by Status">
+                    <Select style={{ width: 120 }} placeholder="Filter by Status">
+                      <Select.Option value={null}>All</Select.Option>
                       <Select.Option value={true}>Active</Select.Option>
                       <Select.Option value={false}>Inactive</Select.Option>
                     </Select>

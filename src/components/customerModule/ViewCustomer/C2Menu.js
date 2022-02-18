@@ -33,7 +33,7 @@ export default function C2Menu({ customer }) {
   }, [customer, setLoading])
 
   useEffect(() => {
-    ProductApiHelper.getAll()
+    ProductApiHelper.get()
       .then(results => {
           setProducts(results);
       })
@@ -65,7 +65,7 @@ export default function C2Menu({ customer }) {
 
   return (
     <>
-        <MyToolbar title={`Customer's Menu`}>
+        <MyToolbar title={`Menu`}>
             <Button onClick={handleAddRow}>Add New Row</Button>
             <Button type='primary' onClick={handleMenuUpdate} loading={loading}>Save</Button>
         </MyToolbar>
@@ -91,7 +91,7 @@ const columns = [
     title: 'Alias',
     dataIndex: 'product_alias',
     key: 'product_alias',
-    width: 180,
+    width: 220,
     sorter: (a, b) => sortByString(a.product_alias, b.product_alias),
   },
   {
