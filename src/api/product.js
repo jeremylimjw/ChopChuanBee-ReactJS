@@ -6,10 +6,15 @@ export class ProductApiHelper {
             .then(res => res.data);
     }
 
-    static async get(name) {
+    static async get(name, status) {
         let query = '';
         if (name)
             query += `&name_like=${name}`
+        if (status === true) {
+            query += `&deactivated_date_is_null=1`;
+        } else if (status === false) {
+            query += `&deactivated_date_is_nn=1`;
+        }
         return axiosObject.get(`/product?order_by=created_at_desc${query}`)
             .then(res => res.data);
     }
@@ -18,7 +23,7 @@ export class ProductApiHelper {
         let query = '';
         if (name)
             query += `&name_like=${name}`
-        return axiosObject.get(`/product?order_by=name${query}`)
+        return axiosObject.get(`/product?deactivated_date_is_null=1&order_by=name${query}`)
             .then(res => res.data);
     }
 

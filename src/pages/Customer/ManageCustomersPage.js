@@ -134,6 +134,7 @@ const columns = [
     title: 'Status',
     dataIndex: 'deactivated_date',
     key: 'deactivated_date',
+    width: 120,
     render: (deactivated_date) => getActiveTag(deactivated_date),
     sorter: (a, b) => sortByNumber(a.deactivated_date ? 1 : 0, b.deactivated_date ? 1 : 0),
   },
@@ -141,7 +142,7 @@ const columns = [
     dataIndex: "id", 
     title: "", 
     key: "link", 
-    width: '8%', 
+    width: 100,
     render: (id) => <Link to={`./${id}`}>View</Link> 
   }
 ]

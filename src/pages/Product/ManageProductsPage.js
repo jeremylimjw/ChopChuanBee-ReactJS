@@ -1,4 +1,4 @@
-import { Button, Form, Input, Table } from 'antd';
+import { Button, Form, Input, Select, Table } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { ProductApiHelper } from '../../api/product';
 import { useApp } from '../../providers/AppProvider';
@@ -6,10 +6,11 @@ import { parseDate } from '../../utilities/datetime';
 import MyCard from '../../components/layout/MyCard';
 import MyLayout from '../../components/layout/MyLayout';
 import MyToolbar from '../../components/layout/MyToolbar';
-import { sortByDate, sortByString } from '../../utilities/sorters';
+import { sortByDate, sortByNumber, sortByString } from '../../utilities/sorters';
 import { Link } from 'react-router-dom';
 import { PlusOutlined } from '@ant-design/icons/lib/icons';
 import NewProductModal from '../../components/inventoryModule/NewProduct/NewProductModal';
+import { getActiveTag } from '../../enums/ActivationStatus';
 
 const breadcrumbs = [
   { url: '/products', name: 'Products' },
@@ -34,9 +35,8 @@ export default function ManageProductsPage() {
             .catch(() => setLoading(false))
     }, [handleHttpError, setLoading])
 
-
     function onValuesChange(_, form) {
-        ProductApiHelper.getOrderByName(form.name)
+        ProductApiHelper.get(form.name, form.status)
           .then(results => {
               setProducts(results);
               setLoading(false);
@@ -59,6 +59,13 @@ export default function ManageProductsPage() {
                 <Form form={form} onValuesChange={onValuesChange} layout='inline' autoComplete='off' initialValues={{ status: null }}>
                     <Form.Item name="name">
                         <Input placeholder='Search Name' />
+                    </Form.Item>
+                    <Form.Item name="status">
+                      <Select style={{ width: 120 }} placeholder="Filter by Status">
+                        <Select.Option value={null}>All</Select.Option>
+                        <Select.Option value={true}>Active</Select.Option>
+                        <Select.Option value={false}>Inactive</Select.Option>
+                      </Select>
                     </Form.Item>
                     <Button onClick={resetForm}>Reset</Button>
                 </Form>
@@ -106,11 +113,19 @@ const columns = [
     render: (unit) => unit || '-',
     sorter: (a, b) => sortByString(a.unit, b.unit),
   },
+  {
+    title: 'Status',
+    dataIndex: 'deactivated_date',
+    key: 'deactivated_date',
+    width: 120,
+    render: (deactivated_date) => getActiveTag(deactivated_date),
+    sorter: (a, b) => sortByNumber(a.deactivated_date ? 1 : 0, b.deactivated_date ? 1 : 0),
+  },
   { 
     dataIndex: "id", 
     title: "", 
     key: "link", 
-    width: '8%', 
+    width: 100,
     render: (id) => <Link to={`./${id}`}>View</Link> 
   }
 ]
