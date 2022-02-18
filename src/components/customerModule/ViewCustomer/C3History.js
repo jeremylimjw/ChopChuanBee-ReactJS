@@ -1,17 +1,21 @@
 import { SearchOutlined } from '@ant-design/icons/lib/icons'
-import { Button, DatePicker, Input, Table } from 'antd'
+import { Button, DatePicker, Input, Select, Table } from 'antd'
 import React from 'react'
 import MyToolbar from '../../layout/MyToolbar'
 
-export default function C4History() {
+export default function C3History() {
     // const [loading, setLoading] = useState(false);
     // const [items, setItems] = useState([]);
 
     return (
         <>
             <MyToolbar title="Past Order History">
-                <Input placeholder="Search ID" suffix={<SearchOutlined className='grey' />} />
+                <Input style={{ width: 180 }} placeholder="Search Order ID" suffix={<SearchOutlined className='grey' />} />
                 <DatePicker.RangePicker />
+                <Select style={{ width: 180 }} placeholder="Filter by Term">
+                    <Select.Option value={1}>Cash</Select.Option>
+                    <Select.Option value={2}>Credit</Select.Option>
+                </Select>
                 <Button>Reset</Button>
             </MyToolbar>
             <Table dataSource={[]} columns={columns} loading={false} rowKey={() => Math.random()} />

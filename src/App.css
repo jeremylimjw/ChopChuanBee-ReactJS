@@ -36,3 +36,11 @@
 .flex-stack .ant-card:last-child {
     margin: 0 24px 24px 24px !important;
 }
+
+.flex-last-left {
+    display: flex;
+}
+
+.flex-last-left div:last-child {
+    margin-left: auto;
+}

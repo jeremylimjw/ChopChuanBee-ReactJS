@@ -4,8 +4,7 @@ import { useNavigate, useParams } from 'react-router';
 import { CustomerApiHelper } from '../../api/customer';
 import C1Form from '../../components/customerModule/ViewCustomer/C1Form';
 import C2Menu from '../../components/customerModule/ViewCustomer/C2Menu';
-import C3AccountReceivable from '../../components/customerModule/ViewCustomer/C3AccountReceivable';
-import C4History from '../../components/customerModule/ViewCustomer/C4History';
+import C3History from '../../components/customerModule/ViewCustomer/C3History';
 import MyCard from '../../components/layout/MyCard';
 import MyLayout from '../../components/layout/MyLayout';
 import { useApp } from '../../providers/AppProvider';
@@ -60,12 +59,8 @@ export default function ViewCustomerPage() {
             </Col>
           </Row>
 
-          <MyCard style={{ marginTop: 0 }}>
-            <C3AccountReceivable />
-          </MyCard>
-
           <MyCard>
-            <C4History />
+            <C3History />
           </MyCard>
         
         </MyLayout>

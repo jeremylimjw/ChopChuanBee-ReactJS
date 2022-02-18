@@ -1,4 +1,4 @@
-import { Button, Form, Input, Table } from 'antd';
+import { Button, Form, Input, Select, Table } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { CustomerApiHelper } from '../../api/customer';
 import { useApp } from '../../providers/AppProvider';
@@ -10,6 +10,7 @@ import { sortByDate, sortByNumber, sortByString } from '../../utilities/sorters'
 import { Link } from 'react-router-dom';
 import { getActiveTag } from '../../enums/ActivationStatus';
 import NewCustomerModal from '../../components/customerModule/NewCustomer/NewCustomerModal';
+import { PlusOutlined } from '@ant-design/icons/lib/icons';
 
 const breadcrumbs = [
   { url: '/customers', name: 'Customers' },
@@ -36,13 +37,14 @@ export default function ManageCustomersPage() {
 
 
     function onValuesChange(_, form) {
-        CustomerApiHelper.get(form.company_name, form.s1_name)
-            .then(results => {
-                setCustomers(results);
-                setLoading(false);
-            })
-            .catch(handleHttpError)
-            .catch(() => setLoading(false))
+
+      CustomerApiHelper.get(form.company_name, form.p1_name, form.status)
+          .then(results => {
+              setCustomers(results);
+              setLoading(false);
+          })
+          .catch(handleHttpError)
+          .catch(() => setLoading(false))
     }
 
     function resetForm() {
@@ -51,30 +53,36 @@ export default function ManageCustomersPage() {
     }
 
     return (
-        <MyLayout breadcrumbs={breadcrumbs} bannerTitle="Manage Customers">
+      <MyLayout breadcrumbs={breadcrumbs} bannerTitle="Manage Customers">
 
-            <MyCard>
+        <MyCard>
 
-                <MyToolbar title="Customers">
-                    <Form form={form} onValuesChange={onValuesChange} layout='inline' autoComplete='off'>
-                        <Form.Item name="company_name">
-                            <Input placeholder='Search Company' />
-                        </Form.Item>
-                        <Form.Item name="p1_name">
-                            <Input placeholder='Search Person' />
-                        </Form.Item>
-                        <Button onClick={resetForm}>Reset</Button>
-                    </Form>
-                    <Button type='primary' onClick={() => setIsModalVisible(true)}>New</Button>
-                </MyToolbar>
+          <MyToolbar title="Customers">
+              <Form form={form} onValuesChange={onValuesChange} layout='inline' autoComplete='off'>
+                  <Form.Item name="company_name">
+                      <Input placeholder='Search Company' />
+                  </Form.Item>
+                  <Form.Item name="p1_name">
+                      <Input placeholder='Search Person' />
+                  </Form.Item>
+                  <Form.Item name="status">
+                    <Select style={{ width: 180 }} placeholder="Filter by Status">
+                      <Select.Option value={true}>Active</Select.Option>
+                      <Select.Option value={false}>Inactive</Select.Option>
+                    </Select>
+                  </Form.Item>
+                  <Button onClick={resetForm}>Reset</Button>
+              </Form>
+              <Button type='primary' onClick={() => setIsModalVisible(true)} icon={<PlusOutlined />}>New</Button>
+          </MyToolbar>
 
-                <Table dataSource={customers} columns={columns} loading={loading} rowKey="id" />
-                
-            </MyCard>
+          <Table dataSource={customers} columns={columns} loading={loading} rowKey="id" />
+            
+        </MyCard>
 
-            <NewCustomerModal customers={customers} setCustomers={setCustomers} isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} />
-        
-        </MyLayout>
+        <NewCustomerModal customers={customers} setCustomers={setCustomers} isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} />
+      
+      </MyLayout>
     )
 }
 
@@ -109,17 +117,18 @@ const columns = [
     sorter: (a, b) => sortByString(a.p1_phone_number, b.p1_phone_number),
   },
   {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address',
-    sorter: (a, b) => sortByString(a.address, b.address),
+    title: 'Email',
+    dataIndex: 'company_email',
+    key: 'company_email',
+    render: (company_email) => company_email || '-',
+    sorter: (a, b) => sortByString(a.company_email, b.company_email),
   },
   {
-    title: 'Email',
-    dataIndex: 'email',
-    key: 'email',
-    render: (email) => email || '-',
-    sorter: (a, b) => sortByString(a.email, b.email),
+    title: 'AR',
+    key: 'AR',
+    width: 80,
+    render: (AR) => '-',
+    sorter: (a, b) => sortByString(a.company_email, b.company_email),
   },
   {
     title: 'Status',

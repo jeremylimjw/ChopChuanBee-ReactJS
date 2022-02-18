@@ -6,7 +6,7 @@ import MyLayout from '../../components/layout/MyLayout';
 import MyToolbar from '../../components/layout/MyToolbar';
 import { getViewTag, View } from '../../enums/View';
 import { useApp } from '../../providers/AppProvider';
-import { parseDateTime } from '../../utilities/datetime';
+import { parseDateTimeSeconds } from '../../utilities/datetime';
 import { sortByDate, sortByNumber, sortByString } from '../../utilities/sorters';
 import moment from 'moment';
 
@@ -91,7 +91,7 @@ const columns = [
     dataIndex: 'created_at',
     key: 'created_at',
     width: '16%',
-    render: (created_at) => parseDateTime(created_at),
+    render: (created_at) => parseDateTimeSeconds(created_at),
     sorter: (a, b) => sortByDate(a.created_at, b.created_at),
   },
   {

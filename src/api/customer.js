@@ -1,12 +1,17 @@
 import { axiosObject } from "./axiosWrapper";
 
 export class CustomerApiHelper {
-    static async get(company_name, p1_name) {
+    static async get(company_name, p1_name, status) {
         let query = '';
         if (company_name)
             query += `&company_name_like=${company_name}`;
-            if (p1_name)
-                query += `&p1_name_like=${p1_name}`;
+        if (p1_name)
+            query += `&p1_name_like=${p1_name}`;
+        if (status === true) {
+            query += `&deactivated_date_is_null=1`;
+        } else if (status === false) {
+            query += `&deactivated_date_is_nn=1`;
+        }
         return axiosObject.get(`/customer?order_by=created_at_desc${query}`)
             .then(res => res.data);
     }

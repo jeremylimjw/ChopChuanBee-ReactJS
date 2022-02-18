@@ -55,8 +55,8 @@ export default function NewCustomerMenuModal({ customer, addToTable, isModalVisi
 
         setLoading(true);
         CustomerApiHelper.createMenu(newMenuItems)
-            .then(() => {
-                addToTable(newMenuItems)
+            .then(results => {
+                addToTable(results)
                 message.success(`Products successfully added!`)
                 setLoading(false);
                 setIsModalVisible(false);
