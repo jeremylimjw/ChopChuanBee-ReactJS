@@ -17,7 +17,7 @@ export class CustomerApiHelper {
     }
 
     static async getById(id) {
-        return axiosObject.get(`/customer?id=${id}`)
+        return axiosObject.get(`/customer?id=${id}&include=customer_menu&customer_menu_include=product&customer_menu_order_by=product_alias`)
             .then(res => res.data);
     }
 
@@ -55,19 +55,19 @@ export class CustomerApiHelper {
             .then(res => res.data);
     }
 
-    static async getMenu(customerId) {
-        return axiosObject.get(`/customer/menu?include=product&customer_id=${customerId}`)
-            .then(res => res.data);
-    }
-
-    static async createMenu(items) {
-        return axiosObject.post(`/customer/menu`, { customer_menu_items: items })
-            .then(res => res.data);
-    }
-
-    static async deleteMenu(id) {
-        return axiosObject.delete(`/customer/menu?id=${id}`)
-            .then(res => res.data);
+    static async updateMenu(customer_id, menuItems) {
+        const newMenu = menuItems
+            .filter(x => (x.product_alias) && (x.product != null))
+            .map(x => ({ 
+                ...x, 
+                customer_id: customer_id,
+                product_id: x.product.id,
+            }))
+        return axiosObject.put(`/customer/menu`, {
+            customer_id: customer_id,
+            customer_menus: newMenu,
+        })
+        .then(res => res.data);
     }
 
 }

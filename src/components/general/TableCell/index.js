@@ -18,7 +18,16 @@ export function RenderInput({ field, items, setItems, record, ...restProps }) {
 
     function save() {
         const newItems = [...items]
-        const index = newItems.findIndex(x => x.key === record.key);
+        // Allow match record by 'id' or 'key'
+        const index = newItems.findIndex(x => {
+            if (record.id) {
+                return (x.id === record.id)
+            } else if (record.key) {
+                return (x.key === record.key)
+            } else {
+                return false;
+            }
+        });
         if (index >= 0) {
             newItems[index][`${field}`] = value;
         }
@@ -51,7 +60,16 @@ export function RenderProductSelect({ field, items, setItems, record, products, 
         setValue(option[`${field}`].name); 
         
         const newItems = [...items]
-        const index = newItems.findIndex(x => x.key === record.key);
+        // Allow match record by 'id' or 'key'
+        const index = newItems.findIndex(x => {
+            if (record.id) {
+                return (x.id === record.id)
+            } else if (record.key) {
+                return (x.key === record.key)
+            } else {
+                return false;
+            }
+        });
         if (index >= 0) {
             newItems[index][`${field}`] = option.product;
         }
