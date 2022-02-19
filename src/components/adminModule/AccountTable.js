@@ -1,14 +1,13 @@
 import { React, useState } from 'react';
-import { compareDesc, format } from 'date-fns';
 import { Button, Table, Dropdown, Menu, Modal, Tag } from 'antd';
 import { MoreOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import EmployeeAccount from './EmployeeAccount';
+import { useEffect } from 'react';
 
 const AccountTable = ({ accountDataSource, user }) => {
     const { confirm } = Modal;
     const [isAccountModalVisible, setIsAccountModalVisible] = useState(false);
-    // console.log(accountDataSource[0].access_rights[0].view_id);
-
+    const [userAccountInfo, setUserAccountInfo] = useState();
     const handleAccountModalOk = () => {
         setIsAccountModalVisible(false);
     };
@@ -20,6 +19,8 @@ const AccountTable = ({ accountDataSource, user }) => {
     const handleMenuClick = (e) => {
         // console.log('click', e);
     };
+
+    useEffect(() => {});
 
     const showPromiseConfirm = (e) => {
         confirm({
@@ -44,20 +45,17 @@ const AccountTable = ({ accountDataSource, user }) => {
                 <Button
                     type='text'
                     onClick={() => {
-                        // setIsAccountModalVisible(true);
+                        setUserAccountInfo(text);
+                        setIsAccountModalVisible(true);
                         console.log(text);
+                        // console.log(userAccountInfo);
                     }}
                 >
                     View account
                 </Button>
             </Menu.Item>
             <Menu.Item key={2}>
-                <Button
-                    danger
-                    type='text'
-                    onClick={() => showPromiseConfirm(text.username)}
-                    // onClick={() => console.log(text)}
-                >
+                <Button danger type='text' onClick={() => showPromiseConfirm(text.username)}>
                     Deactivate account
                 </Button>
             </Menu.Item>
@@ -66,7 +64,7 @@ const AccountTable = ({ accountDataSource, user }) => {
 
     const tableColumns = [
         {
-            title: 'Staff Name',
+            title: 'Employee Name',
             dataIndex: 'name',
             key: 'userId',
             sorter: (a, b) => a.name.length - b.name.length,
@@ -74,7 +72,6 @@ const AccountTable = ({ accountDataSource, user }) => {
         },
         {
             title: 'Access Right',
-            // key: 'userId',
             filters: [
                 { text: 'Human Resource', value: 1 },
                 { text: 'Customer Relationship', value: 2 },
@@ -92,7 +89,7 @@ const AccountTable = ({ accountDataSource, user }) => {
                 <>
                     {record.access_rights.map((ar) => {
                         let temp;
-                        // console.log(ar.view_id);
+                        let color = ar.has_write_access === true ? 'green' : 'blue';
                         if (ar.view_id === 1) {
                             temp = 'HR';
                         } else if (ar.view_id === 2) {
@@ -114,7 +111,7 @@ const AccountTable = ({ accountDataSource, user }) => {
                         } else if (ar.view_id === 10) {
                             temp = 'Driver';
                         }
-                        return <Tag>{temp}</Tag>;
+                        return <Tag color={color}>{temp}</Tag>;
                     })}
                 </>
             ),
@@ -122,34 +119,30 @@ const AccountTable = ({ accountDataSource, user }) => {
         {
             title: 'Username',
             dataIndex: 'username',
-            // key: 'userId',
         },
         {
-            title: 'Created',
+            title: 'Creation Date',
             dataIndex: 'created_at',
-            // key: 'userId',
             sorter: (a, b) => new Date(a.created_at) - new Date(b.created_at),
             sortDirections: ['ascend', 'descend', 'ascend'],
         },
         {
             title: 'Last Active',
             dataIndex: 'updated_at',
-            // key: 'userId',
             sorter: (a, b) => new Date(a.updated_at) - new Date(b.updated_at),
             sortDirections: ['ascend', 'descend', 'ascend'],
         },
         {
             title: 'Last Activity',
             dataIndex: 'lastActive',
-            // key: 'userId',
             filters: [{ text: 'Login', value: 'Login' }],
             onFilter: (value, record) => record.lastActive.indexOf(value) === 0,
         },
 
         {
             title: '',
-            // key: 'userId',
             render: (text, record) => (
+                // console.log(record),
                 <Dropdown.Button trigger={['click']} overlay={menu(text)} icon={<MoreOutlined />} />
             ),
         },
@@ -157,24 +150,30 @@ const AccountTable = ({ accountDataSource, user }) => {
 
     return (
         <>
-            <Table
-                dataSource={accountDataSource}
-                columns={tableColumns}
-                // onRow={(record, rowIndex) => {
-                //     return {
-                //         onClick: (event) => {
-                //             console.log(record);
-                //             // setIsAccountModalVisible(true);
-                //         },
-                //     };
-                // }}
-            ></Table>
-            <EmployeeAccount
-                user={user}
-                isAccountModalVisible={isAccountModalVisible}
-                handleAccountModalOk={handleAccountModalOk}
-                handleAccountModalCancel={handleAccountModalCancel}
-            />
+            <Table dataSource={accountDataSource} columns={tableColumns}></Table>
+            <Modal
+                title='View Employee'
+                visible={isAccountModalVisible}
+                onOk={handleAccountModalOk}
+                onCancel={handleAccountModalCancel}
+                // footer={
+                //     edit ? (
+                //         <Button onClick={() => setEdit(false)}>Save</Button>
+                //     ) : (
+                //         <Button type='primary' onClick={() => setEdit(true)}>
+                //             Edit
+                //         </Button>
+                //     )
+                // }
+                bodyStyle={{ height: '60vh', overflowY: 'scroll' }}
+            >
+                <EmployeeAccount
+                    userAccountInfo={userAccountInfo}
+                    isAccountModalVisible={isAccountModalVisible}
+                    handleAccountModalOk={handleAccountModalOk}
+                    handleAccountModalCancel={handleAccountModalCancel}
+                />
+            </Modal>
         </>
     );
 };

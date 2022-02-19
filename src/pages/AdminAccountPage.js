@@ -2,16 +2,20 @@ import React, { useState, useEffect } from 'react';
 import NewAccountForm from '../components/adminModule/NewAccountForm';
 import AccountTable from './../components/adminModule/AccountTable';
 import { useApp } from '../providers/AppProvider';
-import { Button, Typography } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { Button, Input } from 'antd';
+import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import { EmployeeApiHelper } from './../api/employees';
+import MyLayout from '../components/layout/MyLayout';
+import MyCard from '../components/layout/MyCard';
+import { Link } from 'react-router-dom';
+import MyToolbar from './../components/layout/MyToolbar';
 
 const AdminAccountPage = () => {
+    const breadcrumbs = [{ url: '/admin/accounts/', name: 'Admin' }];
     const { user, logout, removeSession } = useApp();
     const [updateTable, setUpdateTable] = useState(false);
     const [accountDataSource, setAccountDataSource] = useState([]);
     const [isNewAccountModalVisible, setIsNewAccountModalVisible] = useState(false);
-    // console.log(updateTable);
 
     const handleNewAccountModalOk = () => {
         setIsNewAccountModalVisible(false);
@@ -23,19 +27,17 @@ const AdminAccountPage = () => {
 
     useEffect(() => {
         initializeEmployeeDataSource();
-    }, [updateTable]);
+    }, []);
 
     const initializeEmployeeDataSource = async () => {
         let data = await EmployeeApiHelper.getAllEmployees();
-        // console.log('data', data);
         let dataSrc = data.map((value) => {
             return {
                 ...value,
             };
         });
-        // console.log('dataSrc', dataSrc);
         setAccountDataSource(dataSrc);
-        // setUpdateTable(!updateTable);
+        setUpdateTable(!updateTable);
     };
 
     const createNewAccount = async (
@@ -64,33 +66,24 @@ const AdminAccountPage = () => {
             send_email,
             access_rights
         );
+        initializeEmployeeDataSource();
     };
 
-    // const getAccountDataSource = () => {
-    //     let dataSource = sampleAccountData.map((value) => {
-    //         return {
-    //             ...value,
-    //         };
-    //     });
-    //     setAccountDataSource(dataSource);
-    // };
-
     return (
-        <>
-            <Typography.Title>Admin</Typography.Title>
-            <Button icon={<PlusOutlined />} onClick={() => setIsNewAccountModalVisible(true)}>
-                Create a new account
-            </Button>
-            <AccountTable accountDataSource={accountDataSource} user={user} />
-            <NewAccountForm
-                isNewAccountModalVisible={isNewAccountModalVisible}
-                handleNewAccountModalOk={handleNewAccountModalOk}
-                handleNewAccountModalCancel={handleNewAccountModalCancel}
-                createNewAccount={createNewAccount}
-                updateTable={updateTable}
-                setUpdateTable={setUpdateTable}
-            />
-        </>
+        <MyLayout breadcrumbs={breadcrumbs} bannerTitle='Manage Account'>
+            <MyCard>
+                <MyToolbar title='Account Table'>
+                    {/* <Input placeholder='Search Employee Name' addonAfter={<SearchOutlined />} /> */}
+                    <Input placeholder='Search Username' addonAfter={<SearchOutlined />} />
+                    <Input placeholder='Search Employee Name' addonAfter={<SearchOutlined />} />
+                    <Button type='link' icon={<PlusOutlined />}>
+                        <Link to='/admin/create'> New</Link>
+                    </Button>
+                </MyToolbar>
+
+                <AccountTable accountDataSource={accountDataSource} user={user} />
+            </MyCard>
+        </MyLayout>
     );
 };
 

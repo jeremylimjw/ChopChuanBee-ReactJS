@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Button, Modal, Input, Checkbox, Typography, Row, Col, Radio, Dropdown, Menu, Select } from 'antd';
-import { useEffect } from 'react';
+import { Form, Button, Modal, Input, Checkbox, Row, Col, Radio, Select } from 'antd';
 
 const NewAccountForm = ({
     isNewAccountModalVisible,
@@ -10,7 +9,6 @@ const NewAccountForm = ({
     updateTable,
     setUpdateTable,
 }) => {
-    const { Title } = Typography;
     const { Option } = Select;
     const [accountForm] = Form.useForm();
     const [ar1, setAr1] = useState(false);
@@ -24,16 +22,12 @@ const NewAccountForm = ({
     const [ar9, setAr9] = useState(false);
     const [ar10, setAr10] = useState(false);
 
-    // values is a JSON object that contains the form input values
     const handleFinish = (values) => {
-        // console.log('Success:', values);
-        // console.log(values.sentEmail !== undefined);
         let hasWriteAccess = false;
         let tempAccessRight;
         let tempAccessRightList = [];
         for (let i = 0; i < values.accessRights.length; i++) {
             if (values.accessRights[i] === 1) {
-                // console.log(values.ard1);
                 hasWriteAccess = values.ard1;
             } else if (values.accessRights[i] === 2) {
                 hasWriteAccess = values.ard2;
@@ -55,13 +49,8 @@ const NewAccountForm = ({
                 hasWriteAccess = values.ard10;
             }
             tempAccessRight = { view_id: values.accessRights[i], has_write_access: hasWriteAccess };
-            console.log(tempAccessRight);
-
             tempAccessRightList.push(tempAccessRight);
-            // hasWriteAccess = false;
         }
-        console.log(tempAccessRightList);
-
         createNewAccount(
             values.name,
             values.username,
@@ -78,10 +67,7 @@ const NewAccountForm = ({
         setUpdateTable(!updateTable);
         onReset();
         handleNewAccountModalOk();
-        // handleNewAccountModalCancel();
     };
-
-    // useEffect(() => {}, []);
 
     const onReset = () => {
         accountForm.resetFields();
@@ -92,28 +78,6 @@ const NewAccountForm = ({
     };
 
     const sendEmailOption = [{ label: 'Send password & username to the email', value: 'send' }];
-
-    const accessRightOptions = [
-        { label: 'Human Resource', value: 1 },
-        { label: 'Customer Relationship', value: 2 },
-        { label: 'Supplier Relationship', value: 3 },
-        { label: 'Inventory', value: 4 },
-        { label: 'Sales', value: 5 },
-        { label: 'Accounting', value: 6 },
-        { label: 'Administration', value: 7 },
-        { label: 'General', value: 8 },
-        { label: 'Dispatch', value: 9 },
-        { label: 'Catalogue', value: 10 },
-    ];
-
-    // <Checkbox.Group option={accessRightOptions} />;
-
-    const menu = (
-        <Menu>
-            <Menu.Item key='0'>Read-Only</Menu.Item>
-            <Menu.Item key='1'>Read+Write</Menu.Item>
-        </Menu>
-    );
 
     const roleOptions = [
         { label: 'Admin', value: 1 },
@@ -162,373 +126,247 @@ const NewAccountForm = ({
         <>
             <Modal
                 visible={isNewAccountModalVisible}
-                // onOk={handleNewAccountModalOk}
                 onCancel={() => {
                     handleNewAccountModalCancel();
                     onReset();
                 }}
-                // footer={[
-                //     <Button onClick={onReset}>Reset</Button>,
-                //     <Button type='primary' htmlType='submit'
-                //     // onClick={handleFinish}
-                //     >
-                //         submit
-                //     </Button>,
-                // ]}
                 footer={null}
-                bodyStyle={{ height: 450, overflowY: 'scroll' }}
+                bodyStyle={{ height: '60vh', overflowY: 'scroll' }}
                 title='Create a new account'
                 centered='true'
-                // confirmLoading='true'
             >
                 <Form
                     form={accountForm}
                     name='accountForm'
-                    layout='vertical'
                     onFinish={handleFinish}
                     onFinishFailed={onFinishFailed}
+                    labelCol={{ span: 6 }}
                 >
-                    <Row>
-                        <Col span={11}>
-                            <Form.Item
-                                label='Full name'
-                                name='name'
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Required',
-                                    },
-                                ]}
-                            >
-                                <Input />
-                            </Form.Item>
-                        </Col>
-                        <Col span={2} />
-                        <Col span={11}>
-                            <Form.Item
-                                label='Username'
-                                name='username'
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Required',
-                                    },
-                                ]}
-                            >
-                                <Input />
-                            </Form.Item>
-                        </Col>
-                    </Row>
+                    <Form.Item
+                        label='Full name'
+                        name='name'
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Required',
+                            },
+                        ]}
+                    >
+                        <Input />
+                    </Form.Item>
 
-                    <Row>
-                        <Form.Item
-                            label='Roles'
-                            name='role'
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Required',
-                                },
-                            ]}
-                        >
-                            <Radio.Group options={roleOptions}></Radio.Group>
-                        </Form.Item>
-                    </Row>
+                    <Form.Item
+                        label='Username'
+                        name='username'
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Required',
+                            },
+                        ]}
+                    >
+                        <Input />
+                    </Form.Item>
 
-                    {/* <Row>
-                        <Col>
-                            <Form.Item
-                                label='Access Rights'
-                                name='accessRights'
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Required',
-                                    },
-                                ]}
-                            >
-                                <Checkbox.Group
-                                    // style={{ display: 'block', marginLeft: 0 }}
-                                    options={accessRightOptions}
-                                    onChange={accessRightOnChange}
-                                />
-                            </Form.Item>
-                        </Col>
-                    </Row> */}
+                    <Form.Item
+                        label='Roles'
+                        name='role'
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Required',
+                            },
+                        ]}
+                    >
+                        <Radio.Group options={roleOptions}></Radio.Group>
+                    </Form.Item>
 
-                    <Row>
-                        <Col>
-                            <Form.Item
-                                label='Access Rights'
-                                name='accessRights'
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Required',
-                                    },
-                                ]}
-                            >
-                                <Checkbox.Group onChange={accessRightOnChange}>
-                                    <Row>
-                                        <Col>
-                                            <Checkbox value={1}>Human Resource</Checkbox>
-                                        </Col>
-                                        <Col>
-                                            <Form.Item name='ard1' initialValue={false}>
-                                                <Select
-                                                    // defaultValue={false}
-                                                    style={{ width: 140 }}
-                                                    size='small'
-                                                    disabled={ar1 ? false : true}
-                                                >
-                                                    <Option value={false}>Read Only</Option>
-                                                    <Option value={true}>Read and Write</Option>
-                                                </Select>
-                                            </Form.Item>
-                                        </Col>
-                                    </Row>
+                    <Form.Item
+                        label='Access Rights'
+                        name='accessRights'
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Required',
+                            },
+                        ]}
+                    >
+                        <Checkbox.Group onChange={accessRightOnChange}>
+                            <Row>
+                                <Checkbox value={1}>Human Resource</Checkbox>
+                                <Form.Item name='ard1' initialValue={false}>
+                                    <Select style={{ width: 140 }} size='small' disabled={ar1 ? false : true}>
+                                        <Option value={false}>Read Only</Option>
+                                        <Option value={true}>Read and Write</Option>
+                                    </Select>
+                                </Form.Item>
+                            </Row>
 
-                                    <Row>
-                                        <Col>
-                                            <Checkbox value={2}>Customer Relationship</Checkbox>
-                                        </Col>
-                                        <Col>
-                                            <Form.Item name='ard2' initialValue={false}>
-                                                <Select
-                                                    // defaultValue={false}
-                                                    style={{ width: 140 }}
-                                                    size='small'
-                                                    disabled={ar2 ? false : true}
-                                                >
-                                                    <Option value={false}>Read Only</Option>
-                                                    <Option value={true}>Read and Write</Option>
-                                                </Select>
-                                            </Form.Item>
-                                        </Col>
-                                    </Row>
+                            <Row>
+                                <Col>
+                                    <Checkbox value={2}>Customer Relationship</Checkbox>
+                                </Col>
+                                <Col>
+                                    <Form.Item name='ard2' initialValue={false}>
+                                        <Select style={{ width: 140 }} size='small' disabled={ar2 ? false : true}>
+                                            <Option value={false}>Read Only</Option>
+                                            <Option value={true}>Read and Write</Option>
+                                        </Select>
+                                    </Form.Item>
+                                </Col>
+                            </Row>
 
-                                    <Row>
-                                        <Col>
-                                            <Checkbox value={3}>Supplier Relationship</Checkbox>
-                                        </Col>
-                                        <Col>
-                                            <Form.Item name='ard3' initialValue={false}>
-                                                <Select
-                                                    // defaultValue={false}
-                                                    style={{ width: 140 }}
-                                                    size='small'
-                                                    disabled={ar3 ? false : true}
-                                                >
-                                                    <Option value={false}>Read Only</Option>
-                                                    <Option value={true}>Read and Write</Option>
-                                                </Select>
-                                            </Form.Item>
-                                        </Col>
-                                    </Row>
+                            <Row>
+                                <Col>
+                                    <Checkbox value={3}>Supplier Relationship</Checkbox>
+                                </Col>
+                                <Col>
+                                    <Form.Item name='ard3' initialValue={false}>
+                                        <Select style={{ width: 140 }} size='small' disabled={ar3 ? false : true}>
+                                            <Option value={false}>Read Only</Option>
+                                            <Option value={true}>Read and Write</Option>
+                                        </Select>
+                                    </Form.Item>
+                                </Col>
+                            </Row>
 
-                                    <Row>
-                                        <Col>
-                                            <Checkbox value={4}>Purchases</Checkbox>
-                                        </Col>
-                                        <Col>
-                                            <Form.Item name='ard4' initialValue={false}>
-                                                <Select
-                                                    // defaultValue={false}
-                                                    style={{ width: 140 }}
-                                                    size='small'
-                                                    disabled={ar4 ? false : true}
-                                                >
-                                                    <Option value={false}>Read Only</Option>
-                                                    <Option value={true}>Read and Write</Option>
-                                                </Select>
-                                            </Form.Item>
-                                        </Col>
-                                    </Row>
+                            <Row>
+                                <Col>
+                                    <Checkbox value={4}>Purchases</Checkbox>
+                                </Col>
+                                <Col>
+                                    <Form.Item name='ard4' initialValue={false}>
+                                        <Select style={{ width: 140 }} size='small' disabled={ar4 ? false : true}>
+                                            <Option value={false}>Read Only</Option>
+                                            <Option value={true}>Read and Write</Option>
+                                        </Select>
+                                    </Form.Item>
+                                </Col>
+                            </Row>
 
-                                    <Row>
-                                        <Col>
-                                            <Checkbox value={5}>Sales</Checkbox>
-                                        </Col>
-                                        <Col>
-                                            <Form.Item name='ard5' initialValue={false}>
-                                                <Select
-                                                    // defaultValue={false}
-                                                    style={{ width: 140 }}
-                                                    size='small'
-                                                    disabled={ar5 ? false : true}
-                                                >
-                                                    <Option value={false}>Read Only</Option>
-                                                    <Option value={true}>Read and Write</Option>
-                                                </Select>
-                                            </Form.Item>
-                                        </Col>
-                                    </Row>
+                            <Row>
+                                <Col>
+                                    <Checkbox value={5}>Sales</Checkbox>
+                                </Col>
+                                <Col>
+                                    <Form.Item name='ard5' initialValue={false}>
+                                        <Select style={{ width: 140 }} size='small' disabled={ar5 ? false : true}>
+                                            <Option value={false}>Read Only</Option>
+                                            <Option value={true}>Read and Write</Option>
+                                        </Select>
+                                    </Form.Item>
+                                </Col>
+                            </Row>
 
-                                    <Row>
-                                        <Col>
-                                            <Checkbox value={6}>Accounting</Checkbox>
-                                        </Col>
-                                        <Col>
-                                            <Form.Item name='ard6' initialValue={false}>
-                                                <Select
-                                                    // defaultValue={false}
-                                                    style={{ width: 140 }}
-                                                    size='small'
-                                                    disabled={ar6 ? false : true}
-                                                >
-                                                    <Option value={false}>Read Only</Option>
-                                                    <Option value={true}>Read and Write</Option>
-                                                </Select>
-                                            </Form.Item>
-                                        </Col>
-                                    </Row>
+                            <Row>
+                                <Col>
+                                    <Checkbox value={6}>Accounting</Checkbox>
+                                </Col>
+                                <Col>
+                                    <Form.Item name='ard6' initialValue={false}>
+                                        <Select style={{ width: 140 }} size='small' disabled={ar6 ? false : true}>
+                                            <Option value={false}>Read Only</Option>
+                                            <Option value={true}>Read and Write</Option>
+                                        </Select>
+                                    </Form.Item>
+                                </Col>
+                            </Row>
 
-                                    <Row>
-                                        <Col>
-                                            <Checkbox value={7}>Administration</Checkbox>
-                                        </Col>
-                                        <Col>
-                                            <Form.Item name='ard7' initialValue={false}>
-                                                <Select
-                                                    // defaultValue={false}
-                                                    style={{ width: 140 }}
-                                                    size='small'
-                                                    disabled={ar7 ? false : true}
-                                                >
-                                                    <Option value={false}>Read Only</Option>
-                                                    <Option value={true}>Read and Write</Option>
-                                                </Select>
-                                            </Form.Item>
-                                        </Col>
-                                    </Row>
-                                    <Row>
-                                        <Col>
-                                            <Checkbox value={8}>General</Checkbox>
-                                        </Col>
-                                        <Col>
-                                            <Form.Item name='ard8' initialValue={false}>
-                                                <Select
-                                                    // defaultValue={false}
-                                                    style={{ width: 140 }}
-                                                    size='small'
-                                                    disabled={ar8 ? false : true}
-                                                >
-                                                    <Option value={false}>Read Only</Option>
-                                                    <Option value={true}>Read and Write</Option>
-                                                </Select>
-                                            </Form.Item>
-                                        </Col>
-                                    </Row>
-                                    <Row>
-                                        <Col>
-                                            <Checkbox value={9}>Dispatch</Checkbox>
-                                        </Col>
-                                        <Col>
-                                            <Form.Item name='ard9' initialValue={false}>
-                                                <Select
-                                                    // defaultValue={false}
-                                                    style={{ width: 140 }}
-                                                    size='small'
-                                                    disabled={ar9 ? false : true}
-                                                >
-                                                    <Option value={false}>Read Only</Option>
-                                                    <Option value={true}>Read and Write</Option>
-                                                </Select>
-                                            </Form.Item>
-                                        </Col>
-                                    </Row>
-                                    <Row>
-                                        <Col>
-                                            <Checkbox value={10}>Catalogue</Checkbox>
-                                        </Col>
-                                        <Col>
-                                            <Form.Item name='ard10' initialValue={false}>
-                                                <Select
-                                                    // defaultValue={false}
-                                                    style={{ width: 140 }}
-                                                    size='small'
-                                                    disabled={ar10 ? false : true}
-                                                >
-                                                    <Option value={false}>Read Only</Option>
-                                                    <Option value={true}>Read and Write</Option>
-                                                </Select>
-                                            </Form.Item>
-                                        </Col>
-                                    </Row>
-                                </Checkbox.Group>
-                            </Form.Item>
-                        </Col>
-                    </Row>
+                            <Row>
+                                <Col>
+                                    <Checkbox value={7}>Administration</Checkbox>
+                                </Col>
+                                <Col>
+                                    <Form.Item name='ard7' initialValue={false}>
+                                        <Select style={{ width: 140 }} size='small' disabled={ar7 ? false : true}>
+                                            <Option value={false}>Read Only</Option>
+                                            <Option value={true}>Read and Write</Option>
+                                        </Select>
+                                    </Form.Item>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <Checkbox value={8}>General</Checkbox>
+                                </Col>
+                                <Col>
+                                    <Form.Item name='ard8' initialValue={false}>
+                                        <Select style={{ width: 140 }} size='small' disabled={ar8 ? false : true}>
+                                            <Option value={false}>Read Only</Option>
+                                            <Option value={true}>Read and Write</Option>
+                                        </Select>
+                                    </Form.Item>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <Checkbox value={9}>Dispatch</Checkbox>
+                                </Col>
+                                <Col>
+                                    <Form.Item name='ard9' initialValue={false}>
+                                        <Select style={{ width: 140 }} size='small' disabled={ar9 ? false : true}>
+                                            <Option value={false}>Read Only</Option>
+                                            <Option value={true}>Read and Write</Option>
+                                        </Select>
+                                    </Form.Item>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <Checkbox value={10}>Catalogue</Checkbox>
+                                </Col>
+                                <Col>
+                                    <Form.Item name='ard10' initialValue={false}>
+                                        <Select style={{ width: 140 }} size='small' disabled={ar10 ? false : true}>
+                                            <Option value={false}>Read Only</Option>
+                                            <Option value={true}>Read and Write</Option>
+                                        </Select>
+                                    </Form.Item>
+                                </Col>
+                            </Row>
+                        </Checkbox.Group>
+                    </Form.Item>
 
-                    <Row>
-                        <Col span={11}>
-                            <Form.Item
-                                label='Email Address'
-                                name='email'
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Required',
-                                    },
-                                ]}
-                            >
-                                <Input />
-                            </Form.Item>
-                            <Form.Item name='sentEmail'>
-                                <Checkbox.Group
-                                    defaultValue={['send']}
-                                    // onChange={(e) => console.log(e)}
-                                    options={sendEmailOption}
-                                >
-                                    {/* <Checkbox value='send'>Send password {'&'} username to the email</Checkbox> */}
-                                </Checkbox.Group>
-                            </Form.Item>
-                        </Col>
-                        <Col span={2} />
-                        <Col span={11}>
-                            <Form.Item label='Contact Number' name='contactNumber'>
-                                <Input />
-                            </Form.Item>
-                        </Col>
-                    </Row>
+                    <Form.Item
+                        label='Email Address'
+                        name='email'
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Required',
+                            },
+                        ]}
+                    >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item name='sentEmail'>
+                        <Checkbox.Group defaultValue={['send']} options={sendEmailOption}></Checkbox.Group>
+                    </Form.Item>
 
-                    <Row>
-                        <Col span={11}>
-                            <Form.Item label='Postal Code' name='postalCode'>
-                                <Input />
-                            </Form.Item>
-                        </Col>
-                        <Col span={2} />
-                        <Col span={11}>
-                            <Form.Item label='Address' name='address'>
-                                <Input />
-                            </Form.Item>
-                        </Col>
-                    </Row>
+                    <Form.Item label='Contact Number' name='contactNumber'>
+                        <Input />
+                    </Form.Item>
 
-                    <Row>
-                        <Col span={11}>
-                            <Form.Item label='Next-Of-Kin Name' name='nokName'>
-                                <Input />
-                            </Form.Item>
-                        </Col>
-                        <Col span={2} />
-                        <Col span={11}>
-                            <Form.Item label='Next-Of-Kin Number' name='nokNumber'>
-                                <Input />
-                            </Form.Item>
-                        </Col>
-                    </Row>
+                    <Form.Item label='Postal Code' name='postalCode'>
+                        <Input />
+                    </Form.Item>
+                    <Form.Item label='Address' name='address'>
+                        <Input />
+                    </Form.Item>
 
-                    {/* <Row>
-                        <Col> */}
+                    <Form.Item label='NOK Name' name='nokName'>
+                        <Input />
+                    </Form.Item>
+
+                    <Form.Item label='NOK Number' name='nokNumber'>
+                        <Input />
+                    </Form.Item>
+
                     <Form.Item>
                         <Button type='primary' htmlType='submit'>
                             Submit
                         </Button>
                     </Form.Item>
-                    {/* </Col>
-                    </Row> */}
                 </Form>
             </Modal>
         </>

@@ -6,6 +6,8 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
 import { Layout } from 'antd';
 import LoginPage from './pages/LoginPage';
+import AdminAccountPage from './pages/AdminAccountPage';
+import AdminNewAccountFormPage from './pages/AdminNewAccountFormPage';
 import { AppProvider } from './providers/AppProvider';
 import RequireAuth from './auth/RequireAuth';
 import MyTemplate from './pages/MyTemplate';
@@ -20,6 +22,16 @@ const routes = [
         path: '/customers',
         component: <div>Customers Component</div>,
         viewAccess: 'CRM',
+    },
+    {
+        path: '/admin/accounts',
+        component: <AdminAccountPage />,
+        viewAccess: 'ADMIN',
+    },
+    {
+        path: '/admin/create',
+        component: <AdminNewAccountFormPage />,
+        viewAccess: 'ADMIN',
     },
 ];
 

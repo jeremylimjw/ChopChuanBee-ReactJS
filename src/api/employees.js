@@ -7,7 +7,6 @@ export class EmployeeApiHelper {
         });
         return result;
     }
-
     static async createNewAccount(
         name,
         username,
@@ -36,7 +35,11 @@ export class EmployeeApiHelper {
                 access_rights: access_rights,
             })
             .then((res) => {
-                return res.data;
+                // return res.data;
+                return res.status;
+            })
+            .catch((err) => {
+                return err.response.data;
             });
         return result;
     }
