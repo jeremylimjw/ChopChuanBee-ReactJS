@@ -14,17 +14,20 @@ export default function P1Form({ product, setProduct }) {
     const [loading, setLoading] = useState(false);
     const [form] = Form.useForm();
 
-    function onFinish(values) {
-        setLoading(true);
-        ProductApiHelper.update({...values, id: product.id })
-            .then(() => {
-                setLoading(false);
-                setProduct({...product, ...values });
-                message.success('Product successfully updated!');
-                setEditing(false);
-            })
-            .catch(handleHttpError)
-            .catch(() => setLoading(false));
+    async function onFinish() {
+        try {
+            const values = await form.validateFields();
+            setLoading(true);
+            ProductApiHelper.update({...values, id: product.id })
+                .then(() => {
+                    setLoading(false);
+                    setProduct({...product, ...values });
+                    message.success('Product successfully updated!');
+                    setEditing(false);
+                })
+                .catch(handleHttpError)
+                .catch(() => setLoading(false));
+        } catch(err) { }
     }
 
     return (
@@ -34,7 +37,7 @@ export default function P1Form({ product, setProduct }) {
                 <MyToolbar title="Details">
                     <Form.Item>
                         { editing ? 
-                            <Button type="primary" onClick={() => onFinish(form.getFieldsValue())} icon={<SaveOutlined />} loading={loading} style={{ width: 85 }}>Save</Button>
+                            <Button type="primary" onClick={onFinish} icon={<SaveOutlined />} loading={loading} style={{ width: 85 }}>Save</Button>
                             :
                             <Button onClick={() => setEditing(true)} icon={<EditOutlined />} style={{ width: 85 }}>Edit</Button>
                         }

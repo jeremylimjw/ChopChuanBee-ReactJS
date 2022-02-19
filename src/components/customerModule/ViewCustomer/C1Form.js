@@ -15,17 +15,20 @@ export default function C1Form({ customer, setCustomer }) {
     const [loading, setLoading] = useState(false);
     const [form] = Form.useForm();
 
-    function onFinish(values) {
-        setLoading(true);
-        CustomerApiHelper.update({...values, id: customer.id })
-            .then(() => {
-                setLoading(false);
-                setCustomer({...customer, ...values });
-                message.success('Customer successfully updated!');
-                setEditing(false);
-            })
-            .catch(handleHttpError)
-            .catch(() => setLoading(false));
+    async function onFinish() {
+        try {
+            const values = await form.validateFields();
+            setLoading(true);
+            CustomerApiHelper.update({...values, id: customer.id })
+                .then(() => {
+                    setLoading(false);
+                    setCustomer({...customer, ...values });
+                    message.success('Customer successfully updated!');
+                    setEditing(false);
+                })
+                .catch(handleHttpError)
+                .catch(() => setLoading(false));
+        } catch(err) { }
     }
 
     return (
@@ -35,7 +38,7 @@ export default function C1Form({ customer, setCustomer }) {
                 <MyToolbar title="Details">
                     <Form.Item>
                         { editing ? 
-                            <Button type="primary" onClick={() => onFinish(form.getFieldsValue())} icon={<SaveOutlined />} loading={loading} style={{ width: 85 }}>Save</Button>
+                            <Button type="primary" onClick={onFinish} icon={<SaveOutlined />} loading={loading} style={{ width: 85 }}>Save</Button>
                             :
                             <Button onClick={() => setEditing(true)} icon={<EditOutlined />} style={{ width: 85 }}>Edit</Button>
                         }
@@ -119,7 +122,7 @@ export default function C1Form({ customer, setCustomer }) {
                     <Divider />
                     <Typography.Title level={5}>Contact Person 1</Typography.Title>
 
-                    <Form.Item label="POC 1" name="p1_name" rules={editing ? [REQUIRED] : []}>
+                    <Form.Item label="Name" name="p1_name" rules={editing ? [REQUIRED] : []}>
                         {!editing ? 
                             <Typography>{customer.p1_name || '-'}</Typography>
                         :
@@ -127,7 +130,7 @@ export default function C1Form({ customer, setCustomer }) {
                         }
                     </Form.Item>
 
-                    <Form.Item label="POC 1 Number" name="p1_phone_number" rules={editing ? [REQUIRED] : []}>
+                    <Form.Item label="Contact Number" name="p1_phone_number" rules={editing ? [REQUIRED] : []}>
                         {!editing ? 
                             <Typography>{customer.p1_phone_number || '-'}</Typography>
                         :
@@ -138,7 +141,7 @@ export default function C1Form({ customer, setCustomer }) {
                     <Divider />
                     <Typography.Title level={5}>Contact Person 2</Typography.Title>
 
-                    <Form.Item label="POC 2" name="p2_name">
+                    <Form.Item label="Name" name="p2_name">
                         {!editing ? 
                             <Typography>{customer.p2_name || '-'}</Typography>
                         :
@@ -146,7 +149,7 @@ export default function C1Form({ customer, setCustomer }) {
                         }
                     </Form.Item>
 
-                    <Form.Item label="POC 2 Number" name="p2_phone_number">
+                    <Form.Item label="Contact Number" name="p2_phone_number">
                         {!editing ? 
                             <Typography>{customer.p2_phone_number || '-'}</Typography>
                         :

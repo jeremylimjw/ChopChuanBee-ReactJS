@@ -1,9 +1,9 @@
 import { SearchOutlined } from '@ant-design/icons/lib/icons'
 import { Button, DatePicker, Input, Select, Table } from 'antd'
 import React from 'react'
-import MyToolbar from '../../layout/MyToolbar'
+import MyToolbar from '../layout/MyToolbar'
 
-export default function C3History() {
+export default function S3History() {
     // const [loading, setLoading] = useState(false);
     // const [items, setItems] = useState([]);
 

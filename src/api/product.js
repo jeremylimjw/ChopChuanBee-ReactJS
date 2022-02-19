@@ -19,7 +19,7 @@ export class ProductApiHelper {
             .then(res => res.data);
     }
 
-    static async getOrderByName(name) {
+    static async getAllAvailable(name) {
         let query = '';
         if (name)
             query += `&name_like=${name}`

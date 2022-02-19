@@ -1,5 +1,5 @@
 import { UserAddOutlined, UserDeleteOutlined } from '@ant-design/icons/lib/icons';
-import { Row, Col, Popconfirm, Button, message } from 'antd';
+import { Row, Col, Popconfirm, Button, message, Typography } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router';
 import { CustomerApiHelper } from '../../api/customer';
@@ -22,7 +22,7 @@ export default function ViewCustomerPage() {
 
     const breadcrumbs = [
       { url: '/customers', name: 'Customers' },
-      { url: `/customers/${customer?.company_name}`, name: customer?.company_name },
+      { url: `/customers/${customer?.id}`, name: customer?.company_name },
     ]
   
     useEffect(() => {
@@ -72,7 +72,6 @@ export default function ViewCustomerPage() {
           
           <Row>
             <Col xl={10} xs={24}>
-
               <MyCard>
                   <C1Form customer={customer} setCustomer={setCustomer} />
               </MyCard>
@@ -80,7 +79,8 @@ export default function ViewCustomerPage() {
 
             <Col xl={14} xs={24}>
               <MyCard title="Quick View">
-                {customer.company_name} has outstanding account receivables of $0.00.
+                {customer.company_name} has outstanding account receivables of&nbsp;
+                <Typography.Title level={5} style={{ display: 'inline-block'}}>$0.00</Typography.Title>.
               </MyCard>
 
               <MyCard>

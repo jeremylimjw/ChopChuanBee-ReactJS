@@ -33,7 +33,7 @@ export default function C2Menu({ customer }) {
   }, [customer, setLoading, handleHttpError])
 
   useEffect(() => {
-    ProductApiHelper.getOrderByName()
+    ProductApiHelper.getAllAvailable()
       .then(results => {
           setProducts(results);
       })

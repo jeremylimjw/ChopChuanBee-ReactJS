@@ -59,6 +59,7 @@ const columns = [
       sorter: (a, b) => sortByString(a.product?.name, b.product?.name),
     },
     { 
+      title: 'Action',
       align: 'center', 
       width: 100,
     },

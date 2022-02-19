@@ -27,15 +27,15 @@ export default function ManageCustomersPage() {
     const [form] = Form.useForm();
 
     useEffect(() => {
-        CustomerApiHelper.get()
-            .then(results => {
-                setCustomers(results);
-                setLoading(false);
-            })
-            .catch(handleHttpError)
-            .catch(() => setLoading(false))
+      setLoading(true);
+      CustomerApiHelper.get()
+          .then(results => {
+              setCustomers(results);
+              setLoading(false);
+          })
+          .catch(handleHttpError)
+          .catch(() => setLoading(false))
     }, [handleHttpError, setLoading])
-
 
     function onValuesChange(_, form) {
       CustomerApiHelper.get(form.company_name, form.p1_name, form.status)
@@ -141,7 +141,7 @@ const columns = [
   },
   { 
     dataIndex: "id", 
-    title: "", 
+    title: "Action", 
     key: "link", 
     width: 100,
     render: (id) => <Link to={`./${id}`}>View</Link> 

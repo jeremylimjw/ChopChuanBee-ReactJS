@@ -124,7 +124,7 @@ const columns = [
   },
   { 
     dataIndex: "id", 
-    title: "", 
+    title: "Action", 
     key: "link", 
     width: 100,
     render: (id) => <Link to={`./${id}`}>View</Link> 

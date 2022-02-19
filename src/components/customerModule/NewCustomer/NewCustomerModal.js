@@ -4,7 +4,7 @@ import Modal from 'antd/lib/modal/Modal'
 import React, { useState } from 'react'
 import { CustomerApiHelper } from '../../../api/customer';
 import { useApp } from '../../../providers/AppProvider';
-import { EMAIL, REQUIRED } from '../../../utilities/form';
+import { EMAIL, exactLength, minLength, NUMBER, REQUIRED } from '../../../utilities/form';
 
 export default function NewCustomerModal({ isModalVisible, setIsModalVisible, customers, setCustomers }) {
 
@@ -70,7 +70,7 @@ export default function NewCustomerModal({ isModalVisible, setIsModalVisible, cu
                     <Input />
                 </Form.Item>
 
-                <Form.Item label="Postal Code" name="postal_code" rules={[REQUIRED]}>
+                <Form.Item label="Postal Code" name="postal_code" rules={[REQUIRED, exactLength(6), NUMBER]}>
                     <Input />
                 </Form.Item>
 
@@ -85,11 +85,11 @@ export default function NewCustomerModal({ isModalVisible, setIsModalVisible, cu
                 <Divider />
                 <Typography.Title level={5}>Contact Person 1</Typography.Title>
 
-                <Form.Item label="POC 1" name="p1_name" rules={[REQUIRED]}>
+                <Form.Item label="Name" name="p1_name" rules={[REQUIRED]}>
                     <Input />
                 </Form.Item>
 
-                <Form.Item label="POC 1 Number" name="p1_phone_number" rules={[REQUIRED]}>
+                <Form.Item label="Contact Number" name="p1_phone_number" rules={[REQUIRED, minLength(8)]}>
                     <Input />
                 </Form.Item>
 
@@ -107,7 +107,7 @@ export default function NewCustomerModal({ isModalVisible, setIsModalVisible, cu
                             <Input />
                         </Form.Item>
 
-                        <Form.Item label="POC 2 Number" name="p2_phone_number">
+                        <Form.Item label="POC 2 Number" name="p2_phone_number" rules={[minLength(8)]}>
                             <Input />
                         </Form.Item>
                     </>
