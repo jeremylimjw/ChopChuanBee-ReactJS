@@ -60,8 +60,8 @@ export default function C1Form({ customer, setCustomer }) {
                             <Typography>{customer.gst ? 'Yes' : 'No'}</Typography>
                         :
                             <Radio.Group>
-                                <Radio.Button value={true}>Yes</Radio.Button>
-                                <Radio.Button value={false}>No</Radio.Button>
+                                <Radio value={true}>Yes</Radio>
+                                <Radio value={false}>No</Radio>
                             </Radio.Group>
                         }
                     </Form.Item>
@@ -71,8 +71,8 @@ export default function C1Form({ customer, setCustomer }) {
                             <Typography>{customer.gst_show ? 'Yes': 'No'}</Typography>
                         :
                             <Radio.Group>
-                                <Radio.Button value={true}>Yes</Radio.Button>
-                                <Radio.Button value={false}>No</Radio.Button>
+                                <Radio value={true}>Yes</Radio>
+                                <Radio value={false}>No</Radio>
                             </Radio.Group>
                         }
                     </Form.Item>
@@ -82,8 +82,8 @@ export default function C1Form({ customer, setCustomer }) {
                             <Typography>{getChargedUnderTag(customer.charged_under_id)}</Typography>
                         :
                             <Radio.Group>
-                                <Radio.Button value={1}>CCB</Radio.Button>
-                                <Radio.Button value={2}>CBFS</Radio.Button>
+                                <Radio value={1}>CCB</Radio>
+                                <Radio value={2}>CBFS</Radio>
                             </Radio.Group>
                         }
                     </Form.Item>
