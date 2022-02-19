@@ -6,7 +6,7 @@ import { SupplierAPIHelper } from "../../api/supplier";
 import { useApp } from "../../providers/AppProvider";
 import NewSupplierModal from "../../components/supplierModule/NewSupplierModal";
 import MyLayout from "../../components/layout/MyLayout";
-import { PlusOutlined } from "@ant-design/icons/lib/icons";
+import { PlusOutlined, SearchOutlined } from "@ant-design/icons/lib/icons";
 import { Link } from "react-router-dom";
 import { getActiveTag } from "../../enums/ActivationStatus";
 import { sortByDate, sortByNumber, sortByString } from "../../utilities/sorters";
@@ -58,10 +58,10 @@ export default function SuppliersPage() {
         <MyToolbar title="Suppliers">
           <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off' initialValues={{ status: null }}>
             <Form.Item name="company_name">
-                <Input placeholder='Search Company' />
+                <Input placeholder='Search Company' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
             </Form.Item>
             <Form.Item name="p1_name">
-                <Input placeholder='Search Person Name' />
+                <Input placeholder='Search Person Name' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
             </Form.Item>
             <Form.Item name="status">
               <Select style={{ width: 120 }} placeholder="Filter by Status">

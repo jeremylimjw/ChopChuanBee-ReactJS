@@ -10,7 +10,7 @@ import { sortByDate, sortByNumber, sortByString } from '../../utilities/sorters'
 import { Link } from 'react-router-dom';
 import { getActiveTag } from '../../enums/ActivationStatus';
 import NewCustomerModal from '../../components/customerModule/NewCustomer/NewCustomerModal';
-import { PlusOutlined } from '@ant-design/icons/lib/icons';
+import { PlusOutlined, SearchOutlined } from '@ant-design/icons/lib/icons';
 import debounce from 'lodash.debounce';
 import { View } from '../../enums/View';
 
@@ -61,10 +61,10 @@ export default function ManageCustomersPage() {
           <MyToolbar title="Customers">
               <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off' initialValues={{ status: null }}>
                   <Form.Item name="company_name">
-                      <Input placeholder='Search Company' />
+                      <Input placeholder='Search Company' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
                   </Form.Item>
                   <Form.Item name="p1_name">
-                      <Input placeholder='Search Person Name' />
+                      <Input placeholder='Search Person Name' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
                   </Form.Item>
                   <Form.Item name="status">
                     <Select style={{ width: 120 }} placeholder="Filter by Status">

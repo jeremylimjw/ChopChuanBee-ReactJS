@@ -10,6 +10,7 @@ import { parseDateTimeSeconds } from '../../utilities/datetime';
 import { sortByDate, sortByNumber, sortByString } from '../../utilities/sorters';
 import moment from 'moment';
 import debounce from 'lodash.debounce';
+import { SearchOutlined } from '@ant-design/icons';
 
 const breadcrumbs = [
   { url: '/logs', name: 'Logs' },
@@ -64,7 +65,7 @@ export default function ViewLogs() {
                 <MyToolbar title="Logs">
                     <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
                         <Form.Item name="name">
-                            <Input placeholder='Search Name' />
+                            <Input placeholder='Search Name' suffix={<SearchOutlined className='grey' />} />
                         </Form.Item>
                         <Form.Item name="date">
                             <DatePicker.RangePicker />

@@ -31,25 +31,25 @@ const menu = [
     icon: <UserOutlined />,
     items: [
       { route: '/suppliers', name: 'Manage Suppliers' },
-      { route: '/suppliers/accounts', name: 'Accounts Payable' },
+      // { route: '/suppliers/accounts', name: 'Accounts Payable' },
     ]
   },
-  {
-    role: 'Inventory',
-    title: 'Purchases',
-    icon: <UserOutlined />,
-    items: [
-      { route: '/purchases/orders', name: 'Manage Orders' },
-    ]
-  },
+  // {
+  //   role: 'Inventory',
+  //   title: 'Purchases',
+  //   icon: <UserOutlined />,
+  //   items: [
+  //     { route: '/purchases/orders', name: 'Manage Orders' },
+  //   ]
+  // },
   {
     role: 'Inventory',
     title: 'Inventory',
     icon: <UserOutlined />,
     items: [
       { route: '/products', name: 'Manage Products' },
-      { route: '/inventory', name: 'Manage Inventory' },
-      { route: '/inventory/supplier-invoices', name: 'Supplier Invoices' },
+      // { route: '/inventory', name: 'Manage Inventory' },
+      // { route: '/inventory/supplier-invoices', name: 'Supplier Invoices' },
     ]
   },
   {

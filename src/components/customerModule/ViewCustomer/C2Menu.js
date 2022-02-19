@@ -1,4 +1,4 @@
-import { DeleteOutlined } from '@ant-design/icons/lib/icons';
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons/lib/icons';
 import { Button, message, Table } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { CustomerApiHelper } from '../../../api/customer'
@@ -67,7 +67,7 @@ export default function C2Menu({ customer }) {
   return (
     <>
       <MyToolbar title={`Menu`}>
-          <Button onClick={handleAddRow} disabled={!hasWriteAccessTo(View.CRM.name)}>Add New Row</Button>
+          <Button onClick={handleAddRow} icon={<PlusOutlined />} disabled={!hasWriteAccessTo(View.CRM.name)}>New</Button>
           <Button type='primary' onClick={handleMenuUpdate} loading={loading} disabled={!hasWriteAccessTo(View.CRM.name)}>Save</Button>
       </MyToolbar>
       

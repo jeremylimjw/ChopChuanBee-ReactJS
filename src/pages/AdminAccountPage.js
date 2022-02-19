@@ -1,246 +1,145 @@
 import React, { useState, useEffect } from 'react';
-import NewAccountForm from '../components/adminModule/NewAccountForm';
-import AccountTable from './../components/adminModule/AccountTable';
 import { useApp } from '../providers/AppProvider';
-import { Button, Input, Select, Typography } from 'antd';
+import { Button, Form, Input, Select, Table, Tag, Tooltip, Typography } from 'antd';
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
+import { useNavigate } from "react-router-dom";
 import { EmployeeApiHelper } from './../api/employees';
 import MyLayout from '../components/layout/MyLayout';
 import MyCard from '../components/layout/MyCard';
 import { Link } from 'react-router-dom';
 import MyToolbar from './../components/layout/MyToolbar';
+import { sortByDate, sortByNumber, sortByString } from '../utilities/sorters';
+import { parseDate, parseDateTimeSeconds } from '../utilities/datetime';
+import debounce from 'lodash.debounce';
+import { getAccessRightTag, View } from '../enums/View';
+import { getActiveTag } from '../enums/ActivationStatus';
+
+const breadcrumbs = [{ url: '/admin/accounts/', name: 'Accounts' }];
 
 const AdminAccountPage = () => {
-    const breadcrumbs = [{ url: '/admin/accounts/', name: 'Admin' }];
-    const { user, logout, removeSession } = useApp();
-    const [updateTable, setUpdateTable] = useState(false);
-    const [accountDataSource, setAccountDataSource] = useState([]);
-    // const [isNewAccountModalVisible, setIsNewAccountModalVisible] = useState(false);
-    const { Option, OptGroup } = Select;
+    const navigate = useNavigate();
+
+    const { handleHttpError } = useApp();
+
     const [loading, setLoading] = useState();
-    const [employeeNameSearch, setEmployeeNameSearch] = useState();
-
-    const reset = () => {
-        setEmployeeNameSearch('');
-        setLoading(true);
-    };
+    const [employees, setEmployees] = useState([]);
+    const [form] = Form.useForm();
 
     useEffect(() => {
-        initializeEmployeeDataSource();
-        setLoading(false);
-    }, [loading]);
+      setLoading(true);
+      EmployeeApiHelper.get()
+        .then(results => {
+            setEmployees(results);
+            setLoading(false);
+        })
+        .catch(handleHttpError)
+        .catch(() => setLoading(false))
+    }, [handleHttpError, setLoading])
 
-    const handleEmployeeNameSearch = (str) => {
-        if (str === '') {
-            setLoading(true);
-        } else {
-            str = str.toLowerCase();
-            let filteredArr = accountDataSource.filter((account) => {
-                let name = account.name.toLowerCase();
-                return name.includes(str);
-            });
-            setAccountDataSource(filteredArr);
+    function onValuesChange(_, form) {
+        EmployeeApiHelper.get(form)
+            .then(results => {
+                setEmployees(results);
+                setLoading(false);
+            })
+            .catch(handleHttpError)
+            .catch(() => setLoading(false))
+    }
+
+    function resetForm() {
+        form.resetFields();
+        onValuesChange(null, form.getFieldsValue());
+    }
+
+    // Backend query by view_id is complicated to frontend handle this field
+    function filterAccessRights(x) {
+        const view_id = form.getFieldValue('view_id');
+        if (view_id == null) return true;
+
+        for (let accessRight of x.access_rights) {
+            if (accessRight.view_id === view_id) return true;
         }
-    };
-
-    const handleUserNameSearch = (str) => {
-        if (str === '') {
-            setLoading(true);
-        } else {
-            str = str.toLowerCase();
-            let filteredArr = accountDataSource.filter((account) => {
-                let username = account.username.toLowerCase();
-                return username.includes(str);
-            });
-            setAccountDataSource(filteredArr);
-        }
-    };
-
-    const handleAccessRightFilter = (value) => {
-        console.log(value);
-        console.log(accountDataSource);
-        let filteredArr;
-
-        if (value === 1) {
-            filteredArr = accountDataSource.filter((account) => {
-                return account.access_rights.find((accessRight) => {
-                    return accessRight.view_id === value;
-                });
-            });
-        } else if (value === 2) {
-            filteredArr = accountDataSource.filter((account) => {
-                return account.access_rights.find((accessRight) => {
-                    return accessRight.view_id === value;
-                });
-            });
-        } else if (value === 3) {
-            filteredArr = accountDataSource.filter((account) => {
-                return account.access_rights.find((accessRight) => {
-                    return accessRight.view_id === value;
-                });
-            });
-        } else if (value === 4) {
-            filteredArr = accountDataSource.filter((account) => {
-                return account.access_rights.find((accessRight) => {
-                    return accessRight.view_id === value;
-                });
-            });
-        } else if (value === 5) {
-            filteredArr = accountDataSource.filter((account) => {
-                return account.access_rights.find((accessRight) => {
-                    return accessRight.view_id === value;
-                });
-            });
-        } else if (value === 6) {
-            filteredArr = accountDataSource.filter((account) => {
-                return account.access_rights.find((accessRight) => {
-                    return accessRight.view_id === value;
-                });
-            });
-        } else if (value === 8) {
-            filteredArr = accountDataSource.filter((account) => {
-                return account.access_rights.find((accessRight) => {
-                    return accessRight.view_id === value;
-                });
-            });
-        } else if (value === 9) {
-            filteredArr = accountDataSource.filter((account) => {
-                return account.access_rights.find((accessRight) => {
-                    return accessRight.view_id === value;
-                });
-            });
-        } else if (value === 10) {
-            filteredArr = accountDataSource.filter((account) => {
-                return account.access_rights.find((accessRight) => {
-                    return accessRight.view_id === value;
-                });
-            });
-        } else if (value === true) {
-            //deactivated
-            filteredArr = accountDataSource.filter((account) => {
-                return account.discharge_date !== null;
-            });
-        } else if (value === false) {
-            //activate
-            filteredArr = accountDataSource.filter((account) => {
-                return account.discharge_date === null;
-            });
-        }
-        setAccountDataSource(filteredArr);
-    };
-
-    // const handleNewAccountModalOk = () => {
-    //     setIsNewAccountModalVisible(false);
-    // };
-
-    // const handleNewAccountModalCancel = () => {
-    //     setIsNewAccountModalVisible(false);
-    // };
-
-    useEffect(() => {
-        initializeEmployeeDataSource();
-    }, []);
-
-    const initializeEmployeeDataSource = async () => {
-        let data = await EmployeeApiHelper.getAllEmployees();
-        let dataSrc = data.map((value) => {
-            return {
-                ...value,
-            };
-        });
-        setAccountDataSource(dataSrc);
-        setUpdateTable(!updateTable);
-    };
-
-    // const createNewAccount = async (
-    //     name,
-    //     username,
-    //     email,
-    //     role_id,
-    //     contact_number,
-    //     nok_name,
-    //     nok_number,
-    //     address,
-    //     postal_code,
-    //     send_email,
-    //     access_rights
-    // ) => {
-    //     await EmployeeApiHelper.createNewAccount(
-    //         name,
-    //         username,
-    //         email,
-    //         role_id,
-    //         contact_number,
-    //         nok_name,
-    //         nok_number,
-    //         address,
-    //         postal_code,
-    //         send_email,
-    //         access_rights
-    //     );
-    //     initializeEmployeeDataSource();
-    // };
+        return false;
+    }
 
     return (
-        <MyLayout breadcrumbs={breadcrumbs} bannerTitle='Manage Account'>
+        <MyLayout breadcrumbs={breadcrumbs} bannerTitle='Manage Accounts'>
             <MyCard>
-                <MyToolbar title='Account Table'>
-                    <Input
-                        style={{ width: 180 }}
-                        onChange={(e) => handleUserNameSearch(e.target.value)}
-                        value={employeeNameSearch}
-                        placeholder='Search Username'
-                        suffix={<SearchOutlined className='grey' />}
-                    />
-                    <Input
-                        style={{ width: 180 }}
-                        onChange={(e) => handleEmployeeNameSearch(e.target.value)}
-                        value={employeeNameSearch}
-                        placeholder='Search Employee Name'
-                        suffix={<SearchOutlined className='grey' />}
-                    />
-                    <Select
-                        style={{ width: 180 }}
-                        placeholder='Filter by Access Right'
-                        onChange={handleAccessRightFilter}
-                    >
-                        <OptGroup label='Access Right'>
-                            <Option value={1}>Human Resource</Option>
-                            <Option value={2}>Customer Relationship</Option>
-                            <Option value={3}>Supplier</Option>
-                            <Option value={4}>Purchases</Option>
-                            <Option value={5}>Sales</Option>
-                            <Option value={6}>Accounting</Option>
-                            <Option value={8}>General</Option>
-                            <Option value={9}>Dispatch</Option>
-                            <Option value={10}>Catalogue</Option>
-                        </OptGroup>
-                        <OptGroup label='Status'>
-                            <Option value={false}>Activate</Option>
-                            <Option value={true}>Deactivated</Option>
-                        </OptGroup>
-                        {/* <OptGroup label='Read/Write Access'>
-                            <Option value={false}>Read</Option>
-                            <Option value={true}>Write</Option>
-                        </OptGroup> */}
-                    </Select>
-                    <Button onClick={() => reset()}>Reset</Button>
-                    <Button
-                        type='Link'
-                        icon={<PlusOutlined style={{ color: 'white' }} />}
-                        style={{ background: '#1890FF' }}
-                    >
-                        <Link to='/admin/create' style={{ color: 'white' }}>
-                            {'  '}
-                            New
-                        </Link>
-                    </Button>
+                <MyToolbar title='Accounts'>
+                    <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off' initialValues={{ status: null, view_id: null }}>
+                        <Form.Item name="name">
+                            <Input placeholder='Search Name' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
+                        </Form.Item>
+                        <Form.Item name="view_id">
+                            <Select style={{ width: 180 }} placeholder="Filter by Access Right">
+                                <Select.Option value={null}>All</Select.Option>
+                                {Object.keys(View)
+                                    .filter(x => x !== 'ADMIN' && x !== 'GENERAL')
+                                    .map(key => <Select.Option value={View[key].id}>{View[key].name}</Select.Option>)}
+                            </Select>
+                        </Form.Item>
+                        <Form.Item name="status">
+                            <Select style={{ width: 120 }} placeholder="Filter by Status">
+                                <Select.Option value={null}>All</Select.Option>
+                                <Select.Option value={true}>Active</Select.Option>
+                                <Select.Option value={false}>Inactive</Select.Option>
+                            </Select>
+                        </Form.Item>
+                        <Button onClick={resetForm}>Reset</Button>
+                    </Form>
+                    
+                    <Button type='primary' icon={<PlusOutlined />} onClick={() => navigate('./new')}>New</Button>
                 </MyToolbar>
 
-                <AccountTable accountDataSource={accountDataSource} user={user} />
+                <Table dataSource={employees.filter(filterAccessRights)} columns={columns} loading={loading} rowKey="id" />
             </MyCard>
         </MyLayout>
     );
 };
 
 export default AdminAccountPage;
+
+const columns = [
+    {
+        title: 'Created At',
+        dataIndex: 'created_at',
+        width: 150,
+        render: (created_at) => parseDate(created_at),
+        sorter: (a, b) => sortByDate(a.created_at, b.created_at),
+    },
+    {
+        title: 'Name',
+        dataIndex: 'name',
+        key: 'name',
+        width: '18%',
+        sorter: (a, b) => sortByString(a.name, b.name),
+    },
+    {
+        title: 'Access Rights',
+        dataIndex: 'access_rights',
+        key: 'access_rights',
+        render: (access_rights) => access_rights?.map((accessRight) => getAccessRightTag(accessRight)),
+    },
+    {
+        title: 'Last Active',
+        dataIndex: 'last_active',
+        width: 200,
+        render: (last_active) => last_active ? parseDateTimeSeconds(last_active) : '-',
+        sorter: (a, b) => sortByDate(a.last_active, b.last_active),
+    },
+    {
+      title: 'Status',
+      dataIndex: 'discharge_date',
+      key: 'discharge_date',
+      width: 120,
+      render: (discharge_date) => getActiveTag(discharge_date),
+      sorter: (a, b) => sortByNumber(a.discharge_date ? 1 : 0, b.discharge_date ? 1 : 0),
+    },
+    { 
+        dataIndex: "id", 
+        title: "Action", 
+        key: "link", 
+        width: 100,
+        render: (id) => <Link to={`./${id}`}>View</Link> 
+    }
+];

@@ -1,12 +1,21 @@
 import { axiosObject } from './axiosWrapper';
 
 export class EmployeeApiHelper {
-    static async getAllEmployees() {
-        let result = axiosObject.get('/employee').then((res) => {
-            return res.data;
-        });
-        return result;
+    static async get(query) {
+        const params = { order_by: 'created_at_desc' };
+        if (query?.id)
+            params.id = query.id;
+        if (query?.name)
+            params.name_like = query.name;
+        if (query?.status === true) {
+            params.discharge_date_is_null = 1;
+        } else if (query?.status === false) {
+            params.discharge_date_is_nn = 1;
+        }
+        return axiosObject.get('/employee', { params: params })
+            .then((res) => res.data);
     }
+
     static async createNewAccount(
         name,
         username,

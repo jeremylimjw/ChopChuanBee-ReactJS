@@ -8,7 +8,7 @@ import MyLayout from '../../components/layout/MyLayout';
 import MyToolbar from '../../components/layout/MyToolbar';
 import { sortByDate, sortByNumber, sortByString } from '../../utilities/sorters';
 import { Link } from 'react-router-dom';
-import { PlusOutlined } from '@ant-design/icons/lib/icons';
+import { PlusOutlined, SearchOutlined } from '@ant-design/icons/lib/icons';
 import NewProductModal from '../../components/inventoryModule/NewProduct/NewProductModal';
 import { getActiveTag } from '../../enums/ActivationStatus';
 import debounce from 'lodash.debounce';
@@ -60,7 +60,7 @@ export default function ManageProductsPage() {
             <MyToolbar title="Products">
                 <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off' initialValues={{ status: null }}>
                     <Form.Item name="name">
-                        <Input placeholder='Search Name' />
+                        <Input placeholder='Search Name' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
                     </Form.Item>
                     <Form.Item name="status">
                       <Select style={{ width: 120 }} placeholder="Filter by Status">
