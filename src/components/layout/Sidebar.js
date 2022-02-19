@@ -1,64 +1,66 @@
-import React from 'react';
-import { Layout, Menu } from 'antd';
-import { Link } from 'react-router-dom';
-import { useApp } from '../../providers/AppProvider';
-import { HomeOutlined, UserOutlined } from '@ant-design/icons/lib/icons';
+import React from 'react'
+import { Layout, Menu } from 'antd'
+import { Link } from 'react-router-dom'
+import { useApp } from '../../providers/AppProvider'
+import { HomeOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons/lib/icons'
+
 
 // Add on more menu items here
 const menu = [
-    {
-        role: 'Admin',
-        title: 'Admin',
-        icon: <UserOutlined />,
-        items: [
-            { route: '/admin/accounts', name: 'Manage Accounts' },
-            { route: '/admin/logs', name: 'Logs' },
-        ],
-    },
-    {
-        role: 'HR',
-        title: 'Human Resource',
-        icon: <UserOutlined />,
-        items: [
-            { route: '/human-resource/employees', name: 'Manage Employees' },
-            { route: '/human-resource/employees', name: 'Leaves' },
-        ],
-    },
-    {
-        role: 'SCM',
-        title: 'Suppliers',
-        icon: <UserOutlined />,
-        items: [
-            { route: '/suppliers', name: 'Manage Suppliers' },
-            { route: '/suppliers/accounts', name: 'Accounts Payable' },
-        ],
-    },
-    {
-        role: 'Inventory',
-        title: 'Purchases',
-        icon: <UserOutlined />,
-        items: [{ route: '/purchases/orders', name: 'Manage Orders' }],
-    },
-    {
-        role: 'Inventory',
-        title: 'Inventory',
-        icon: <UserOutlined />,
-        items: [
-            { route: '/inventory', name: 'Manage Inventory' },
-            { route: '/inventory/supplier-invoices', name: 'Supplier Invoices' },
-            { route: '/products', name: 'Manage Products' },
-        ],
-    },
-    {
-        role: 'CRM',
-        title: 'Customers',
-        icon: <UserOutlined />,
-        items: [
-            { route: '/customers', name: 'Manage Customers' },
-            { route: '/customers/accounts', name: 'Accounts Receivables' },
-        ],
-    },
-];
+  {
+    role: 'Admin',
+    title: 'Admin',
+    icon: <UserOutlined />,
+    items: [
+      { route: '/admin/accounts', name: 'Manage Accounts' },
+      { route: '/logs', name: 'Logs' },
+    ]
+  },
+  {
+    role: 'HR',
+    title: 'Human Resource',
+    icon: <UserOutlined />,
+    items: [
+      { route: '/human-resource/employees', name: 'Manage Employees' },
+      { route: '/human-resource/employees', name: 'Leaves' },
+    ]
+  },
+  {
+    role: 'SCM',
+    title: 'Suppliers',
+    icon: <UserOutlined />,
+    items: [
+      { route: '/suppliers', name: 'Manage Suppliers' },
+      { route: '/suppliers/accounts', name: 'Accounts Payable' },
+    ]
+  },
+  {
+    role: 'Inventory',
+    title: 'Purchases',
+    icon: <UserOutlined />,
+    items: [
+      { route: '/purchases/orders', name: 'Manage Orders' },
+    ]
+  },
+  {
+    role: 'Inventory',
+    title: 'Inventory',
+    icon: <UserOutlined />,
+    items: [
+      { route: '/products', name: 'Manage Products' },
+      { route: '/inventory', name: 'Manage Inventory' },
+      { route: '/inventory/supplier-invoices', name: 'Supplier Invoices' },
+    ]
+  },
+  {
+    role: 'CRM',
+    title: 'Customers',
+    icon: <TeamOutlined />,
+    items: [
+      { route: '/customers', name: 'Manage Customers' },
+    ]
+  },
+]
 
 const Sidebar = () => {
     const { hasViewAccessTo } = useApp();
