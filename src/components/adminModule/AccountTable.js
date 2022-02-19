@@ -1,8 +1,9 @@
 import { React, useState } from 'react';
-import { Button, Table, Dropdown, Menu, Modal, Tag } from 'antd';
-import { MoreOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { Button, Table, Dropdown, Menu, Modal, Tag, Tooltip } from 'antd';
+import { MoreOutlined, ExclamationCircleOutlined, EyeOutlined } from '@ant-design/icons';
 import EmployeeAccount from './EmployeeAccount';
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 const AccountTable = ({ accountDataSource, user }) => {
     const { confirm } = Modal;
@@ -70,21 +71,9 @@ const AccountTable = ({ accountDataSource, user }) => {
             sorter: (a, b) => a.name.length - b.name.length,
             sortDirections: ['ascend', 'descend', 'ascend'],
         },
+
         {
             title: 'Access Right',
-            filters: [
-                { text: 'Human Resource', value: 1 },
-                { text: 'Customer Relationship', value: 2 },
-                { text: 'Supplier Relationship', value: 3 },
-                { text: 'Purchases', value: 4 },
-                { text: 'Sales', value: 5 },
-                { text: 'Accounting', value: 6 },
-                { text: 'Admin', value: 7 },
-                { text: 'General', value: 8 },
-                { text: 'Catalogue', value: 9 },
-                { text: 'Driver', value: 10 },
-            ],
-            onFilter: (value, record) => record.access_rights.view_id.indexOf(value) === 0,
             render: (text, record) => (
                 <>
                     {record.access_rights.map((ar) => {
@@ -111,7 +100,11 @@ const AccountTable = ({ accountDataSource, user }) => {
                         } else if (ar.view_id === 10) {
                             temp = 'Driver';
                         }
-                        return <Tag color={color}>{temp}</Tag>;
+                        return (
+                            <Tooltip title={color === 'green' ? 'Read/Write' : 'Read'}>
+                                <Tag color={color}>{temp}</Tag>
+                            </Tooltip>
+                        );
                     })}
                 </>
             ),
@@ -132,18 +125,21 @@ const AccountTable = ({ accountDataSource, user }) => {
             sorter: (a, b) => new Date(a.updated_at) - new Date(b.updated_at),
             sortDirections: ['ascend', 'descend', 'ascend'],
         },
-        {
-            title: 'Last Activity',
-            dataIndex: 'lastActive',
-            filters: [{ text: 'Login', value: 'Login' }],
-            onFilter: (value, record) => record.lastActive.indexOf(value) === 0,
-        },
+        // {
+        //     title: 'Last Activity',
+        //     dataIndex: 'lastActive',
+        //     filters: [{ text: 'Login', value: 'Login' }],
+        //     onFilter: (value, record) => record.lastActive.indexOf(value) === 0,
+        // },
 
         {
             title: '',
-            render: (text, record) => (
-                // console.log(record),
-                <Dropdown.Button trigger={['click']} overlay={menu(text)} icon={<MoreOutlined />} />
+            render: (value, record) => (
+                <Tooltip title='View account'>
+                    <Link to={`${record.id}`} state={{ accountData: record }}>
+                        <EyeOutlined />
+                    </Link>
+                </Tooltip>
             ),
         },
     ];

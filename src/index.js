@@ -8,6 +8,7 @@ import { Layout } from 'antd';
 import LoginPage from './pages/LoginPage';
 import AdminAccountPage from './pages/AdminAccountPage';
 import AdminNewAccountFormPage from './pages/AdminNewAccountFormPage';
+import AdminViewAccountPage from './pages/AdminViewAccountPage';
 import { AppProvider } from './providers/AppProvider';
 import RequireAuth from './auth/RequireAuth';
 import MyTemplate from './pages/MyTemplate';
@@ -31,6 +32,11 @@ const routes = [
     {
         path: '/admin/create',
         component: <AdminNewAccountFormPage />,
+        viewAccess: 'ADMIN',
+    },
+    {
+        path: '/admin/accounts/:accountId',
+        component: <AdminViewAccountPage />,
         viewAccess: 'ADMIN',
     },
 ];
