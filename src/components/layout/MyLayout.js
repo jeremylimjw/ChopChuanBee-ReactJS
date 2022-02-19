@@ -8,7 +8,7 @@ export default function MyLayout({ children, breadcrumbs, bannerTitle }) {
       <Banner breadcrumbs={breadcrumbs} title={bannerTitle} />
       <Content>
         {children}
-        <Footer style={{ textAlign: 'center', color: 'rgba(0,0,0,.45)' }}>© 2021 Produced by IS4103 Group 3 AY21/22 Sem 2</Footer>
+        <Footer style={{ textAlign: 'center', color: 'rgba(0,0,0,.45)' }}>© 2021 Produced by IS4103 ID04 AY21/22 S2</Footer>
       </Content>
     </Layout>
   )
