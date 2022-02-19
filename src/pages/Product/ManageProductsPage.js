@@ -12,6 +12,7 @@ import { PlusOutlined } from '@ant-design/icons/lib/icons';
 import NewProductModal from '../../components/inventoryModule/NewProduct/NewProductModal';
 import { getActiveTag } from '../../enums/ActivationStatus';
 import debounce from 'lodash.debounce';
+import { View } from '../../enums/View';
 
 const breadcrumbs = [
   { url: '/products', name: 'Products' },
@@ -19,7 +20,7 @@ const breadcrumbs = [
 
 export default function ManageProductsPage() {
 
-    const { handleHttpError } = useApp();
+    const { handleHttpError, hasWriteAccessTo } = useApp();
 
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -70,7 +71,7 @@ export default function ManageProductsPage() {
                     </Form.Item>
                     <Button onClick={resetForm}>Reset</Button>
                 </Form>
-                <Button type='primary' onClick={() => setIsModalVisible(true)} icon={<PlusOutlined />}>New</Button>
+                <Button type='primary' onClick={() => setIsModalVisible(true)} icon={<PlusOutlined />} disabled={!hasWriteAccessTo(View.INVENTORY.name)}>New</Button>
             </MyToolbar>
   
             <Table dataSource={products} columns={columns} loading={loading} rowKey="id" />

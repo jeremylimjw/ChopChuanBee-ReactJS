@@ -3,6 +3,7 @@ import { Button, message, Table } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { CustomerApiHelper } from '../../../api/customer'
 import { ProductApiHelper } from '../../../api/product';
+import { View } from '../../../enums/View';
 import { useApp } from '../../../providers/AppProvider';
 import { sortByString } from '../../../utilities/sorters';
 import { RenderCell } from '../../general/TableCell';
@@ -10,7 +11,7 @@ import MyToolbar from '../../layout/MyToolbar'
 
 export default function C2Menu({ customer }) {
 
-  const { handleHttpError } = useApp();
+  const { handleHttpError, hasWriteAccessTo } = useApp();
 
   const [loading, setLoading] = useState(false);
   const [items, setItems] = useState([]);
@@ -65,17 +66,17 @@ export default function C2Menu({ customer }) {
 
   return (
     <>
-        <MyToolbar title={`Menu`}>
-            <Button onClick={handleAddRow}>Add New Row</Button>
-            <Button type='primary' onClick={handleMenuUpdate} loading={loading}>Save</Button>
-        </MyToolbar>
-        
-        <Table dataSource={items} 
-          columns={columns} 
-          loading={loading} 
-          rowKey={() => Math.random()} 
-          components={{ body: { cell: RenderCell } }} 
-        />
+      <MyToolbar title={`Menu`}>
+          <Button onClick={handleAddRow} disabled={!hasWriteAccessTo(View.CRM.name)}>Add New Row</Button>
+          <Button type='primary' onClick={handleMenuUpdate} loading={loading} disabled={!hasWriteAccessTo(View.CRM.name)}>Save</Button>
+      </MyToolbar>
+      
+      <Table dataSource={items} 
+        columns={columns} 
+        loading={loading} 
+        rowKey={() => Math.random()} 
+        components={{ body: { cell: RenderCell } }} 
+      />
     </>  
   )
 }

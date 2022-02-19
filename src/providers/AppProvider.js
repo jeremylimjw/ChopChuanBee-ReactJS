@@ -92,7 +92,7 @@ export function AppProvider({ children }) {
      */
     function hasWriteAccessTo(view) {
         if (user == null) return false;
-        if (user.role_name === 'Admin' || user.access_rights[view]?.has_write_access) return true;
+        if (user.role.name === 'Admin' || user.access_rights[view]?.has_write_access) return true;
         return false;
     }
 

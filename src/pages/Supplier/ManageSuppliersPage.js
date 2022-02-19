@@ -12,13 +12,14 @@ import { getActiveTag } from "../../enums/ActivationStatus";
 import { sortByDate, sortByNumber, sortByString } from "../../utilities/sorters";
 import { parseDate } from "../../utilities/datetime";
 import debounce from "lodash.debounce";
+import { View } from "../../enums/View";
 
 const breadcrumbs = [
   { url: "/suppliers", name: "Supplier" },
 ];
 
 export default function SuppliersPage() {
-  const { handleHttpError } = useApp();
+  const { handleHttpError, hasWriteAccessTo } = useApp();
 
   const [form] = Form.useForm();
   const [loading, setLoading] = useState();
@@ -71,7 +72,7 @@ export default function SuppliersPage() {
             </Form.Item>
             <Button onClick={resetForm}>Reset</Button>
           </Form>
-          <Button type="primary" icon={<PlusOutlined />} onClick={() => setIsModalVisible(true)}>New</Button>
+          <Button type="primary" icon={<PlusOutlined />} onClick={() => setIsModalVisible(true)} disabled={!hasWriteAccessTo(View.SCM.name)}>New</Button>
         </MyToolbar>
 
         <Table dataSource={suppliers} columns={columns} loading={loading} rowKey="id" />

@@ -2,13 +2,14 @@ import { EditOutlined, SaveOutlined } from '@ant-design/icons/lib/icons';
 import { Button, Form, Input, InputNumber, message, Typography } from 'antd'
 import React, { useState } from 'react'
 import { ProductApiHelper } from '../../../api/product';
+import { View } from '../../../enums/View';
 import { useApp } from '../../../providers/AppProvider';
 import { REQUIRED } from '../../../utilities/form';
 import MyToolbar from '../../layout/MyToolbar';
 
 export default function P1Form({ product, setProduct }) {
 
-    const { handleHttpError } = useApp();
+    const { handleHttpError, hasWriteAccessTo } = useApp();
 
     const [editing, setEditing] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -39,7 +40,7 @@ export default function P1Form({ product, setProduct }) {
                         { editing ? 
                             <Button type="primary" onClick={onFinish} icon={<SaveOutlined />} loading={loading} style={{ width: 85 }}>Save</Button>
                             :
-                            <Button onClick={() => setEditing(true)} icon={<EditOutlined />} style={{ width: 85 }}>Edit</Button>
+                            <Button onClick={() => setEditing(true)} icon={<EditOutlined />} style={{ width: 85 }} disabled={!hasWriteAccessTo(View.INVENTORY.name)}>Edit</Button>
                         }
                     </Form.Item>
                 </MyToolbar>

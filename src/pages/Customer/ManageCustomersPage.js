@@ -12,6 +12,7 @@ import { getActiveTag } from '../../enums/ActivationStatus';
 import NewCustomerModal from '../../components/customerModule/NewCustomer/NewCustomerModal';
 import { PlusOutlined } from '@ant-design/icons/lib/icons';
 import debounce from 'lodash.debounce';
+import { View } from '../../enums/View';
 
 const breadcrumbs = [
   { url: '/customers', name: 'Customers' },
@@ -19,7 +20,7 @@ const breadcrumbs = [
 
 export default function ManageCustomersPage() {
 
-    const { handleHttpError } = useApp();
+    const { handleHttpError, hasWriteAccessTo } = useApp();
 
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -74,7 +75,7 @@ export default function ManageCustomersPage() {
                   </Form.Item>
                   <Button onClick={resetForm}>Reset</Button>
               </Form>
-              <Button type='primary' onClick={() => setIsModalVisible(true)} icon={<PlusOutlined />}>New</Button>
+              <Button type='primary' onClick={() => setIsModalVisible(true)} icon={<PlusOutlined />} disabled={!hasWriteAccessTo(View.CRM.name)}>New</Button>
           </MyToolbar>
 
           <Table dataSource={customers} columns={columns} loading={loading} rowKey="id" />

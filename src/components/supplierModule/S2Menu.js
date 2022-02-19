@@ -3,6 +3,7 @@ import { Button, message, Table } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { ProductApiHelper } from '../../api/product';
 import { SupplierAPIHelper } from '../../api/supplier';
+import { View } from '../../enums/View';
 import { useApp } from '../../providers/AppProvider';
 import { sortByString } from '../../utilities/sorters';
 import { RenderCell } from '../general/TableCell';
@@ -10,7 +11,7 @@ import MyToolbar from '../layout/MyToolbar'
 
 export default function S2Menu({ supplier }) {
 
-    const { handleHttpError } = useApp();
+    const { handleHttpError, hasWriteAccessTo } = useApp();
 
     const [loading, setLoading] = useState(false);
     const [items, setItems] = useState([]);
@@ -77,8 +78,8 @@ export default function S2Menu({ supplier }) {
     return (
         <>
             <MyToolbar title={`Menu`}>
-                <Button onClick={handleAddRow}>Add New Row</Button>
-                <Button type='primary' onClick={handleMenuUpdate} loading={loading}>Save</Button>
+                <Button onClick={handleAddRow} disabled={!hasWriteAccessTo(View.SCM.name)}>Add New Row</Button>
+                <Button type='primary' onClick={handleMenuUpdate} loading={loading} disabled={!hasWriteAccessTo(View.SCM.name)}>Save</Button>
             </MyToolbar>
             
             <Table dataSource={items} 

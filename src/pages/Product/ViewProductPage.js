@@ -9,6 +9,7 @@ import P2PriceTable from '../../components/inventoryModule/ViewProduct/P2PriceTa
 import P3InventoryTable from '../../components/inventoryModule/ViewProduct/P3InventoryTable';
 import MyCard from '../../components/layout/MyCard';
 import MyLayout from '../../components/layout/MyLayout';
+import { View } from '../../enums/View';
 import { useApp } from '../../providers/AppProvider';
 
 export default function ViewProductPage() {
@@ -16,7 +17,7 @@ export default function ViewProductPage() {
     const { id } = useParams();
     const navigate = useNavigate();
 
-    const { handleHttpError } = useApp();
+    const { handleHttpError, hasWriteAccessTo } = useApp();
   
     const [product, setProduct] = useState(null)
     const [loading, setLoading] = useState(false);
@@ -54,12 +55,12 @@ export default function ViewProductPage() {
         return (
             <>
                 { product.deactivated_date == null ? 
-                    <Popconfirm title="Confirm deactivate?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading}>
-                        <Button type="danger" loading={loading} icon={<UserDeleteOutlined />} style={{ width: 120 }}>Deactivate</Button>
+                    <Popconfirm title="Confirm deactivate?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading || !hasWriteAccessTo(View.INVENTORY.name)}>
+                        <Button type="danger" loading={loading} icon={<UserDeleteOutlined />} style={{ width: 120 }} disabled={!hasWriteAccessTo(View.INVENTORY.name)}>Deactivate</Button>
                     </Popconfirm>
                     :
-                    <Popconfirm title="Confirm activate?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading}>
-                        <Button type="primary" loading={loading} icon={<UserAddOutlined />} style={{ width: 120 }}>Activate</Button>
+                    <Popconfirm title="Confirm activate?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading || !hasWriteAccessTo(View.INVENTORY.name)}>
+                        <Button type="primary" loading={loading} icon={<UserAddOutlined />} style={{ width: 120 }} disabled={!hasWriteAccessTo(View.INVENTORY.name)}>Activate</Button>
                     </Popconfirm>
                 }
             </>

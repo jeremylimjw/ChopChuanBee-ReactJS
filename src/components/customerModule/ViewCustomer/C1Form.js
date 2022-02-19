@@ -3,13 +3,14 @@ import { Button, Divider, Form, Input, message, Radio, Typography } from 'antd'
 import React, { useState } from 'react'
 import { CustomerApiHelper } from '../../../api/customer';
 import { getChargedUnderTag } from '../../../enums/ChargedUnder';
+import { View } from '../../../enums/View';
 import { useApp } from '../../../providers/AppProvider';
 import { EMAIL, REQUIRED } from '../../../utilities/form';
 import MyToolbar from '../../layout/MyToolbar';
 
 export default function C1Form({ customer, setCustomer }) {
 
-    const { handleHttpError } = useApp();
+    const { handleHttpError, hasWriteAccessTo } = useApp();
 
     const [editing, setEditing] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -40,7 +41,7 @@ export default function C1Form({ customer, setCustomer }) {
                         { editing ? 
                             <Button type="primary" onClick={onFinish} icon={<SaveOutlined />} loading={loading} style={{ width: 85 }}>Save</Button>
                             :
-                            <Button onClick={() => setEditing(true)} icon={<EditOutlined />} style={{ width: 85 }}>Edit</Button>
+                            <Button onClick={() => setEditing(true)} icon={<EditOutlined />} style={{ width: 85 }} disabled={!hasWriteAccessTo(View.CRM.name)}>Edit</Button>
                         }
                     </Form.Item>
                 </MyToolbar>

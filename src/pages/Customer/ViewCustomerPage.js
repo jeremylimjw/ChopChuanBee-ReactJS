@@ -8,6 +8,7 @@ import C2Menu from '../../components/customerModule/ViewCustomer/C2Menu';
 import C3History from '../../components/customerModule/ViewCustomer/C3History';
 import MyCard from '../../components/layout/MyCard';
 import MyLayout from '../../components/layout/MyLayout';
+import { View } from '../../enums/View';
 import { useApp } from '../../providers/AppProvider';
 
 export default function ViewCustomerPage() {
@@ -15,7 +16,7 @@ export default function ViewCustomerPage() {
     const { id } = useParams();
     const navigate = useNavigate();
 
-    const { handleHttpError } = useApp();
+    const { handleHttpError, hasWriteAccessTo } = useApp();
   
     const [customer, setCustomer] = useState(null)
     const [loading, setLoading] = useState(false);
@@ -53,12 +54,12 @@ export default function ViewCustomerPage() {
       return (
         <>
           { customer.deactivated_date == null ? 
-            <Popconfirm title="Confirm deactivate?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading}>
-              <Button type="danger" loading={loading} icon={<UserDeleteOutlined />} style={{ width: 120 }}>Deactivate</Button>
+            <Popconfirm title="Confirm deactivate?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading || !hasWriteAccessTo(View.CRM.name)}>
+              <Button type="danger" loading={loading} icon={<UserDeleteOutlined />} style={{ width: 120 }} disabled={!hasWriteAccessTo(View.CRM.name)}>Deactivate</Button>
             </Popconfirm>
             :
-            <Popconfirm title="Confirm activate?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading}>
-              <Button type="primary" loading={loading} icon={<UserAddOutlined />} style={{ width: 120 }}>Activate</Button>
+            <Popconfirm title="Confirm activate?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading || !hasWriteAccessTo(View.CRM.name)}>
+              <Button type="primary" loading={loading} icon={<UserAddOutlined />} style={{ width: 120 }} disabled={!hasWriteAccessTo(View.CRM.name)}>Activate</Button>
             </Popconfirm>
           }
         </>

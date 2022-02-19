@@ -9,13 +9,14 @@ import { UserDeleteOutlined, UserAddOutlined } from "@ant-design/icons/lib/icons
 import S1Form from "../../components/supplierModule/S1Form";
 import S2Menu from "../../components/supplierModule/S2Menu";
 import S3History from "../../components/supplierModule/S3History";
+import { View } from "../../enums/View";
 
 export default function SupplierDetailPage() {
 
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const { handleHttpError } = useApp();
+  const { handleHttpError, hasWriteAccessTo } = useApp();
 
   const [loading, setLoading] = useState(false);
   const [supplier, setSupplier] = useState();
@@ -53,12 +54,12 @@ export default function SupplierDetailPage() {
     return (
       <>
         { supplier.deactivated_date == null ? 
-          <Popconfirm title="Confirm deactivate?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading}>
-            <Button type="danger" loading={loading} icon={<UserDeleteOutlined />} style={{ width: 120 }}>Deactivate</Button>
+          <Popconfirm title="Confirm deactivate?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading || !hasWriteAccessTo(View.SCM.name)}>
+            <Button type="danger" loading={loading} icon={<UserDeleteOutlined />} style={{ width: 120 }} disabled={!hasWriteAccessTo(View.SCM.name)}>Deactivate</Button>
           </Popconfirm>
           :
-          <Popconfirm title="Confirm activate?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading}>
-            <Button type="primary" loading={loading} icon={<UserAddOutlined />} style={{ width: 120 }}>Activate</Button>
+          <Popconfirm title="Confirm activate?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading || !hasWriteAccessTo(View.SCM.name)}>
+            <Button type="primary" loading={loading} icon={<UserAddOutlined />} style={{ width: 120 }} disabled={!hasWriteAccessTo(View.SCM.name)}>Activate</Button>
           </Popconfirm>
         }
       </>
