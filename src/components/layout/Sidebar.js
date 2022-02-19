@@ -2,7 +2,7 @@ import React from 'react'
 import { Layout, Menu } from 'antd'
 import { Link } from 'react-router-dom'
 import { useApp } from '../../providers/AppProvider'
-import { HomeOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons/lib/icons'
+import { HomeOutlined, InboxOutlined, ShopOutlined, ShoppingOutlined, SolutionOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons/lib/icons'
 
 
 // Add on more menu items here
@@ -19,7 +19,7 @@ const menu = [
   {
     role: 'HR',
     title: 'Human Resource',
-    icon: <UserOutlined />,
+    icon: <TeamOutlined />,
     items: [
       { route: '/human-resource/employees', name: 'Manage Employees' },
       { route: '/human-resource/employees', name: 'Leaves' },
@@ -28,7 +28,7 @@ const menu = [
   {
     role: 'SCM',
     title: 'Suppliers',
-    icon: <UserOutlined />,
+    icon: <ShoppingOutlined />,
     items: [
       { route: '/suppliers', name: 'Manage Suppliers' },
       // { route: '/suppliers/accounts', name: 'Accounts Payable' },
@@ -45,7 +45,7 @@ const menu = [
   {
     role: 'Inventory',
     title: 'Inventory',
-    icon: <UserOutlined />,
+    icon: <InboxOutlined />,
     items: [
       { route: '/products', name: 'Manage Products' },
       // { route: '/inventory', name: 'Manage Inventory' },
@@ -55,7 +55,7 @@ const menu = [
   {
     role: 'CRM',
     title: 'Customers',
-    icon: <TeamOutlined />,
+    icon: <SolutionOutlined />,
     items: [
       { route: '/customers', name: 'Manage Customers' },
     ]

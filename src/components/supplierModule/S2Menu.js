@@ -1,4 +1,4 @@
-import { DeleteOutlined, PlusOutlined } from '@ant-design/icons/lib/icons';
+import { DeleteOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons/lib/icons';
 import { Button, message, Table } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { ProductApiHelper } from '../../api/product';
@@ -78,8 +78,8 @@ export default function S2Menu({ supplier }) {
     return (
         <>
             <MyToolbar title={`Menu`}>
-                <Button onClick={handleAddRow} icon={<PlusOutlined />} disabled={!hasWriteAccessTo(View.SCM.name)}>Add New Row</Button>
-                <Button type='primary' onClick={handleMenuUpdate} loading={loading} disabled={!hasWriteAccessTo(View.SCM.name)}>Save</Button>
+                <Button onClick={handleAddRow} icon={<PlusOutlined />} disabled={!hasWriteAccessTo(View.SCM.name)}>New</Button>
+                <Button type='primary' onClick={handleMenuUpdate} icon={<SaveOutlined />} loading={loading} disabled={!hasWriteAccessTo(View.SCM.name)}>Save</Button>
             </MyToolbar>
             
             <Table dataSource={items} 
