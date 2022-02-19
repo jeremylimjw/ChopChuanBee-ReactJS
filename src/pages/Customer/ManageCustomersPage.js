@@ -59,7 +59,7 @@ export default function ManageCustomersPage() {
         <MyCard>
 
           <MyToolbar title="Customers">
-              <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off' initialValues={{ status: null }}>
+              <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
                   <Form.Item name="company_name">
                       <Input placeholder='Search Company' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
                   </Form.Item>
@@ -67,7 +67,7 @@ export default function ManageCustomersPage() {
                       <Input placeholder='Search Person Name' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
                   </Form.Item>
                   <Form.Item name="status">
-                    <Select style={{ width: 120 }} placeholder="Filter by Status">
+                    <Select style={{ width: 140 }} placeholder="Filter by Status">
                       <Select.Option value={null}>All</Select.Option>
                       <Select.Option value={true}>Active</Select.Option>
                       <Select.Option value={false}>Inactive</Select.Option>
@@ -94,6 +94,7 @@ const columns = [
     dataIndex: 'created_at',
     key: 'created_at',
     width: 150,
+    ellipsis: true,
     render: (created_at) => parseDate(created_at),
     sorter: (a, b) => sortByDate(a.created_at, b.created_at),
   },
@@ -102,6 +103,7 @@ const columns = [
     dataIndex: 'company_name',
     key: 'company_name',
     width: '14%',
+    ellipsis: true,
     sorter: (a, b) => sortByString(a.company_name, b.company_name),
   },
   {
@@ -109,6 +111,7 @@ const columns = [
     dataIndex: 'p1_name',
     key: 'p1_name',
     width: '12%',
+    ellipsis: true,
     sorter: (a, b) => sortByString(a.p1_name, b.p1_name),
   },
   {
@@ -116,12 +119,14 @@ const columns = [
     dataIndex: 'p1_phone_number',
     key: 'p1_phone_number',
     width: '14%',
+    ellipsis: true,
     sorter: (a, b) => sortByString(a.p1_phone_number, b.p1_phone_number),
   },
   {
     title: 'Email',
     dataIndex: 'company_email',
     key: 'company_email',
+    ellipsis: true,
     render: (company_email) => company_email || '-',
     sorter: (a, b) => sortByString(a.company_email, b.company_email),
   },
@@ -129,6 +134,7 @@ const columns = [
     title: 'AR',
     key: 'AR',
     width: 80,
+    ellipsis: true,
     render: (AR) => '-',
     sorter: (a, b) => sortByString(a.company_email, b.company_email),
   },
@@ -137,6 +143,7 @@ const columns = [
     dataIndex: 'deactivated_date',
     key: 'deactivated_date',
     width: 120,
+    ellipsis: true,
     render: (deactivated_date) => getActiveTag(deactivated_date),
     sorter: (a, b) => sortByNumber(a.deactivated_date ? 1 : 0, b.deactivated_date ? 1 : 0),
   },
@@ -145,6 +152,7 @@ const columns = [
     title: "Action", 
     key: "link", 
     width: 100,
+    ellipsis: true,
     render: (id) => <Link to={`./${id}`}>View</Link> 
   }
 ]

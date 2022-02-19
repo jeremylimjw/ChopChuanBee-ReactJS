@@ -58,12 +58,12 @@ export default function ManageProductsPage() {
           <MyCard>
   
             <MyToolbar title="Products">
-                <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off' initialValues={{ status: null }}>
+                <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
                     <Form.Item name="name">
                         <Input placeholder='Search Name' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
                     </Form.Item>
                     <Form.Item name="status">
-                      <Select style={{ width: 120 }} placeholder="Filter by Status">
+                      <Select style={{ width: 140 }} placeholder="Filter by Status">
                         <Select.Option value={null}>All</Select.Option>
                         <Select.Option value={true}>Active</Select.Option>
                         <Select.Option value={false}>Inactive</Select.Option>
@@ -90,6 +90,7 @@ const columns = [
     dataIndex: 'created_at',
     key: 'created_at',
     width: 150,
+    ellipsis: true,
     render: (created_at) => parseDate(created_at),
     sorter: (a, b) => sortByDate(a.created_at, b.created_at),
   },
@@ -98,12 +99,14 @@ const columns = [
     dataIndex: 'name',
     key: 'name',
     width: 450,
+    ellipsis: true,
     sorter: (a, b) => sortByString(a.name, b.name),
   },
   {
     title: 'Description',
     dataIndex: 'description',
     key: 'description',
+    ellipsis: true,
     render: (description) => description || '-',
     sorter: (a, b) => sortByString(a.description, b.description),
   },
@@ -112,6 +115,7 @@ const columns = [
     dataIndex: 'unit',
     key: 'unit',
     width: '10%',
+    ellipsis: true,
     render: (unit) => unit || '-',
     sorter: (a, b) => sortByString(a.unit, b.unit),
   },
@@ -120,6 +124,7 @@ const columns = [
     dataIndex: 'deactivated_date',
     key: 'deactivated_date',
     width: 120,
+    ellipsis: true,
     render: (deactivated_date) => getActiveTag(deactivated_date),
     sorter: (a, b) => sortByNumber(a.deactivated_date ? 1 : 0, b.deactivated_date ? 1 : 0),
   },
@@ -128,6 +133,7 @@ const columns = [
     title: "Action", 
     key: "link", 
     width: 100,
+    ellipsis: true,
     render: (id) => <Link to={`./${id}`}>View</Link> 
   }
 ]

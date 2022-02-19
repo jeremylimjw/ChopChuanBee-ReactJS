@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Form, Modal, Input, Checkbox, Row, Col, Radio, Typography } from 'antd';
 import { useLocation } from 'react-router-dom';
-import MyCard from '../components/layout/MyCard';
-import MyLayout from '../components/layout/MyLayout';
-import MyToolbar from '../components/layout/MyToolbar';
+import MyCard from '../../components/layout/MyCard';
+import MyLayout from '../../components/layout/MyLayout';
+import MyToolbar from '../../components/layout/MyToolbar';
 
 const AdminViewAccountPage = () => {
     const breadcrumbs = [{ url: '/admin/accounts/:accountId', name: 'Admin' }];

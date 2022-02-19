@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Form, Button, Modal, Input, Checkbox, Row, Col, Radio, Select, Typography, Table, Alert } from 'antd';
-import MyLayout from '../components/layout/MyLayout';
-import MyCard from '../components/layout/MyCard';
-import MyToolbar from '../components/layout/MyToolbar';
-import { EmployeeApiHelper } from './../api/employees';
+import MyLayout from '../../components/layout/MyLayout';
+import MyCard from '../../components/layout/MyCard';
+import MyToolbar from '../../components/layout/MyToolbar';
+import { EmployeeApiHelper } from './../../api/employees';
 import { Redirect } from 'react-router-dom';
 
 const AdminNewAccountFormPage = () => {

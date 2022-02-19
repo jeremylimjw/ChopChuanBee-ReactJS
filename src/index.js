@@ -6,9 +6,9 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
 import { Layout } from 'antd';
 import LoginPage from './pages/LoginPage';
-import AdminAccountPage from './pages/AdminAccountPage';
-import AdminNewAccountFormPage from './pages/AdminNewAccountFormPage';
-import AdminViewAccountPage from './pages/AdminViewAccountPage';
+import ManageAccountsPage from './pages/Accounts/ManageAccountsPage';
+import AdminNewAccountFormPage from './pages/Accounts/AdminNewAccountFormPage';
+import AdminViewAccountPage from './pages/Accounts/AdminViewAccountPage';
 import { AppProvider } from './providers/AppProvider';
 import RequireAuth from './auth/RequireAuth';
 import MyTemplate from './pages/MyTemplate';
@@ -29,7 +29,7 @@ const routes = [
   },
   {
       path: '/admin/accounts',
-      component: <AdminAccountPage />,
+      component: <ManageAccountsPage />,
       viewAccess: 'ADMIN',
   },
   {
