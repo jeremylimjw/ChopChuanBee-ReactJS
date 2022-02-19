@@ -139,6 +139,7 @@ const columns = [
     dataIndex: 'deactivated_date',
     key: 'deactivated_date',
     width: 120,
+    align: 'center',
     ellipsis: true,
     render: (deactivated_date) => getActiveTag(deactivated_date),
     sorter: (a, b) => sortByNumber(a.deactivated_date ? 1 : 0, b.deactivated_date ? 1 : 0),

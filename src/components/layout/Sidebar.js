@@ -12,7 +12,7 @@ const menu = [
     title: 'Admin',
     icon: <UserOutlined />,
     items: [
-      { route: '/admin/accounts', name: 'Manage Accounts' },
+      { route: '/accounts', name: 'Manage Accounts' },
       { route: '/logs', name: 'Logs' },
     ]
   },

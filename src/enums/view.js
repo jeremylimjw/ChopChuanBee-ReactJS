@@ -30,8 +30,8 @@ export function getViewTag(id) {
 
 export function getAccessRightTag(accessRight) {
     const view = getView(accessRight.view_id);
-    const tooltip = accessRight.has_write_access === true ? 'Read/Write' : 'Read';
-    const color = accessRight.has_write_access === true ? 'green' : 'blue';
+    const tooltip = accessRight.has_write_access === true ? 'Full Access' : 'View Only';
+    const color = accessRight.has_write_access === true ? 'geekblue' : 'cyan';
 
     return (
         <Tooltip title={tooltip}>

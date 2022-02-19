@@ -5,6 +5,7 @@ import MyCard from '../../components/layout/MyCard';
 import MyLayout from '../../components/layout/MyLayout';
 import MyToolbar from '../../components/layout/MyToolbar';
 
+// I redid this page under 'ViewAccountPage.js'
 const AdminViewAccountPage = () => {
     const breadcrumbs = [{ url: '/admin/accounts/:accountId', name: 'Admin' }];
     const location = useLocation();

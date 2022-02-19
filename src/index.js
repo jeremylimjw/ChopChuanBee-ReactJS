@@ -20,6 +20,7 @@ import ManageProductsPage from './pages/Product/ManageProductsPage';
 import ViewProductPage from './pages/Product/ViewProductPage';
 import ManageSuppliersPage from "./pages/Supplier/ManageSuppliersPage";
 import ViewSupplierPage from "./pages/Supplier/ViewSupplierPage";
+import ViewAccountPage from './pages/Accounts/ViewAccountPage';
 
 // Add on more routes here
 const routes = [
@@ -28,19 +29,25 @@ const routes = [
     component: <MyTemplate />,
   },
   {
-      path: '/admin/accounts',
-      component: <ManageAccountsPage />,
-      viewAccess: 'ADMIN',
-  },
-  {
-      path: '/admin/create',
-      component: <AdminNewAccountFormPage />,
-      viewAccess: 'ADMIN',
-  },
-  {
-      path: '/admin/accounts/:accountId',
-      component: <AdminViewAccountPage />,
-      viewAccess: 'ADMIN',
+    path: '/accounts',
+    component: <Outlet />,
+    childRoutes: [
+      { 
+        path: '', 
+        component: <ManageAccountsPage />,
+        viewAccess: View.ADMIN.name,
+      },
+      { 
+        path: ':id', 
+        component: <ViewAccountPage />,
+        viewAccess: View.ADMIN.name,
+      },
+      { 
+        path: 'new', 
+        component: <AdminNewAccountFormPage />,
+        viewAccess: View.ADMIN.name,
+      },
+    ]
   },
   {
     path: '/customers',

@@ -36,15 +36,15 @@ export default function SupplierDetailPage() {
         setSupplier(result[0]);
       })
       .catch(handleHttpError);
-  }, [id, handleHttpError, navigate, loading]);
+  }, [id, handleHttpError, navigate]);
 
   function handleDeactivate() {
     setLoading(true);
     const promise = supplier.deactivated_date == null ? SupplierAPIHelper.deactivate(supplier.id) : SupplierAPIHelper.activate(supplier.id);
     promise.then(newFields => {
-        setLoading(false);
-        setSupplier({...supplier, ...newFields });
-        message.success(`Supplier successfully ${supplier.deactivated_date == null ? 'deactivated' : 'activated' }!`);
+      setLoading(false);
+      setSupplier({...supplier, ...newFields });
+      message.success(`Supplier successfully ${supplier.deactivated_date == null ? 'deactivated' : 'activated' }!`);
     })
     .catch(handleHttpError)
     .catch(() => setLoading(false));

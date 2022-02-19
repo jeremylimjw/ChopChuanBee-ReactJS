@@ -43,9 +43,9 @@ export default function ViewProductPage() {
       setLoading(true);
       const promise = product.deactivated_date == null ? ProductApiHelper.deactivate(product.id) : ProductApiHelper.activate(product.id);
       promise.then(newFields => {
-          setLoading(false);
-          setProduct({...product, ...newFields });
-          message.success(`Product successfully ${product.deactivated_date == null ? 'deactivated' : 'activated' }!`);
+        setLoading(false);
+        setProduct({...product, ...newFields });
+        message.success(`Product successfully ${product.deactivated_date == null ? 'deactivated' : 'activated' }!`);
       })
       .catch(handleHttpError)
       .catch(() => setLoading(false));

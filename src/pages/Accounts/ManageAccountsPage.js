@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from '../../providers/AppProvider';
-import { Button, Form, Input, Select, Table, Tag, Tooltip, Typography } from 'antd';
+import { Button, Form, Input, Select, Table } from 'antd';
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import { useNavigate } from "react-router-dom";
 import { EmployeeApiHelper } from '../../api/employees';
@@ -13,8 +13,9 @@ import { parseDate, parseDateTimeSeconds } from '../../utilities/datetime';
 import debounce from 'lodash.debounce';
 import { getAccessRightTag, View } from '../../enums/View';
 import { getActiveTag } from '../../enums/ActivationStatus';
+import { getRoleTag, Role } from '../../enums/Role';
 
-const breadcrumbs = [{ url: '/admin/accounts/', name: 'Accounts' }];
+const breadcrumbs = [{ url: '/accounts/', name: 'Accounts' }];
 
 export default function ManageAccountsPage() {
     const navigate = useNavigate();
@@ -70,6 +71,14 @@ export default function ManageAccountsPage() {
                         <Form.Item name="name">
                             <Input placeholder='Search Name' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
                         </Form.Item>
+                        <Form.Item name="role_id">
+                            <Select style={{ width: 140 }} placeholder="Filter by Role">
+                                <Select.Option value={null}>All</Select.Option>
+                                {Object.keys(Role)
+                                    .filter(x => x !== 'ADMIN')
+                                    .map(key => <Select.Option value={Role[key].id}>{Role[key].name}</Select.Option>)}
+                            </Select>
+                        </Form.Item>
                         <Form.Item name="view_id">
                             <Select style={{ width: 180 }} placeholder="Filter by Access Right">
                                 <Select.Option value={null}>All</Select.Option>
@@ -107,6 +116,16 @@ const columns = [
         sorter: (a, b) => sortByDate(a.created_at, b.created_at),
     },
     {
+        title: 'Role',
+        dataIndex: 'role_id',
+        key: 'role_id',
+        width: 100,
+        align: 'center',
+        ellipsis: true,
+        render: (role_id) => getRoleTag(role_id),
+        sorter: (a, b) => sortByNumber(a.role_id, b.role_id),
+    },
+    {
         title: 'Name',
         dataIndex: 'name',
         key: 'name',
@@ -134,6 +153,7 @@ const columns = [
         dataIndex: 'discharge_date',
         key: 'discharge_date',
         width: 120,
+        align: 'center',
         ellipsis: true,
         render: (discharge_date) => getActiveTag(discharge_date),
         sorter: (a, b) => sortByNumber(a.discharge_date ? 1 : 0, b.discharge_date ? 1 : 0),
