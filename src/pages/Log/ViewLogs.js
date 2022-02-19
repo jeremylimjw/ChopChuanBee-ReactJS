@@ -9,6 +9,7 @@ import { useApp } from '../../providers/AppProvider';
 import { parseDateTimeSeconds } from '../../utilities/datetime';
 import { sortByDate, sortByNumber, sortByString } from '../../utilities/sorters';
 import moment from 'moment';
+import debounce from 'lodash.debounce';
 
 const breadcrumbs = [
   { url: '/logs', name: 'Logs' },
@@ -61,7 +62,7 @@ export default function ViewLogs() {
             <MyCard>
 
                 <MyToolbar title="Logs">
-                    <Form form={form} onValuesChange={onValuesChange} layout='inline' autoComplete='off'>
+                    <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
                         <Form.Item name="name">
                             <Input placeholder='Search Name' />
                         </Form.Item>

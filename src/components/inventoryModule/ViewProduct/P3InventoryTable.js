@@ -1,10 +1,10 @@
 import { Table } from 'antd';
-import React, { useState } from 'react'
+import React from 'react'
 import { sortByString } from '../../../utilities/sorters';
 import MyToolbar from '../../layout/MyToolbar';
 
 export default function P3InventoryTable() {
-    const [loading, setLoading] = useState(false);
+    // const [loading, setLoading] = useState(false);
 
     return (
         <>
@@ -13,7 +13,7 @@ export default function P3InventoryTable() {
             
             <Table dataSource={[]} 
               columns={columns} 
-              loading={loading} 
+              // loading={loading} 
               rowKey={() => Math.random()} 
             />
         </>  

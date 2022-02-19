@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom';
 import { PlusOutlined } from '@ant-design/icons/lib/icons';
 import NewProductModal from '../../components/inventoryModule/NewProduct/NewProductModal';
 import { getActiveTag } from '../../enums/ActivationStatus';
+import debounce from 'lodash.debounce';
 
 const breadcrumbs = [
   { url: '/products', name: 'Products' },
@@ -36,13 +37,13 @@ export default function ManageProductsPage() {
     }, [handleHttpError, setLoading])
 
     function onValuesChange(_, form) {
-        ProductApiHelper.get(form.name, form.status)
-          .then(results => {
-              setProducts(results);
-              setLoading(false);
-          })
-          .catch(handleHttpError)
-          .catch(() => setLoading(false))
+      ProductApiHelper.get(form.name, form.status)
+        .then(results => {
+            setProducts(results);
+            setLoading(false);
+        })
+        .catch(handleHttpError)
+        .catch(() => setLoading(false))
     }
 
     function resetForm() {
@@ -56,7 +57,7 @@ export default function ManageProductsPage() {
           <MyCard>
   
             <MyToolbar title="Products">
-                <Form form={form} onValuesChange={onValuesChange} layout='inline' autoComplete='off' initialValues={{ status: null }}>
+                <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off' initialValues={{ status: null }}>
                     <Form.Item name="name">
                         <Input placeholder='Search Name' />
                     </Form.Item>

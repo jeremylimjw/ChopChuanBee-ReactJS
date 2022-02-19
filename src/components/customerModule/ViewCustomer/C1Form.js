@@ -1,5 +1,5 @@
-import { EditOutlined, SaveOutlined, UserAddOutlined, UserDeleteOutlined } from '@ant-design/icons/lib/icons';
-import { Button, Divider, Form, Input, message, Popconfirm, Radio, Typography } from 'antd'
+import { EditOutlined, SaveOutlined } from '@ant-design/icons/lib/icons';
+import { Button, Divider, Form, Input, message, Radio, Typography } from 'antd'
 import React, { useState } from 'react'
 import { CustomerApiHelper } from '../../../api/customer';
 import { getChargedUnderTag } from '../../../enums/ChargedUnder';
