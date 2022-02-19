@@ -66,8 +66,7 @@ export default function S2Menu({ supplier }) {
     function handleMenuUpdate() {
         setLoading(true);
         SupplierAPIHelper.updateMenu(supplier.id, items)
-        .then(newMenu => {
-            setItems(newMenu.map(x => ({...x, key: Math.random() })));
+        .then(() => {
             setLoading(false);
             message.success(`Supplier Menu successfully updated!`)
         })

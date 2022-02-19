@@ -55,8 +55,7 @@ export default function C2Menu({ customer }) {
   function handleMenuUpdate() {
     setLoading(true);
     CustomerApiHelper.updateMenu(customer.id, items)
-      .then(newMenu => {
-        setItems(newMenu);
+      .then(() => {
         setLoading(false);
         message.success(`Customer Menu successfully updated!`)
       })
