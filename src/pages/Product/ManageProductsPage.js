@@ -13,6 +13,7 @@ import NewProductModal from '../../components/inventoryModule/NewProduct/NewProd
 import { getActiveTag } from '../../enums/ActivationStatus';
 import debounce from 'lodash.debounce';
 import { View } from '../../enums/View';
+import { showTotal } from '../../utilities/table';
 
 const breadcrumbs = [
   { url: '/products', name: 'Products' },
@@ -74,7 +75,13 @@ export default function ManageProductsPage() {
                 <Button type='primary' onClick={() => setIsModalVisible(true)} icon={<PlusOutlined />} disabled={!hasWriteAccessTo(View.INVENTORY.name)}>New</Button>
             </MyToolbar>
   
-            <Table dataSource={products} columns={columns} loading={loading} rowKey="id" />
+            <Table 
+              dataSource={products} 
+              columns={columns}
+              loading={loading} 
+              rowKey="id" 
+              pagination={{ showTotal }}
+            />
               
           </MyCard>
   

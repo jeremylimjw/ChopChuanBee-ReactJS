@@ -6,6 +6,7 @@ import { ProductApiHelper } from '../../../api/product';
 import { View } from '../../../enums/View';
 import { useApp } from '../../../providers/AppProvider';
 import { sortByString } from '../../../utilities/sorters';
+import { showTotal } from '../../../utilities/table';
 import { RenderCell } from '../../general/TableCell';
 import MyToolbar from '../../layout/MyToolbar'
 
@@ -42,8 +43,7 @@ export default function C2Menu({ customer }) {
   }, [handleHttpError, setProducts])
 
   function handleAddRow() {
-      const newItems = [...items];
-      newItems.push({ product_alias: '', product: null, key: Math.random() });
+      const newItems = [{ product_alias: '', product: null, key: Math.random() }, ...items];
       setItems(newItems);
   }
 
@@ -76,6 +76,7 @@ export default function C2Menu({ customer }) {
         loading={loading} 
         rowKey={() => Math.random()} 
         components={{ body: { cell: RenderCell } }} 
+        pagination={{ pageSize: 6, showTotal }}
       />
     </>  
   )

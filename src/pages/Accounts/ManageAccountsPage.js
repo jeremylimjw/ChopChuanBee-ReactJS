@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import MyToolbar from '../../components/layout/MyToolbar';
 import { sortByDate, sortByNumber, sortByString } from '../../utilities/sorters';
 import { parseDate, parseDateTimeSeconds } from '../../utilities/datetime';
+import { showTotal } from '../../utilities/table';
 import debounce from 'lodash.debounce';
 import { getAccessRightTag, View } from '../../enums/View';
 import { getActiveTag } from '../../enums/ActivationStatus';
@@ -100,7 +101,13 @@ export default function ManageAccountsPage() {
                     <Button type='primary' icon={<PlusOutlined />} onClick={() => navigate('./new')}>New</Button>
                 </MyToolbar>
 
-                <Table dataSource={employees.filter(filterAccessRights)} columns={columns} loading={loading} rowKey="id" />
+                <Table 
+                    dataSource={employees.filter(filterAccessRights)} 
+                    columns={columns} 
+                    loading={loading} 
+                    rowKey="id" 
+                    pagination={{ showTotal }}
+                />
             </MyCard>
         </MyLayout>
     );

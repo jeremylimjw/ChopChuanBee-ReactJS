@@ -13,6 +13,7 @@ import NewCustomerModal from '../../components/customerModule/NewCustomer/NewCus
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons/lib/icons';
 import debounce from 'lodash.debounce';
 import { View } from '../../enums/View';
+import { showTotal } from '../../utilities/table';
 
 const breadcrumbs = [
   { url: '/customers', name: 'Customers' },
@@ -78,7 +79,13 @@ export default function ManageCustomersPage() {
               <Button type='primary' onClick={() => setIsModalVisible(true)} icon={<PlusOutlined />} disabled={!hasWriteAccessTo(View.CRM.name)}>New</Button>
           </MyToolbar>
 
-          <Table dataSource={customers} columns={columns} loading={loading} rowKey="id" />
+          <Table 
+            dataSource={customers} 
+            columns={columns} 
+            loading={loading} 
+            rowKey="id" 
+            pagination={{ showTotal }}
+          />
             
         </MyCard>
 

@@ -13,6 +13,7 @@ import { sortByDate, sortByNumber, sortByString } from "../../utilities/sorters"
 import { parseDate } from "../../utilities/datetime";
 import debounce from "lodash.debounce";
 import { View } from "../../enums/View";
+import { showTotal } from '../../utilities/table';
 
 const breadcrumbs = [
   { url: "/suppliers", name: "Supplier" },
@@ -75,7 +76,13 @@ export default function SuppliersPage() {
           <Button type="primary" icon={<PlusOutlined />} onClick={() => setIsModalVisible(true)} disabled={!hasWriteAccessTo(View.SCM.name)}>New</Button>
         </MyToolbar>
 
-        <Table dataSource={suppliers} columns={columns} loading={loading} rowKey="id" />
+        <Table 
+          dataSource={suppliers} 
+          columns={columns} 
+          loading={loading} 
+          rowKey="id" 
+          pagination={{ showTotal }}
+        />
       </MyCard>
 
       <NewSupplierModal suppliers={suppliers} setSuppliers={setSuppliers} isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} />

@@ -6,6 +6,7 @@ import { SupplierAPIHelper } from '../../api/supplier';
 import { View } from '../../enums/View';
 import { useApp } from '../../providers/AppProvider';
 import { sortByString } from '../../utilities/sorters';
+import { showTotal } from '../../utilities/table';
 import { RenderCell } from '../general/TableCell';
 import MyToolbar from '../layout/MyToolbar'
 
@@ -53,8 +54,7 @@ export default function S2Menu({ supplier }) {
     
 
     function handleAddRow() {
-        const newItems = [...items];
-        newItems.push({ product: null, key: Math.random() });
+        const newItems = [{ product: null, key: Math.random() }, ...items];
         setItems(newItems);
     }
 
@@ -87,6 +87,7 @@ export default function S2Menu({ supplier }) {
             loading={loading} 
             rowKey={() => Math.random()} 
             components={{ body: { cell: RenderCell } }} 
+            pagination={{ pageSize: 6, showTotal }}
             />
         </>  
     )

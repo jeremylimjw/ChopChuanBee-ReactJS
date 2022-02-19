@@ -11,6 +11,7 @@ import { sortByDate, sortByNumber, sortByString } from '../../utilities/sorters'
 import moment from 'moment';
 import debounce from 'lodash.debounce';
 import { SearchOutlined } from '@ant-design/icons';
+import { showTotal } from '../../utilities/table';
 
 const breadcrumbs = [
   { url: '/logs', name: 'Logs' },
@@ -79,7 +80,13 @@ export default function ViewLogs() {
                     </Form>
                 </MyToolbar>
 
-                <Table dataSource={logs} columns={columns} loading={loading} rowKey="id" />
+                <Table 
+                    dataSource={logs} 
+                    columns={columns} 
+                    loading={loading} 
+                    rowKey="id"
+                    pagination={{ showTotal }} 
+                />
                 
             </MyCard>
         
