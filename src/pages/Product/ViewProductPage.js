@@ -93,7 +93,7 @@ export default function ViewProductPage() {
               </Col>
             </Row>
   
-            <MyCard>
+            <MyCard style={{ marginTop: 0 }}>
               <P3InventoryTable />
             </MyCard>
           
