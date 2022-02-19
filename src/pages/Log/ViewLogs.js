@@ -91,7 +91,7 @@ const columns = [
     title: 'Created At',
     dataIndex: 'created_at',
     key: 'created_at',
-    width: '16%',
+    width: 200,
     render: (created_at) => parseDateTimeSeconds(created_at),
     sorter: (a, b) => sortByDate(a.created_at, b.created_at),
   },
