@@ -24,3 +24,22 @@ export const leaveTypeFilter = [
         value: 5
     }
 ]
+
+export const leaveStatusFilter = [
+    {
+        text: 'Pending',
+        value: 1
+    },
+    {
+        text: 'Accepted',
+        value: 2
+    },
+    {
+        text: 'Rejected',
+        value: 3
+    },
+    {
+        text: 'Cancelled',
+        value: 4
+    }
+]

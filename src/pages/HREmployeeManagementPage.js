@@ -2,12 +2,17 @@ import { Spin, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { EmployeeApiHelper } from '../api/employees';
 import EmployeeTable from '../components/humanResourceModule/EmployeeTable';
+import MyCard from '../components/layout/MyCard';
+import MyLayout from '../components/layout/MyLayout';
 import { employeeSampleData } from '../utilities/SampleData';
 
 const HREmployeeManagementPage = () => {
-  const [modalVisibility, setModalVisibility] = useState(false)
   const [employeesDataSource, setEmployeesDataSource] = useState([])
   const [loading, setLoading] = useState(true)
+  const breadcrumbs = [
+    { url: '/', name: 'Human Resource' },
+    { url: '', name: 'Employees' }
+  ]
 
   useEffect(() => {
     if (loading) {
@@ -20,13 +25,20 @@ const HREmployeeManagementPage = () => {
   const initializeEmployeesDataSrc = async () => {
     let data = await EmployeeApiHelper.getAllEmployees()
     setEmployeesDataSource(data)
+    console.log(data)
     setLoading(false)
   }
 
-  return <div>
-    <Typography.Title>Employee Management</Typography.Title>
-    {loading ? <Spin /> : <EmployeeTable employeesDataSource={employeesDataSource} />}
-  </div>
+  return <>
+    <MyLayout
+      breadcrumbs={breadcrumbs}
+      bannerTitle='Employee Management'
+    >
+      <MyCard>
+        {loading ? <Spin /> : <EmployeeTable employeesDataSource={employeesDataSource} />}
+      </MyCard>
+    </MyLayout>
+  </>
 };
 
 export default HREmployeeManagementPage;

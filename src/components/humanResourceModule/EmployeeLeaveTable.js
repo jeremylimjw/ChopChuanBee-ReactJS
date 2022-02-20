@@ -11,13 +11,15 @@ const EmployeeLeaveTable = (props) => {
     const [dataSource, setDataSource] = useState([])
 
     useEffect(() => {
-        setDataSource(sortLeaveApplicationsByStartDate(props.leavesDataSource))
+        setDataSource(props.leavesDataSource)
+        //  setDataSource(sortLeaveApplicationsByStartDate(props.leavesDataSource))
     }, [props.leavesDataSource])
 
     const renderLeaveTypes = (type) => {
         const leaveTypes = ['Annual', 'Compassionate', 'Maternity/Paternity', 'Sick', 'Childcare']
         return leaveTypes[type]
     }
+
 
 
     const processTags = (status) => {
@@ -49,11 +51,6 @@ const EmployeeLeaveTable = (props) => {
                     break
             }
         }
-    }
-
-    const sortLeaveApplicationsByStartDate = (data) => {
-        let sortedArr = data.sort((a, b) => moment(a.start_date) - moment(b.start_date))
-        return sortedArr
     }
 
     // Array list of objects to be placed inside table
@@ -117,10 +114,8 @@ const EmployeeLeaveTable = (props) => {
         },
         {
             title: 'Type',
-            filters: leaveTypeFilter,
             dataIndex: 'leave_account',
             render: (value) => value.leave_type.name,
-            onFilter: (value, record) => record.leaveType === value
         },
         {
             title: 'Requested Days',

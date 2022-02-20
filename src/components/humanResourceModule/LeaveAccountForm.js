@@ -42,10 +42,12 @@ const LeaveAccountForm = (props) => {
   return <div>
     {!loading ?
       <Form
-        layout='vertical'
         form={form}
         initialValues={initialFormValues}
-        onFinish={onFinish}>
+        onFinish={onFinish}
+        labelCol={{ span: 7 }}
+        wrapperCol={{ span: 10 }}
+      >
         <Form.Item
           label='Annual Leave'
           name='1'
@@ -101,7 +103,7 @@ const LeaveAccountForm = (props) => {
               addonAfter={'Days'} />
           </Space>
         </Form.Item>
-        <Form.Item>
+        <Form.Item wrapperCol={{ offset: 7, span: 10 }}>
           <Button
             type='primary'
             htmlType='submit'>

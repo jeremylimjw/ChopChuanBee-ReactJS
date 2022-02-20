@@ -62,4 +62,13 @@ export class HRApiHelper {
             })
         return response
     }
+
+    // static async getPublicHolidays() {
+    //     let data = {
+    //         resource_id: '04a78f5b-2d12-4695-a6cd-d2b072bc93fe'
+    //     }
+    //     let result = axiosObject.get('https://data.gov.sg/api/action/datastore_search', { params: { data: data } })
+    //         .then((res) => console.log(res))
+    // }
+
 }

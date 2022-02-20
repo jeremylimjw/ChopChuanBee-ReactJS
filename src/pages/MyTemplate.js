@@ -24,7 +24,7 @@ export default function MyTemplate() {
         </MyToolbar>
 
         <Table dataSource={dataSource} columns={columns} />
-        
+
       </MyCard>
 
       <MyCard>
@@ -40,14 +40,14 @@ export default function MyTemplate() {
             <Select.Option value="lucy">Charlie</Select.Option>
           </Select>
           <Button>Reset</Button>
-          
+
           <Dropdown.Button
             type="primary"
             icon={<DownOutlined />}
             overlay={<Menu>
-                <Menu.Item key="1" icon={<PlusOutlined />}>Add Refund</Menu.Item>
-                <Menu.Item key="2" icon={<PlusOutlined />}>Add Damaged</Menu.Item>
-              </Menu>}
+              <Menu.Item key="1" icon={<PlusOutlined />}>Add Refund</Menu.Item>
+              <Menu.Item key="2" icon={<PlusOutlined />}>Add Damaged</Menu.Item>
+            </Menu>}
           >
             New Item
           </Dropdown.Button>
@@ -55,42 +55,36 @@ export default function MyTemplate() {
 
         <Table dataSource={dataSource} columns={columns} />
 
-        <MyToolbar style={{marginTop: 10}}>
+        <MyToolbar style={{ marginTop: 10 }}>
           <Button icon={<StopOutlined />}>Cancel Order</Button>
           <Button icon={<SaveOutlined />}>Save for later</Button>
           <Button type="primary" icon={<FileTextOutlined />}>Convert to Invoice</Button>
           <Button type="primary" icon={<FileDoneOutlined />}>Close Invoice</Button>
         </MyToolbar>
-        
       </MyCard>
 
       <div className='flex-side-by-side'>
-        
-          <MyCard title="Past Payment History">
-
-            <Form labelCol={{ span: 4 }} wrapperCol={{ span: 10 }}>
-              <Form.Item label="Name"><Input /></Form.Item>
-              <Form.Item label="Email"><Input /></Form.Item>
-              <Form.Item label="Age"><InputNumber /> </Form.Item>
-              <Form.Item label="Website"><Input /></Form.Item>
-              <Form.Item label="Introduction"><Input.TextArea /></Form.Item>
-              <Form.Item wrapperCol={{  offset: 4, span: 10 }}>
-                <Button type="primary" htmlType="submit">Submit</Button>
-              </Form.Item>
-            </Form>
-
-          </MyCard>
-
-          <MyCard title="Past Deliveries">
-              Bill is a cat.
-          </MyCard>
+        <MyCard title="Past Payment History">
+          <Form labelCol={{ span: 4 }} wrapperCol={{ span: 10 }}>
+            <Form.Item label="Name"><Input /></Form.Item>
+            <Form.Item label="Email"><Input /></Form.Item>
+            <Form.Item label="Age"><InputNumber /> </Form.Item>
+            <Form.Item label="Website"><Input /></Form.Item>
+            <Form.Item label="Introduction"><Input.TextArea /></Form.Item>
+            <Form.Item wrapperCol={{ offset: 4, span: 10 }}>
+              <Button type="primary" htmlType="submit">Submit</Button>
+            </Form.Item>
+          </Form>
+        </MyCard>
+        <MyCard title="Past Deliveries">
+          Bill is a cat.
+        </MyCard>
 
       </div>
-      
+
     </MyLayout>
   )
 }
-
 
 const columns = [
   {
@@ -123,18 +117,18 @@ const columns = [
 ]
 
 const dataSource = [
-    {
-      key: '1',
-      name: 'Mike',
-      age: 32,
-      address: '10 Downing Street',
-      created_at: new Date(),
-    },
-    {
-      key: '2',
-      name: 'John',
-      age: 42,
-      address: '10 Downing Street',
-      created_at: new Date(),
-    },
-  ];
+  {
+    key: '1',
+    name: 'Mike',
+    age: 32,
+    address: '10 Downing Street',
+    created_at: new Date(),
+  },
+  {
+    key: '2',
+    name: 'John',
+    age: 42,
+    address: '10 Downing Street',
+    created_at: new Date(),
+  },
+];

@@ -6,7 +6,6 @@ import { HRApiHelper } from '../../api/humanResource';
 import moment from 'moment';
 
 const LeaveTable = (props) => {
-  console.log(props.leavesDataSource[0])
   const leavesDataSource = props.leavesDataSource
   const [dataSource, setDataSource] = useState([])
   const leaveTypes = ['', 'Annual', 'Compassionate', 'Maternity/Paternity', 'Sick', 'Childcare']
@@ -131,13 +130,6 @@ const LeaveTable = (props) => {
   ]
 
   return <div>
-    {/* <Input
-      style={{
-        width: '25%',
-        marginBottom: '20px'
-      }}
-      onChange={(e) => props.handleSearch(e.target.value)}
-      placeholder='Search by employee name...' /> */}
     <Table dataSource={dataSource} columns={tableColumns} />
   </div>;
 };

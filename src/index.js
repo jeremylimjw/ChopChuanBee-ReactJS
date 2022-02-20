@@ -27,6 +27,29 @@ const routes = [
     component: <div>Customers Component</div>,
     viewAccess: "CRM",
   },
+  {
+    path: '/human-resource/leaves',
+    component: <HRLeavePage />,
+    viewAccess: 'HR'
+  },
+  {
+    path: '/human-resource/employees',
+    component: <HREmployeeManagementPage />,
+    viewAccess: 'HR'
+  },
+  {
+    path: '/human-resource/employees/:employeeId',
+    component: <ViewEmployeePage />,
+    viewAccess: 'HR'
+  },
+  {
+    path: '/user/profile',
+    component: <ProfilePage />,
+  },
+  {
+    path: '/user/leaves',
+    component: <MyLeavesPage />,
+  },
 
 ]
 

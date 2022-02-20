@@ -2,18 +2,32 @@ import { EditOutlined, SaveOutlined } from '@ant-design/icons/lib/icons'
 import { Button, Form, Typography, Input, Spin } from 'antd'
 import '../../css/ProfilePage.css'
 import React, { useEffect, useState } from 'react'
+import { GeneralApiHelper } from '../../api/general'
+import { useApp } from '../../providers/AppProvider'
 
 const UserProfileForm = (props) => {
-  let profileData = props.profileData
+  const { handleHttpError } = useApp()
   const [loading, setLoading] = useState(true)
+  const [profileData, setProfileData] = useState({})
   const [formRenderState, setFormRenderState] = useState(true)
   const [actionState, setActionState] = useState(true)
   const [profileForm] = Form.useForm()
 
   // Set the initial state to viewing mode
   useEffect(() => {
-    handleViewModeChange(true)
-  }, [])
+    if (loading) {
+      fetchEmployeeProfileData()
+    } else {
+      handleViewModeChange(true)
+    }
+  }, [loading])
+
+  const fetchEmployeeProfileData = async () => {
+    let data = await GeneralApiHelper.getProfile(props.user.id)
+      .catch(handleHttpError)
+    setProfileData(data[0])
+    setLoading(false)
+  }
 
   /**
    * 
@@ -35,7 +49,7 @@ const UserProfileForm = (props) => {
     }
   }
 
-  const handleFinish = (values) => {
+  const handleFinish = async (values) => {
     if (actionState) {
       handleViewModeChange(false)
     } else {
@@ -43,89 +57,88 @@ const UserProfileForm = (props) => {
         ...values,
         id: profileData.id
       }
+      console.log(formData)
       props.updateProfile(formData)
-      handleViewModeChange(true)
     }
   }
 
   // Viewing Mode
   const viewModeForm = <React.Fragment>
-    <Form.Item>
-      <Button htmlType='submit'>
-        <EditOutlined style={{ fontSize: '16px' }} /> Edit
-      </Button>
-    </Form.Item>
-
     <Form.Item
       label='Full Name'
       name='name'
     >
-      <Typography className='profile-form-data'>{profileData.name}</Typography>
+      <Typography >{profileData.name}</Typography>
     </Form.Item>
     <Form.Item
+      hidden={true}
       label='Username'
       name='username'
     >
-      <Typography className='profile-form-data'>{profileData.username}</Typography>
+      <Typography >{profileData.username}</Typography>
     </Form.Item>
     <Form.Item
       label='Email Address'
       name='email'
     >
-      <Typography className='profile-form-data'>{profileData.email}</Typography>
+      <Typography >{profileData.email}</Typography>
     </Form.Item>
     <Form.Item
       label='Contact Number'
       name='contact_number'
     >
-      <Typography className='profile-form-data'>{profileData.contact_number}</Typography>
+      <Typography >{profileData.contact_number}</Typography>
     </Form.Item>
     <Form.Item
       label='Address'
       name='address'
     >
-      <Typography className='profile-form-data'>{profileData.address}</Typography>
+      <Typography >{profileData.address}</Typography>
     </Form.Item>
     <Form.Item
       label='Postal Code'
       name='postal_code'
     >
-      <Typography className='profile-form-data'>{profileData.postal_code}</Typography>
+      <Typography >{profileData.postal_code}</Typography>
     </Form.Item>
     <Form.Item
-      label='Next-of-Kin Name'
+      label='NOK Name'
       name='nok_name'
     >
-      <Typography className='profile-form-data'>{profileData.nok_name}</Typography>
+      <Typography >{profileData.nok_name}</Typography>
     </Form.Item>
     <Form.Item
-      label='Next-of-Kin Number'
+      label='NOK Number'
       name='nok_number'
     >
-      <Typography className='profile-form-data'>{profileData.nok_number}</Typography>
+      <Typography >{profileData.nok_number}</Typography>
+    </Form.Item>
+    <Form.Item wrapperCol={{ offset: 4, span: 10 }}>
+      <Button htmlType='submit'>
+        <EditOutlined style={{ fontSize: '16px' }} /> Edit
+      </Button>
     </Form.Item>
   </React.Fragment>
 
   // Editing Mode
   const editModeForm = <React.Fragment>
-    <Form.Item>
-      <Button className='profile-edit-button' htmlType='submit'>
-        <SaveOutlined style={{ fontSize: '16px' }} />Save Changes
-      </Button>
-    </Form.Item>
+
     <Form.Item
+      rules={[{ required: true, message: 'Full name required!' }]}
       label='Full Name'
       name='name'
     >
       <Input />
     </Form.Item>
     <Form.Item
+      hidden={true}
       label='Username'
       name='username'
     >
       <Input disabled={true} />
     </Form.Item>
     <Form.Item
+      rules={[{ required: true, message: 'Email required!' }]}
       label='Email Address'
       name='email'
     >
@@ -150,31 +163,39 @@ const UserProfileForm = (props) => {
       <Input />
     </Form.Item>
     <Form.Item
-      label='Next-of-Kin Name'
+      label='NOK Name'
       name='nok_name'
     >
       <Input />
     </Form.Item>
     <Form.Item
-      label='Next-of-Kin Number'
+      label='NOK Number'
       name='nok_number'
     >
       <Input />
+    </Form.Item>
+    <Form.Item wrapperCol={{ offset: 4, span: 10 }}>
+      <Button htmlType='submit'>
+        <SaveOutlined style={{ fontSize: '16px' }} />Save Changes
+      </Button>
     </Form.Item>
   </React.Fragment>
 
 
   return (
     <div>
-      <Form
-        layout='vertical'
-        form={profileForm}
-        onFinish={handleFinish}
-        initialValues={profileData}
-      >
-        {formRenderState}
-      </Form>
+      {loading ? <Spin /> :
+        <Form
+          labelCol={{ span: 4 }} wrapperCol={{ span: 10 }}
+          form={profileForm}
+          onFinish={handleFinish}
+          initialValues={profileData}
+        >
+          {formRenderState}
+        </Form>
+      }
     </div>
+
   )
 }
 

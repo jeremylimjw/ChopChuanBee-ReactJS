@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { MoreOutlined } from '@ant-design/icons/lib/icons';
+import { MoreOutlined, SearchOutlined } from '@ant-design/icons/lib/icons';
 import { Button, Dropdown, Input, Menu, Table, Modal } from 'antd';
 import { Link } from 'react-router-dom';
+import MyToolbar from '../layout/MyToolbar';
 
 const EmployeeTable = (props) => {
   const [confirmationVisibility, setConfirmationVisibility] = useState(false)
@@ -10,37 +11,6 @@ const EmployeeTable = (props) => {
   useEffect(() => {
     setDataSource(props.employeesDataSource)
   }, [])
-
-  const viewEmployee = (record) => {
-
-  }
-
-  const toolsMenu = (record) => {
-    return (
-      <Menu>
-        <Menu.Item key='1'> <Button type='link' onClick={() => handleEdit(record.leaveId)}>Edit </Button> </Menu.Item>
-        <Menu.Item key='2'>
-          <Button type='link' onClick={() => setConfirmationVisibility(true)}> Deactivate</Button>
-          <Modal
-            title='Deactivation Confirmation'
-            visible={confirmationVisibility}
-            onOk={() => handleDeactivation(record)}
-            onCancel={() => setConfirmationVisibility(false)}
-          >
-            <h3>Deactivate Employee?</h3>
-          </Modal>
-        </Menu.Item>
-      </Menu>
-    )
-  }
-
-  const handleDeactivation = (record) => {
-
-  }
-
-  const handleEdit = (record) => {
-
-  }
 
   const handleSearch = (str) => {
     str = str.toLowerCase()
@@ -51,13 +21,10 @@ const EmployeeTable = (props) => {
     setDataSource(filteredArr)
   }
 
-
   const tableColumns = [
     {
       title: 'Staff Name',
       dataIndex: 'name',
-      render: (value, record) =>
-        <Link to={`${record.id}`} state={{ employeeData: record }}> {value}</Link>
     },
     {
       title: 'E-Mail',
@@ -65,33 +32,34 @@ const EmployeeTable = (props) => {
     },
     {
       title: 'Contact',
-      dataIndex: 'contact_Number'
+      dataIndex: 'contact_number'
     },
     {
       title: 'NOK Name',
-      dataIndex: 'nok_Name'
+      dataIndex: 'nok_name'
     },
     {
       title: 'NOK Number',
-      dataIndex: 'nok_Number'
+      dataIndex: 'nok_number'
     },
     {
-      title: '',
-      render: (value, record) => <Dropdown overlay={() => toolsMenu(record)}
-        trigger='click'>
-        <MoreOutlined />
-      </Dropdown>
+      title: 'Action',
+      dataIndex: 'name',
+      render: (value, record) =>
+        <Link to={`${record.id}`} state={{ employeeData: record }}>View Details</Link>
     }
   ]
 
   return <div>
-    <Input
-      style={{
-        width: '25%',
-        marginBottom: '20px'
-      }}
-      onChange={(e) => handleSearch(e.target.value)}
-      placeholder='Search by employee name...' />
+    <MyToolbar title='Employees'>
+      <Input
+        suffix={<SearchOutlined className='grey' />}
+        style={{
+          width: 180
+        }}
+        onChange={(e) => handleSearch(e.target.value)}
+        placeholder='Search name' />
+    </MyToolbar>
     <Table dataSource={dataSource} columns={tableColumns} />
   </div>;
 }

@@ -1,12 +1,14 @@
 import { Form, Select, DatePicker, Button, Modal, Input, Typography, Space, Divider, InputNumber } from 'antd'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
+import { HRApiHelper } from '../../api/humanResource'
 
 const LeaveForm = (props) => {
   const [leaveForm] = Form.useForm()
   const employeeList = props.employeeList || []
   const [selectedLeaveBal, setSelectedLeaveBal] = useState(0)
   const [selectedLeaveAccounts, setSelectedLeaveAccounts] = useState([])
+  const [calculatedLeaveDays, setCalculatedLeaveDays] = useState(0)
   const { RangePicker } = DatePicker
   const layout = {
     labelCol: { span: 8 },
@@ -14,7 +16,7 @@ const LeaveForm = (props) => {
   }
 
   useEffect(() => {
-    employeeList.length === 0 ? setSelectedLeaveAccounts(props.leaveAccounts) : setSelectedLeaveAccounts([])
+    employeeList.length === 0 ? fetchEmployeeLeaveAccts(props.selectedEmployee.id) : setSelectedLeaveAccounts([])
   }, [])
 
   // Updates current leave balance in situations where user 
@@ -82,20 +84,30 @@ const LeaveForm = (props) => {
     return leaveTypeOptions
   }
 
-  const filterEmployeeLeaveAccounts = (employee_id) => {
-    let filteredArr = props.leaveAccounts.filter((element) => element.employee_id === employee_id)
-    setSelectedLeaveAccounts(filteredArr)
+  const fetchEmployeeLeaveAccts = async (employee_id) => {
+    let leaveAccts = await HRApiHelper.getEmployeeLeaveAccounts(employee_id)
+    setSelectedLeaveAccounts(leaveAccts)
   }
 
   const renderLeaveBalance = (value) => {
     let balance = selectedLeaveAccounts.filter((element) => element.leave_type.id === parseInt(value))
     if (balance.length > 0) {
-      setSelectedLeaveBal(balance[0].entitled_days)
+      setSelectedLeaveBal(balance[0].balance)
     } else {
       setSelectedLeaveBal(0)
     }
     leaveForm.setFieldsValue({ leaveTypeId: value })
   }
+
+  // const countRequestedDays = (values) => {
+  //   let [start, end] = [...values]
+  //   if (start && end) {
+  //     let days = end.diff(start, 'days')
+  //     days = calculateLeaveDays(start, days)
+  //   } else {
+  //     return
+  //   }
+  // }
 
   return (
     <Form
@@ -114,7 +126,7 @@ const LeaveForm = (props) => {
             showSearch={true}
             placeholder='Select employee...'
             optionFilterProp="children"
-            onSelect={(e) => filterEmployeeLeaveAccounts(e)}
+            onSelect={(e) => fetchEmployeeLeaveAccts(e)}
             filterOption={(input, option) =>
               option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
             }
@@ -147,8 +159,10 @@ const LeaveForm = (props) => {
       >
         <RangePicker
           placeholder={['Start Date', 'End Date']}
+          allowClear={false}
           rules={[{ required: true, message: 'Select a date!' }]}
           disabledDate={(prev) => (prev < moment().startOf('day'))}
+        // onCalendarChange={(values) => countRequestedDays(values)}
         />
       </Form.Item>
       <Form.Item
