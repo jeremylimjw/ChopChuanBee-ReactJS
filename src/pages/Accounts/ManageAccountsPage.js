@@ -21,7 +21,7 @@ const breadcrumbs = [{ url: '/accounts/', name: 'Accounts' }];
 export default function ManageAccountsPage() {
     const navigate = useNavigate();
 
-    const { handleHttpError } = useApp();
+    const { handleHttpError, hasWriteAccessTo } = useApp();
 
     const [loading, setLoading] = useState();
     const [employees, setEmployees] = useState([]);
@@ -98,7 +98,7 @@ export default function ManageAccountsPage() {
                         <Button onClick={resetForm}>Reset</Button>
                     </Form>
                     
-                    <Button type='primary' icon={<PlusOutlined />} onClick={() => navigate('./new')}>New</Button>
+                    <Button type='primary' icon={<PlusOutlined />} onClick={() => navigate('./new')} disabled={!hasWriteAccessTo(View.ADMIN.name)}>New</Button>
                 </MyToolbar>
 
                 <Table 
