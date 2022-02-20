@@ -12,7 +12,8 @@ const ProfilePage = () => {
     const [profileData, setProfileData] = useState({})
     const [loading, setLoading] = useState(true)
     const breadcrumbs = [
-        { url: '/user/profile', name: 'Profile page' }
+        { url: '/', name: 'Homepage' },
+        { url: '', name: 'My Profile' }
     ]
 
     useEffect(() => {

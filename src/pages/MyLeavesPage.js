@@ -20,7 +20,8 @@ const MyLeavesPage = () => {
   const [loading, setLoading] = useState(true)
   const { user, handleHttpError } = useApp()
   const breadcrumbs = [
-    { url: 'My Leaves', name: 'Leaves' }
+    { url: '/', name: 'Homepage' },
+    { url: '', name: 'Leaves' }
   ]
   const renderLeaveTypes = (type) => {
     const leaveTypes = ['Annual', 'Compassionate', 'Maternity/Paternity', 'Sick', 'Childcare']

@@ -24,6 +24,10 @@ const HRLeavePage = () => {
   const [employeeList, setEmployeeList] = useState([])
   const [leaveAccounts, setLeaveAccounts] = useState([])
   const { handleHttpError } = useApp()
+  const breadcrumbs = [
+    { url: '/', name: 'Human Resource' },
+    { url: '', name: 'Leaves' }
+  ]
 
   useEffect(() => {
     if (loading) {
@@ -142,6 +146,7 @@ const HRLeavePage = () => {
   }
 
   return <MyLayout
+    breadcrumbs={breadcrumbs}
     bannerTitle='Leave Management'
   >
     <div style={{ display: 'flex', justifyContent: 'space-between' }}>

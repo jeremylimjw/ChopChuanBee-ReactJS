@@ -33,9 +33,11 @@ const ViewEmployeePage = (props) => {
   const [loading, setLoading] = useState(true)
   const { handleHttpError } = useApp()
   const breadcrumbs = [
+    { url: '/', name: 'Human Resource' },
     { url: '/human-resource/employees', name: 'Employees' },
-    { url: `/human-resource/employees/${employeeData.id}`, name: `${employeeData.name}'s leave details` }
+    { url: '/human-resource/employees', name: `${employeeData.name}'s page` }
   ]
+
 
   useEffect(() => {
     if (loading) {
