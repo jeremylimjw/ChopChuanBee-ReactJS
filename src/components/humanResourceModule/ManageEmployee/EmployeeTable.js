@@ -8,6 +8,7 @@ import { sortByNumber, sortByString } from '../../../utilities/sorters';
 import { useApp } from '../../../providers/AppProvider';
 import { EmployeeApiHelper } from '../../../api/employees';
 import debounce from 'lodash.debounce';
+import { getRoleTag } from '../../../enums/Role';
 
 const EmployeeTable = () => {
 
@@ -18,7 +19,7 @@ const EmployeeTable = () => {
 
   useEffect(() => {
     setLoading(true);
-    EmployeeApiHelper.get()
+    EmployeeApiHelper.get({ status: true }) // Status = true to filter out deactivated employees
       .then(results => {
           setEmployees(results);
           setLoading(false);
@@ -28,7 +29,7 @@ const EmployeeTable = () => {
   }, [handleHttpError, setLoading])
 
   function onValuesChange(_, form) {
-      EmployeeApiHelper.get(form)
+      EmployeeApiHelper.get({ ...form, status: true }) // Status = true to filter out deactivated employees
           .then(results => {
               setEmployees(results);
               setLoading(false);
@@ -69,6 +70,16 @@ const tableColumns = [
     sorter: (a, b) => sortByString(a.name, b.name),
   },
   {
+      title: 'Role',
+      dataIndex: 'role_id',
+      key: 'role_id',
+      width: 100,
+      align: 'center',
+      ellipsis: true,
+      render: (role_id) => getRoleTag(role_id),
+      sorter: (a, b) => sortByNumber(a.role_id, b.role_id),
+  },
+  {
     title: 'Contact Number',
     dataIndex: 'contact_number',
     width: 180,
@@ -94,16 +105,6 @@ const tableColumns = [
     dataIndex: 'email',
     ellipsis: true,
     sorter: (a, b) => sortByString(a.email, b.email),
-  },
-  {
-      title: 'Status',
-      dataIndex: 'discharge_date',
-      key: 'discharge_date',
-      width: 120,
-      align: 'center',
-      ellipsis: true,
-      render: (discharge_date) => getActiveTag(discharge_date),
-      sorter: (a, b) => sortByNumber(a.discharge_date ? 1 : 0, b.discharge_date ? 1 : 0),
   },
   {
     title: 'Action',

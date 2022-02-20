@@ -13,7 +13,7 @@ import { AppProvider } from './providers/AppProvider';
 import RequireAuth from './auth/RequireAuth';
 import HRLeavePage from './pages/HRLeavePage'
 import ManageEmployeesPage from './pages/HumanResource/ManageEmployeesPage';
-import ViewEmployeePage from './pages/ViewEmployeePage';
+import ViewEmployeePage from './pages/HumanResource/ViewEmployeePage';
 import MyLeavesPage from './pages/MyLeavesPage';
 import MyTemplate from './pages/MyTemplate';
 import { View } from './enums/View';
@@ -71,7 +71,7 @@ const routes = [
         viewAccess: View.HR.name
       },
       { 
-        path: 'employees/:employeeId', 
+        path: 'employees/:id', 
         component: <ViewEmployeePage />,
         viewAccess: View.HR.name
       },

@@ -89,8 +89,3 @@ export class EmployeeApiHelper {
             .then(res => res.data);
     }
 }
-
-// export const getAllEmployees = axiosObject.get('/employee')
-//     .then((res) => {
-//         return res
-//     })

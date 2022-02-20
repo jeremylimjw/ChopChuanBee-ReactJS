@@ -83,22 +83,6 @@ export default function A1Form({ employee, setEmployee }) {
                     }
                 </Form.Item>
                 
-                <Form.Item label="NOK Name" name="nok_name">
-                    {!editing ? 
-                        <Typography>{employee.contact_number || '-'}</Typography>
-                    :
-                        <Input />
-                    }
-                </Form.Item>
-                
-                <Form.Item label="NOK Contact" name="nok_number">
-                    {!editing ? 
-                        <Typography>{employee.nok_number || '-'}</Typography>
-                    :
-                        <Input />
-                    }
-                </Form.Item>
-                
                 <Form.Item label="Address" name="address">
                     {!editing ? 
                         <Typography>{employee.address || '-'}</Typography>
@@ -110,6 +94,22 @@ export default function A1Form({ employee, setEmployee }) {
                 <Form.Item label="Postal Code" name="postal_code">
                     {!editing ? 
                         <Typography>{employee.postal_code || '-'}</Typography>
+                    :
+                        <Input />
+                    }
+                </Form.Item>
+                
+                <Form.Item label="NOK Name" name="nok_name">
+                    {!editing ? 
+                        <Typography>{employee.contact_number || '-'}</Typography>
+                    :
+                        <Input />
+                    }
+                </Form.Item>
+                
+                <Form.Item label="NOK Contact" name="nok_number">
+                    {!editing ? 
+                        <Typography>{employee.nok_number || '-'}</Typography>
                     :
                         <Input />
                     }

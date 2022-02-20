@@ -1,6 +1,16 @@
 import { axiosObject } from "./axiosWrapper";
 
 export class HRApiHelper {
+
+    static async getAllLeaveAccounts() {
+        return axiosObject.get('/employee/leave')
+            .then((res) => res.data)
+    }
+
+
+
+
+
     static async createNewLeaveApplication(leaveApplication) {
         let response = axiosObject.post('/employee/leave/application', leaveApplication)
             .then((res) => { return res })
@@ -17,12 +27,6 @@ export class HRApiHelper {
             .then((res) => {
                 return res.data
             })
-        return result
-    }
-
-    static async getAllLeaveAccounts() {
-        let result = axiosObject.get('/employee/leave')
-            .then((res) => { return res })
         return result
     }
 
