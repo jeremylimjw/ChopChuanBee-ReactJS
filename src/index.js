@@ -12,7 +12,7 @@ import ProfilePage from './pages/ProfilePage';
 import { AppProvider } from './providers/AppProvider';
 import RequireAuth from './auth/RequireAuth';
 import HRLeavePage from './pages/HRLeavePage'
-import HREmployeeManagementPage from './pages/HREmployeeManagementPage';
+import ManageEmployeesPage from './pages/HumanResource/ManageEmployeesPage';
 import ViewEmployeePage from './pages/ViewEmployeePage';
 import MyLeavesPage from './pages/MyLeavesPage';
 import MyTemplate from './pages/MyTemplate';
@@ -62,21 +62,21 @@ const routes = [
     component: <MyLeavesPage />,
   },
   {
-    path: '/humanResource',
+    path: 'humanResource',
     component: <Outlet />,
     childRoutes: [
       { 
-        path: '', 
-        component: <HREmployeeManagementPage />,
+        path: 'employees', 
+        component: <ManageEmployeesPage />,
         viewAccess: View.HR.name
       },
       { 
-        path: ':employeeId', 
+        path: 'employees/:employeeId', 
         component: <ViewEmployeePage />,
         viewAccess: View.HR.name
       },
       { 
-        path: 'leaves', 
+        path: 'employees/leaves', 
         component: <HRLeavePage />,
         viewAccess: View.HR.name
       },

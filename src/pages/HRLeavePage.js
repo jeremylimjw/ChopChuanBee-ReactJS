@@ -70,7 +70,7 @@ const HRLeavePage = () => {
     let leaveAcctData = await HRApiHelper.getAllLeaveAccounts()
       .catch(handleHttpError)
     setLeaveAccounts(leaveAcctData.data)
-    let employeeData = await EmployeeApiHelper.getAllEmployees()
+    let employeeData = await EmployeeApiHelper.get()
       .catch(handleHttpError)
     setEmployeeList(employeeData)
     setLoading(false)

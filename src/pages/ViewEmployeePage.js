@@ -33,9 +33,9 @@ const ViewEmployeePage = (props) => {
   const [loading, setLoading] = useState(true)
   const { handleHttpError } = useApp()
   const breadcrumbs = [
-    { url: '/', name: 'Human Resource' },
-    { url: '/human-resource/employees', name: 'Employees' },
-    { url: '/human-resource/employees', name: `${employeeData.name}'s page` }
+    { url: 'humanResource/employees', name: 'Human Resource' },
+    { url: 'humanResource/employees', name: 'Employees' },
+    { url: `humanResource/employees/${employeeData?.id}`, name: employeeData?.name },
   ]
 
 

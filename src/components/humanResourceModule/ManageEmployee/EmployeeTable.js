@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { MoreOutlined, SearchOutlined } from '@ant-design/icons/lib/icons';
 import { Button, Dropdown, Input, Menu, Table, Modal, Form } from 'antd';
 import { Link } from 'react-router-dom';
-import MyToolbar from '../layout/MyToolbar';
-import { getActiveTag } from '../../enums/ActivationStatus';
-import { sortByNumber, sortByString } from '../../utilities/sorters';
-import { useApp } from '../../providers/AppProvider';
-import { EmployeeApiHelper } from '../../api/employees';
+import MyToolbar from '../../layout/MyToolbar';
+import { getActiveTag } from '../../../enums/ActivationStatus';
+import { sortByNumber, sortByString } from '../../../utilities/sorters';
+import { useApp } from '../../../providers/AppProvider';
+import { EmployeeApiHelper } from '../../../api/employees';
 import debounce from 'lodash.debounce';
 
 const EmployeeTable = () => {
@@ -42,17 +42,19 @@ const EmployeeTable = () => {
       onValuesChange(null, form.getFieldsValue());
   }
 
-  return <div>
-    <MyToolbar title='Employees'>
-      <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
-          <Form.Item name="name">
-              <Input placeholder='Search Name' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
-          </Form.Item>
-          <Button onClick={resetForm}>Reset</Button>
-      </Form>
-    </MyToolbar>
-    <Table dataSource={employees} columns={tableColumns} loading={loading} />
-  </div>;
+  return (
+    <>
+      <MyToolbar title='Employees'>
+        <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
+            <Form.Item name="name">
+                <Input placeholder='Search Name' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
+            </Form.Item>
+            <Button onClick={resetForm}>Reset</Button>
+        </Form>
+      </MyToolbar>
+      <Table dataSource={employees} columns={tableColumns} loading={loading} />
+    </>
+  );
 }
 
 export default EmployeeTable;

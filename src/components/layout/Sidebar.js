@@ -21,8 +21,8 @@ const menu = [
     title: 'Human Resource',
     icon: <TeamOutlined />,
     items: [
-      { route: '/humanResource', name: 'Manage Employees' },
-      { route: '/humanResource/leaves', name: 'Leaves' },
+      { route: '/humanResource/employees', name: 'Manage Employees' },
+      { route: '/humanResource/employees/leaves', name: 'Leaves' },
     ]
   },
   {
