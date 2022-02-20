@@ -8,9 +8,13 @@ import { Layout } from 'antd';
 import LoginPage from './pages/LoginPage';
 import ManageAccountsPage from './pages/Accounts/ManageAccountsPage';
 import AdminNewAccountFormPage from './pages/Accounts/AdminNewAccountFormPage';
-import AdminViewAccountPage from './pages/Accounts/AdminViewAccountPage';
+import ProfilePage from './pages/ProfilePage';
 import { AppProvider } from './providers/AppProvider';
 import RequireAuth from './auth/RequireAuth';
+import HRLeavePage from './pages/HRLeavePage'
+import HREmployeeManagementPage from './pages/HREmployeeManagementPage';
+import ViewEmployeePage from './pages/ViewEmployeePage';
+import MyLeavesPage from './pages/MyLeavesPage';
 import MyTemplate from './pages/MyTemplate';
 import { View } from './enums/View';
 import ViewLogs from './pages/Log/ViewLogs';
@@ -46,6 +50,35 @@ const routes = [
         path: 'new', 
         component: <AdminNewAccountFormPage />,
         viewAccess: View.ADMIN.name,
+      },
+    ]
+  },
+  {
+    path: '/myprofile',
+    component: <ProfilePage />,
+  },
+  {
+    path: '/myleaves',
+    component: <MyLeavesPage />,
+  },
+  {
+    path: '/humanResource',
+    component: <Outlet />,
+    childRoutes: [
+      { 
+        path: '', 
+        component: <HREmployeeManagementPage />,
+        viewAccess: View.HR.name
+      },
+      { 
+        path: ':employeeId', 
+        component: <ViewEmployeePage />,
+        viewAccess: View.HR.name
+      },
+      { 
+        path: 'leaves', 
+        component: <HRLeavePage />,
+        viewAccess: View.HR.name
       },
     ]
   },

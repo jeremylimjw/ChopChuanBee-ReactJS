@@ -7,15 +7,15 @@ import Sidebar from './components/layout/Sidebar';
 import Navbar from './components/layout/Navbar';
 
 function App() {
-    return (
-        <>
-            <Navbar />
-            <Layout>
-                <Sidebar />
-                <Outlet />
-            </Layout>
-        </>
-    );
+  return (
+    <>
+      <Navbar />
+      <Layout>
+        <Sidebar />
+        <Outlet />
+      </Layout>
+    </>
+  )
 }
 
 export default App;

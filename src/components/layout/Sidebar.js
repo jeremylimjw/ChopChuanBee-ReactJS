@@ -21,8 +21,8 @@ const menu = [
     title: 'Human Resource',
     icon: <TeamOutlined />,
     items: [
-      { route: '/human-resource/employees', name: 'Manage Employees' },
-      { route: '/human-resource/employees', name: 'Leaves' },
+      { route: '/humanResource', name: 'Manage Employees' },
+      { route: '/humanResource/leaves', name: 'Leaves' },
     ]
   },
   {
@@ -66,32 +66,32 @@ const Sidebar = () => {
     const { hasViewAccessTo } = useApp();
 
     return (
-        <Layout.Sider theme='light' width={210} style={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}>
-            <Menu mode='inline'>
-                <Menu.Item key='home' icon={<HomeOutlined />}>
-                    <Link to='/'>Home</Link>
-                </Menu.Item>
+      <Layout.Sider theme='light' width={210} style={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}>
+        <Menu mode='inline'>
+          <Menu.Item key='home' icon={<HomeOutlined />}>
+            <Link to='/'>Home</Link>
+          </Menu.Item>
 
-                {menu.map((menuItem, index) => {
-                    if (hasViewAccessTo(menuItem.role)) {
-                        return (
-                            <Menu.SubMenu key={index} title={menuItem.title} icon={menuItem.icon}>
-                                {menuItem.items.map((subMenu, index2) => (
-                                    <Menu.Item key={`${index}_${index2}`}>
-                                        <Link to={subMenu.route}>{subMenu.name}</Link>
-                                    </Menu.Item>
-                                ))}
-                            </Menu.SubMenu>
-                        );
-                    }
-                    return null;
-                })}
+          {menu.map((menuItem, index) => {
+            if (hasViewAccessTo(menuItem.role)) {
+              return (
+                <Menu.SubMenu key={index} title={menuItem.title} icon={menuItem.icon}>
+                  {menuItem.items.map((subMenu, index2) => (
+                    <Menu.Item key={`${index}_${index2}`}>
+                      <Link to={subMenu.route}>{subMenu.name}</Link>
+                    </Menu.Item>
+                  ))}
+                </Menu.SubMenu>
+              );
+            }
+            return null;
+          })}
 
-                <Menu.Item key='logoutMenu' icon={<UserOutlined />}>
-                    <Link to='/'>Logout</Link>
-                </Menu.Item>
-            </Menu>
-        </Layout.Sider>
+          <Menu.Item key='logoutMenu' icon={<UserOutlined />}>
+            <Link to='/'>Logout</Link>
+          </Menu.Item>
+        </Menu>
+      </Layout.Sider>
     );
 };
 

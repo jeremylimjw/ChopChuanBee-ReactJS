@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useContext, createContext  } from "react";
+import { useState, useEffect, useContext, createContext } from "react";
 import { httpLogout } from "../api/auth";
 import { useNavigate } from "react-router-dom";
 import { message } from "antd";
@@ -12,7 +12,7 @@ export function useApp() {
 
 export function AppProvider({ children }) {
     const navigate = useNavigate();
-    
+
     const [user, setUser] = useState(null);
 
     /**
@@ -20,7 +20,7 @@ export function AppProvider({ children }) {
      */
     useEffect(() => {
         let userSession = JSON.parse(sessionStorage.getItem("user")) || null;
-        
+
         if (userSession != null) {
             setUser(userSession);
         }
@@ -44,7 +44,7 @@ export function AppProvider({ children }) {
             removeSession();
         })
     }
-    
+
     /**
      * Wrapper to handle HTTP errors
      */
@@ -99,9 +99,9 @@ export function AppProvider({ children }) {
     const value = { user, setUser, logout, removeSession, hasViewAccessTo, hasWriteAccessTo, handleHttpError }
 
     return (
-        <AppContext.Provider 
+        <AppContext.Provider
             value={value}>
-            { children }
+            {children}
         </AppContext.Provider>
     )
 }
