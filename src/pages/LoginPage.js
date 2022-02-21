@@ -1,57 +1,85 @@
 import React, { useState } from 'react';
 import '../css/LoginPage.css';
-import { Row, Col, Button, Input, Spin } from 'antd';
-import LoginForm from '../components/general/LoginForm';
-import ForgotPasswordForm from '../components/general/ForgotPasswordForm';
+import { Row, Col, Button, Input, Form } from 'antd';
 import { httpLogin } from '../api/auth';
 import { useNavigate, useLocation } from "react-router-dom";
 import { useApp } from '../providers/AppProvider';
+import { REQUIRED } from '../utilities/form';
+import ForgotPasswordModal from './ForgotPasswordModal';
 
 const LoginPage = () => {
-  const [showForgotPasswordForm, setShowForgotPasswordForm] = useState(false);
+
+  const { setUser, handleHttpError } = useApp();
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [form] = Form.useForm();
+
+  function onSubmit(values) {
+    setLoading(true);
+    httpLogin(values.username, values.password)
+      .then(user => {
+        setLoading(false);
+        // Set the user in session
+        sessionStorage.setItem("user", JSON.stringify(user));
+        setUser(user);
+
+        // Redirect to dashboard or any previously entered url
+        const from = location.state?.from?.pathname || "/";
+        navigate(from, { replace: true });
+      })
+      .catch(handleHttpError)
+      .catch(() => setLoading(false));
+
+  }
+
+  function quickLogin(username, password) {
+    onSubmit({ username, password: password });
+  }
 
   return (
-    // <div className='container'>
-    //   <form onSubmit={onSubmit}>
-    //     <div className='form'>
-    //       <img className='image' src="Chop_Chuan_Bee_Logo.png" height="200" width="200"></img>
+    <Row justify="center" align="middle" style={{ height: '100vh' }}>
+      <Col span={5} >
+        <div style={{ width: 300 }}>
 
-    //       <Input type="text" className='input'
-    //           value={form.username} placeholder='Username'
-    //           onChange={e => setForm({ ...form, username : e.target.value })} />
+          <div style={{ textAlign: 'center' }}>
+            <img className='image' src="Chop_Chuan_Bee_Logo.png"></img>
+          </div>
 
-    //       <Input type="password" className='input'
-    //           value={form.password} placeholder='Password'
-    //           onChange={e => setForm({ ...form, password : e.target.value })} />
+          <Form form={form} onFinish={onSubmit}>
+            <Form.Item name="username" rules={[REQUIRED]}>
+              <Input placeholder='Username' />
+            </Form.Item>
 
-    //       <Button type="primary" htmlType="submit" className='button' disabled={loading} onClick={onSubmit} shape="round" size="large">
-    //         {loading ? <Spin /> : "Sign In" }
-    //       </Button>
+            <Form.Item name="password" rules={[REQUIRED]}>
+              <Input.Password placeholder='Password' />
+            </Form.Item>
 
-    //       {/* <i>These buttons are for developer's convenience. Remove this whenever</i>
-    //       <Button className='button' disabled={loading} onClick={() => login("admin", "password")} shape="round" size="large">
-    //         {loading ? <Spin /> : "Quick Login (Admin)" }
-    //       </Button>
+            <Form.Item>
+              <Button type="primary" htmlType="submit" disabled={loading} style={{ width: '100%'}}>Sign In</Button>
+            </Form.Item>
 
-    //       <Button className='button' disabled={loading} onClick={() => login("alice", "password")} shape="round" size="large">
-    //         {loading ? <Spin /> : "Quick Login (Staff)" }
-    //       </Button> */}
+            <Form.Item>
+              <Button type="link" style={{ width: '100%'}} onClick={() => setIsModalVisible(true)}>Forgot password</Button>
+            </Form.Item>
+            
+            <Form.Item>
+              <Button disabled={loading} onClick={() => quickLogin("admin", "password")} style={{ width: '100%'}}>Quick Login (Admin)</Button>
+            </Form.Item>
 
-    //     </div>
-    //   </form>
-    // </div>
+            <Form.Item>
+              <Button disabled={loading} onClick={() => quickLogin("alice", "password")} style={{ width: '100%'}}>Quick Login (Staff)</Button>
+            </Form.Item>
+          </Form>
 
-    <>
-      <Row justify="center" align="middle" style={{ minHeight: '100vh', textAlign: 'center' }}>
-        <Col span={5}>
-          <img className='image' src="Chop_Chuan_Bee_Logo.png"></img>
+        </div>
+      </Col>
 
-          {showForgotPasswordForm
-            ? <><ForgotPasswordForm setShowForgotPasswordForm={setShowForgotPasswordForm} /> <Button type="link" onClick={() => setShowForgotPasswordForm(false)}> Back to login page </Button></>
-            : <><LoginForm /> <Button type="link" onClick={() => setShowForgotPasswordForm(true)}> Forgot Password? </Button></>}
-        </Col>
-      </Row>
-    </>
+      <ForgotPasswordModal isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} />
+    </Row>
   )
 }
 

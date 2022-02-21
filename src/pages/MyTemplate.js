@@ -1,28 +1,16 @@
 import { DownOutlined, FileDoneOutlined, FileTextOutlined, PlusOutlined, SaveOutlined, SearchOutlined, StopOutlined } from '@ant-design/icons/lib/icons'
-import { Button, DatePicker, Dropdown, Form, Input, InputNumber, Menu, Select, Table } from 'antd'
+import { Button, Col, DatePicker, Dropdown, Form, Input, InputNumber, Menu, Row, Select, Table } from 'antd'
 import React from 'react'
 import MyToolbar from '../components/layout/MyToolbar'
 import MyCard from '../components/layout/MyCard'
 import MyLayout from '../components/layout/MyLayout'
 import moment from 'moment';
 
-const breadcrumbs = [{ url: '/', name: 'Customers' }];
+const breadcrumbs = [{ url: '/', name: 'Home' }];
 
 export default function MyTemplate() {
     return (
-        <MyLayout breadcrumbs={breadcrumbs} bannerTitle='Manage Customers'>
-            <MyCard>
-                <MyToolbar title='Simple Table'>
-                    <Input placeholder='Search Name' addonBefore={<SearchOutlined />} />
-                    <Input placeholder='Search Address' addonBefore={<SearchOutlined />} />
-                    <Button>Reset</Button>
-                    <Button type='primary' icon={<PlusOutlined />}>
-                        New
-                    </Button>
-                </MyToolbar>
-
-                <Table dataSource={dataSource} columns={columns} />
-            </MyCard>
+        <MyLayout breadcrumbs={breadcrumbs} bannerTitle='Dashboard'>
 
             <MyCard>
                 <MyToolbar title='Extreme Table'>
@@ -81,34 +69,44 @@ export default function MyTemplate() {
                 </MyToolbar>
             </MyCard>
 
-            <div className='flex-side-by-side'>
-                <MyCard title='Past Payment History'>
-                    <Form labelCol={{ span: 4 }} wrapperCol={{ span: 10 }}>
-                        <Form.Item label='Name'>
-                            <Input />
-                        </Form.Item>
-                        <Form.Item label='Email'>
-                            <Input />
-                        </Form.Item>
-                        <Form.Item label='Age'>
-                            <InputNumber />{' '}
-                        </Form.Item>
-                        <Form.Item label='Website'>
-                            <Input />
-                        </Form.Item>
-                        <Form.Item label='Introduction'>
-                            <Input.TextArea />
-                        </Form.Item>
-                        <Form.Item wrapperCol={{ offset: 4, span: 10 }}>
-                            <Button type='primary' htmlType='submit'>
-                                Submit
-                            </Button>
-                        </Form.Item>
-                    </Form>
-                </MyCard>
+            
+            <Row>
+                <Col xl={12} xs={24}>
+                    <MyCard title="Flex Layout">
+                        <Form labelCol={{ span: 4 }} wrapperCol={{ span: 10 }}>
+                            <Form.Item label='Name'>
+                                <Input />
+                            </Form.Item>
+                            <Form.Item label='Email'>
+                                <Input />
+                            </Form.Item>
+                            <Form.Item label='Age'>
+                                <InputNumber />{' '}
+                            </Form.Item>
+                            <Form.Item label='Website'>
+                                <Input />
+                            </Form.Item>
+                            <Form.Item label='Introduction'>
+                                <Input.TextArea />
+                            </Form.Item>
+                            <Form.Item wrapperCol={{ offset: 4, span: 10 }}>
+                                <Button type='primary' htmlType='submit'>
+                                    Submit
+                                </Button>
+                            </Form.Item>
+                        </Form>
+                    </MyCard>
+                </Col>
 
-                <MyCard title='Past Deliveries'>Bill is a cat.</MyCard>
-            </div>
+                <Col xl={12} xs={24}>
+                    <MyCard title='Past Payment History'>
+                    </MyCard>
+
+                    <MyCard title='Past Deliveries'>Bill is a cat.</MyCard>
+
+                </Col>
+            </Row>
+            
         </MyLayout>
     );
 }
