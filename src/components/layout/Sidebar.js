@@ -2,7 +2,7 @@ import React from 'react'
 import { Layout, Menu } from 'antd'
 import { Link } from 'react-router-dom'
 import { useApp } from '../../providers/AppProvider'
-import { HomeOutlined, InboxOutlined, ShopOutlined, ShoppingOutlined, SolutionOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons/lib/icons'
+import { HomeOutlined, InboxOutlined, ShopOutlined, ShoppingOutlined, SolutionOutlined, TeamOutlined, UserOutlined, AccountBookOutlined } from '@ant-design/icons/lib/icons'
 
 
 // Add on more menu items here
@@ -58,6 +58,16 @@ const menu = [
     icon: <SolutionOutlined />,
     items: [
       { route: '/customers', name: 'Manage Customers' },
+    ]
+  },
+  {
+    role: 'Accounting',
+    title: 'Accounting',
+    icon: <AccountBookOutlined />,
+    items: [
+      { route: '/accounting/SOFPs', name: 'Manage Balance Sheets' },
+      { route: '/accounting/incomeStatements', name: 'Manage Income Statements' },
+      { route: '/accounting/taxes', name: 'Manage Taxes' },
     ]
   },
 ]
