@@ -150,7 +150,7 @@ const columns = [
         title: 'Name',
         dataIndex: 'leave_account',
         key: 'leave_account',
-        width: 250,
+        width: '14%',
         ellipsis: true,
         render: (leave_account) => leave_account.employee.name,
         sorter: (a, b) => sortByString(a.leave_account.employee.name, b.leave_account.employee.name),

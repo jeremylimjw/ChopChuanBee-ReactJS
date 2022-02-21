@@ -139,7 +139,7 @@ const EmployeeLeaveTable = (props) => {
         {
             title: 'Type',
             dataIndex: 'leave_account',
-            render: (value) => value.leave_type.name,
+            render: (value) => value.leave_type?.name,
         },
         {
             title: 'Requested Days',

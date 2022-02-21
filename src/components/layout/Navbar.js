@@ -1,13 +1,16 @@
 import { BellOutlined, LineChartOutlined, UserOutlined } from '@ant-design/icons/lib/icons'
-import { Menu, Layout, Popover, Button, Modal, Typography } from 'antd'
+import { Menu, Layout, Popover, Button, Modal, Typography, Space } from 'antd'
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
 import { useApp } from '../../providers/AppProvider'
 import ChangePasswordForm from '../general/ChangePasswordForm'
+import { useNavigate } from "react-router";
 
 const Navbar = () => {
   const { Header } = Layout
   const { user, logout, removeSession } = useApp();
+
+  const navigate = useNavigate();
+
   const [changePasswordModalVisibility, setChangePasswordModalVisibility] = useState(false);
   const [successMessageVisibility, setSuccessMessageVisibility] = useState(false);
   const [failureMessageVisibility, setFailureMessageVisibility] = useState(false);
@@ -15,12 +18,12 @@ const Navbar = () => {
 
   const content = (
     <>
-      <div>
-        <Link to='/user/profile'>My Profile</Link><br />
-        <Link to='/user/leaves'>My Leaves</Link><br />
-        <Button style={{ padding: '0' }} onClick={() => setChangePasswordModalVisibility(true)} type="link">Change Password</Button><br />
+      <Space direction='vertical'>
+        <Button style={{ padding: '0' }} onClick={() => navigate('/myProfile')} type="link">My Profile</Button>
+        <Button style={{ padding: '0' }} onClick={() => navigate('/myLeaves')} type="link">My Leaves</Button>
+        <Button style={{ padding: '0' }} onClick={() => setChangePasswordModalVisibility(true)} type="link">Change Password</Button>
         <Button style={{ padding: '0' }} type="link" onClick={logout}>Logout</Button>
-      </div>
+      </Space>
     </>
   );
 

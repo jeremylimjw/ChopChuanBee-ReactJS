@@ -8,7 +8,7 @@ import { Layout } from 'antd';
 import LoginPage from './pages/LoginPage';
 import ManageAccountsPage from './pages/Accounts/ManageAccountsPage';
 import AdminNewAccountFormPage from './pages/Accounts/AdminNewAccountFormPage';
-import ProfilePage from './pages/ProfilePage';
+import MyProfilePage from './pages/User/MyProfilePage';
 import { AppProvider } from './providers/AppProvider';
 import RequireAuth from './auth/RequireAuth';
 import ManageEmployeesPage from './pages/HumanResource/ManageEmployeesPage';
@@ -54,11 +54,11 @@ const routes = [
     ]
   },
   {
-    path: '/myprofile',
-    component: <ProfilePage />,
+    path: '/myProfile',
+    component: <MyProfilePage />,
   },
   {
-    path: '/myleaves',
+    path: '/myLeaves',
     component: <MyLeavesPage />,
   },
   {

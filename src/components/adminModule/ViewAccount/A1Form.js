@@ -77,7 +77,7 @@ export default function A1Form({ employee, setEmployee }) {
                     }
                 </Form.Item>
                 
-                <Form.Item label="Contact Number" name="contact_number" rules={editing ? [REQUIRED] : []}>
+                <Form.Item label="Contact Number" name="contact_number">
                     {!editing ? 
                         <Typography>{employee.contact_number || '-'}</Typography>
                     :
