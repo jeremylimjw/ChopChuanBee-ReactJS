@@ -8,7 +8,7 @@ export const LeaveType = {
     CHILDCARE: { id: 5, name: "Childcare", color: "orange" },
 }
     
-export function getLeaveAccount(id) {
+export function getLeaveType(id) {
     const foundKey = Object.keys(LeaveType).filter(key => LeaveType[key].id === id);
     if (foundKey.length > 0) {
         return LeaveType[foundKey];
@@ -16,8 +16,8 @@ export function getLeaveAccount(id) {
     return null;
 }
 
-export function getLeaveAccountTag(id) {
-    const item = getLeaveAccount(id);
+export function getLeaveTypeTag(id) {
+    const item = getLeaveType(id);
     if (item == null) return '-';
     return <Tag color={item.color}>{item.name}</Tag>
 }

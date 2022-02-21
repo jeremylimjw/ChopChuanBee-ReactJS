@@ -1,7 +1,7 @@
 import { Button, Form, message, Popconfirm, Select, Table } from 'antd'
 import debounce from 'lodash.debounce'
 import React, { useCallback, useEffect, useState } from 'react'
-import { getLeaveAccountTag, LeaveType } from '../../../enums/LeaveType'
+import { getLeaveTypeTag, LeaveType } from '../../../enums/LeaveType'
 import { getLeaveStatusTag, LeaveStatus } from '../../../enums/LeaveStatus'
 import { useApp } from '../../../providers/AppProvider'
 import MyToolbar from '../../layout/MyToolbar'
@@ -63,7 +63,7 @@ export default function E3ApplicationsTable({ employee, refreshBalances }) {
 
     function updateLeaveStatus(record, leaveStatus) {
         setLoading(true);
-        HRApiHelper.updateLeaveApplicationStatus({...record, leave_status_id: leaveStatus.id })
+        HRApiHelper.updateLeaveApplication({...record, leave_status_id: leaveStatus.id })
             .then(() => {
                 setLoading(false);
                 const newItems = [...leaveApplications];
@@ -143,7 +143,7 @@ const tableColumns = [
         align: 'center',
         width: 150,
         ellipsis: true,
-        render: (leave_account) => getLeaveAccountTag(leave_account.leave_type_id),
+        render: (leave_account) => getLeaveTypeTag(leave_account.leave_type_id),
         sorter: (a, b) => sortByNumber(a.leave_account.leave_type_id, b.leave_account.leave_type_id),
     },
     {

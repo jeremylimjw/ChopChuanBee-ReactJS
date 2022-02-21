@@ -73,7 +73,7 @@ const ViewEmployeePage = (props) => {
         </Col>
       </Row>
 
-      <MyCard>
+      <MyCard style={{ marginTop: 0 }}>
         <E3ApplicationsTable employee={employee} refreshBalances={refreshBalances} />
       </MyCard>
 

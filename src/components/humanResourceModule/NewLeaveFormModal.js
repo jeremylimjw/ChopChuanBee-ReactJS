@@ -3,7 +3,7 @@ import moment from 'moment'
 import React, { useEffect, useState } from 'react'
 import { EmployeeApiHelper } from '../../api/employees'
 import { HRApiHelper } from '../../api/humanResource'
-import { getLeaveAccount } from '../../enums/LeaveType'
+import { getLeaveType } from '../../enums/LeaveType'
 import { useApp } from '../../providers/AppProvider'
 import { REQUIRED } from '../../utilities/form'
 
@@ -143,7 +143,7 @@ export default function NewLeaveFormModal({ selectedEmployee, isModalVisible, se
         }
 
         <Form.Item rules={[REQUIRED]} label='Select Leave Type' name='leave_account_id'>
-          <Select options={leaveAccounts.map(x => ({ label: getLeaveAccount(x.leave_type_id).name, value: x.id, leave_account: x }))}
+          <Select options={leaveAccounts.map(x => ({ label: getLeaveType(x.leave_type_id).name, value: x.id, leave_account: x }))}
               placeholder="Select Type" 
               onSelect={(_, option) => setSelectedAccount(option.leave_account)}
           />

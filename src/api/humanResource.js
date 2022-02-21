@@ -36,42 +36,18 @@ export class HRApiHelper {
             .then(res => res.data)
     }
 
-    static async updateLeaveApplicationStatus(leaveApplications) {
+    static async updateLeaveApplication(leaveApplications) {
         return axiosObject.put('/employee/leave/application', { leave_applications: [leaveApplications] })
             .then(res => res.data)
     }
 
     static async getPublicHolidays() {
         let data = {
-            resource_id: '04a78f5b-2d12-4695-a6cd-d2b072bc93fe'
+            resource_id: '04a78f5b-2d12-4695-a6cd-d2b072bc93fe' // Year 2022
         }
         
         return axiosObject.get('https://data.gov.sg/api/action/datastore_search', { params: data })
             .then(res => res.data)
     }
-
-
-
-
-
-    static async getLeaveApplicationByEmployeeId(employeeId) {
-        return axiosObject.get('/employee/leave/application', { params: { employee_id: employeeId } })
-            .then(res => res.data)
-    }
-
-    static async getAllLeaveApplications() {
-        let result = axiosObject.get('/employee/leave/application')
-            .then((res) => { return res.data })
-        return result
-    }
-
-    static async cancelLeaveApplication(id) {
-        let response = axiosObject.delete('/employee/leave/application', { params: { id: id } })
-            .then((res) => {
-                return res
-            })
-        return response
-    }
-
 
 }

@@ -14,7 +14,7 @@ export default function E2LeaveBalance({ employee, leaveAccounts, setLeaveAccoun
     
     return (
         <>
-            <MyToolbar title="Leave Accounts">
+            <MyToolbar title="Leave Details">
                 { hasWriteAccessTo(View.HR.name) && 
                     <Button onClick={() => setIsModalVisible(true)} icon={<EditOutlined/>} style={{ width: 85 }} disabled={!hasWriteAccessTo(View.HR.name)}>Edit</Button>
                 }

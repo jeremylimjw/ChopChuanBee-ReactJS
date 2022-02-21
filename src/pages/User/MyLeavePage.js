@@ -1,5 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Form, List, message, Popconfirm, Select, Table } from 'antd';
+import { Button, Form, message, Popconfirm, Select, Space, Table } from 'antd';
 import debounce from 'lodash.debounce';
 import React, { useEffect, useState } from 'react'
 import { HRApiHelper } from '../../api/humanResource';
@@ -8,7 +8,7 @@ import MyCard from '../../components/layout/MyCard';
 import MyLayout from '../../components/layout/MyLayout';
 import MyToolbar from '../../components/layout/MyToolbar';
 import { getLeaveStatusTag, LeaveStatus } from '../../enums/LeaveStatus';
-import { getLeaveAccountTag, LeaveType } from '../../enums/LeaveType';
+import { getLeaveTypeTag, LeaveType, getLeaveType } from '../../enums/LeaveType';
 import { useApp } from '../../providers/AppProvider';
 import { parseDate, parseDateTime } from '../../utilities/datetime';
 import { sortByDate, sortByNumber, sortByString } from '../../utilities/sorters';
@@ -36,16 +36,13 @@ export default function MyLeavePage() {
         <MyLayout breadcrumbs={breadcrumbs} bannerTitle='My Leaves'>
         { true &&
             <>
-                <MyCard style={{ width: 500 }}>
-                    <MyToolbar title="Leave Accounts" />
-                
-                    <List itemLayout='horizontal' dataSource={leaveAccounts} renderItem={(item) => (
-                        <List.Item>
-                            <List.Item.Meta title={item.leave_type.name} description={`${item.balance} out of ${item.entitled_days} Days Remaining`}/>
-                        </List.Item>
-                        )}
-                    />
-                </MyCard>
+                <Space direction='horizontal' wrap>
+                    { leaveAccounts.filter(x => x.entitled_days > 0).map((x, idx) => (
+                        <MyCard key={idx} title={`${getLeaveType(x.leave_type_id).name} Leaves`}>
+                            <span className='grey'>{`${x.balance} out of ${x.entitled_days} Days Remaining`}</span>
+                        </MyCard>
+                    ))}
+                </Space>
 
                 <MyCard>
                     <MyTable />
@@ -104,7 +101,7 @@ function MyTable() {
 
     function updateLeaveStatus(record, leaveStatus) {
         setLoading(true);
-        HRApiHelper.updateLeaveApplicationStatus({...record, leave_status_id: leaveStatus.id })
+        HRApiHelper.updateLeaveApplication({...record, leave_status_id: leaveStatus.id })
             .then(() => {
                 setLoading(false);
                 const newItems = [...leaveApplications];
@@ -183,7 +180,7 @@ const tableColumns = [
         align: 'center',
         width: 150,
         ellipsis: true,
-        render: (leave_account) => getLeaveAccountTag(leave_account.leave_type_id),
+        render: (leave_account) => getLeaveTypeTag(leave_account.leave_type_id),
         sorter: (a, b) => sortByNumber(a.leave_account.leave_type_id, b.leave_account.leave_type_id),
     },
     {

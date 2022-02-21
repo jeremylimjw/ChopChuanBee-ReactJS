@@ -1,7 +1,7 @@
 import { Form, InputNumber, message, Modal } from 'antd'
 import React, { useState } from 'react'
 import { HRApiHelper } from '../../../api/humanResource';
-import { getLeaveAccount } from '../../../enums/LeaveType';
+import { getLeaveType } from '../../../enums/LeaveType';
 import { useApp } from '../../../providers/AppProvider';
 import { REQUIRED } from '../../../utilities/form';
 
@@ -56,7 +56,7 @@ export default function EditLeaveAccountModal({ employee, leaveAccounts, setLeav
                 <>
                     <Form form={form} labelCol={{ span: 12 }} wrapperCol={{ span: 12 }} autoComplete="off" labelAlign="left" initialValues={initialValues}>
                         { leaveAccounts.map((item, idx) => (
-                            <Form.Item key={idx} label={getLeaveAccount(item.leave_type_id).name} name={item.id} required={[REQUIRED]}>
+                            <Form.Item key={idx} label={getLeaveType(item.leave_type_id).name} name={item.id} required={[REQUIRED]}>
                                 <InputNumber style={{ width: '100%' }} />
                             </Form.Item>
                             )
