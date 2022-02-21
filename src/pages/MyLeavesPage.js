@@ -5,7 +5,7 @@ import moment from 'moment'
 import React, { useEffect, useState } from 'react'
 import { HRApiHelper } from '../api/humanResource'
 import EmployeeLeaveTable from '../components/humanResourceModule/EmployeeLeaveTable'
-import NewLeaveForm from '../components/humanResourceModule/ViewEmployee/NewLeaveForm'
+import NewLeaveFormModal from '../components/humanResourceModule/NewLeaveFormModal'
 import MyCard from '../components/layout/MyCard'
 import MyLayout from '../components/layout/MyLayout'
 import MyToolbar from '../components/layout/MyToolbar'
@@ -87,7 +87,7 @@ const MyLeavesPage = () => {
         footer={null}
         width={600}
       >
-        <NewLeaveForm
+        <NewLeaveFormModal
           submitLeaveApplicationForm={submitLeaveApplicationForm}
           selectedEmployee={user}
           leaveAccounts={leaveAccounts}

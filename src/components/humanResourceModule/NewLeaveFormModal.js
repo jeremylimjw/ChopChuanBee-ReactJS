@@ -1,13 +1,13 @@
 import { Form, Select, DatePicker, Modal, Input, Typography, message } from 'antd'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
-import { EmployeeApiHelper } from '../../../api/employees'
-import { HRApiHelper } from '../../../api/humanResource'
-import { getLeaveAccount } from '../../../enums/LeaveType'
-import { useApp } from '../../../providers/AppProvider'
-import { REQUIRED } from '../../../utilities/form'
+import { EmployeeApiHelper } from '../../api/employees'
+import { HRApiHelper } from '../../api/humanResource'
+import { getLeaveAccount } from '../../enums/LeaveType'
+import { useApp } from '../../providers/AppProvider'
+import { REQUIRED } from '../../utilities/form'
 
-export default function NewLeaveForm({ selectedEmployee, isModalVisible, setIsModalVisible, myCallback }) {
+export default function NewLeaveFormModal({ selectedEmployee, isModalVisible, setIsModalVisible, myCallback }) {
 
   const { handleHttpError } = useApp()
   const [form] = Form.useForm()
@@ -28,11 +28,13 @@ export default function NewLeaveForm({ selectedEmployee, isModalVisible, setIsMo
     if (isModalVisible && !selectedEmployee) {
       onSearch('');
     }
-  }, [isModalVisible, selectedEmployee, form, setEmployee, onSearch])
+  }, [isModalVisible, selectedEmployee, form, setEmployee])
 
   // Make sure leave account is binded to the selected employee
   useEffect(() => {
     if (employee) {
+      setLeaveAccounts([]);
+      setSelectedAccount(null);
       form.setFieldsValue({ leave_account_id: null })
       HRApiHelper.getLeaveAccountsById(employee.id)
         .then((results) => {
@@ -85,8 +87,6 @@ export default function NewLeaveForm({ selectedEmployee, isModalVisible, setIsMo
     try {
       const values = await form.validateFields();
       const [startDate, endDate] = values.dateRange
-      let numDays = endDate.diff(startDate, 'days')
-      numDays = calculateLeaveDays(startDate, numDays)
 
       const newApplication = {
         leave_account_id: values.leave_account_id,
@@ -94,8 +94,10 @@ export default function NewLeaveForm({ selectedEmployee, isModalVisible, setIsMo
         start_date: startDate.format('YYYY-MM-DD HH:mm:ss'),
         end_date: endDate.format('YYYY-MM-DD HH:mm:ss'),
         remarks: values.remarks,
-        num_days: numDays,
       }
+
+      let numDays = endDate.diff(startDate, 'days')
+      newApplication.num_days = calculateLeaveDays(startDate, numDays)
 
       setLoading(true);
       HRApiHelper.createNewLeaveApplication(newApplication)
@@ -114,7 +116,7 @@ export default function NewLeaveForm({ selectedEmployee, isModalVisible, setIsMo
   }
 
   return (
-    <Modal title='Create Leave'
+    <Modal title='Create Leave Application'
         visible={isModalVisible}
         onCancel={onCancel}
         onOk={onFinish}
@@ -126,7 +128,7 @@ export default function NewLeaveForm({ selectedEmployee, isModalVisible, setIsMo
 
         {selectedEmployee == null ?
           <Form.Item rules={[REQUIRED]} label='Employee' name='employee_id'>
-            <Select showSearch style={{ width: 280 }}
+            <Select showSearch
               options={allEmployees.map(x => ({ label: x.name, value: x.id, employee: x }))}
               placeholder="Search Employee" 
               onSearch={onSearch}
@@ -154,10 +156,8 @@ export default function NewLeaveForm({ selectedEmployee, isModalVisible, setIsMo
         }
 
         <Form.Item label='Date' name='dateRange' rules={[REQUIRED]}>
-          <DatePicker.RangePicker
+          <DatePicker.RangePicker style={{ width: '100%' }} allowClear={false}
             placeholder={['Start Date', 'End Date']}
-            allowClear={false}
-            
             disabledDate={(prev) => (prev < moment().startOf('day'))}
           // onCalendarChange={(values) => countRequestedDays(values)}
           />

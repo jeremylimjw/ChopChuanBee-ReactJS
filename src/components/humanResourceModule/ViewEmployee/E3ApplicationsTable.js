@@ -10,7 +10,7 @@ import { parseDate, parseDateTime } from '../../../utilities/datetime'
 import { sortByDate, sortByNumber, sortByString } from '../../../utilities/sorters'
 import { View } from '../../../enums/View'
 import { HRApiHelper } from '../../../api/humanResource'
-import NewLeaveForm from './NewLeaveForm'
+import NewLeaveFormModal from '../NewLeaveFormModal'
 import { showTotal } from '../../../utilities/table'
 
 export default function E3ApplicationsTable({ employee, leaveAccounts, setLeaveAccounts }) {
@@ -113,7 +113,7 @@ export default function E3ApplicationsTable({ employee, leaveAccounts, setLeaveA
                 rowKey="id"
             />
 
-            <NewLeaveForm 
+            <NewLeaveFormModal 
                 selectedEmployee={employee}
                 isModalVisible={isModalVisible}
                 setIsModalVisible={setIsModalVisible}

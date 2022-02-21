@@ -13,6 +13,7 @@ import { showTotal } from '../../utilities/table';
 import { HRApiHelper } from '../../api/humanResource';
 import { getLeaveAccountTag, LeaveType } from '../../enums/LeaveType';
 import { getLeaveStatusTag, LeaveStatus } from '../../enums/LeaveStatus';
+import NewLeaveFormModal from '../../components/humanResourceModule/NewLeaveFormModal';
 
 const breadcrumbs = [
     { url: '/humanResource/leaves', name: 'Human Resource' },
@@ -29,16 +30,15 @@ export default function ManageLeavesPage() {
     const [form] = Form.useForm();
 
     columns[8].render = (record, action) => (
-        <Space size="middle">
-            <a onClick={() => updateLeaveStatus(record, LeaveStatus.APPROVED)}>Accept</a>
-            <a onClick={() => updateLeaveStatus(record, LeaveStatus.REJECTED)}>Reject</a>
-        </Space>
+        <>
+            <Button type="link" style={{ paddingLeft: 0 }} disabled={record.leave_status_id !== LeaveStatus.PENDING.id} onClick={() => updateLeaveStatus(record, LeaveStatus.APPROVED)}>Accept</Button>
+            <Button type="link" style={{ paddingLeft: 0 }} disabled={record.leave_status_id !== LeaveStatus.PENDING.id} onClick={() => updateLeaveStatus(record, LeaveStatus.REJECTED)}>Reject</Button>
+        </>
     )
 
     useEffect(() => {
         HRApiHelper.getLeaveApplications()
         .then(results => {
-            console.log(results[0])
             setLeaveApplications(results);
             setLoading(false);
         })
@@ -76,6 +76,11 @@ export default function ManageLeavesPage() {
             })
             .catch(handleHttpError)
             .catch(() => setLoading(false))
+    }
+
+    function myCallback(newApplication) {
+        setLeaveApplications([newApplication, ...leaveApplications])
+        setIsModalVisible(false)
     }
 
     return (
@@ -123,6 +128,11 @@ export default function ManageLeavesPage() {
   
           {/* <NewProductModal products={leaveApplications} setProducts={setLeaveApplications} isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} /> */}
         
+          <NewLeaveFormModal 
+                isModalVisible={isModalVisible}
+                setIsModalVisible={setIsModalVisible}
+                myCallback={myCallback}
+            />
         </MyLayout>
     )
 }
