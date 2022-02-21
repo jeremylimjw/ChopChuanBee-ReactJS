@@ -5,15 +5,31 @@ import { CheckOutlined, CloseOutlined, MoreOutlined } from '@ant-design/icons/li
 import { HRApiHelper } from '../../api/humanResource';
 import moment from 'moment';
 import { useApp } from '../../providers/AppProvider';
+import { parseDate } from '../../utilities/datetime';
+import { sortByDate } from '../../utilities/sorters';
 
 const EmployeeLeaveTable = (props) => {
-    let { user } = useApp()
-    const [dataSource, setDataSource] = useState([])
 
+    let { handleHttpError } = useApp()
+
+    const [loading, setLoading] = useState();
+    const [dataSource, setDataSource] = useState([])
+    
     useEffect(() => {
-        setDataSource(props.leavesDataSource)
-        //  setDataSource(sortLeaveApplicationsByStartDate(props.leavesDataSource))
-    }, [props.leavesDataSource])
+        setLoading(true);
+        HRApiHelper.getLeaveApplications()
+            .then(results => {
+                setDataSource(results);
+                setLoading(false);
+            })
+            .catch(handleHttpError)
+            .catch(() => setLoading(false))
+    }, [handleHttpError, setLoading])
+
+    // useEffect(() => {
+    //     setDataSource(props.leavesDataSource)
+    //     //  setDataSource(sortLeaveApplicationsByStartDate(props.leavesDataSource))
+    // }, [props.leavesDataSource])
 
     const renderLeaveTypes = (type) => {
         const leaveTypes = ['Annual', 'Compassionate', 'Maternity/Paternity', 'Sick', 'Childcare']
@@ -101,6 +117,14 @@ const EmployeeLeaveTable = (props) => {
 
     const tableColumns = [
         {
+            title: 'Created At',
+            dataIndex: 'created_at',
+            width: 150,
+            ellipsis: true,
+            render: (created_at) => parseDate(created_at),
+            sorter: (a, b) => sortByDate(a.created_at, b.created_at),
+        },
+        {
             title: 'Start Date',
             dataIndex: 'start_date',
             render: (value) => moment(value).format('ll'),
@@ -125,12 +149,6 @@ const EmployeeLeaveTable = (props) => {
             title: 'Status',
             dataIndex: 'leave_status_id',
             render: (value) => processTags(value)
-        },
-        {
-            title: 'Creation Date',
-            dataIndex: 'created_at',
-            render: (value) => moment(value).format('ll'),
-            sorter: (a, b) => moment(a.created_at) - moment(b.created_at)
         },
         {
             title: 'Action',

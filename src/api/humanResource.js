@@ -22,8 +22,22 @@ export class HRApiHelper {
             .then(res => res.data)
     }
 
-    static async getLeaveApplicationByEmployeeId(employeeId) {
-        return axiosObject.get('/employee/leave/application', { params: { employee_id: employeeId } })
+    static async getLeaveApplications(values) {
+        const params = {}
+        if (values?.employee_id)
+            params.employee_id = values.employee_id;
+        if (values?.employee_name)
+            params.employee_name = values.employee_name;
+        if (values?.leave_type_id)
+            params.leave_type_id = values.leave_type_id;
+        if (values?.leave_status_id)
+            params.leave_status_id = values.leave_status_id;
+        return axiosObject.get('/employee/leave/application', { params: params })
+            .then(res => res.data)
+    }
+
+    static async updateLeaveApplicationStatus(leaveApplications) {
+        return axiosObject.put('/employee/leave/application', { leave_applications: [leaveApplications] })
             .then(res => res.data)
     }
 
@@ -40,18 +54,15 @@ export class HRApiHelper {
 
 
 
+    static async getLeaveApplicationByEmployeeId(employeeId) {
+        return axiosObject.get('/employee/leave/application', { params: { employee_id: employeeId } })
+            .then(res => res.data)
+    }
+
     static async getAllLeaveApplications() {
         let result = axiosObject.get('/employee/leave/application')
             .then((res) => { return res.data })
         return result
-    }
-
-    static async updateLeaveApplicationStatus(leaveApplications) {
-        let response = axiosObject.put('/employee/leave/application', { leave_applications: [leaveApplications] })
-            .then((res) => {
-                return res
-            })
-        return response
     }
 
     static async cancelLeaveApplication(id) {

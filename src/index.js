@@ -11,7 +11,6 @@ import AdminNewAccountFormPage from './pages/Accounts/AdminNewAccountFormPage';
 import ProfilePage from './pages/ProfilePage';
 import { AppProvider } from './providers/AppProvider';
 import RequireAuth from './auth/RequireAuth';
-import HRLeavePage from './pages/HRLeavePage'
 import ManageEmployeesPage from './pages/HumanResource/ManageEmployeesPage';
 import ViewEmployeePage from './pages/HumanResource/ViewEmployeePage';
 import MyLeavesPage from './pages/MyLeavesPage';
@@ -25,6 +24,7 @@ import ViewProductPage from './pages/Product/ViewProductPage';
 import ManageSuppliersPage from "./pages/Supplier/ManageSuppliersPage";
 import ViewSupplierPage from "./pages/Supplier/ViewSupplierPage";
 import ViewAccountPage from './pages/Accounts/ViewAccountPage';
+import ManageLeavesPage from './pages/HumanResource/ManageLeavesPage';
 
 // Add on more routes here
 const routes = [
@@ -77,7 +77,7 @@ const routes = [
       },
       { 
         path: 'employees/leaves', 
-        component: <HRLeavePage />,
+        component: <ManageLeavesPage />,
         viewAccess: View.HR.name
       },
     ]

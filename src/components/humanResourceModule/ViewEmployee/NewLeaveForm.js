@@ -28,7 +28,7 @@ export default function NewLeaveForm({ selectedEmployee, isModalVisible, setIsMo
     if (isModalVisible && !selectedEmployee) {
       onSearch('');
     }
-  }, [isModalVisible, selectedEmployee, form, setEmployee])
+  }, [isModalVisible, selectedEmployee, form, setEmployee, onSearch])
 
   // Make sure leave account is binded to the selected employee
   useEffect(() => {
@@ -40,7 +40,7 @@ export default function NewLeaveForm({ selectedEmployee, isModalVisible, setIsMo
         })
         .catch(handleHttpError);
     }
-  }, [employee, handleHttpError, setLeaveAccounts]);
+  }, [employee, handleHttpError, setLeaveAccounts, form]);
 
   const calculateLeaveDays = (date, totalDays) => {
     let startDate = date

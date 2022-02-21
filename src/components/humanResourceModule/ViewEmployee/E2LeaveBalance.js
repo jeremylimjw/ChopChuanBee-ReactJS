@@ -1,7 +1,6 @@
-import { EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { EditOutlined } from '@ant-design/icons';
 import { Button, List } from 'antd';
-import React, { useEffect, useState } from 'react'
-import { HRApiHelper } from '../../../api/humanResource';
+import React, { useState } from 'react'
 import { useApp } from '../../../providers/AppProvider';
 import MyToolbar from '../../layout/MyToolbar';
 import { View } from '../../../enums/View';
@@ -9,14 +8,16 @@ import EditLeaveAccountModal from './EditLeaveAccountModal';
 
 export default function E2LeaveBalance({ employee, leaveAccounts, setLeaveAccounts }) {
 
-    const { handleHttpError, hasWriteAccessTo } = useApp()
+    const { hasWriteAccessTo } = useApp()
 
     const [isModalVisible, setIsModalVisible] = useState(false);
     
     return (
         <>
             <MyToolbar title="Leave Accounts">
-                <Button onClick={() => setIsModalVisible(true)} icon={<EditOutlined/>} style={{ width: 85 }} disabled={!hasWriteAccessTo(View.HR.name)}>Edit</Button>
+                { hasWriteAccessTo(View.HR.name) && 
+                    <Button onClick={() => setIsModalVisible(true)} icon={<EditOutlined/>} style={{ width: 85 }} disabled={!hasWriteAccessTo(View.HR.name)}>Edit</Button>
+                }
             </MyToolbar>
         
             <List itemLayout='horizontal' dataSource={leaveAccounts} renderItem={(item) => (

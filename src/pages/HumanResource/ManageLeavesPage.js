@@ -1,27 +1,34 @@
-import { Button, Form, message, Select, Space, Table } from 'antd'
-import debounce from 'lodash.debounce'
+import { Button, Form, Input, message, Select, Space, Table } from 'antd';
 import React, { useEffect, useState } from 'react'
-import { getLeaveAccountTag, LeaveType } from '../../../enums/LeaveType'
-import { getLeaveStatusTag, LeaveStatus } from '../../../enums/LeaveStatus'
-import { useApp } from '../../../providers/AppProvider'
-import MyToolbar from '../../layout/MyToolbar'
-import { PlusOutlined } from '@ant-design/icons'
-import { parseDate, parseDateTime } from '../../../utilities/datetime'
-import { sortByDate, sortByNumber, sortByString } from '../../../utilities/sorters'
-import { View } from '../../../enums/View'
-import { HRApiHelper } from '../../../api/humanResource'
-import NewLeaveForm from './NewLeaveForm'
-import { showTotal } from '../../../utilities/table'
+import { useApp } from '../../providers/AppProvider';
+import { parseDate, parseDateTime } from '../../utilities/datetime';
+import MyCard from '../../components/layout/MyCard';
+import MyLayout from '../../components/layout/MyLayout';
+import MyToolbar from '../../components/layout/MyToolbar';
+import { sortByDate, sortByNumber, sortByString } from '../../utilities/sorters';
+import { PlusOutlined } from '@ant-design/icons/lib/icons';
+import debounce from 'lodash.debounce';
+import { View } from '../../enums/View';
+import { showTotal } from '../../utilities/table';
+import { HRApiHelper } from '../../api/humanResource';
+import { getLeaveAccountTag, LeaveType } from '../../enums/LeaveType';
+import { getLeaveStatusTag, LeaveStatus } from '../../enums/LeaveStatus';
 
-export default function E3ApplicationsTable({ employee, leaveAccounts, setLeaveAccounts }) {
-    
+const breadcrumbs = [
+    { url: '/humanResource/leaves', name: 'Human Resource' },
+    { url: '/humanResource/leaves', name: 'Leaves' }
+]
+
+export default function ManageLeavesPage() {
+
     const { handleHttpError, hasWriteAccessTo } = useApp();
-    const [loading, setLoading] = useState();
+
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [leaveApplications, setLeaveApplications] = useState([]);
     const [form] = Form.useForm();
 
-    tableColumns[7].render = (record, action) => (
+    columns[8].render = (record, action) => (
         <Space size="middle">
             <a onClick={() => updateLeaveStatus(record, LeaveStatus.APPROVED)}>Accept</a>
             <a onClick={() => updateLeaveStatus(record, LeaveStatus.REJECTED)}>Reject</a>
@@ -29,28 +36,24 @@ export default function E3ApplicationsTable({ employee, leaveAccounts, setLeaveA
     )
 
     useEffect(() => {
-        if (employee) {
-            setLoading(true);
-            HRApiHelper.getLeaveApplications({ employee_id: employee.id })
-                .then(results => {
-                    console.log(results)
-                    setLeaveApplications(results);
-                    setLoading(false);
-                })
-                .catch(handleHttpError)
-                .catch(() => setLoading(false))
-        }
-    }, [handleHttpError, setLoading, employee])
+        HRApiHelper.getLeaveApplications()
+        .then(results => {
+            console.log(results[0])
+            setLeaveApplications(results);
+            setLoading(false);
+        })
+        .catch(handleHttpError)
+        .catch(() => setLoading(false))
+    }, [handleHttpError, setLoading, setLeaveApplications])
 
     function onValuesChange(_, form) {
-        setLoading(true);
-        HRApiHelper.getLeaveApplications({ employee_id: employee.id, ...form })
-            .then(results => {
-                setLeaveApplications(results);
-                setLoading(false);
-            })
-            .catch(handleHttpError)
-            .catch(() => setLoading(false))
+        HRApiHelper.getLeaveApplications(form)
+        .then(results => {
+            setLeaveApplications(results);
+            setLoading(false);
+        })
+        .catch(handleHttpError)
+        .catch(() => setLoading(false))
     }
 
     function resetForm() {
@@ -75,15 +78,16 @@ export default function E3ApplicationsTable({ employee, leaveAccounts, setLeaveA
             .catch(() => setLoading(false))
     }
 
-    function myCallback(newApplication) {
-        setLeaveApplications([newApplication, ...leaveApplications])
-        setIsModalVisible(false)
-    }
-
     return (
-        <>
-            <MyToolbar title='Leave Applications'>
+        <MyLayout breadcrumbs={breadcrumbs} bannerTitle="Manage Leave Applications">
+  
+          <MyCard>
+  
+            <MyToolbar title="Leave Applications">
                 <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
+                    <Form.Item name="employee_name">
+                        <Input placeholder='Search Name' />
+                    </Form.Item>
                     <Form.Item name="leave_type_id">
                         <Select style={{ width: 180 }} placeholder="Filter by Type">
                             <Select.Option value={null}>All</Select.Option>
@@ -102,28 +106,28 @@ export default function E3ApplicationsTable({ employee, leaveAccounts, setLeaveA
                     </Form.Item>
                     <Button onClick={resetForm}>Reset</Button>
                 </Form>
-                
-                <Button type='primary' icon={<PlusOutlined />} onClick={() => setIsModalVisible(true)} disabled={!hasWriteAccessTo(View.HR.name)}>New</Button>
+                { hasWriteAccessTo(View.HR.name) && 
+                  <Button type='primary' onClick={() => setIsModalVisible(true)} icon={<PlusOutlined />}>New</Button>
+                }
             </MyToolbar>
-
-            <Table loading={loading}
-                columns={tableColumns} 
-                dataSource={leaveApplications}
-                pagination={{ showTotal }}
-                rowKey="id"
+  
+            <Table 
+              dataSource={leaveApplications} 
+              columns={columns}
+              loading={loading} 
+              rowKey="id" 
+              pagination={{ showTotal }}
             />
-
-            <NewLeaveForm 
-                selectedEmployee={employee}
-                isModalVisible={isModalVisible}
-                setIsModalVisible={setIsModalVisible}
-                myCallback={myCallback}
-            />
-        </>
+              
+          </MyCard>
+  
+          {/* <NewProductModal products={leaveApplications} setProducts={setLeaveApplications} isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} /> */}
+        
+        </MyLayout>
     )
 }
 
-const tableColumns = [
+const columns = [
     {
         title: 'Created At',
         dataIndex: 'created_at',
@@ -133,11 +137,20 @@ const tableColumns = [
         sorter: (a, b) => sortByDate(a.created_at, b.created_at),
     },
     {
+        title: 'Name',
+        dataIndex: 'leave_account',
+        key: 'leave_account',
+        width: 250,
+        ellipsis: true,
+        render: (leave_account) => leave_account.employee.name,
+        sorter: (a, b) => sortByString(a.leave_account.employee.name, b.leave_account.employee.name),
+    },
+    {
         title: 'Type',
         dataIndex: 'leave_account',
         key: 'leave_account',
         align: 'center',
-        width: 150,
+        width: 120,
         ellipsis: true,
         render: (leave_account) => getLeaveAccountTag(leave_account.leave_type_id),
         sorter: (a, b) => sortByNumber(a.leave_account.leave_type_id, b.leave_account.leave_type_id),
@@ -161,7 +174,7 @@ const tableColumns = [
     {
         title: 'Days',
         dataIndex: 'num_days',
-        width: 150,
+        width: 120,
         align: 'center',
         sorter: (a, b) => sortByNumber(a.num_days, b.num_days),
     },
@@ -176,7 +189,7 @@ const tableColumns = [
         title: 'Status',
         dataIndex: 'leave_status_id',
         key: 'leave_status_id',
-        width: 150,
+        width: 120,
         align: 'center',
         ellipsis: true,
         render: (leave_status_id) => getLeaveStatusTag(leave_status_id),
