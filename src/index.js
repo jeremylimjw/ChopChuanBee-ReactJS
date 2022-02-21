@@ -25,6 +25,7 @@ import ViewProductPage from './pages/Product/ViewProductPage';
 import ManageSuppliersPage from "./pages/Supplier/ManageSuppliersPage";
 import ViewSupplierPage from "./pages/Supplier/ViewSupplierPage";
 import ViewAccountPage from './pages/Accounts/ViewAccountPage';
+import ManageSOFPsPage from './pages/Accounting/ManageSOFPsPage';
 
 // Add on more routes here
 const routes = [
@@ -133,6 +134,22 @@ const routes = [
         component: <ViewSupplierPage />,
         viewAccess: View.SCM.name,
       },
+    ],
+  },
+  {
+    path: "/accounting",
+    component: <Outlet />,
+    childRoutes: [
+      {
+        path: "SOFPs",
+        component: <ManageSOFPsPage />,
+        viewAccess: View.ACCOUNTING.name,
+      },
+      // {
+      //   path: ":id",
+      //   component: <ViewSupplierPage />,
+      //   viewAccess: View.SCM.name,
+      // },
     ],
   },
 ];
