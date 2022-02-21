@@ -55,7 +55,7 @@ const LoginPage = () => {
             </Form.Item>
 
             <Form.Item name="password" rules={[REQUIRED]}>
-              <Input.Password placeholder='Password' />
+              <Input.Password placeholder='Password' autoComplete='off' />
             </Form.Item>
 
             <Form.Item>

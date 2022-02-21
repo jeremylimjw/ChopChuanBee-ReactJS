@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useApp } from '../../providers/AppProvider';
 import { Button, Form, Input, Select, Table } from 'antd';
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
-import { useNavigate } from "react-router-dom";
 import { EmployeeApiHelper } from '../../api/employees';
 import MyLayout from '../../components/layout/MyLayout';
 import MyCard from '../../components/layout/MyCard';
@@ -20,7 +19,6 @@ import NewAccountModal from '../../components/adminModule/NewAccountModal';
 const breadcrumbs = [{ url: '/accounts/', name: 'Accounts' }];
 
 export default function ManageAccountsPage() {
-    const navigate = useNavigate();
 
     const { handleHttpError, hasWriteAccessTo } = useApp();
 
@@ -67,6 +65,10 @@ export default function ManageAccountsPage() {
             if (accessRight.view_id === view_id) return true;
         }
         return false;
+    }
+
+    function myCallback(newEmployee) {
+        setEmployees([newEmployee, ...employees]);
     }
 
     return (
@@ -116,7 +118,7 @@ export default function ManageAccountsPage() {
                 />
             </MyCard>
 
-            <NewAccountModal isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} />
+            <NewAccountModal isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} myCallback={myCallback} />
         </MyLayout>
     );
 };
@@ -125,6 +127,7 @@ const columns = [
     {
         title: 'Created At',
         dataIndex: 'created_at',
+        key: 'created_at',
         width: 150,
         ellipsis: true,
         render: (created_at) => parseDate(created_at),
@@ -153,11 +156,12 @@ const columns = [
         dataIndex: 'access_rights',
         key: 'access_rights',
         ellipsis: true,
-        render: (access_rights) => access_rights?.map((accessRight) => getAccessRightTag(accessRight)),
+        render: (access_rights) => access_rights?.map((accessRight, idx) => <span key={idx}>{getAccessRightTag(accessRight)}</span>),
     },
     {
         title: 'Last Active',
         dataIndex: 'last_active',
+        key: 'last_active',
         width: 200,
         ellipsis: true,
         render: (last_active) => last_active ? parseDateTimeSeconds(last_active) : '-',

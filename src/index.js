@@ -7,7 +7,6 @@ import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom
 import { Layout } from 'antd';
 import LoginPage from './pages/LoginPage';
 import ManageAccountsPage from './pages/Accounts/ManageAccountsPage';
-import AdminNewAccountFormPage from './pages/Accounts/AdminNewAccountFormPage';
 import MyProfilePage from './pages/User/MyProfilePage';
 import { AppProvider } from './providers/AppProvider';
 import RequireAuth from './auth/RequireAuth';
@@ -44,11 +43,6 @@ const routes = [
       { 
         path: ':id', 
         component: <ViewAccountPage />,
-        viewAccess: View.ADMIN.name,
-      },
-      { 
-        path: 'new', 
-        component: <AdminNewAccountFormPage />,
         viewAccess: View.ADMIN.name,
       },
     ]

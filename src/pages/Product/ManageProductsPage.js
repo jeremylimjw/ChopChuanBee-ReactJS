@@ -132,7 +132,7 @@ const columns = [
       return (
         <Space>
           <Typography.Text>{quantity || 0}</Typography.Text>
-          <ExclamationCircleFilled style={{ color: '#f5222d' }} />
+          <ExclamationCircleFilled style={{ color: '#CD5C5C' }} />
         </Space>
       )
     },

@@ -21,28 +21,20 @@ export class EmployeeApiHelper {
     }
 
     static async createNewAccount(employee, access_rights) {
-        let result = axiosObject
-            .post('/employee', {
-                name: employee.name,
-                username: employee.username,
-                email: employee.email,
-                role_id: employee.role_id,
-                contact_number: employee.contact_number,
-                nok_name: employee.nok_name,
-                nok_number: employee.nok_number,
-                address: employee.address,
-                postal_code: employee.postal_code,
-                send_email: employee.send_email,
-                access_rights: access_rights,
-            })
-            .then((res) => {
-                // return res.data;
-                return res.status;
-            })
-            .catch((err) => {
-                return err.response.data;
-            });
-        return result;
+        return axiosObject.post('/employee', {
+            name: employee.name,
+            username: employee.username,
+            email: employee.email,
+            role_id: employee.role_id,
+            contact_number: employee.contact_number,
+            nok_name: employee.nok_name,
+            nok_number: employee.nok_number,
+            address: employee.address,
+            postal_code: employee.postal_code,
+            send_email: true,
+            access_rights: access_rights,
+        })
+        .then((res) => res.data);
     }
 
     static async update(id, employee) {

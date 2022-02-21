@@ -1,27 +1,32 @@
-import { Form, Input, message, Modal } from 'antd';
+import { Form, Input, message, Modal, Radio, Tabs } from 'antd';
 import React, { useState } from 'react'
 import { EmployeeApiHelper } from '../../api/employees';
+import { Role } from '../../enums/Role';
+import { View } from '../../enums/View';
 import { useApp } from '../../providers/AppProvider';
 import { REQUIRED } from '../../utilities/form';
 import { EMAIL } from '../../utilities/form';
 
-export default function NewAccountModal({ isModalVisible, setIsModalVisible }) {
+export default function NewAccountModal({ isModalVisible, setIsModalVisible, myCallback }) {
     const { handleHttpError } = useApp();
 
     const [form] = Form.useForm();
+    const [accessRightsForm] = Form.useForm();
     const [loading, setLoading] = useState(false)
 
     async function handleSubmit() {
         try {
             const values = await form.validateFields();
-            const access_rights = [];
+            const accessRights = accessRightsForm.getFieldsValue();
+            const access_rights = Object.keys(accessRights).filter(key => accessRights[key] != null).map(key => ({ view_id: key, has_write_access: accessRights[key] }));
             setLoading(true);
             EmployeeApiHelper.createNewAccount(values, access_rights)
-                .then(() => {
+                .then(newEmployee => {
+                    myCallback(newEmployee);
                     message.success('Employee successfully created!')
+                    message.success('Account details has been sent to the registered email!')
                     setLoading(false);
                     setIsModalVisible(false);
-                    form.resetFields();
                 })
                 .catch(handleHttpError)
                 .catch(() => setLoading(false));
@@ -29,7 +34,7 @@ export default function NewAccountModal({ isModalVisible, setIsModalVisible }) {
     }
 
     return (
-        <Modal width={600}
+        <Modal width={600} bodyStyle={{ paddingTop: 0 }}
           title='Create an Employee'
           visible={isModalVisible}
           onOk={handleSubmit}
@@ -37,24 +42,80 @@ export default function NewAccountModal({ isModalVisible, setIsModalVisible }) {
           destroyOnClose
           okButtonProps={{ loading: loading }}
         >
-            <MyForm form={form} />
-
+            <MyForm form={form} accessRightsForm={accessRightsForm} />
         </Modal>
     )
 }
 
-function MyForm({ form }) {
-
+function MyForm({ form, accessRightsForm }) {
     return (
-        <Form form={form} labelCol={{ span: 10 }} wrapperCol={{ span: 14 }} autoComplete="off" labelAlign="left">
-            <Form.Item label="Username" name="username" rules={[REQUIRED]}>
-                <Input />
-            </Form.Item>
+        <>
+            <Tabs defaultActiveKey="1">
 
-            <Form.Item label="Email" name="email" rules={[REQUIRED, EMAIL]}>
-                <Input />
-            </Form.Item>
-        </Form>
+                <Tabs.TabPane tab="Personal Details" key="1">
+                    <Form form={form} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }} autoComplete="off" labelAlign="left">
+
+                        <Form.Item label="Role" name="role_id" rules={[REQUIRED]}>
+                            <Radio.Group>
+                                { Object.keys(Role)
+                                    .filter(x => x !== 'ADMIN')
+                                    .map((key, idx) => <Radio key={idx} value={Role[key].id}>{Role[key].name}</Radio>)
+                                }
+                            </Radio.Group>
+                        </Form.Item>
+
+                        <Form.Item label="Name" name="name" rules={[REQUIRED]}>
+                            <Input />
+                        </Form.Item>
+                        
+                        <Form.Item label="Username" name="username" rules={[REQUIRED]}>
+                            <Input />
+                        </Form.Item>
+                        
+                        <Form.Item label="Email" name="email" rules={[REQUIRED, EMAIL]}>
+                            <Input />
+                        </Form.Item>
+                        
+                        <Form.Item label="Contact Number" name="contact_number">
+                            <Input />
+                        </Form.Item>
+                        
+                        <Form.Item label="Address" name="address">
+                            <Input />
+                        </Form.Item>
+                        
+                        <Form.Item label="Postal Code" name="postal_code">
+                            <Input />
+                        </Form.Item>
+                        
+                        <Form.Item label="NOK Name" name="nok_name">
+                            <Input />
+                        </Form.Item>
+                        
+                        <Form.Item label="NOK Contact" name="nok_number">
+                            <Input />
+                        </Form.Item>
+                    </Form>
+                </Tabs.TabPane>
+
+                <Tabs.TabPane tab="Access Rights" key="2">
+                    <Form form={accessRightsForm} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }} autoComplete="off" labelAlign="left">
+                        { Object.keys(View)
+                            .filter(x => x !== 'ADMIN' && x !== 'GENERAL')
+                            .map((key, idx) => <Form.Item key={idx} label={View[key].name} name={View[key].id} initialValue={undefined}>
+                                    <Radio.Group>
+                                        <Radio value={undefined}>None</Radio>
+                                        <Radio value={false}>View Only</Radio>
+                                        <Radio value={true}>Full Access</Radio>
+                                    </Radio.Group>
+                                </Form.Item>
+                            )
+                        }
+                    </Form>
+                </Tabs.TabPane>
+
+            </Tabs>
+        </>
     )
 
 }

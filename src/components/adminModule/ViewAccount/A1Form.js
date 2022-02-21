@@ -56,14 +56,14 @@ export default function A1Form({ employee, setEmployee }) {
                     }
                 </Form.Item>
 
-                <Form.Item label="Role" name="role_id">
+                <Form.Item label="Role" name="role_id" rules={editing ? [REQUIRED] : []}>
                     {!editing ? 
                         getRoleTag(employee.role_id)
                     :
                         <Radio.Group disabled={!editing}>
                             { Object.keys(Role)
                                 .filter(x => x !== 'ADMIN')
-                                .map(key => <Radio value={Role[key].id}>{Role[key].name}</Radio>)
+                                .map((key, idx) => <Radio key={idx} value={Role[key].id}>{Role[key].name}</Radio>)
                             }
                         </Radio.Group>
                     }
