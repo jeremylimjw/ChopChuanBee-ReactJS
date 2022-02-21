@@ -61,7 +61,7 @@ export default function SuppliersPage() {
             <Form.Item name="company_name">
                 <Input placeholder='Search Company' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
             </Form.Item>
-            <Form.Item name="p1_name">
+            <Form.Item name="s1_name">
                 <Input placeholder='Search Person Name' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
             </Form.Item>
             <Form.Item name="status">
@@ -73,7 +73,9 @@ export default function SuppliersPage() {
             </Form.Item>
             <Button onClick={resetForm}>Reset</Button>
           </Form>
-          <Button type="primary" icon={<PlusOutlined />} onClick={() => setIsModalVisible(true)} disabled={!hasWriteAccessTo(View.SCM.name)}>New</Button>
+          { hasWriteAccessTo(View.SCM.name) && 
+            <Button type="primary" icon={<PlusOutlined />} onClick={() => setIsModalVisible(true)}>New</Button>
+          }
         </MyToolbar>
 
         <Table 

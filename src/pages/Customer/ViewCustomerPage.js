@@ -51,15 +51,16 @@ export default function ViewCustomerPage() {
     }
 
     function renderDeactivateButton() {
+      if (!hasWriteAccessTo(View.CRM.name)) return <></>
       return (
         <>
           { customer.deactivated_date == null ? 
-            <Popconfirm title="Confirm deactivate?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading || !hasWriteAccessTo(View.CRM.name)}>
-              <Button type="danger" loading={loading} icon={<UserDeleteOutlined />} style={{ width: 120 }} disabled={!hasWriteAccessTo(View.CRM.name)}>Deactivate</Button>
+            <Popconfirm title="Confirm deactivate?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading}>
+              <Button type="danger" loading={loading} icon={<UserDeleteOutlined />} style={{ width: 120 }}>Deactivate</Button>
             </Popconfirm>
             :
-            <Popconfirm title="Confirm activate?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading || !hasWriteAccessTo(View.CRM.name)}>
-              <Button type="primary" loading={loading} icon={<UserAddOutlined />} style={{ width: 120 }} disabled={!hasWriteAccessTo(View.CRM.name)}>Activate</Button>
+            <Popconfirm title="Confirm activate?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading}>
+              <Button type="primary" loading={loading} icon={<UserAddOutlined />} style={{ width: 120 }}>Activate</Button>
             </Popconfirm>
           }
         </>

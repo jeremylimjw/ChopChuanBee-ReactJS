@@ -1,6 +1,6 @@
 import { Tag } from "antd";
 
-export const LeaveAccount = {
+export const LeaveType = {
     ANNUAL: { id: 1, name: "Annual", color: "volcano" },
     COMPASSIONATE: { id: 2, name: "Compassionate", color: "blue" },
     MATERNAL: { id: 3, name: "Maternity/Paternity", color: "green" },
@@ -9,9 +9,9 @@ export const LeaveAccount = {
 }
     
 export function getLeaveAccount(id) {
-    const foundKey = Object.keys(LeaveAccount).filter(key => LeaveAccount[key].id === id);
+    const foundKey = Object.keys(LeaveType).filter(key => LeaveType[key].id === id);
     if (foundKey.length > 0) {
-        return LeaveAccount[foundKey];
+        return LeaveType[foundKey];
     }
     return null;
 }

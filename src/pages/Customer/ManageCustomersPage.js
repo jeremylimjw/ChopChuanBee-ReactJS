@@ -76,7 +76,9 @@ export default function ManageCustomersPage() {
                   </Form.Item>
                   <Button onClick={resetForm}>Reset</Button>
               </Form>
-              <Button type='primary' onClick={() => setIsModalVisible(true)} icon={<PlusOutlined />} disabled={!hasWriteAccessTo(View.CRM.name)}>New</Button>
+              { hasWriteAccessTo(View.CRM.name) && 
+                <Button type='primary' onClick={() => setIsModalVisible(true)} icon={<PlusOutlined />}>New</Button>
+              }
           </MyToolbar>
 
           <Table 

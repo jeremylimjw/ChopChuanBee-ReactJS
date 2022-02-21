@@ -53,7 +53,7 @@ const EmployeeTable = () => {
             <Button onClick={resetForm}>Reset</Button>
         </Form>
       </MyToolbar>
-      <Table dataSource={employees} columns={tableColumns} loading={loading} />
+      <Table dataSource={employees} columns={tableColumns} loading={loading} rowKey="id" />
     </>
   );
 }

@@ -5,7 +5,7 @@ import moment from 'moment'
 import React, { useEffect, useState } from 'react'
 import { HRApiHelper } from '../api/humanResource'
 import EmployeeLeaveTable from '../components/humanResourceModule/EmployeeLeaveTable'
-import LeaveForm from '../components/humanResourceModule/LeaveForm'
+import NewLeaveForm from '../components/humanResourceModule/ViewEmployee/NewLeaveForm'
 import MyCard from '../components/layout/MyCard'
 import MyLayout from '../components/layout/MyLayout'
 import MyToolbar from '../components/layout/MyToolbar'
@@ -43,7 +43,7 @@ const MyLeavesPage = () => {
     })
     setLeavesDataSource(leaveData)
     setFilteredDataSource(leaveData)
-    let leaveAcct = await HRApiHelper.getEmployeeLeaveAccounts(user.id)
+    let leaveAcct = await HRApiHelper.getLeaveAccountsById(user.id)
       .catch(handleHttpError)
     leaveAcct.sort((a, b) => a.leave_type.id - b.leave_type.id)
     setLeaveAccounts(leaveAcct)
@@ -87,7 +87,7 @@ const MyLeavesPage = () => {
         footer={null}
         width={600}
       >
-        <LeaveForm
+        <NewLeaveForm
           submitLeaveApplicationForm={submitLeaveApplicationForm}
           selectedEmployee={user}
           leaveAccounts={leaveAccounts}

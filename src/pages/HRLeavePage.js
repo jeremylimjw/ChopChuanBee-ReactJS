@@ -2,7 +2,7 @@ import { CalendarOutlined, PlusOutlined, TableOutlined } from '@ant-design/icons
 import { Button, Input, message, Modal, Select, Spin, Switch, Typography } from 'antd'
 import React, { useState, useEffect } from 'react'
 import LeaveCalendarView from '../components/humanResourceModule/LeaveCalendarView';
-import LeaveForm from '../components/humanResourceModule/LeaveForm'
+import NewLeaveForm from '../components/humanResourceModule/ViewEmployee/NewLeaveForm'
 import LeaveTable from '../components/humanResourceModule/LeaveTable'
 import '../css/LeavePage.css'
 import { HRApiHelper } from '../api/humanResource';
@@ -157,7 +157,7 @@ const HRLeavePage = () => {
         footer={null}
         width={600}
       >
-        <LeaveForm
+        <NewLeaveForm
           submitLeaveApplicationForm={submitLeaveApplicationForm}
           leaveAccounts={leaveAccounts}
           employeeList={employeeList}

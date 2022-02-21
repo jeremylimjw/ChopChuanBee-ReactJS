@@ -35,13 +35,15 @@ export default function A1Form({ employee, setEmployee }) {
     return (
         <>
             <MyToolbar title="Personal Details">
-                <Form.Item>
-                    { editing ? 
-                        <Button type="primary" onClick={onFinish} icon={<SaveOutlined />} loading={loading} style={{ width: 85 }}>Save</Button>
-                        :
-                        <Button onClick={() => setEditing(true)} icon={<EditOutlined />} style={{ width: 85 }} disabled={!hasWriteAccessTo(View.ADMIN.name)}>Edit</Button>
-                    }
-                </Form.Item>
+                { hasWriteAccessTo(View.ADMIN.name) && 
+                    <Form.Item>
+                        { editing ? 
+                            <Button type="primary" onClick={onFinish} icon={<SaveOutlined />} loading={loading} style={{ width: 85 }}>Save</Button>
+                            :
+                            <Button onClick={() => setEditing(true)} icon={<EditOutlined />} style={{ width: 85 }}>Edit</Button>
+                        }
+                    </Form.Item>
+                }
             </MyToolbar>
 
             <Form form={form} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }} autoComplete="off" labelAlign="left" initialValues={{...employee}}>

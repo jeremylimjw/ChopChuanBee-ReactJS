@@ -1,7 +1,9 @@
 import { Table } from 'antd'
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { sortByString } from '../../../utilities/sorters'
 import MyToolbar from '../../layout/MyToolbar'
+import { showTotal } from '../../../utilities/table';
 
 export default function P2PriceTable() {
     // const [loading, setLoading] = useState(false);
@@ -9,12 +11,14 @@ export default function P2PriceTable() {
     return (
         <>
             <MyToolbar title="Latest Prices">
+                    <Link to="./">Last Ordered:  21/2/2022</Link>
             </MyToolbar>
             
             <Table dataSource={[]} 
               columns={columns} 
               // loading={loading} 
               rowKey={() => Math.random()} 
+              pagination={{ pageSize: 6, showTotal }}
             />
         </>  
     )

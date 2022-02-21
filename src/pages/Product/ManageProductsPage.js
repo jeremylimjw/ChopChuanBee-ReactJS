@@ -1,4 +1,4 @@
-import { Button, Form, Input, Select, Table } from 'antd';
+import { Button, Form, Input, Select, Space, Table } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { ProductApiHelper } from '../../api/product';
 import { useApp } from '../../providers/AppProvider';
@@ -72,7 +72,9 @@ export default function ManageProductsPage() {
                     </Form.Item>
                     <Button onClick={resetForm}>Reset</Button>
                 </Form>
-                <Button type='primary' onClick={() => setIsModalVisible(true)} icon={<PlusOutlined />} disabled={!hasWriteAccessTo(View.INVENTORY.name)}>New</Button>
+                { hasWriteAccessTo(View.INVENTORY.name) && 
+                  <Button type='primary' onClick={() => setIsModalVisible(true)} icon={<PlusOutlined />}>New</Button>
+                }
             </MyToolbar>
   
             <Table 
@@ -105,23 +107,35 @@ const columns = [
     title: 'Name',
     dataIndex: 'name',
     key: 'name',
-    width: 450,
     ellipsis: true,
     sorter: (a, b) => sortByString(a.name, b.name),
   },
   {
-    title: 'Description',
-    dataIndex: 'description',
-    key: 'description',
+    title: 'Min Level',
+    dataIndex: 'min_inventory_level',
+    key: 'min_inventory_level',
+    align: 'center',
+    width: 120,
     ellipsis: true,
-    render: (description) => description || '-',
-    sorter: (a, b) => sortByString(a.description, b.description),
+    render: (min_inventory_level) => min_inventory_level || '0',
+    sorter: (a, b) => sortByNumber(a.min_inventory_level, b.min_inventory_level),
+  },
+  {
+    title: 'Stock',
+    dataIndex: 'quantity',
+    key: 'quantity',
+    align: 'center',
+    width: 120,
+    ellipsis: true,
+    render: (quantity) => (quantity || '0'),
+    sorter: (a, b) => sortByNumber(a.quantity, b.quantity),
   },
   {
     title: 'Unit',
     dataIndex: 'unit',
     key: 'unit',
-    width: '10%',
+    align: 'center',
+    width: 120,
     ellipsis: true,
     render: (unit) => unit || '-',
     sorter: (a, b) => sortByString(a.unit, b.unit),
@@ -133,15 +147,22 @@ const columns = [
     width: 120,
     align: 'center',
     ellipsis: true,
-    render: (deactivated_date) => getActiveTag(deactivated_date),
+    render: (deactivated_date) => getActiveTag(deactivated_date, ['Listed', 'Unlisted']),
     sorter: (a, b) => sortByNumber(a.deactivated_date ? 1 : 0, b.deactivated_date ? 1 : 0),
   },
   { 
     dataIndex: "id", 
     title: "Action", 
     key: "link", 
-    width: 100,
+    width: 130,
     ellipsis: true,
-    render: (id) => <Link to={`./${id}`}>View</Link> 
+    render: (id) => {
+     return (
+      <Space size="middle">
+        <Link to={`./${id}`}>View</Link>
+        <Link to={`./${id}`}>Restock</Link>
+      </Space>
+      )
+    }
   }
 ]

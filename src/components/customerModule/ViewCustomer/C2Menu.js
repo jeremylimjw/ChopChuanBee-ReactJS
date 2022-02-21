@@ -66,8 +66,12 @@ export default function C2Menu({ customer }) {
   return (
     <>
       <MyToolbar title={`Menu`}>
+        { hasWriteAccessTo(View.CRM.name) && 
+        <>
           <Button onClick={handleAddRow} icon={<PlusOutlined />} disabled={!hasWriteAccessTo(View.CRM.name)}>New</Button>
-          <Button type='primary' onClick={handleMenuUpdate} icon={<SaveOutlined />} loading={loading} disabled={!hasWriteAccessTo(View.CRM.name)}>Save</Button>
+          <Button type='primary' onClick={handleMenuUpdate} icon={<SaveOutlined />} loading={loading}>Save</Button>
+        </>
+        }
       </MyToolbar>
       
       <Table dataSource={items} 

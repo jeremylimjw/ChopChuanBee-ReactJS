@@ -14,7 +14,7 @@ import { showTotal } from '../../utilities/table';
 import debounce from 'lodash.debounce';
 import { getAccessRightTag, View } from '../../enums/View';
 import { getActiveTag } from '../../enums/ActivationStatus';
-import { getRoleTag, Role } from '../../enums/Role';
+import { getRole, getRoleTag, Role } from '../../enums/Role';
 
 const breadcrumbs = [{ url: '/accounts/', name: 'Accounts' }];
 
@@ -53,8 +53,11 @@ export default function ManageAccountsPage() {
         onValuesChange(null, form.getFieldsValue());
     }
 
-    // Backend query by view_id is complicated to frontend handle this field
-    function filterAccessRights(x) {
+    function filterData(x) {
+        // Remove admins
+        if (getRole(x.role_id).name === 'Admin') return false;
+
+        // Backend query by view_id is complicated to frontend handle this field
         const view_id = form.getFieldValue('view_id');
         if (view_id == null) return true;
 
@@ -77,7 +80,7 @@ export default function ManageAccountsPage() {
                                 <Select.Option value={null}>All</Select.Option>
                                 {Object.keys(Role)
                                     .filter(x => x !== 'ADMIN')
-                                    .map(key => <Select.Option value={Role[key].id}>{Role[key].name}</Select.Option>)}
+                                    .map((key, idx) => <Select.Option key={idx} value={Role[key].id}>{Role[key].name}</Select.Option>)}
                             </Select>
                         </Form.Item>
                         <Form.Item name="view_id">
@@ -85,7 +88,7 @@ export default function ManageAccountsPage() {
                                 <Select.Option value={null}>All</Select.Option>
                                 {Object.keys(View)
                                     .filter(x => x !== 'ADMIN' && x !== 'GENERAL')
-                                    .map(key => <Select.Option value={View[key].id}>{View[key].name}</Select.Option>)}
+                                    .map((key, idx) => <Select.Option key={idx} value={View[key].id}>{View[key].name}</Select.Option>)}
                             </Select>
                         </Form.Item>
                         <Form.Item name="status">
@@ -97,12 +100,13 @@ export default function ManageAccountsPage() {
                         </Form.Item>
                         <Button onClick={resetForm}>Reset</Button>
                     </Form>
-                    
-                    <Button type='primary' icon={<PlusOutlined />} onClick={() => navigate('./new')} disabled={!hasWriteAccessTo(View.ADMIN.name)}>New</Button>
+                    { hasWriteAccessTo(View.ADMIN.name) && 
+                        <Button type='primary' icon={<PlusOutlined />} onClick={() => navigate('./new')}>New</Button>
+                    }
                 </MyToolbar>
 
                 <Table 
-                    dataSource={employees.filter(filterAccessRights)} 
+                    dataSource={employees.filter(filterData)} 
                     columns={columns} 
                     loading={loading} 
                     rowKey="id" 

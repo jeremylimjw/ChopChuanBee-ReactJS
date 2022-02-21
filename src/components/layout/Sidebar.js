@@ -86,10 +86,6 @@ const Sidebar = () => {
             }
             return null;
           })}
-
-          <Menu.Item key='logoutMenu' icon={<UserOutlined />}>
-            <Link to='/'>Logout</Link>
-          </Menu.Item>
         </Menu>
       </Layout.Sider>
     );

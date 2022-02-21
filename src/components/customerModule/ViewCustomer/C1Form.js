@@ -37,13 +37,15 @@ export default function C1Form({ customer, setCustomer }) {
         { customer != null &&
             <>
                 <MyToolbar title="Details">
-                    <Form.Item>
-                        { editing ? 
-                            <Button type="primary" onClick={onFinish} icon={<SaveOutlined />} loading={loading} style={{ width: 85 }}>Save</Button>
-                            :
-                            <Button onClick={() => setEditing(true)} icon={<EditOutlined />} style={{ width: 85 }} disabled={!hasWriteAccessTo(View.CRM.name)}>Edit</Button>
-                        }
-                    </Form.Item>
+                    { hasWriteAccessTo(View.CRM.name) && 
+                        <Form.Item>
+                            { editing ? 
+                                <Button type="primary" onClick={onFinish} icon={<SaveOutlined />} loading={loading} style={{ width: 85 }}>Save</Button>
+                                :
+                                <Button onClick={() => setEditing(true)} icon={<EditOutlined />} style={{ width: 85 }}>Edit</Button>
+                            }
+                        </Form.Item>
+                    }
                 </MyToolbar>
 
                 <Form form={form} labelCol={{ span: 10 }} wrapperCol={{ span: 14 }} autoComplete="off" labelAlign="left" initialValues={{...customer}} onFinish={onFinish}>

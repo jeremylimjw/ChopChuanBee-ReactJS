@@ -1,11 +1,11 @@
 import { Form, InputNumber, message, Modal } from 'antd'
 import React, { useState } from 'react'
 import { HRApiHelper } from '../../../api/humanResource';
-import { getLeaveAccount } from '../../../enums/LeaveAccount';
+import { getLeaveAccount } from '../../../enums/LeaveType';
 import { useApp } from '../../../providers/AppProvider';
 import { REQUIRED } from '../../../utilities/form';
 
-export default function EditLeaveAccountModal({ leaveAccounts, setLeaveAccounts, isModalVisible, setIsModalVisible }) {
+export default function EditLeaveAccountModal({ employee, leaveAccounts, setLeaveAccounts, isModalVisible, setIsModalVisible }) {
 
     const { handleHttpError } = useApp();
 
@@ -26,6 +26,7 @@ export default function EditLeaveAccountModal({ leaveAccounts, setLeaveAccounts,
             HRApiHelper.updateEmployeeLeaveAccounts(newLeaveAccounts)
                 .then(() => {
                     setLeaveAccounts(newLeaveAccounts)
+                    refreshBalances();
                     message.success(`Employee leaves successfully updated!`);
                     setLoading(false);
                     setIsModalVisible(false);
@@ -33,6 +34,14 @@ export default function EditLeaveAccountModal({ leaveAccounts, setLeaveAccounts,
                 .catch(handleHttpError)
                 .catch(() => setLoading(false))
         } catch(err) { }
+    }
+
+    async function refreshBalances() {
+        HRApiHelper.getLeaveAccountsById(employee.id)
+            .then((results) => {
+                setLeaveAccounts(results)
+            })
+            .catch(handleHttpError);
     }
 
     return (
@@ -46,8 +55,8 @@ export default function EditLeaveAccountModal({ leaveAccounts, setLeaveAccounts,
             { leaveAccounts && 
                 <>
                     <Form form={form} labelCol={{ span: 12 }} wrapperCol={{ span: 12 }} autoComplete="off" labelAlign="left" initialValues={initialValues}>
-                        { leaveAccounts.map(item => (
-                            <Form.Item label={getLeaveAccount(item.leave_type_id).name} name={item.id} required={[REQUIRED]}>
+                        { leaveAccounts.map((item, idx) => (
+                            <Form.Item key={idx} label={getLeaveAccount(item.leave_type_id).name} name={item.id} required={[REQUIRED]}>
                                 <InputNumber style={{ width: '100%' }} />
                             </Form.Item>
                             )
