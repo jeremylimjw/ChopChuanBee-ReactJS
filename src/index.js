@@ -76,7 +76,7 @@ const routes = [
         viewAccess: View.HR.name
       },
       { 
-        path: 'employees/leaves', 
+        path: 'leaves', 
         component: <ManageLeavesPage />,
         viewAccess: View.HR.name
       },

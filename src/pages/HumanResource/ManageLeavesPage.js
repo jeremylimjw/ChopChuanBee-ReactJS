@@ -14,6 +14,7 @@ import { HRApiHelper } from '../../api/humanResource';
 import { getLeaveTypeTag, LeaveType } from '../../enums/LeaveType';
 import { getLeaveStatusTag, LeaveStatus } from '../../enums/LeaveStatus';
 import NewLeaveFormModal from '../../components/humanResourceModule/NewLeaveFormModal';
+import { Link } from 'react-router-dom';
 
 const breadcrumbs = [
     { url: '/humanResource/leaves', name: 'Human Resource' },
@@ -153,7 +154,7 @@ const columns = [
         key: 'leave_account',
         width: '14%',
         ellipsis: true,
-        render: (leave_account) => leave_account.employee.name,
+        render: (leave_account) => <Link to={`../employees/${leave_account.employee.id}`}>{leave_account.employee.name}</Link>,
         sorter: (a, b) => sortByString(a.leave_account.employee.name, b.leave_account.employee.name),
     },
     {

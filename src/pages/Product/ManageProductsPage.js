@@ -1,4 +1,4 @@
-import { Button, Form, Input, Select, Space, Table } from 'antd';
+import { Button, Form, Input, Select, Space, Table, Typography } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { ProductApiHelper } from '../../api/product';
 import { useApp } from '../../providers/AppProvider';
@@ -8,7 +8,7 @@ import MyLayout from '../../components/layout/MyLayout';
 import MyToolbar from '../../components/layout/MyToolbar';
 import { sortByDate, sortByNumber, sortByString } from '../../utilities/sorters';
 import { Link } from 'react-router-dom';
-import { PlusOutlined, SearchOutlined } from '@ant-design/icons/lib/icons';
+import { PlusOutlined, SearchOutlined, ExclamationCircleFilled } from '@ant-design/icons/lib/icons';
 import NewProductModal from '../../components/inventoryModule/NewProduct/NewProductModal';
 import { getActiveTag } from '../../enums/ActivationStatus';
 import debounce from 'lodash.debounce';
@@ -126,9 +126,17 @@ const columns = [
     key: 'quantity',
     align: 'center',
     width: 120,
+    defaultSortOrder: 'ascend',
     ellipsis: true,
-    render: (quantity) => (quantity || '0'),
-    sorter: (a, b) => sortByNumber(a.quantity, b.quantity),
+    render: (quantity) => {
+      return (
+        <Space>
+          <Typography.Text>{quantity || 0}</Typography.Text>
+          <ExclamationCircleFilled style={{ color: '#f5222d' }} />
+        </Space>
+      )
+    },
+    sorter: (a, b) => sortByNumber(a.quantity - a.min_inventory_level, b.quantity - b.min_inventory_level),
   },
   {
     title: 'Unit',

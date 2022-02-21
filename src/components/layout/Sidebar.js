@@ -22,7 +22,7 @@ const menu = [
     icon: <TeamOutlined />,
     items: [
       { route: '/humanResource/employees', name: 'Manage Employees' },
-      { route: '/humanResource/employees/leaves', name: 'Leaves' },
+      { route: '/humanResource/leaves', name: 'Leaves' },
     ]
   },
   {
