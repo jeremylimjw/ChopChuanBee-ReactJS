@@ -1,4 +1,4 @@
-import { Form, Select, DatePicker, Button, Modal, Input, Typography, Space, Divider, InputNumber, message } from 'antd'
+import { Form, Select, DatePicker, Modal, Input, Typography, message } from 'antd'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
 import { EmployeeApiHelper } from '../../../api/employees'
@@ -7,24 +7,33 @@ import { getLeaveAccount } from '../../../enums/LeaveType'
 import { useApp } from '../../../providers/AppProvider'
 import { REQUIRED } from '../../../utilities/form'
 
-const NewLeaveForm = (props) => {
+export default function NewLeaveForm({ selectedEmployee, isModalVisible, setIsModalVisible, myCallback }) {
 
   const { handleHttpError } = useApp()
   const [form] = Form.useForm()
 
+  const [loading, setLoading] = useState(false);
   const [employee, setEmployee] = useState();
   const [allEmployees, setAllEmployees] = useState([]);
   const [leaveAccounts, setLeaveAccounts] = useState([]);
   const [selectedAccount, setSelectedAccount] = useState();
 
+  // Init selected employee and employee search results
   useEffect(() => {
-    if (props.selectedEmployee) {
-      setEmployee(props.selectedEmployee)
+    if (isModalVisible && selectedEmployee) {
+      setEmployee(selectedEmployee)
+      form.setFieldsValue({ employee_id: selectedEmployee.id })
     }
-  }, [setEmployee])
+    
+    if (isModalVisible && !selectedEmployee) {
+      onSearch('');
+    }
+  }, [isModalVisible, selectedEmployee, form, setEmployee])
 
+  // Make sure leave account is binded to the selected employee
   useEffect(() => {
     if (employee) {
+      form.setFieldsValue({ leave_account_id: null })
       HRApiHelper.getLeaveAccountsById(employee.id)
         .then((results) => {
           setLeaveAccounts(results)
@@ -64,6 +73,14 @@ const NewLeaveForm = (props) => {
       .catch(handleHttpError);
   }
 
+  function onCancel() {
+    setIsModalVisible(false);
+    form.resetFields();
+    setEmployee(null);
+    setLeaveAccounts([]);
+    setSelectedAccount(null);
+  }
+
   async function onFinish() {
     try {
       const values = await form.validateFields();
@@ -72,35 +89,42 @@ const NewLeaveForm = (props) => {
       numDays = calculateLeaveDays(startDate, numDays)
 
       const newApplication = {
-        employee_id: values.employee_id,
-        leave_account_id: values.leave_type_id,
+        leave_account_id: values.leave_account_id,
         paid: true,
         start_date: startDate.format('YYYY-MM-DD HH:mm:ss'),
         end_date: endDate.format('YYYY-MM-DD HH:mm:ss'),
         remarks: values.remarks,
         num_days: numDays,
       }
-      
-      if (props.myCallback) {
-        props.myCallback(newApplication)
-      }
-      // submitLeaveApplicationForm(leaveApplication)
-      // form.resetFields()
-      // setSelectedLeaveBal(0)
+
+      setLoading(true);
+      HRApiHelper.createNewLeaveApplication(newApplication)
+        .then(result => {
+          message.success('Application successfully created!')
+          if (myCallback) {
+            myCallback(result)
+          }
+          setLoading(false);
+          onCancel();
+        })
+        .catch(handleHttpError)
+        .catch(() => setLoading(false));
+
     } catch(err) { }
   }
 
   return (
     <Modal title='Create Leave'
-        visible={props.isModalVisible}
-        onCancel={() => props.setIsModalVisible(false)}
+        visible={isModalVisible}
+        onCancel={onCancel}
         onOk={onFinish}
         width={600}
+        okButtonProps={{ loading: loading }}
         destroyOnClose
     >
       <Form labelCol={{ span: 10 }} wrapperCol={{ span: 14 }} autoComplete="off" labelAlign="left" form={form}>
 
-        {props.freeFlow || employee == null ?
+        {selectedEmployee == null ?
           <Form.Item rules={[REQUIRED]} label='Employee' name='employee_id'>
             <Select showSearch style={{ width: 280 }}
               options={allEmployees.map(x => ({ label: x.name, value: x.id, employee: x }))}
@@ -111,12 +135,12 @@ const NewLeaveForm = (props) => {
             />
           </Form.Item>
           :
-          <Form.Item rules={[REQUIRED]} label='Employee' name='employee_id' initialValue={employee.id}>
-            <Typography.Title level={5}>{employee.name}</Typography.Title>
+          <Form.Item rules={[REQUIRED]} label='Employee' name='employee_id'>
+            <Typography.Title level={5}>{employee?.name}</Typography.Title>
           </Form.Item>
         }
 
-        <Form.Item rules={[REQUIRED]} label='Select Leave Type' name='leave_type_id'>
+        <Form.Item rules={[REQUIRED]} label='Select Leave Type' name='leave_account_id'>
           <Select options={leaveAccounts.map(x => ({ label: getLeaveAccount(x.leave_type_id).name, value: x.id, leave_account: x }))}
               placeholder="Select Type" 
               onSelect={(_, option) => setSelectedAccount(option.leave_account)}
@@ -147,5 +171,3 @@ const NewLeaveForm = (props) => {
     </Modal>
   )
 }
-
-export default NewLeaveForm

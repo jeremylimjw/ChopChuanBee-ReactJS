@@ -2,7 +2,6 @@ import { UserAddOutlined, UserDeleteOutlined } from '@ant-design/icons/lib/icons
 import { Row, Col, Popconfirm, Button, message, Typography } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router';
-import { Link } from 'react-router-dom';
 import { ProductApiHelper } from '../../api/product';
 import P1Form from '../../components/inventoryModule/ViewProduct/P1Form';
 import P2PriceTable from '../../components/inventoryModule/ViewProduct/P2PriceTable';

@@ -17,6 +17,11 @@ export class HRApiHelper {
             .then(res => res.data)
     }
 
+    static async createNewLeaveApplication(leaveApplication) {
+        return axiosObject.post('/employee/leave/application', leaveApplication)
+            .then(res => res.data)
+    }
+
     static async getLeaveApplicationByEmployeeId(employeeId) {
         return axiosObject.get('/employee/leave/application', { params: { employee_id: employeeId } })
             .then(res => res.data)
@@ -33,12 +38,6 @@ export class HRApiHelper {
 
 
 
-
-    static async createNewLeaveApplication(leaveApplication) {
-        let response = axiosObject.post('/employee/leave/application', leaveApplication)
-            .then((res) => { return res })
-        return response
-    }
 
 
     static async getAllLeaveApplications() {
