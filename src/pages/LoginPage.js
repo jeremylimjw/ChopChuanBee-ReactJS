@@ -5,7 +5,7 @@ import { httpLogin } from '../api/auth';
 import { useNavigate, useLocation } from "react-router-dom";
 import { useApp } from '../providers/AppProvider';
 import { REQUIRED } from '../utilities/form';
-import ForgotPasswordModal from './ForgotPasswordModal';
+import ForgotPasswordModal from './User/ForgotPasswordModal';
 
 const LoginPage = () => {
 
@@ -46,7 +46,7 @@ const LoginPage = () => {
         <div style={{ width: 300 }}>
 
           <div style={{ textAlign: 'center' }}>
-            <img className='image' src="Chop_Chuan_Bee_Logo.png"></img>
+            <img className='image' src="Chop_Chuan_Bee_Logo.png" alt="company_logo"></img>
           </div>
 
           <Form form={form} onFinish={onSubmit}>

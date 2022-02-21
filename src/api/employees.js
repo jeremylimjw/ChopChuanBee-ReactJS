@@ -20,31 +20,19 @@ export class EmployeeApiHelper {
             .then((res) => res.data);
     }
 
-    static async createNewAccount(
-        name,
-        username,
-        email,
-        role_id,
-        contact_number,
-        nok_name,
-        nok_number,
-        address,
-        postal_code,
-        send_email,
-        access_rights
-    ) {
+    static async createNewAccount(employee, access_rights) {
         let result = axiosObject
             .post('/employee', {
-                name: name,
-                username: username,
-                email: email,
-                role_id: role_id,
-                contact_number: contact_number,
-                nok_name: nok_name,
-                nok_number: nok_number,
-                address: address,
-                postal_code: postal_code,
-                send_email: send_email,
+                name: employee.name,
+                username: employee.username,
+                email: employee.email,
+                role_id: employee.role_id,
+                contact_number: employee.contact_number,
+                nok_name: employee.nok_name,
+                nok_number: employee.nok_number,
+                address: employee.address,
+                postal_code: employee.postal_code,
+                send_email: employee.send_email,
                 access_rights: access_rights,
             })
             .then((res) => {

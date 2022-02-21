@@ -15,6 +15,7 @@ import debounce from 'lodash.debounce';
 import { getAccessRightTag, View } from '../../enums/View';
 import { getActiveTag } from '../../enums/ActivationStatus';
 import { getRole, getRoleTag, Role } from '../../enums/Role';
+import NewAccountModal from '../../components/adminModule/NewAccountModal';
 
 const breadcrumbs = [{ url: '/accounts/', name: 'Accounts' }];
 
@@ -23,6 +24,7 @@ export default function ManageAccountsPage() {
 
     const { handleHttpError, hasWriteAccessTo } = useApp();
 
+    const [isModalVisible, setIsModalVisible] = useState(false);
     const [loading, setLoading] = useState();
     const [employees, setEmployees] = useState([]);
     const [form] = Form.useForm();
@@ -101,7 +103,7 @@ export default function ManageAccountsPage() {
                         <Button onClick={resetForm}>Reset</Button>
                     </Form>
                     { hasWriteAccessTo(View.ADMIN.name) && 
-                        <Button type='primary' icon={<PlusOutlined />} onClick={() => navigate('./new')}>New</Button>
+                        <Button type='primary' icon={<PlusOutlined />} onClick={() => setIsModalVisible(true)}>New</Button>
                     }
                 </MyToolbar>
 
@@ -113,6 +115,8 @@ export default function ManageAccountsPage() {
                     pagination={{ showTotal }}
                 />
             </MyCard>
+
+            <NewAccountModal isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} />
         </MyLayout>
     );
 };

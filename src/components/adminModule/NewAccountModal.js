@@ -1,11 +1,11 @@
 import { Form, Input, message, Modal } from 'antd';
 import React, { useState } from 'react'
-import { GeneralApiHelper } from '../api/general';
-import { useApp } from '../providers/AppProvider';
-import { minLength, REQUIRED } from '../utilities/form';
-import { EMAIL } from '../utilities/form';
+import { EmployeeApiHelper } from '../../api/employees';
+import { useApp } from '../../providers/AppProvider';
+import { REQUIRED } from '../../utilities/form';
+import { EMAIL } from '../../utilities/form';
 
-export default function ForgotPasswordModal({ isModalVisible, setIsModalVisible }) {
+export default function NewAccountModal({ isModalVisible, setIsModalVisible }) {
     const { handleHttpError } = useApp();
 
     const [form] = Form.useForm();
@@ -14,10 +14,11 @@ export default function ForgotPasswordModal({ isModalVisible, setIsModalVisible 
     async function handleSubmit() {
         try {
             const values = await form.validateFields();
+            const access_rights = [];
             setLoading(true);
-            GeneralApiHelper.resetPassword(values.username, values.email)
+            EmployeeApiHelper.createNewAccount(values, access_rights)
                 .then(() => {
-                    message.success('We have sent you an email with a new password! Please login using the new password.')
+                    message.success('Employee successfully created!')
                     setLoading(false);
                     setIsModalVisible(false);
                     form.resetFields();
@@ -27,17 +28,12 @@ export default function ForgotPasswordModal({ isModalVisible, setIsModalVisible 
         } catch (err) { }
     }
 
-    function onCancel() {
-        form.resetFields();
-        setIsModalVisible(false);
-    }
-
     return (
-        <Modal width={500}
-          title='Reset password'
+        <Modal width={600}
+          title='Create an Employee'
           visible={isModalVisible}
           onOk={handleSubmit}
-          onCancel={onCancel}
+          onCancel={() => setIsModalVisible(false)}
           destroyOnClose
           okButtonProps={{ loading: loading }}
         >

@@ -91,6 +91,7 @@ const tableColumns = [
     dataIndex: 'contact_number',
     width: 180,
     ellipsis: true,
+    render: (contact_number) => contact_number || '-',
     sorter: (a, b) => sortByString(a.contact_number, b.contact_number),
   },
   {
@@ -98,6 +99,7 @@ const tableColumns = [
     dataIndex: 'nok_name',
     width: 220,
     ellipsis: true,
+    render: (nok_name) => nok_name || '-',
     sorter: (a, b) => sortByString(a.nok_name, b.nok_name),
   },
   {
@@ -105,12 +107,14 @@ const tableColumns = [
     dataIndex: 'nok_number',
     width: 180,
     ellipsis: true,
+    render: (nok_number) => nok_number || '-',
     sorter: (a, b) => sortByString(a.nok_number, b.nok_number),
   },
   {
     title: 'Email',
     dataIndex: 'email',
     ellipsis: true,
+    render: (email) => email || '-',
     sorter: (a, b) => sortByString(a.email, b.email),
   },
   {

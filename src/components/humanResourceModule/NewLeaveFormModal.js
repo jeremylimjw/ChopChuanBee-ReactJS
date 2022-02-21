@@ -1,6 +1,6 @@
 import { Form, Select, DatePicker, Modal, Input, Typography, message } from 'antd'
 import moment from 'moment'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { EmployeeApiHelper } from '../../api/employees'
 import { HRApiHelper } from '../../api/humanResource'
 import { getLeaveType } from '../../enums/LeaveType'
@@ -18,6 +18,15 @@ export default function NewLeaveFormModal({ selectedEmployee, isModalVisible, se
   const [leaveAccounts, setLeaveAccounts] = useState([]);
   const [selectedAccount, setSelectedAccount] = useState();
 
+  const onSearch = useCallback((name) => {
+    EmployeeApiHelper.get({ name: name, limit: 10 })
+      .then((results) => {
+        setAllEmployees(results)
+      })
+      .catch(handleHttpError);
+  },
+  [handleHttpError, setAllEmployees])
+
   // Init selected employee and employee search results
   useEffect(() => {
     if (isModalVisible && selectedEmployee) {
@@ -28,7 +37,7 @@ export default function NewLeaveFormModal({ selectedEmployee, isModalVisible, se
     if (isModalVisible && !selectedEmployee) {
       onSearch('');
     }
-  }, [isModalVisible, selectedEmployee, form, setEmployee])
+  }, [isModalVisible, selectedEmployee, form, setEmployee, onSearch])
 
   // Make sure leave account is binded to the selected employee
   useEffect(() => {
@@ -66,14 +75,6 @@ export default function NewLeaveFormModal({ selectedEmployee, isModalVisible, se
   //     return
   //   }
   // }
-
-  function onSearch(value) {
-    EmployeeApiHelper.get({ name: value, limit: 10 })
-      .then((results) => {
-        setAllEmployees(results)
-      })
-      .catch(handleHttpError);
-  }
 
   function onCancel() {
     setIsModalVisible(false);
