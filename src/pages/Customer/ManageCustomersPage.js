@@ -16,6 +16,7 @@ import { View } from '../../enums/View';
 import { showTotal } from '../../utilities/table';
 
 const breadcrumbs = [
+  { url: '/customers', name: 'Customer' },
   { url: '/customers', name: 'Customers' },
 ]
 

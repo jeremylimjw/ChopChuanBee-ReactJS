@@ -21,6 +21,7 @@ export default function ViewAccountPage() {
     const [loading, setLoading] = useState(false);
 
     const breadcrumbs = [
+      { url: '/accounts', name: 'Admin' },
       { url: '/accounts', name: 'Accounts' },
       { url: `/accounts/${employee?.id}`, name: employee?.name },
     ]

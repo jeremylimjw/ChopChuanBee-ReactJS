@@ -22,7 +22,8 @@ export default function SupplierDetailPage() {
   const [supplier, setSupplier] = useState();
 
   const breadcrumbs = [
-    { url: "/suppliers", name: "Supplier" },
+    { url: "/supplier", name: "Supplier" },
+    { url: "/suppliers", name: "Suppliers" },
     { url: `/suppliers/${supplier?.id}`, name: `${supplier?.company_name}` },
   ];
 

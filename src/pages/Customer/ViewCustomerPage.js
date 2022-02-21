@@ -22,6 +22,7 @@ export default function ViewCustomerPage() {
     const [loading, setLoading] = useState(false);
 
     const breadcrumbs = [
+      { url: '/customers', name: 'Customer' },
       { url: '/customers', name: 'Customers' },
       { url: `/customers/${customer?.id}`, name: customer?.company_name },
     ]

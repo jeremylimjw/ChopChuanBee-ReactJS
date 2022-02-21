@@ -14,7 +14,8 @@ import { SearchOutlined } from '@ant-design/icons';
 import { showTotal } from '../../utilities/table';
 
 const breadcrumbs = [
-  { url: '/logs', name: 'Logs' },
+    { url: '/logs', name: 'Admin' },
+    { url: '/logs', name: 'Logs' },
 ]
 
 export default function ViewLogs() {

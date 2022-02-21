@@ -16,7 +16,10 @@ import { getActiveTag } from '../../enums/ActivationStatus';
 import { getRole, getRoleTag, Role } from '../../enums/Role';
 import NewAccountModal from '../../components/adminModule/NewAccountModal';
 
-const breadcrumbs = [{ url: '/accounts/', name: 'Accounts' }];
+const breadcrumbs = [
+    { url: '/accounts', name: 'Admin' },
+    { url: '/accounts', name: 'Accounts' },
+];
 
 export default function ManageAccountsPage() {
 

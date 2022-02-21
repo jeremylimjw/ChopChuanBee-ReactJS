@@ -17,6 +17,7 @@ import { showTotal } from '../../utilities/table';
 
 const breadcrumbs = [
   { url: "/suppliers", name: "Supplier" },
+  { url: "/suppliers", name: "Suppliers" },
 ];
 
 export default function SuppliersPage() {

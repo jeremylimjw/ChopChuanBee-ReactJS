@@ -22,6 +22,7 @@ export default function ViewProductPage() {
   const [loading, setLoading] = useState(false);
 
   const breadcrumbs = [
+    { url: '/products', name: 'Inventory' },
     { url: '/products', name: 'Products' },
     { url: `/products/${product?.name}`, name: product?.name },
   ]

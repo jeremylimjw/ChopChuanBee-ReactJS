@@ -26,8 +26,18 @@ const menu = [
     ]
   },
   {
+    role: 'Inventory',
+    title: 'Inventory',
+    icon: <InboxOutlined />,
+    items: [
+      { route: '/products', name: 'Manage Products' },
+      // { route: '/inventory', name: 'Manage Inventory' },
+      // { route: '/inventory/supplier-invoices', name: 'Supplier Invoices' },
+    ]
+  },
+  {
     role: 'SCM',
-    title: 'Suppliers',
+    title: 'Supplier',
     icon: <ShoppingOutlined />,
     items: [
       { route: '/suppliers', name: 'Manage Suppliers' },
@@ -43,18 +53,8 @@ const menu = [
   //   ]
   // },
   {
-    role: 'Inventory',
-    title: 'Inventory',
-    icon: <InboxOutlined />,
-    items: [
-      { route: '/products', name: 'Manage Products' },
-      // { route: '/inventory', name: 'Manage Inventory' },
-      // { route: '/inventory/supplier-invoices', name: 'Supplier Invoices' },
-    ]
-  },
-  {
     role: 'CRM',
-    title: 'Customers',
+    title: 'Customer',
     icon: <SolutionOutlined />,
     items: [
       { route: '/customers', name: 'Manage Customers' },
