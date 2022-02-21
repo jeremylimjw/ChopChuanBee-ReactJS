@@ -1,9 +1,7 @@
-import { Button, Col, Input, List, message, Row, Select, Spin } from 'antd';
-import moment from 'moment';
+import { Col, Row } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from "react-router";
 import { EmployeeApiHelper } from '../../api/employees';
-import { GeneralApiHelper } from '../../api/general';
 import { HRApiHelper } from '../../api/humanResource';
 import E1Form from '../../components/humanResourceModule/ViewEmployee/E1Form';
 import E2LeaveBalance from '../../components/humanResourceModule/ViewEmployee/E2LeaveBalance';
@@ -18,12 +16,6 @@ import { useApp } from '../../providers/AppProvider';
  * 
  */
 const ViewEmployeePage = (props) => {
-  const [leavesDataSource, setLeavesDataSource] = useState([])
-  const [filteredDataSource, setFilteredDataSource] = useState([])
-  const [profileData, setProfileData] = useState({})
-  const [modalVisibility, setModalVisibility] = useState(false)
-  const [loading, setLoading] = useState(false)
-
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -59,52 +51,6 @@ const ViewEmployeePage = (props) => {
               .catch(handleHttpError);
       }
   }, [employee, handleHttpError, setLeaveAccounts]);
-
-
-  // useEffect(() => {
-  //   if (employee) {
-  //     initializeData()
-  //   }
-  // }, [employee])
-
-  // const initializeData = async () => {
-  //   fetchEmployeeLeaveApplications()
-  //   fetchEmployeeLeaveAccounts()
-  //   fetchEmployeeProfileData()
-  //   setLoading(false)
-  // }
-
-  // const fetchEmployeeLeaveApplications = async () => {
-  //   let employeeLeaveApplications = await HRApiHelper.getLeaveApplicationByEmployeeId(employee.id)
-  //     .catch(handleHttpError)
-  //   employeeLeaveApplications.sort((a, b) => moment(b.created_at) - moment(a.created_at))
-  //   setLeavesDataSource(employeeLeaveApplications)
-  //   setFilteredDataSource(employeeLeaveApplications)
-  // }
-
-  // const fetchEmployeeLeaveAccounts = async () => {
-  //   let leaveAcct = await HRApiHelper.getLeaveAccountsById(employee.id)
-  //     .catch(handleHttpError)
-  //   leaveAcct.sort((a, b) => a.leave_type.id - b.leave_type.id)
-  //   setLeaveAccounts(leaveAcct)
-  // }
-
-  // const fetchEmployeeProfileData = async () => {
-  //   let profileData = await GeneralApiHelper.getProfile(employee.id)
-  //     .catch(handleHttpError)
-  //   setProfileData(profileData[0])
-  // }
-
-  // const submitLeaveApplicationForm = async (leaveApplication) => {
-  //   HRApiHelper.createNewLeaveApplication(leaveApplication)
-  //     .then((res) => res.status === 200 ? HRApiHelper.updateLeaveApplicationStatus({
-  //       id: res.data.id,
-  //       leave_status_id: 2
-  //     }) : message.error('Leave application failed'))
-  //     .then(() => fetchEmployeeLeaveApplications())
-  //     .catch(handleHttpError)
-  //   setModalVisibility(false)
-  // }
 
   return (
     <MyLayout breadcrumbs={breadcrumbs} bannerTitle={employee?.name}>
