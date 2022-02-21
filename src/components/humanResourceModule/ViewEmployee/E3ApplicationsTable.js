@@ -1,6 +1,6 @@
-import { Button, Form, message, Select, Space, Table } from 'antd'
+import { Button, Form, message, Popconfirm, Select, Table } from 'antd'
 import debounce from 'lodash.debounce'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { getLeaveAccountTag, LeaveType } from '../../../enums/LeaveType'
 import { getLeaveStatusTag, LeaveStatus } from '../../../enums/LeaveStatus'
 import { useApp } from '../../../providers/AppProvider'
@@ -13,7 +13,7 @@ import { HRApiHelper } from '../../../api/humanResource'
 import NewLeaveFormModal from '../NewLeaveFormModal'
 import { showTotal } from '../../../utilities/table'
 
-export default function E3ApplicationsTable({ employee, leaveAccounts, setLeaveAccounts }) {
+export default function E3ApplicationsTable({ employee, refreshBalances }) {
     
     const { handleHttpError, hasWriteAccessTo } = useApp();
     const [loading, setLoading] = useState();
@@ -21,36 +21,39 @@ export default function E3ApplicationsTable({ employee, leaveAccounts, setLeaveA
     const [leaveApplications, setLeaveApplications] = useState([]);
     const [form] = Form.useForm();
 
-    tableColumns[7].render = (record, action) => (
-        <Space size="middle">
-            <a onClick={() => updateLeaveStatus(record, LeaveStatus.APPROVED)}>Accept</a>
-            <a onClick={() => updateLeaveStatus(record, LeaveStatus.REJECTED)}>Reject</a>
-        </Space>
+    tableColumns[7].render = (record) => (
+        <>
+            <Popconfirm title="Confirm approve?" onConfirm={() => updateLeaveStatus(record, LeaveStatus.APPROVED)} disabled={loading || record.leave_status_id !== LeaveStatus.PENDING.id}>
+                <Button type="link" style={{ paddingLeft: 0 }} disabled={record.leave_status_id !== LeaveStatus.PENDING.id}>Accept</Button>
+            </Popconfirm>
+            <Popconfirm title="Confirm reject?" onConfirm={() => updateLeaveStatus(record, LeaveStatus.REJECTED)} disabled={loading || record.leave_status_id !== LeaveStatus.PENDING.id}>
+                <Button type="link" style={{ paddingLeft: 0 }} disabled={record.leave_status_id !== LeaveStatus.PENDING.id}>Reject</Button>
+            </Popconfirm>
+        </>
     )
 
-    useEffect(() => {
-        if (employee) {
-            setLoading(true);
-            HRApiHelper.getLeaveApplications({ employee_id: employee.id })
-                .then(results => {
-                    console.log(results)
-                    setLeaveApplications(results);
-                    setLoading(false);
-                })
-                .catch(handleHttpError)
-                .catch(() => setLoading(false))
-        }
-    }, [handleHttpError, setLoading, employee])
-
-    function onValuesChange(_, form) {
+    const getLeaveApplications = useCallback((query) => {
         setLoading(true);
-        HRApiHelper.getLeaveApplications({ employee_id: employee.id, ...form })
+        HRApiHelper.getLeaveApplications(query)
             .then(results => {
                 setLeaveApplications(results);
                 setLoading(false);
             })
             .catch(handleHttpError)
             .catch(() => setLoading(false))
+    }, [handleHttpError, setLoading])
+    
+
+    useEffect(() => {
+        if (employee) {
+            getLeaveApplications({ employee_id: employee.id })
+        }
+    }, [getLeaveApplications, employee])
+
+    function onValuesChange(_, form) {
+        if (employee) {
+            getLeaveApplications({ employee_id: employee.id, ...form })
+        }
     }
 
     function resetForm() {
@@ -69,7 +72,8 @@ export default function E3ApplicationsTable({ employee, leaveAccounts, setLeaveA
                     newItems[idx] = {...newItems[idx], leave_status_id: leaveStatus.id }
                 }
                 setLeaveApplications(newItems);
-                message.success(`Application successfully ${leaveStatus.name}!`)
+                message.success(`Application successfully ${leaveStatus.name.toLowerCase()}!`)
+                refreshBalances();
             })
             .catch(handleHttpError)
             .catch(() => setLoading(false))

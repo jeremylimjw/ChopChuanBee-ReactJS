@@ -1,5 +1,5 @@
-import { Button, Form, Input, message, Select, Space, Table } from 'antd';
-import React, { useEffect, useState } from 'react'
+import { Button, Form, Input, message, Popconfirm, Select, Table } from 'antd';
+import React, { useCallback, useEffect, useState } from 'react'
 import { useApp } from '../../providers/AppProvider';
 import { parseDate, parseDateTime } from '../../utilities/datetime';
 import MyCard from '../../components/layout/MyCard';
@@ -29,31 +29,34 @@ export default function ManageLeavesPage() {
     const [leaveApplications, setLeaveApplications] = useState([]);
     const [form] = Form.useForm();
 
-    columns[8].render = (record, action) => (
+    columns[8].render = (record) => (
         <>
-            <Button type="link" style={{ paddingLeft: 0 }} disabled={record.leave_status_id !== LeaveStatus.PENDING.id} onClick={() => updateLeaveStatus(record, LeaveStatus.APPROVED)}>Accept</Button>
-            <Button type="link" style={{ paddingLeft: 0 }} disabled={record.leave_status_id !== LeaveStatus.PENDING.id} onClick={() => updateLeaveStatus(record, LeaveStatus.REJECTED)}>Reject</Button>
+            <Popconfirm title="Confirm approve?" onConfirm={() => updateLeaveStatus(record, LeaveStatus.APPROVED)} disabled={loading || record.leave_status_id !== LeaveStatus.PENDING.id}>
+                <Button type="link" style={{ paddingLeft: 0 }} disabled={record.leave_status_id !== LeaveStatus.PENDING.id}>Accept</Button>
+            </Popconfirm>
+            <Popconfirm title="Confirm reject?" onConfirm={() => updateLeaveStatus(record, LeaveStatus.REJECTED)} disabled={loading || record.leave_status_id !== LeaveStatus.PENDING.id}>
+                <Button type="link" style={{ paddingLeft: 0 }} disabled={record.leave_status_id !== LeaveStatus.PENDING.id}>Reject</Button>
+            </Popconfirm>
         </>
     )
 
-    useEffect(() => {
-        HRApiHelper.getLeaveApplications()
-        .then(results => {
-            setLeaveApplications(results);
-            setLoading(false);
-        })
-        .catch(handleHttpError)
-        .catch(() => setLoading(false))
+    const getLeaveApplications = useCallback((query) => {
+        HRApiHelper.getLeaveApplications(query)
+            .then(results => {
+                setLeaveApplications(results);
+                setLoading(false);
+            })
+            .catch(handleHttpError)
+            .catch(() => setLoading(false))
     }, [handleHttpError, setLoading, setLeaveApplications])
+    
+
+    useEffect(() => {
+        getLeaveApplications()
+    }, [getLeaveApplications])
 
     function onValuesChange(_, form) {
-        HRApiHelper.getLeaveApplications(form)
-        .then(results => {
-            setLeaveApplications(results);
-            setLoading(false);
-        })
-        .catch(handleHttpError)
-        .catch(() => setLoading(false))
+        getLeaveApplications(form);
     }
 
     function resetForm() {
@@ -72,7 +75,7 @@ export default function ManageLeavesPage() {
                     newItems[idx] = {...newItems[idx], leave_status_id: leaveStatus.id }
                 }
                 setLeaveApplications(newItems);
-                message.success(`Application successfully ${leaveStatus.name}!`)
+                message.success(`Application successfully ${leaveStatus.name.toLowerCase()}!`)
             })
             .catch(handleHttpError)
             .catch(() => setLoading(false))
@@ -117,18 +120,16 @@ export default function ManageLeavesPage() {
             </MyToolbar>
   
             <Table 
-              dataSource={leaveApplications} 
-              columns={columns}
-              loading={loading} 
-              rowKey="id" 
-              pagination={{ showTotal }}
+                dataSource={leaveApplications} 
+                columns={columns}
+                loading={loading} 
+                rowKey="id" 
+                pagination={{ showTotal }}
             />
-              
-          </MyCard>
-  
-          {/* <NewProductModal products={leaveApplications} setProducts={setLeaveApplications} isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} /> */}
-        
-          <NewLeaveFormModal 
+                
+            </MyCard>
+            
+            <NewLeaveFormModal 
                 isModalVisible={isModalVisible}
                 setIsModalVisible={setIsModalVisible}
                 myCallback={myCallback}

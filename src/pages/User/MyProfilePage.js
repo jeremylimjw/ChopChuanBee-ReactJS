@@ -1,11 +1,11 @@
 import { EditOutlined, SaveOutlined } from '@ant-design/icons/lib/icons';
-import { Button, Form, Input, message, Radio, Typography } from 'antd';
+import { Button, Form, Input, message, Typography } from 'antd';
 import React, { useState } from 'react'
 import { EmployeeApiHelper } from '../../api/employees';
 import MyCard from '../../components/layout/MyCard';
 import MyLayout from '../../components/layout/MyLayout';
 import MyToolbar from '../../components/layout/MyToolbar';
-import { getRoleTag, Role } from '../../enums/Role';
+import { getRoleTag } from '../../enums/Role';
 import { View } from '../../enums/View';
 import { useApp } from '../../providers/AppProvider';
 import { EMAIL, REQUIRED } from '../../utilities/form';
@@ -37,7 +37,7 @@ export default function MyProfilePage() {
     }
 
     return (
-        <MyLayout breadcrumbs={breadcrumbs} bannerTitle='Edit Profile'>
+        <MyLayout breadcrumbs={breadcrumbs} bannerTitle='My Profile'>
         { user != null &&
             <>
                 <MyCard style={{ width: 500 }}>

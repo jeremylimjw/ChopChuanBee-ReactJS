@@ -13,7 +13,6 @@ import { AppProvider } from './providers/AppProvider';
 import RequireAuth from './auth/RequireAuth';
 import ManageEmployeesPage from './pages/HumanResource/ManageEmployeesPage';
 import ViewEmployeePage from './pages/HumanResource/ViewEmployeePage';
-import MyLeavesPage from './pages/MyLeavesPage';
 import MyTemplate from './pages/MyTemplate';
 import { View } from './enums/View';
 import ViewLogs from './pages/Log/ViewLogs';
@@ -25,6 +24,7 @@ import ManageSuppliersPage from "./pages/Supplier/ManageSuppliersPage";
 import ViewSupplierPage from "./pages/Supplier/ViewSupplierPage";
 import ViewAccountPage from './pages/Accounts/ViewAccountPage';
 import ManageLeavesPage from './pages/HumanResource/ManageLeavesPage';
+import MyLeavePage from './pages/User/MyLeavePage';
 
 // Add on more routes here
 const routes = [
@@ -59,7 +59,7 @@ const routes = [
   },
   {
     path: '/myLeaves',
-    component: <MyLeavesPage />,
+    component: <MyLeavePage />,
   },
   {
     path: 'humanResource',

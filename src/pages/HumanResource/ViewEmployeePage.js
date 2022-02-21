@@ -1,5 +1,5 @@
 import { Col, Row } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from "react-router";
 import { EmployeeApiHelper } from '../../api/employees';
 import { HRApiHelper } from '../../api/humanResource';
@@ -41,16 +41,20 @@ const ViewEmployeePage = (props) => {
       })
       .catch(handleHttpError);
   }, [id, handleHttpError, navigate]);
+
+  const refreshBalances = useCallback(() => {
+    if (employee) {
+      HRApiHelper.getLeaveAccountsById(employee.id)
+        .then((results) => {
+            setLeaveAccounts(results)
+        })
+        .catch(handleHttpError);
+    }
+  }, [employee, handleHttpError])
   
   useEffect(() => {
-      if (employee) {
-          HRApiHelper.getLeaveAccountsById(employee.id)
-              .then((results) => {
-                  setLeaveAccounts(results)
-              })
-              .catch(handleHttpError);
-      }
-  }, [employee, handleHttpError, setLeaveAccounts]);
+    refreshBalances()
+  }, [employee, handleHttpError, setLeaveAccounts, refreshBalances]);
 
   return (
     <MyLayout breadcrumbs={breadcrumbs} bannerTitle={employee?.name}>
@@ -70,7 +74,7 @@ const ViewEmployeePage = (props) => {
       </Row>
 
       <MyCard>
-        <E3ApplicationsTable employee={employee} leaveAccounts={leaveAccounts} setLeaveAccounts={setLeaveAccounts} />
+        <E3ApplicationsTable employee={employee} refreshBalances={refreshBalances} />
       </MyCard>
 
     </MyLayout>

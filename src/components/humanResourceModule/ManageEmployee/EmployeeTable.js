@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { MoreOutlined, SearchOutlined } from '@ant-design/icons/lib/icons';
-import { Button, Dropdown, Input, Menu, Table, Modal, Form } from 'antd';
+import { SearchOutlined } from '@ant-design/icons/lib/icons';
+import { Button, Input, Table, Form, Select } from 'antd';
 import { Link } from 'react-router-dom';
 import MyToolbar from '../../layout/MyToolbar';
-import { getActiveTag } from '../../../enums/ActivationStatus';
 import { sortByNumber, sortByString } from '../../../utilities/sorters';
 import { useApp } from '../../../providers/AppProvider';
 import { EmployeeApiHelper } from '../../../api/employees';
 import debounce from 'lodash.debounce';
-import { getRoleTag } from '../../../enums/Role';
+import { getRoleTag, Role } from '../../../enums/Role';
 
 const EmployeeTable = () => {
 
@@ -49,6 +48,14 @@ const EmployeeTable = () => {
         <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
             <Form.Item name="name">
                 <Input placeholder='Search Name' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
+            </Form.Item>
+            <Form.Item name="role_id">
+              <Select style={{ width: 140 }} placeholder="Filter by Role">
+                <Select.Option value={null}>All</Select.Option>
+                {Object.keys(Role)
+                  .filter(x => x !== 'ADMIN')
+                  .map((key, idx) => <Select.Option key={idx} value={Role[key].id}>{Role[key].name}</Select.Option>)}
+              </Select>
             </Form.Item>
             <Button onClick={resetForm}>Reset</Button>
         </Form>
