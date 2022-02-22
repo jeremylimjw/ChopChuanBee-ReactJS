@@ -1,65 +1,67 @@
 import { SearchOutlined } from '@ant-design/icons/lib/icons';
-import { Button, Input, Table } from 'antd';
+import { Button, Form, Input, Table } from 'antd';
+import debounce from 'lodash.debounce';
 import React, { useEffect, useState } from 'react'
 import { SupplierAPIHelper } from '../../../api/SupplierAPIHelper';
 import { useApp } from '../../../providers/AppProvider';
 import { sortByString } from '../../../utilities/sorters';
+import { showTotal } from '../../../utilities/table';
 import MyToolbar from '../../common/MyToolbar';
 
-const initialSearchForm = {
-  company_name: '',
-  name: '',
-}
-
-export default function NP1SupplierTable({ setSelectedSupplier }) {
+export default function NP1SupplierTable({ selectedSupplier,  setSelectedSupplier }) {
 
     const { handleHttpError } = useApp();
   
+    const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
-    const [dataSource, setDataSource] = useState([]);
-
-    const [searchForm, setSearchForm] = useState({...initialSearchForm});
+    const [suppliers, setSuppliers] = useState([]);
 
     useEffect(() => {
       setLoading(true);
-          
-      SupplierAPIHelper.search(searchForm.company_name, searchForm.name)
+      SupplierAPIHelper.get({ status: true })
         .then(results => {
-          setDataSource(results);
-          setLoading(false);
-        })
-        .catch(handleHttpError)
-        .catch(() => setLoading(false));
-
-    }, [handleHttpError, searchForm, setSelectedSupplier]);
-  
-    useEffect(() => {
-      setSelectedSupplier({});
-      setLoading(true);
-  
-      SupplierAPIHelper.getAll()
-        .then(results => {
-          setDataSource(results);
+          setSuppliers(results);
           setLoading(false);
         })
         .catch(handleHttpError)
         .catch(() => setLoading(false))
+    }, [handleHttpError, setLoading])
   
-    }, [handleHttpError, setSelectedSupplier])
+    function onValuesChange(_, form) {
+      SupplierAPIHelper.get({ ...form, status: true })
+        .then(results => {
+          setSuppliers(results);
+            setLoading(false);
+        })
+        .catch(handleHttpError)
+        .catch(() => setLoading(false))
+    }
+  
+    function resetForm() {
+      form.resetFields();
+      onValuesChange(null, form.getFieldsValue());
+    }
 
     return (
         <>
             <MyToolbar title="All Suppliers">
-              <Input placeholder="Search Company Name" suffix={<SearchOutlined className='grey' />} value={searchForm.company_name} onChange={(e) => setSearchForm({...searchForm, company_name: e.target.value })} />
-              <Input placeholder="Search Name" suffix={<SearchOutlined className='grey' />} value={searchForm.name} onChange={(e) => setSearchForm({...searchForm, name: e.target.value })} />
-              <Button onClick={() => setSearchForm({...initialSearchForm})}>Reset</Button>
+              <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
+                <Form.Item name="company_name">
+                    <Input placeholder='Search Company' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
+                </Form.Item>
+                <Form.Item name="s1_name">
+                    <Input placeholder='Search Person Name' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
+                </Form.Item>
+                <Button onClick={resetForm}>Reset</Button>
+              </Form>
             </MyToolbar>
 
             <Table loading={loading}
-              rowSelection={{ type: 'radio', onChange: (_, selectedRows) => setSelectedSupplier(selectedRows[0]) }}
+              rowSelection={{ type: 'radio', onChange: (_, selectedRows) => setSelectedSupplier(selectedRows[0]), selectedRowKeys: [selectedSupplier?.id] }}
               columns={columns}
-              dataSource={dataSource}
-              rowKey={(_, index) => index}
+              dataSource={suppliers}
+              pagination={{ pageSize: 6, showTotal: showTotal }}
+              rowKey="id"
             />
         </>
     )
@@ -70,23 +72,27 @@ const columns = [
     title: 'Company Name',
     dataIndex: 'company_name',
     width: '20%', 
+    ellipsis: true,
     sorter: (a, b) => sortByString(a.company_name, b.company_name),
   },
   {
     title: 'Name',
     dataIndex: 's1_name',
     width: '16%', 
+    ellipsis: true,
     sorter: (a, b) => sortByString(a.s1_name, b.s1_name),
   },
   {
     title: 'Phone Number',
     dataIndex: 's1_phone_number',
     width: '16%', 
+    ellipsis: true,
     sorter: (a, b) => sortByString(a.s1_phone_number, b.s1_phone_number),
   },
   {
     title: 'Description',
     dataIndex: 'description',
+    ellipsis: true,
     render: (description) => description || '-',
     sorter: (a, b) => sortByString(a.description, b.description),
   },

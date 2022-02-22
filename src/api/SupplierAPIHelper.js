@@ -1,33 +1,22 @@
 import { axiosObject } from "./axiosWrapper";
 
 export class SupplierAPIHelper {
-  static async getById(id) {
-    return axiosObject.get("/supplier", { params: { id: id } })
-      .then((res) => res.data);
-  }
-
   static async get(query) {
     const params = {};
     
-    if (query.company_name)
+    if (query?.company_name)
       params.company_name_like = query.company_name;
-    if (query.s1_name)
+    if (query?.s1_name)
       params.s1_name_like = query.s1_name;
-    if (query.status === true) {
+
+    if (query?.status === true) {
       params.deactivated_date_is_null = 1;
-    } else if (query.status === false) {
+    } else if (query?.status === false) {
       params.deactivated_date_is_nn = 1;
     }
+
     params.order_by = 'created_at_desc';
 
-    return axiosObject.get("/supplier", { params })
-      .then((res) => res.data);
-  }
-
-  static async getAll() {
-    const params = {
-      order_by: 'created_at_desc'
-    };
     return axiosObject.get("/supplier", { params })
       .then((res) => res.data);
   }

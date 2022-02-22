@@ -28,7 +28,7 @@ export default function ViewSupplierPage() {
   ];
 
   useEffect(() => {
-    SupplierAPIHelper.getById(id)
+    SupplierAPIHelper.get({ id: id })
       .then((result) => {
         if (result.length === 0) {
           navigate('../');

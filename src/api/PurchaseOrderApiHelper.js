@@ -6,6 +6,24 @@ export class PurchaseOrderApiHelper {
             .then(res => res.data);
     }
 
+    static async get(query) {
+        const params = {};
+        
+        if (query?.id)
+          params.id = query?.id;
+        if (query?.startDate && query?.endDate) {
+          params.created_at_from = query.startDate;
+          params.created_at_to = query.endDate;
+        }
+        if (query?.purchase_order_status_id) {
+          params.purchase_order_status_id = query.purchase_order_status_id;
+        }
+        params.order_by = 'created_at_desc';
+
+        return axiosObject.get(`/purchaseOrder`, { params: params })
+            .then(res => res.data);
+    }
+
     static async getAll(from, to) {
         let queryString = "";
         if (from && to) {

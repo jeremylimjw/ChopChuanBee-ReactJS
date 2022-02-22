@@ -22,11 +22,14 @@ export default function NP3Confirm({ selectedSupplier, selectedProducts, step, s
       </MyCard>
 
       <MyCard title="Order Items" style={{ flexGrow: 1, margin: '0 12px 24px 24px' }}>
-        <Table columns={columns} dataSource={selectedProducts.filter(x => x.quantity !== 0)} rowKey="id" />
+
+        <Table columns={columns} dataSource={selectedProducts.filter(x => x.product != null)} rowKey="key" />
+
         <MyToolbar style={{ marginTop: 15 }}>
           <Button onClick={() => setStep(step-1)}>Back</Button>
-          <Button type="primary" onClick={() => handleSubmitEvent()}>Confirm Order</Button>
+          <Button type="primary" onClick={() => handleSubmitEvent()} disabled={selectedProducts.filter(x => x.product != null).length === 0}>Confirm Order</Button>
         </MyToolbar>
+
       </MyCard>
 
     </div>
@@ -37,17 +40,17 @@ const columns = [
   {
     title: 'Name',
     dataIndex: 'product',
-    render: (product) => product.name,
+    render: (product) => product?.name,
   },
   {
     title: 'Description',
     dataIndex: 'product',
-    render: (product) => product.description || '-',
+    render: (product) => product?.description || '-',
   },
   {
     title: 'Unit',
     dataIndex: 'product',
-    render: (product) => product.unit,
+    render: (product) => product?.unit,
   },
   {
     title: 'Quantity',

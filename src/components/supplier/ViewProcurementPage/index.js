@@ -27,6 +27,7 @@ export default function ViewProcurementPage() {
     const [isDeliveryModalVisible, setIsDeliveryModalVisible] = useState(0);
 
     const breadcrumbs = [
+      { url: '/supplier/procurements', name: 'Supplier' },
       { url: '/supplier/procurements', name: 'Procurement' },
       { url: `/supplier/procurements/${purchaseOrder?.id}`, name: purchaseOrder?.idToString() },
     ]

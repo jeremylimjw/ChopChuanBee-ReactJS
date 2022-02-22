@@ -30,7 +30,7 @@ export default function ManageSuppliersPage() {
 
   useEffect(() => {
     setLoading(true);
-    SupplierAPIHelper.getAll()
+    SupplierAPIHelper.get()
       .then(results => {
         setSuppliers(results);
         setLoading(false);

@@ -1,5 +1,5 @@
 import { Button, message, Steps } from 'antd';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router';
 import { PurchaseOrderApiHelper } from '../../../api/PurchaseOrderApiHelper';
 import { useApp } from '../../../providers/AppProvider';
@@ -11,8 +11,9 @@ import NP2SupplierMenuTable from './NP2SupplierMenuTable';
 import NP3Confirm from './NP3Confirm';
 
 const breadcrumbs = [
-  { url: '/procurements', name: 'Procurements' },
-  { url: '/procurements/new', name: 'New' },
+  { url: '/supplier/procurements', name: 'Supplier' },
+  { url: '/supplier/procurements', name: 'Procurements' },
+  { url: '/supplier/procurements/new', name: 'New' },
 ]
 
 export default function NewProcurementPage() {
@@ -24,18 +25,31 @@ export default function NewProcurementPage() {
   const [selectedSupplier, setSelectedSupplier] = useState({});
   const [selectedProducts, setSelectedProducts] = useState([]);
 
+  useEffect(() => {
+    if (selectedSupplier != null) {
+      setSelectedProducts([]);
+      const newItem = {
+        product: null, 
+        key: Math.random(),
+        quantity: 0,
+      }
+      const newItems = [newItem];
+      setSelectedProducts(newItems);
+    }
+  }, [selectedSupplier, setSelectedProducts])
+
   // Handles purchase order creation
   function handleSubmitEvent() {
     const purchaseOrder = {
       supplier_id: selectedSupplier.id,
       purchase_order_status_id: 1,
-      purchase_order_items: selectedProducts.filter(x => x.quantity !== 0).map(x => ({ product_id: x.product_id, quantity: x.quantity })),
+      purchase_order_items: selectedProducts.filter(x => x.product != null).map(x => ({ product_id: x.product.id, quantity: x.quantity })),
     }
 
     PurchaseOrderApiHelper.create(purchaseOrder)
       .then(result => {
         message.success(`Invoice with ID ${result.id} successfully created!`);
-        navigate(`../${result.id}`);
+        navigate(`./../${result.id}`);
       })
       .catch(handleHttpError);
 
@@ -54,7 +68,7 @@ export default function NewProcurementPage() {
 
       { step === 0 &&
         <MyCard>
-          <NP1SupplierTable setSelectedSupplier={setSelectedSupplier} />
+          <NP1SupplierTable selectedSupplier={selectedSupplier} setSelectedSupplier={setSelectedSupplier} />
           <MyToolbar style={{ marginTop: 15 }}>
             <Button type="primary" onClick={() => setStep(step+1)} disabled={selectedSupplier.id == null}>Next</Button>
           </MyToolbar>
@@ -62,7 +76,11 @@ export default function NewProcurementPage() {
       }
       { step === 1 &&
         <MyCard>
-          <NP2SupplierMenuTable selectedSupplier={selectedSupplier} selectedProducts={selectedProducts} setSelectedProducts={setSelectedProducts} />
+          <NP2SupplierMenuTable 
+            selectedSupplier={selectedSupplier} 
+            selectedProducts={selectedProducts} 
+            setSelectedProducts={setSelectedProducts} 
+          />
 
           <MyToolbar style={{ marginTop: 15 }}>
             <Button onClick={() => setStep(step-1)}>Back</Button>
@@ -73,7 +91,12 @@ export default function NewProcurementPage() {
 
       { step === 2 && 
         <>
-          <NP3Confirm selectedSupplier={selectedSupplier} selectedProducts={selectedProducts} step={step} setStep={setStep} handleSubmitEvent={handleSubmitEvent} />
+          <NP3Confirm 
+            selectedSupplier={selectedSupplier} 
+            selectedProducts={selectedProducts} 
+            step={step} setStep={setStep} 
+            handleSubmitEvent={handleSubmitEvent} 
+          />
         </>
       }
 
