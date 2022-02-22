@@ -12,6 +12,7 @@ import { getActiveTag } from "../../enums/ActivationStatus";
 import { sortByDate, sortByNumber, sortByString } from "../../utilities/sorters";
 import { parseDate } from "../../utilities/datetime";
 import debounce from "lodash.debounce";
+import moment from 'moment';
 import { View } from "../../enums/View";
 import { showTotal } from '../../utilities/table';
 
@@ -25,11 +26,11 @@ export default function SOFPPage() {
     const [form] = Form.useForm();
     const [loading, setLoading] = useState();
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [SOFP, setSOFPs] = useState([]);
+    const [SOFPs, setSOFPs] = useState([]);
 
     useEffect(() => {
         setLoading(true);
-        AccountingAPIHelper.getAllSOFP()
+        AccountingAPIHelper.getAllSOFPs()
           .then(results => {
             setSOFPs(results);
             setLoading(false);
@@ -38,12 +39,24 @@ export default function SOFPPage() {
           .catch(() => setLoading(false))
     }, [handleHttpError, setLoading])
 
-    function onValuesChange() {
-
+    function onValuesChange(_, form) {
+        let start_date, end_date;
+        if (form.date && form.date[0] && form.date[1]) {
+            start_date = moment(form.date[0]).set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toDate();
+            end_date = moment(form.date[0]).set({ hour: 23, minute: 59, second: 59, millisecond: 999 }).toDate();
+        }
+        AccountingAPIHelper.getSOFP(form, start_date, end_date)
+        .then(results => {
+          setSOFPs(results);
+            setLoading(false);
+        })
+        .catch(handleHttpError)
+        .catch(() => setLoading(false))
     }
     
     function resetForm() {
-
+        form.resetFields();
+        onValuesChange(null, form.getFieldsValue());
     }
 
     return (
@@ -59,7 +72,53 @@ export default function SOFPPage() {
                         </Form.Item>
                     </Form>
                 </MyToolbar>
+                <Table 
+                    dataSource={SOFPs} 
+                    columns={columns} 
+                    loading={loading} 
+                    rowKey="id" 
+                    pagination={{ showTotal }}
+                />
             </MyCard>
         </MyLayout>
     );
 }
+
+const columns = [
+    {
+        title: 'Created At',
+        dataIndex: 'created_at',
+        key: 'created_at',
+        width: 150,
+        ellipsis: true,
+        render: (created_at) => parseDate(created_at),
+        sorter: (a, b) => sortByDate(a.created_at, b.created_at),
+    },
+    {
+        title: 'Title',
+        dataIndex: 'name',
+        key: 'name',
+        width: '14%',
+        ellipsis: true,
+        sorter: (a, b) => sortByString(a.name, b.name),
+    },
+    {
+        title: 'Date',
+        dataIndex: 'end_date',
+        key: 'end_date',
+        width: 150,
+        ellipsis: true,
+        render: (end_date) => parseDate(end_date),
+        sorter: (a, b) => sortByDate(a.end_date, b.end_date),
+    },
+    {
+        title: 'Status',
+        dataIndex: 'deleted_date',
+        key: 'deleted_date',
+        width: 120,
+        align: 'center',
+        ellipsis: true,
+        render: (deleted_date) => getActiveTag(deleted_date),
+        sorter: (a, b) => sortByNumber(a.deleted_date ? 1 : 0, b.deleted_date ? 1 : 0),
+    },
+]
