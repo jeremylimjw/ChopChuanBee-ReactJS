@@ -3,6 +3,7 @@ import { Layout, Menu } from 'antd'
 import { Link } from 'react-router-dom'
 import { HomeOutlined, InboxOutlined, ShoppingOutlined, SolutionOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons/lib/icons'
 import { useApp } from '../../providers/AppProvider'
+import { useLocation } from "react-router-dom";
 
 
 // Add on more menu items here
@@ -54,13 +55,15 @@ const menu = [
   },
 ]
 
-const Sidebar = () => {
+export default function Sidebar() {
+
     const { hasViewAccessTo } = useApp();
+    const location = useLocation();
 
     return (
       <Layout.Sider theme='light' width={210} style={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}>
-        <Menu mode='inline'>
-          <Menu.Item key='home' icon={<HomeOutlined />}>
+        <Menu mode='inline' selectedKeys={[location.pathname]}>
+          <Menu.Item key='/' icon={<HomeOutlined />}>
             <Link to='/'>Home</Link>
           </Menu.Item>
 
@@ -69,7 +72,7 @@ const Sidebar = () => {
               return (
                 <Menu.SubMenu key={index} title={menuItem.title} icon={menuItem.icon}>
                   {menuItem.items.map((subMenu, index2) => (
-                    <Menu.Item key={`${index}_${index2}`}>
+                    <Menu.Item key={subMenu.route}>
                       <Link to={subMenu.route}>{subMenu.name}</Link>
                     </Menu.Item>
                   ))}
@@ -82,5 +85,3 @@ const Sidebar = () => {
       </Layout.Sider>
     );
 };
-
-export default Sidebar;
