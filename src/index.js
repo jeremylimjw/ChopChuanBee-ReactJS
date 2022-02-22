@@ -32,17 +32,22 @@ const routes = [
     component: <MyTemplate />,
   },
   {
-    path: '/accounts',
+    path: 'admin',
     component: <Outlet />,
     childRoutes: [
       { 
-        path: '', 
+        path: 'accounts', 
         component: <ManageAccountsPage />,
         viewAccess: View.ADMIN.name,
       },
       { 
-        path: ':id', 
+        path: 'accounts/:id', 
         component: <ViewAccountPage />,
+        viewAccess: View.ADMIN.name,
+      },
+      { 
+        path: 'logs', 
+        component: <ViewLogs />,
         viewAccess: View.ADMIN.name,
       },
     ]
@@ -70,7 +75,7 @@ const routes = [
         viewAccess: View.HR.name
       },
       { 
-        path: 'leaves', 
+        path: 'leaveApplications', 
         component: <ManageLeavesPage />,
         viewAccess: View.HR.name
       },
@@ -107,11 +112,6 @@ const routes = [
         viewAccess: View.INVENTORY.name,
       },
     ]
-  },
-  {
-    path: '/logs',
-    component: <ViewLogs />,
-    viewAccess: View.ADMIN.name,
   },
   {
     path: "/suppliers",

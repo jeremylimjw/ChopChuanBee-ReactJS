@@ -12,8 +12,8 @@ const menu = [
     title: 'Admin',
     icon: <UserOutlined />,
     items: [
-      { route: '/accounts', name: 'Manage Accounts' },
-      { route: '/logs', name: 'Logs' },
+      { route: '/admin/accounts', name: 'Manage Accounts' },
+      { route: '/admin/logs', name: 'Logs' },
     ]
   },
   {
@@ -22,7 +22,7 @@ const menu = [
     icon: <TeamOutlined />,
     items: [
       { route: '/humanResource/employees', name: 'Manage Employees' },
-      { route: '/humanResource/leaves', name: 'Leaves' },
+      { route: '/humanResource/leaveApplications', name: 'Leave Applications' },
     ]
   },
   {

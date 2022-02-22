@@ -17,8 +17,8 @@ import NewLeaveFormModal from '../../components/humanResourceModule/NewLeaveForm
 import { Link } from 'react-router-dom';
 
 const breadcrumbs = [
-    { url: '/humanResource/leaves', name: 'Human Resource' },
-    { url: '/humanResource/leaves', name: 'Leaves' }
+    { url: '/humanResource/leaveApplications', name: 'Human Resource' },
+    { url: '/humanResource/leaveApplications', name: 'Leave Applications' }
 ]
 
 export default function ManageLeavesPage() {
