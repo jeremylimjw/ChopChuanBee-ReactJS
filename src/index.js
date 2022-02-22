@@ -25,7 +25,7 @@ import ManageSuppliersPage from './components/supplier/ManageSuppliersPage';
 import ViewSupplierPage from './components/supplier/ViewSupplierPage';
 import ManageCustomersPage from './components/customer/ManageCustomersPage';
 import ViewCustomerPage from './components/customer/ViewCustomerPage';
-import AnalyticsPage from './components/analytics/AnalyticsPage';
+import AnalyticsDashboard from './components/analytics/AnalyticsDashboard';
 
 // Add on more routes here
 const routes = [
@@ -133,7 +133,7 @@ const routes = [
     },
     {
         path: 'analytics',
-        component: <AnalyticsPage />,
+        component: <AnalyticsDashboard />,
         viewAccess: View.ACCOUNTING.name,
     },
 ];

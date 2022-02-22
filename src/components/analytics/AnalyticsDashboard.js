@@ -3,9 +3,9 @@ import React from 'react';
 import MyLayout from '../common/MyLayout';
 import MyCard from '../common/MyCard';
 // import MyToolbar from '../../common/MyToolbar';
-import A1ProfitsDashboard from './A1ProfitsDashboard';
+import A1ProfitsDashboard from './A1Profits';
 
-export default function AnalyticsPage() {
+export default function AnalyticsDashboard() {
     return (
         <MyLayout bannerTitle='Analytics Dashboard'>
             <Row>
