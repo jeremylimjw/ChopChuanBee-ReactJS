@@ -26,6 +26,8 @@ import ViewSupplierPage from './components/supplier/ViewSupplierPage';
 import ManageCustomersPage from './components/customer/ManageCustomersPage';
 import ViewCustomerPage from './components/customer/ViewCustomerPage';
 import AnalyticsDashboard from './components/analytics/AnalyticsDashboard';
+import InventoryDashboard from './components/analytics/InventoryPage/InventoryDashboard';
+import ProductDashboard from './components/analytics/ProductPage/ProductDashboard';
 
 // Add on more routes here
 const routes = [
@@ -132,9 +134,25 @@ const routes = [
         ],
     },
     {
-        path: 'analytics',
-        component: <AnalyticsDashboard />,
-        viewAccess: View.ACCOUNTING.name,
+        path: '/analytics',
+        component: <Outlet />,
+        childRoutes: [
+            {
+                path: 'analyticsDashboard',
+                component: <AnalyticsDashboard />,
+                viewAccess: View.ANALYTICS.name,
+            },
+            {
+                path: 'inventoryDashboard',
+                component: <InventoryDashboard />,
+                viewAccess: View.ANALYTICS.name,
+            },
+            {
+                path: 'productDashboard',
+                component: <ProductDashboard />,
+                viewAccess: View.ANALYTICS.name,
+            },
+        ],
     },
 ];
 
