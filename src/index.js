@@ -25,6 +25,8 @@ import ManageSuppliersPage from './components/supplier/ManageSuppliersPage';
 import ViewSupplierPage from './components/supplier/ViewSupplierPage';
 import ManageCustomersPage from './components/customer/ManageCustomersPage';
 import ViewCustomerPage from './components/customer/ViewCustomerPage';
+import ManageSOFPsPage from './components/accounting/ManageSOFPsPage';
+import ViewSOFPPage from './components/accounting/ViewSOFPPage';
 
 // Add on more routes here
 const routes = [
@@ -135,12 +137,12 @@ const routes = [
     component: <Outlet />,
     childRoutes: [
       {
-        path: "SOFPs",
+        path: "sofps",
         component: <ManageSOFPsPage />,
         viewAccess: View.ACCOUNTING.name,
       },
       {
-        path: "SOFPS/:id",
+        path: "sofps/:id",
         component: <ViewSOFPPage />,
         viewAccess: View.ACCOUNTING.name,
       },

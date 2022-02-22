@@ -2,12 +2,11 @@ import { UserAddOutlined, UserDeleteOutlined } from '@ant-design/icons/lib/icons
 import { Row, Col, Popconfirm, Button, message, Typography } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router';
-import { AccountingAPIHelper } from '../../api/accounting';
-import SOFPAsset from '../../components/accountingModule/SOFPAsset';
-import MyCard from '../../components/layout/MyCard';
-import MyLayout from '../../components/layout/MyLayout';
-import { View } from '../../enums/View';
-import { useApp } from '../../providers/AppProvider';
+import { AccountingAPIHelper } from '../../../api/AccountingAPIHelper';
+import { View } from '../../../enums/View';
+import { useApp } from '../../../providers/AppProvider';
+import MyLayout from '../../common/MyLayout';
+import SOFPAsset from './SOFPAsset';
 
 export default function ViewSOFPPage() {
     const { id } = useParams();

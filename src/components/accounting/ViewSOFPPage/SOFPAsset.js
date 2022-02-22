@@ -1,12 +1,12 @@
 import { EditOutlined, SaveOutlined } from '@ant-design/icons/lib/icons';
 import { Row, Col, Button, Form, Input, InputNumber, message, Typography } from 'antd'
 import React, { useState } from 'react'
-import { View } from '../../enums/View';
-import { useApp } from '../../providers/AppProvider';
-import { REQUIRED } from '../../utilities/form';
-import { AccountingAPIHelper } from '../../api/accounting';
-import MyToolbar from '../layout/MyToolbar';
-import MyCard from '../layout/MyCard';
+import { AccountingAPIHelper } from '../../../api/AccountingAPIHelper';
+import { View } from '../../../enums/View';
+import { useApp } from '../../../providers/AppProvider';
+import { REQUIRED } from '../../../utilities/form';
+import MyCard from '../../common/MyCard';
+import MyToolbar from '../../common/MyToolbar';
 
 export default function SOFPAsset({ SOFP, setSOFP }) {
     const { handleHttpError, hasWriteAccessTo } = useApp();
@@ -48,6 +48,7 @@ export default function SOFPAsset({ SOFP, setSOFP }) {
                     </>
                     }
                 </MyToolbar>
+
                 <Form form={form} labelCol={{ span: 10 }} wrapperCol={{ span: 14 }} autoComplete="off" labelAlign="left" initialValues={{...SOFP}}>
                     <Row>
                         <Col xl={10} xs={24}> 

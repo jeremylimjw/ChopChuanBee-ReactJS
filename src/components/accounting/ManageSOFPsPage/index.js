@@ -1,26 +1,26 @@
 import { Button, Table, Input, DatePicker, Select, Form } from "antd";
 import React, { useEffect, useState } from "react";
-import MyToolbar from "../../components/layout/MyToolbar";
-import MyCard from "../../components/layout/MyCard";
-import { AccountingAPIHelper } from "../../api/accounting";
-import { useApp } from "../../providers/AppProvider";
-import NewSOFPModal from "../../components/accountingModule/NewSOFPModal";
-import MyLayout from "../../components/layout/MyLayout";
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons/lib/icons";
 import { Link } from "react-router-dom";
-import { getActiveTag } from "../../enums/ActivationStatus";
-import { sortByDate, sortByNumber, sortByString } from "../../utilities/sorters";
-import { parseDate } from "../../utilities/datetime";
 import debounce from "lodash.debounce";
 import moment from 'moment';
-import { View } from "../../enums/View";
-import { showTotal } from '../../utilities/table';
+import { useApp } from "../../../providers/AppProvider";
+import { AccountingAPIHelper } from "../../../api/AccountingAPIHelper";
+import MyLayout from "../../common/MyLayout";
+import MyCard from "../../common/MyCard";
+import MyToolbar from "../../common/MyToolbar";
+import { View } from "../../../enums/View";
+import NewSOFPModal from "./NewSOFPModal";
+import { parseDate } from "../../../utilities/datetime";
+import { sortByDate, sortByNumber, sortByString } from "../../../utilities/sorters";
+import { getActiveTag } from "../../../enums/ActivationStatus";
+import { showTotal } from "../../../utilities/table";
 
 const breadcrumbs = [
     { url: "/accounting/SOFP", name: "Statement of Financial Position" },
 ];
 
-export default function SOFPPage() {
+export default function ManageSOFPsPage() {
     const { handleHttpError, hasWriteAccessTo } = useApp();
 
     const [form] = Form.useForm();
@@ -82,7 +82,7 @@ export default function SOFPPage() {
                     columns={columns} 
                     loading={loading} 
                     rowKey="id" 
-                    pagination={{ showTotal }}
+                    pagination={{ showTotal: showTotal }}
                 />
             </MyCard>
 
