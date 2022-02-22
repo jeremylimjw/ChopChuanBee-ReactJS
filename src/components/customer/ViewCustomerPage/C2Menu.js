@@ -7,8 +7,8 @@ import { View } from '../../../enums/View';
 import { useApp } from '../../../providers/AppProvider';
 import { sortByString } from '../../../utilities/sorters';
 import { showTotal } from '../../../utilities/table';
+import { CustomCell } from '../../common/CustomCell';
 import MyToolbar from '../../common/MyToolbar';
-import { RenderCell } from '../../common/TableCell/RenderCell';
 
 export default function C2Menu({ customer }) {
 
@@ -53,9 +53,11 @@ export default function C2Menu({ customer }) {
   };
 
   function handleMenuUpdate() {
+    const newItems = items.filter(x => (x.product_alias) && (x.product != null))
     setLoading(true);
-    CustomerApiHelper.updateMenu(customer.id, items)
+    CustomerApiHelper.updateMenu(customer.id, newItems)
       .then(() => {
+        setItems(newItems);
         setLoading(false);
         message.success(`Customer Menu successfully updated!`)
       })
@@ -78,7 +80,7 @@ export default function C2Menu({ customer }) {
         columns={columns} 
         loading={loading} 
         rowKey={() => Math.random()} 
-        components={{ body: { cell: RenderCell } }} 
+        components={{ body: { cell: CustomCell } }} 
         pagination={{ pageSize: 6, showTotal: showTotal }}
       />
     </>  

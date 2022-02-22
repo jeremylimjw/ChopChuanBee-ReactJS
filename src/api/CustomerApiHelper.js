@@ -61,9 +61,7 @@ export class CustomerApiHelper {
     }
 
     static async updateMenu(customer_id, menuItems) {
-        const newMenu = menuItems
-            .filter(x => (x.product_alias) && (x.product != null))
-            .map(x => ({ 
+        const newMenu = menuItems.map(x => ({ 
                 ...x, 
                 customer_id: customer_id,
                 product_id: x.product.id,

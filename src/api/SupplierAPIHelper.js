@@ -86,9 +86,7 @@ export class SupplierAPIHelper {
   }
 
   static async updateMenu(supplierId, menuItems) {
-      const newMenu = menuItems
-        .filter(x => x.product != null)
-        .map(x => ({ 
+      const newMenu = menuItems.map(x => ({ 
             ...x, 
             supplier_id: supplierId,
             product_id: x.product.id,
