@@ -25,111 +25,117 @@ import ManageSuppliersPage from './components/supplier/ManageSuppliersPage';
 import ViewSupplierPage from './components/supplier/ViewSupplierPage';
 import ManageCustomersPage from './components/customer/ManageCustomersPage';
 import ViewCustomerPage from './components/customer/ViewCustomerPage';
+import AnalyticsPage from './components/analytics/AnalyticsPage';
 
 // Add on more routes here
 const routes = [
-  {
-    path: '/',
-    component: <MyTemplate />,
-  },
-  {
-    path: '/admin',
-    component: <Outlet />,
-    childRoutes: [
-      { 
-        path: 'accounts', 
-        component: <ManageAccountsPage />,
-        viewAccess: View.ADMIN.name,
-      },
-      { 
-        path: 'accounts/:id', 
-        component: <ViewAccountPage />,
-        viewAccess: View.ADMIN.name,
-      },
-      { 
-        path: 'logs', 
-        component: <ViewLogsPage />,
-        viewAccess: View.ADMIN.name,
-      },
-    ]
-  },
-  {
-    path: '/myProfile',
-    component: <MyProfilePage />,
-  },
-  {
-    path: '/myLeaves',
-    component: <MyLeavePage />,
-  },
-  {
-    path: 'humanResource',
-    component: <Outlet />,
-    childRoutes: [
-      { 
-        path: 'employees', 
-        component: <ManageEmployeesPage />,
-        viewAccess: View.HR.name
-      },
-      { 
-        path: 'employees/:id', 
-        component: <ViewEmployeePage />,
-        viewAccess: View.HR.name
-      },
-      { 
-        path: 'leaveApplications', 
-        component: <ManageLeavesPage />,
-        viewAccess: View.HR.name
-      },
-    ]
-  },
-  {
-    path: '/inventory',
-    component: <Outlet />,
-    childRoutes: [
-      { 
-        path: 'products', 
-        component: <ManageProductsPage />,
-        viewAccess: View.INVENTORY.name,
-      },
-      { 
-        path: 'products/:id', 
-        component: <ViewProductPage />,
-        viewAccess: View.INVENTORY.name,
-      },
-    ]
-  },
-  {
-    path: "/supplier",
-    component: <Outlet />,
-    childRoutes: [
-      {
-        path: "suppliers",
-        component: <ManageSuppliersPage />,
-        viewAccess: View.SCM.name,
-      },
-      {
-        path: "suppliers/:id",
-        component: <ViewSupplierPage />,
-        viewAccess: View.SCM.name,
-      },
-    ],
-  },
-  {
-    path: '/customer',
-    component: <Outlet />,
-    childRoutes: [
-      { 
-        path: 'customers', 
-        component: <ManageCustomersPage />,
-        viewAccess: View.CRM.name,
-      },
-      { 
-        path: 'customers/:id', 
-        component: <ViewCustomerPage />,
-        viewAccess: View.CRM.name,
-      },
-    ]
-  },
+    {
+        path: '/',
+        component: <MyTemplate />,
+    },
+    {
+        path: '/admin',
+        component: <Outlet />,
+        childRoutes: [
+            {
+                path: 'accounts',
+                component: <ManageAccountsPage />,
+                viewAccess: View.ADMIN.name,
+            },
+            {
+                path: 'accounts/:id',
+                component: <ViewAccountPage />,
+                viewAccess: View.ADMIN.name,
+            },
+            {
+                path: 'logs',
+                component: <ViewLogsPage />,
+                viewAccess: View.ADMIN.name,
+            },
+        ],
+    },
+    {
+        path: '/myProfile',
+        component: <MyProfilePage />,
+    },
+    {
+        path: '/myLeaves',
+        component: <MyLeavePage />,
+    },
+    {
+        path: 'humanResource',
+        component: <Outlet />,
+        childRoutes: [
+            {
+                path: 'employees',
+                component: <ManageEmployeesPage />,
+                viewAccess: View.HR.name,
+            },
+            {
+                path: 'employees/:id',
+                component: <ViewEmployeePage />,
+                viewAccess: View.HR.name,
+            },
+            {
+                path: 'leaveApplications',
+                component: <ManageLeavesPage />,
+                viewAccess: View.HR.name,
+            },
+        ],
+    },
+    {
+        path: '/inventory',
+        component: <Outlet />,
+        childRoutes: [
+            {
+                path: 'products',
+                component: <ManageProductsPage />,
+                viewAccess: View.INVENTORY.name,
+            },
+            {
+                path: 'products/:id',
+                component: <ViewProductPage />,
+                viewAccess: View.INVENTORY.name,
+            },
+        ],
+    },
+    {
+        path: '/supplier',
+        component: <Outlet />,
+        childRoutes: [
+            {
+                path: 'suppliers',
+                component: <ManageSuppliersPage />,
+                viewAccess: View.SCM.name,
+            },
+            {
+                path: 'suppliers/:id',
+                component: <ViewSupplierPage />,
+                viewAccess: View.SCM.name,
+            },
+        ],
+    },
+    {
+        path: '/customer',
+        component: <Outlet />,
+        childRoutes: [
+            {
+                path: 'customers',
+                component: <ManageCustomersPage />,
+                viewAccess: View.CRM.name,
+            },
+            {
+                path: 'customers/:id',
+                component: <ViewCustomerPage />,
+                viewAccess: View.CRM.name,
+            },
+        ],
+    },
+    {
+        path: 'analytics',
+        component: <AnalyticsPage />,
+        viewAccess: View.ACCOUNTING.name,
+    },
 ];
 
 function renderRoute(route, index) {
@@ -167,21 +173,28 @@ function renderRoute(route, index) {
 }
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Router>
-      <AppProvider>
-        <Layout style={{ minHeight: '100vh' }}>
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/" element={<RequireAuth><App /></RequireAuth>}>
-              {routes.map((route, index) => renderRoute(route, index))}
-            </Route>
-          </Routes>
-        </Layout>
-      </AppProvider>
-    </Router>
-  </React.StrictMode>,
-  document.getElementById('root')
+    <React.StrictMode>
+        <Router>
+            <AppProvider>
+                <Layout style={{ minHeight: '100vh' }}>
+                    <Routes>
+                        <Route path='/login' element={<LoginPage />} />
+                        <Route
+                            path='/'
+                            element={
+                                <RequireAuth>
+                                    <App />
+                                </RequireAuth>
+                            }
+                        >
+                            {routes.map((route, index) => renderRoute(route, index))}
+                        </Route>
+                    </Routes>
+                </Layout>
+            </AppProvider>
+        </Router>
+    </React.StrictMode>,
+    document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function
