@@ -5,27 +5,26 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
 import { Layout } from 'antd';
-import LoginPage from './pages/LoginPage';
-import ManageAccountsPage from './pages/Accounts/ManageAccountsPage';
-import MyProfilePage from './pages/User/MyProfilePage';
 import { AppProvider } from './providers/AppProvider';
 import RequireAuth from './auth/RequireAuth';
-import ManageEmployeesPage from './pages/HumanResource/ManageEmployeesPage';
-import ViewEmployeePage from './pages/HumanResource/ViewEmployeePage';
-import MyTemplate from './pages/MyTemplate';
 import { View } from './enums/View';
-import ViewLogs from './pages/Log/ViewLogs';
-import ManageCustomersPage from './pages/Customer/ManageCustomersPage';
-import ViewCustomerPage from './pages/Customer/ViewCustomerPage';
-import ManageProductsPage from './pages/Product/ManageProductsPage';
-import ViewProductPage from './pages/Product/ViewProductPage';
-import ManageSuppliersPage from "./pages/Supplier/ManageSuppliersPage";
-import ViewSupplierPage from "./pages/Supplier/ViewSupplierPage";
-import ViewAccountPage from './pages/Accounts/ViewAccountPage';
-import ManageSOFPsPage from './pages/Accounting/ManageSOFPsPage';
-import ViewSOFPPage from './pages/Accounting/ViewSOFPPage'
-import ManageLeavesPage from './pages/HumanResource/ManageLeavesPage';
-import MyLeavePage from './pages/User/MyLeavePage';
+
+import LoginPage from './components/LoginPage';
+import MyTemplate from './components/MyTemplate';
+import ManageAccountsPage from './components/admin/ManageAccountsPage';
+import ViewAccountPage from './components/admin/ViewAccountPage';
+import ViewLogsPage from './components/admin/ViewLogsPage';
+import MyProfilePage from './components/general/MyProfilePage';
+import MyLeavePage from './components/general/MyLeavePage';
+import ManageEmployeesPage from './components/humanResource/ManageEmployeesPage';
+import ViewEmployeePage from './components/humanResource/ViewEmployeePage';
+import ManageLeavesPage from './components/humanResource/ManageLeavesPage';
+import ManageProductsPage from './components/inventory/ManageProductsPage';
+import ViewProductPage from './components/inventory/ViewProductPage';
+import ManageSuppliersPage from './components/supplier/ManageSuppliersPage';
+import ViewSupplierPage from './components/supplier/ViewSupplierPage';
+import ManageCustomersPage from './components/customer/ManageCustomersPage';
+import ViewCustomerPage from './components/customer/ViewCustomerPage';
 
 // Add on more routes here
 const routes = [
@@ -34,17 +33,22 @@ const routes = [
     component: <MyTemplate />,
   },
   {
-    path: '/accounts',
+    path: '/admin',
     component: <Outlet />,
     childRoutes: [
       { 
-        path: '', 
+        path: 'accounts', 
         component: <ManageAccountsPage />,
         viewAccess: View.ADMIN.name,
       },
       { 
-        path: ':id', 
+        path: 'accounts/:id', 
         component: <ViewAccountPage />,
+        viewAccess: View.ADMIN.name,
+      },
+      { 
+        path: 'logs', 
+        component: <ViewLogsPage />,
         viewAccess: View.ADMIN.name,
       },
     ]
@@ -72,64 +76,59 @@ const routes = [
         viewAccess: View.HR.name
       },
       { 
-        path: 'leaves', 
+        path: 'leaveApplications', 
         component: <ManageLeavesPage />,
         viewAccess: View.HR.name
       },
     ]
   },
   {
-    path: '/customers',
+    path: '/inventory',
     component: <Outlet />,
     childRoutes: [
       { 
-        path: '', 
-        component: <ManageCustomersPage />,
-        viewAccess: View.CRM.name,
-      },
-      { 
-        path: ':id', 
-        component: <ViewCustomerPage />,
-        viewAccess: View.CRM.name,
-      },
-    ]
-  },
-  {
-    path: '/products',
-    component: <Outlet />,
-    childRoutes: [
-      { 
-        path: '', 
+        path: 'products', 
         component: <ManageProductsPage />,
         viewAccess: View.INVENTORY.name,
       },
       { 
-        path: ':id', 
+        path: 'products/:id', 
         component: <ViewProductPage />,
         viewAccess: View.INVENTORY.name,
       },
     ]
   },
   {
-    path: '/logs',
-    component: <ViewLogs />,
-    viewAccess: View.ADMIN.name,
-  },
-  {
-    path: "/suppliers",
+    path: "/supplier",
     component: <Outlet />,
     childRoutes: [
       {
-        path: "",
+        path: "suppliers",
         component: <ManageSuppliersPage />,
         viewAccess: View.SCM.name,
       },
       {
-        path: ":id",
+        path: "suppliers/:id",
         component: <ViewSupplierPage />,
         viewAccess: View.SCM.name,
       },
     ],
+  },
+  {
+    path: '/customer',
+    component: <Outlet />,
+    childRoutes: [
+      { 
+        path: 'customers', 
+        component: <ManageCustomersPage />,
+        viewAccess: View.CRM.name,
+      },
+      { 
+        path: 'customers/:id', 
+        component: <ViewCustomerPage />,
+        viewAccess: View.CRM.name,
+      },
+    ]
   },
   {
     path: "/accounting",
