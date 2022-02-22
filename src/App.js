@@ -8,13 +8,13 @@ import Navbar from './components/common/Navbar';
 
 function App() {
   return (
-    <>
+    <Layout>
       <Navbar />
       <Layout>
         <Sidebar />
         <Outlet />
       </Layout>
-    </>
+    </Layout>
   )
 }
 

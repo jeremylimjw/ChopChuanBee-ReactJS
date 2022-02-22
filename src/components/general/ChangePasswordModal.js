@@ -51,11 +51,11 @@ function MyForm({ form }) {
     return (
         <Form form={form} labelCol={{ span: 10 }} wrapperCol={{ span: 14 }} autoComplete="off" labelAlign="left">
             <Form.Item label="Old password" name="oldPassword" rules={[REQUIRED]}>
-                <Input.Password />
+                <Input.Password autoComplete='off' />
             </Form.Item>
 
             <Form.Item label="New password" name="newPassword" rules={[REQUIRED, minLength(6)]}>
-                <Input.Password />
+                <Input.Password autoComplete='off' />
             </Form.Item>
             
             <Form.Item name="confirm" label="Confirm Password" dependencies={['password']} hasFeedback
@@ -69,7 +69,7 @@ function MyForm({ form }) {
                     },
                 })]}
             >
-                <Input.Password />
+                <Input.Password autoComplete='off' />
             </Form.Item>
         </Form>
     )
