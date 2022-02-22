@@ -1,9 +1,9 @@
 import { Button, Table, Descriptions } from 'antd';
 import React from 'react'
-import MyCard from '../../layout/MyCard';
-import MyToolbar from '../../layout/MyToolbar';
+import MyCard from '../../common/MyCard';
+import MyToolbar from '../../common/MyToolbar';
 
-export default function ConfirmOrderTab({ selectedSupplier, selectedProducts, step, setStep, handleSubmitEvent }) {
+export default function NP3Confirm({ selectedSupplier, selectedProducts, step, setStep, handleSubmitEvent }) {
 
   return (
     <div style={{ display: 'flex'}}>

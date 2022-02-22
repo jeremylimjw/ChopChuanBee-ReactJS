@@ -1,14 +1,14 @@
 import { PlusOutlined, UndoOutlined } from '@ant-design/icons/lib/icons'
 import { Button, Table, Typography } from 'antd'
 import React, { useState } from 'react'
-import { POStatus } from '../../../enums/PurchaseOrderStatus'
-import MyCard from '../../layout/MyCard'
-import MyToolbar from '../../layout/MyToolbar'
-import { getPaymentMethodTag } from '../../../enums/PaymentMethod'
-import NewPaymentModal from './NewPaymentModal'
-import { parseDate } from '../../../utilities/datetime'
+import { getPaymentMethodTag } from '../../../enums/PaymentMethod';
+import { POStatus } from '../../../enums/PurchaseOrderStatus';
+import { parseDate } from '../../../utilities/datetime';
+import MyCard from '../../common/MyCard';
+import MyToolbar from '../../common/MyToolbar';
+import NewPaymentModal from './NewPaymentModal';
 
-export default function PaymentsTable({ purchaseOrder, setPurchaseOrder, loading }) {
+export default function PO4PaymentsTable({ purchaseOrder, setPurchaseOrder, loading }) {
     
     const [isModalVisible, setIsModalVisible] = useState(0);
 

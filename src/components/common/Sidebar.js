@@ -32,8 +32,6 @@ const menu = [
     icon: <InboxOutlined />,
     items: [
       { route: '/inventory/products', name: 'Manage Products' },
-      // { route: '/inventory', name: 'Manage Inventory' },
-      // { route: '/inventory/supplier-invoices', name: 'Supplier Invoices' },
     ]
   },
   {
@@ -42,7 +40,7 @@ const menu = [
     icon: <ShoppingOutlined />,
     items: [
       { route: '/supplier/suppliers', name: 'Manage Suppliers' },
-      // { route: '/suppliers/accounts', name: 'Accounts Payable' },
+      { route: '/supplier/procurements', name: 'Procurements' },
     ]
   },
   {

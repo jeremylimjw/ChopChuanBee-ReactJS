@@ -2,19 +2,19 @@ import { FileDoneOutlined, FileTextOutlined, SaveOutlined, SendOutlined, StopOut
 import { Button, message, Popconfirm, Progress, Space, Typography } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router';
-import { PurchaseOrderApiHelper } from '../api/purchaseOrder';
-import MyCard from '../components/layout/MyCard';
-import MyLayout from '../components/layout/MyLayout'
-import DeliveriesTable from '../components/purchaseModule/viewPurchaseOrder/DeliveriesTable';
-import OrderItemsTable from '../components/purchaseModule/viewPurchaseOrder/OrderItemsTable';
-import PaymentsTable from '../components/purchaseModule/viewPurchaseOrder/PaymentsTable';
-import PurchaseOrderForm from '../components/purchaseModule/viewPurchaseOrder/PurchaseOrderForm';
-import SupplierInfo from '../components/purchaseModule/viewPurchaseOrder/SupplierInfo';
-import { POStatus } from '../enums/PurchaseOrderStatus';
-import { PurchaseOrder } from '../models/PurchaseOrder';
-import { useApp } from '../providers/AppProvider';
+import { PurchaseOrderApiHelper } from '../../../api/PurchaseOrderApiHelper';
+import { POStatus } from '../../../enums/PurchaseOrderStatus';
+import { PurchaseOrder } from '../../../models/PurchaseOrder';
+import { useApp } from '../../../providers/AppProvider';
+import MyCard from '../../common/MyCard';
+import MyLayout from '../../common/MyLayout';
+import PO1SupplierInfo from './PO1SupplierInfo';
+import PO2Form from './PO2Form';
+import PO3ItemsTable from './PO3ItemsTable';
+import PO4PaymentsTable from './PO4PaymentsTable';
+import PO5DeliveriesTable from './PO5DeliveriesTable';
 
-export default function ViewPurchaseOrderPage() {
+export default function ViewProcurementPage() {
 
     const { id } = useParams();
     const navigate = useNavigate();
@@ -27,8 +27,8 @@ export default function ViewPurchaseOrderPage() {
     const [isDeliveryModalVisible, setIsDeliveryModalVisible] = useState(0);
 
     const breadcrumbs = [
-      { url: '/procurements', name: 'Procurement' },
-      { url: `/procurements/${purchaseOrder?.id}`, name: purchaseOrder?.idToString() },
+      { url: '/supplier/procurements', name: 'Procurement' },
+      { url: `/supplier/procurements/${purchaseOrder?.id}`, name: purchaseOrder?.idToString() },
     ]
   
     useEffect(() => {
@@ -129,11 +129,11 @@ export default function ViewPurchaseOrderPage() {
         <div style={{ display: 'flex', marginTop: 24 }}>
           
           <MyCard title="Supplier Details" style={{ width: 350, margin: '0 12px 12px 24px' }}>
-            <SupplierInfo purchaseOrder={purchaseOrder} />
+            <PO1SupplierInfo purchaseOrder={purchaseOrder} />
           </MyCard>
 
           <MyCard title="Order Details" style={{ flexGrow: 1, margin: '0 12px 12px 24px' }}>
-            <PurchaseOrderForm purchaseOrder={purchaseOrder} setPurchaseOrder={setPurchaseOrder} loading={loading} saveForLater={saveForLater} />
+            <PO2Form purchaseOrder={purchaseOrder} setPurchaseOrder={setPurchaseOrder} loading={loading} saveForLater={saveForLater} />
           </MyCard>
 
           <MyCard style={{ width: 250, margin: '0 24px 12px 24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -154,7 +154,7 @@ export default function ViewPurchaseOrderPage() {
 
         <MyCard style={{ marginTop: 12 }} title={!purchaseOrder.isStatus(POStatus.PENDING, POStatus.SENT) ? 'Order Items': null}>
 
-          <OrderItemsTable purchaseOrder={purchaseOrder} setPurchaseOrder={setPurchaseOrder} loading={loading} setLoading={setLoading} />
+          <PO3ItemsTable purchaseOrder={purchaseOrder} setPurchaseOrder={setPurchaseOrder} loading={loading} setLoading={setLoading} />
 
           <div style={{ display: 'flex', marginTop: 30 }}>
 
@@ -190,8 +190,8 @@ export default function ViewPurchaseOrderPage() {
         { !purchaseOrder.isStatus(POStatus.PENDING) && 
         <div className='flex-side-by-side'>
 
-          <PaymentsTable purchaseOrder={purchaseOrder} setPurchaseOrder={setPurchaseOrder} loading={loading} />
-          <DeliveriesTable purchaseOrder={purchaseOrder} setPurchaseOrder={setPurchaseOrder} loading={loading} isModalVisible={isDeliveryModalVisible} setIsModalVisible={setIsDeliveryModalVisible} />
+          <PO4PaymentsTable purchaseOrder={purchaseOrder} setPurchaseOrder={setPurchaseOrder} loading={loading} />
+          <PO5DeliveriesTable purchaseOrder={purchaseOrder} setPurchaseOrder={setPurchaseOrder} loading={loading} isModalVisible={isDeliveryModalVisible} setIsModalVisible={setIsDeliveryModalVisible} />
 
         </div>
         }

@@ -1,18 +1,17 @@
 import { DeleteOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons/lib/icons";
 import { Button, Input, message, Popconfirm, Table } from "antd";
 import { useEffect, useState } from "react";
-import { SupplierApiHelper } from "../../../api/supplier";
+import { SupplierAPIHelper } from "../../../api/SupplierAPIHelper";
 import { useApp } from "../../../providers/AppProvider";
 import { sortByString } from "../../../utilities/sorters";
-import EditableCell from "../../general/EditableCell";
-import MyToolbar from "../../layout/MyToolbar";
-import NewSupplierMenuModal from "../../supplierModule/NewSupplierMenuModal";
+import { CustomCell } from "../../common/CustomCell";
+import MyToolbar from "../../common/MyToolbar";
 
 const initialSearchForm = {
   name: '',
 };
 
-export default function SupplierMenuTable({ selectedSupplier, selectedProducts, setSelectedProducts, disabledProductsMap = {} }) {
+export default function NP2SupplierMenuTable({ selectedSupplier, selectedProducts, setSelectedProducts, disabledProductsMap = {} }) {
 
     const { handleHttpError } = useApp();
   
@@ -27,7 +26,7 @@ export default function SupplierMenuTable({ selectedSupplier, selectedProducts, 
       if (selectedSupplier != null) {
         setSelectedProducts([]);
         setLoading(true);
-        SupplierApiHelper.getSupplierMenu(selectedSupplier.id)
+        SupplierAPIHelper.getSupplierMenu(selectedSupplier.id)
           .then(results => {
             setDataSource(results.map(x => ({...x, quantity: 0, id: Math.random() })));
             setLoading(false);
@@ -54,7 +53,7 @@ export default function SupplierMenuTable({ selectedSupplier, selectedProducts, 
   
     function handleDelete(record) {
       setLoading(true);
-      SupplierApiHelper.deleteSupplierMenuItem(selectedSupplier.id, record.product_id)
+      SupplierAPIHelper.deleteSupplierMenuItem(selectedSupplier.id, record.product_id)
         .then(() => {
           message.success(`${record.product.name} successfully removed!`)
           const newData = dataSource.filter((item) => item.id !== record.id);
@@ -135,10 +134,10 @@ export default function SupplierMenuTable({ selectedSupplier, selectedProducts, 
           columns={columns}
           dataSource={dataSource}
           rowKey={(_, index) => index}
-          components={{ body: { cell: EditableCell } }}
+          components={{ body: { cell: CustomCell } }}
         />
 
-        <NewSupplierMenuModal 
+        {/* <NewSupplierMenuModal 
           supplier={selectedSupplier}
           addToTable={addToTable}
           isModalVisible={isModalVisible} 
@@ -147,7 +146,7 @@ export default function SupplierMenuTable({ selectedSupplier, selectedProducts, 
             prev[`${current.product_id}`] = true;
             return prev;
           }, {})} 
-        />
+        /> */}
       </>
     )
   

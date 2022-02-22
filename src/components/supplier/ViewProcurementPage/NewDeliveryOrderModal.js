@@ -1,10 +1,10 @@
 import { message, Table } from 'antd';
 import Modal from 'antd/lib/modal/Modal'
 import React, { useEffect, useState } from 'react'
-import { PurchaseOrderApiHelper } from '../../../api/purchaseOrder';
+import { PurchaseOrderApiHelper } from '../../../api/PurchaseOrderApiHelper';
 import { PurchaseOrder } from '../../../models/PurchaseOrder';
 import { useApp } from '../../../providers/AppProvider';
-import EditableCell from '../../general/EditableCell';
+import { CustomCell } from '../../common/CustomCell';
 
 export default function NewDeliveryOrderModal({ purchaseOrder, setPurchaseOrder, isModalVisible, setIsModalVisible }) {
 
@@ -121,8 +121,8 @@ export default function NewDeliveryOrderModal({ purchaseOrder, setPurchaseOrder,
         >
 
             <Table dataSource={items} columns={tableColumns} 
-                components={{ body: { cell: EditableCell } }}
-                pagination={{ position: ['none', 'none'] }} 
+                components={{ body: { cell: CustomCell } }}
+                pagination={false} 
                 rowKey={(_, index) => index}
             />
 

@@ -5,7 +5,7 @@ import React from 'react'
 import { POStatus } from '../../../enums/PurchaseOrderStatus'
 import { PurchaseOrder } from '../../../models/PurchaseOrder'
 
-export default function PurchaseOrderForm({ purchaseOrder, setPurchaseOrder, loading, saveForLater }) {
+export default function PO2Form({ purchaseOrder, setPurchaseOrder, loading, saveForLater }) {
     return (
         <>
             { purchaseOrder != null &&

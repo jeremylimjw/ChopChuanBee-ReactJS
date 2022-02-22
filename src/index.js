@@ -25,9 +25,9 @@ import ManageSuppliersPage from './components/supplier/ManageSuppliersPage';
 import ViewSupplierPage from './components/supplier/ViewSupplierPage';
 import ManageCustomersPage from './components/customer/ManageCustomersPage';
 import ViewCustomerPage from './components/customer/ViewCustomerPage';
-import ManagePurchaseOrdersPage from './pages/ManagePurchaseOrdersPage';
-import NewPurchaseOrderPage from './pages/NewPurchaseOrderPage';
-import ViewPurchaseOrderPage from './pages/ViewPurchaseOrderPage';
+import ManageProcurementsPage from './components/supplier/ManageProcurementsPage';
+import NewProcurementPage from './components/supplier/NewProcurementPage';
+import ViewProcurementPage from './components/supplier/ViewProcurementPage';
 
 // Add on more routes here
 const routes = [
@@ -117,18 +117,18 @@ const routes = [
       },
       { 
         path: 'procurements', 
-        component: <ManagePurchaseOrdersPage />,
-        viewAccess: "CRM",
+        component: <ManageProcurementsPage />,
+        viewAccess: View.SCM.name,
       },
       { 
         path: 'procurements/new', 
-        component: <NewPurchaseOrderPage />,
-        viewAccess: "CRM",
+        component: <NewProcurementPage />,
+        viewAccess: View.SCM.name,
       },
       { 
         path: 'procurements/:id', 
-        component: <ViewPurchaseOrderPage />,
-        viewAccess: "CRM",
+        component: <ViewProcurementPage />,
+        viewAccess: View.SCM.name,
       },
     ],
   },

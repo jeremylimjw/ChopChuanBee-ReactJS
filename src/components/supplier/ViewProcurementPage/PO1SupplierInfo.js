@@ -1,7 +1,7 @@
 import { Descriptions } from 'antd'
 import React from 'react'
 
-export default function SupplierInfo({ purchaseOrder }) {
+export default function PO1SupplierInfo({ purchaseOrder }) {
   return (
     <>
       {purchaseOrder != null &&

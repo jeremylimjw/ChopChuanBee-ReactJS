@@ -3,11 +3,11 @@ import { Button, InputNumber, Table, Typography } from 'antd';
 import React, { useState } from 'react'
 import { POStatus } from '../../../enums/PurchaseOrderStatus';
 import { PurchaseOrder } from '../../../models/PurchaseOrder';
-import EditableCell from '../../general/EditableCell';
-import MyToolbar from '../../layout/MyToolbar';
+import { CustomCell } from '../../common/CustomCell';
+import MyToolbar from '../../common/MyToolbar';
 import NewOrderItemModal from './NewOrderItemModal';
 
-export default function OrderItemsTable({ purchaseOrder, setPurchaseOrder, loading, setLoading }) {
+export default function PO3ItemsTable({ purchaseOrder, setPurchaseOrder, loading, setLoading }) {
   
   const [isNewOrderItemModalVisible, setIsNewOrderItemModalVisible] = useState(false);
   
@@ -58,7 +58,7 @@ export default function OrderItemsTable({ purchaseOrder, setPurchaseOrder, loadi
             columns={columns}
             dataSource={purchaseOrder.purchase_order_items}
             rowKey={(_, index) => index}
-            components={{ body: { cell: EditableCell } }}
+            components={{ body: { cell: CustomCell } }}
             summary={pageData => {
               if (purchaseOrder == null) return <></>
 

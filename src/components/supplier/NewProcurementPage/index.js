@@ -1,21 +1,21 @@
 import { Button, message, Steps } from 'antd';
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router';
-import { PurchaseOrderApiHelper } from '../api/purchaseOrder';
-import MyCard from '../components/layout/MyCard';
-import MyLayout from '../components/layout/MyLayout';
-import MyToolbar from '../components/layout/MyToolbar';
-import ConfirmOrderTab from '../components/purchaseModule/newPurchaseOrder/ConfirmOrderTab';
-import SupplierMenuTable from '../components/purchaseModule/newPurchaseOrder/SupplierMenuTable';
-import SupplierTable from '../components/purchaseModule/newPurchaseOrder/SupplierTable';
-import { useApp } from '../providers/AppProvider';
+import { PurchaseOrderApiHelper } from '../../../api/PurchaseOrderApiHelper';
+import { useApp } from '../../../providers/AppProvider';
+import MyCard from '../../common/MyCard';
+import MyLayout from '../../common/MyLayout';
+import MyToolbar from '../../common/MyToolbar';
+import NP1SupplierTable from './NP1SupplierTable';
+import NP2SupplierMenuTable from './NP2SupplierMenuTable';
+import NP3Confirm from './NP3Confirm';
 
 const breadcrumbs = [
   { url: '/procurements', name: 'Procurements' },
   { url: '/procurements/new', name: 'New' },
 ]
 
-export default function NewPurchaseOrderPage() {
+export default function NewProcurementPage() {
 
   const { handleHttpError } = useApp();
   const navigate = useNavigate();
@@ -54,7 +54,7 @@ export default function NewPurchaseOrderPage() {
 
       { step === 0 &&
         <MyCard>
-          <SupplierTable setSelectedSupplier={setSelectedSupplier} />
+          <NP1SupplierTable setSelectedSupplier={setSelectedSupplier} />
           <MyToolbar style={{ marginTop: 15 }}>
             <Button type="primary" onClick={() => setStep(step+1)} disabled={selectedSupplier.id == null}>Next</Button>
           </MyToolbar>
@@ -62,7 +62,7 @@ export default function NewPurchaseOrderPage() {
       }
       { step === 1 &&
         <MyCard>
-          <SupplierMenuTable selectedSupplier={selectedSupplier} selectedProducts={selectedProducts} setSelectedProducts={setSelectedProducts} />
+          <NP2SupplierMenuTable selectedSupplier={selectedSupplier} selectedProducts={selectedProducts} setSelectedProducts={setSelectedProducts} />
 
           <MyToolbar style={{ marginTop: 15 }}>
             <Button onClick={() => setStep(step-1)}>Back</Button>
@@ -73,7 +73,7 @@ export default function NewPurchaseOrderPage() {
 
       { step === 2 && 
         <>
-          <ConfirmOrderTab selectedSupplier={selectedSupplier} selectedProducts={selectedProducts} step={step} setStep={setStep} handleSubmitEvent={handleSubmitEvent} />
+          <NP3Confirm selectedSupplier={selectedSupplier} selectedProducts={selectedProducts} step={step} setStep={setStep} handleSubmitEvent={handleSubmitEvent} />
         </>
       }
 

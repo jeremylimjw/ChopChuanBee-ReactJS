@@ -1,7 +1,6 @@
 import { Modal } from 'antd';
 import React, { useState } from 'react'
 import { PurchaseOrder } from '../../../models/PurchaseOrder';
-import SupplierMenuTable from '../newPurchaseOrder/SupplierMenuTable'
 
 export default function NewOrderItemModal({ supplier, purchaseOrder, setPurchaseOrder, isModalVisible, setIsModalVisible, loading, setLoading }) {
 
@@ -33,7 +32,7 @@ export default function NewOrderItemModal({ supplier, purchaseOrder, setPurchase
             onCancel={() => setIsModalVisible(false)}
             okButtonProps={{ disabled: loading }}
         >
-            <SupplierMenuTable 
+            {/* <SupplierMenuTable 
                 selectedSupplier={selectedSupplier} 
                 selectedProducts={selectedProducts} 
                 setSelectedProducts={setSelectedProducts} 
@@ -41,7 +40,7 @@ export default function NewOrderItemModal({ supplier, purchaseOrder, setPurchase
                     prev[current.product.id] = true;
                     return prev;
                 }, {})}
-            />
+            /> */}
 
         </Modal>
     )

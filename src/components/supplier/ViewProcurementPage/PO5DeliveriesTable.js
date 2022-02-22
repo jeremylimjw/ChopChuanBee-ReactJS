@@ -1,13 +1,13 @@
 import { MinusOutlined, PlusOutlined, UndoOutlined } from '@ant-design/icons/lib/icons'
 import { Avatar, Button, Collapse, List, Tag } from 'antd'
 import React from 'react'
-import { POStatus } from '../../../enums/PurchaseOrderStatus'
-import { parseDate } from '../../../utilities/datetime'
-import MyCard from '../../layout/MyCard'
-import MyToolbar from '../../layout/MyToolbar'
-import NewDeliveryOrderModal from './NewDeliveryOrderModal'
+import { POStatus } from '../../../enums/PurchaseOrderStatus';
+import { parseDate } from '../../../utilities/datetime';
+import MyCard from '../../common/MyCard';
+import MyToolbar from '../../common/MyToolbar';
+import NewDeliveryOrderModal from './NewDeliveryOrderModal';
 
-export default function DeliveriesTable({ purchaseOrder, setPurchaseOrder, loading, isModalVisible, setIsModalVisible }) {
+export default function PO5DeliveriesTable({ purchaseOrder, setPurchaseOrder, loading, isModalVisible, setIsModalVisible }) {
 
     return (
         <>

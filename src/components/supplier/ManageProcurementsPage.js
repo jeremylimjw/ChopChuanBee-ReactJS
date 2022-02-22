@@ -3,73 +3,30 @@ import { Button, DatePicker, Input, Progress, Table } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
-import { PurchaseOrderApiHelper } from '../api/purchaseOrder';
-import MyCard from '../components/layout/MyCard';
-import MyLayout from '../components/layout/MyLayout';
-import MyToolbar from '../components/layout/MyToolbar';
-import { PurchaseOrder } from '../models/PurchaseOrder';
-import { useApp } from '../providers/AppProvider';
-import { parseDateTime } from '../utilities/datetime';
-import { sortByDate, sortByNumber, sortByString } from '../utilities/sorters';
-import moment from 'moment';
+import { useApp } from '../../providers/AppProvider';
+import { PurchaseOrderApiHelper } from '../../api/PurchaseOrderApiHelper';
+import MyLayout from '../common/MyLayout';
+import MyCard from '../common/MyCard';
+import MyToolbar from '../common/MyToolbar';
+import { sortByDate, sortByNumber, sortByString } from '../../utilities/sorters';
+import { parseDateTime } from '../../utilities/datetime';
 
 const breadcrumbs = [
-  { url: '/procurements', name: 'Procurements' },
+  { url: '/supplier/procurements', name: 'Procurements' },
 ]
-const initialSearchForm = {
-  id: '',
-  month: null,
-  year: null,
-};
 
-export default function ManagePurchaseOrdersPage() {
+export default function ManageProcurementsPage() {
 
     const { handleHttpError } = useApp();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [purchaseOrders, setPurchaseOrders] = useState([])
 
-    const [searchForm, setSearchForm] = useState({...initialSearchForm});
-
-    useEffect(() => {
-        setLoading(true);
-
-        let promise;
-        if (searchForm.id === '') {
-            if (searchForm.month != null) {
-                const startDate = searchForm.month.set({ date: 1, hour: 0, minute: 0, second: 0, milisecond: 0 }).toDate();
-                const endDate = moment(startDate).add(1, 'month').toDate();
-                promise = PurchaseOrderApiHelper.getAll(startDate, endDate);
-            } else if (searchForm.year != null) {
-                const startDate = searchForm.year.set({ date: 1, month: 1, hour: 0, minute: 0, second: 0, milisecond: 0 }).toDate();
-                const endDate = moment(startDate).add(1, 'year').toDate();
-                promise = PurchaseOrderApiHelper.getAll(startDate, endDate);
-            } else {
-                promise = PurchaseOrderApiHelper.getAll();
-            }
-        } else {
-            promise = PurchaseOrderApiHelper.getById(searchForm.id);
-        }
-            
-        promise.then(results => {
-            setPurchaseOrders(results.map(x => new PurchaseOrder(x)));
-            setLoading(false);
-        })
-        .catch(handleHttpError)
-        .catch(() => setLoading(false));
-
-    }, [handleHttpError, searchForm]);
-
     return (
         <MyLayout breadcrumbs={breadcrumbs} bannerTitle="Manage Procurements">
 
             <MyCard>
                 <MyToolbar title="Procurements">
-                    <Input placeholder="Search Order ID" suffix={<SearchOutlined className='grey' />} value={searchForm.id} onChange={(e) => setSearchForm({...searchForm, id: e.target.value })} />
-                    <DatePicker placeholder="Filter Month" picker="month" value={searchForm.month} onChange={(value) => setSearchForm({...searchForm, month: value })} />
-                    <DatePicker placeholder="Filter Year" picker="year" value={searchForm.year} onChange={(value) => setSearchForm({...searchForm, year: value })} />
-                    <Button onClick={() => setSearchForm({...initialSearchForm})}>Reset</Button>
-                    <Button type="primary" icon={<PlusOutlined />} onClick={() => navigate('./new')}>New Order</Button>
                 </MyToolbar>
                 <Table dataSource={purchaseOrders} columns={tableColumns} rowKey="id" loading={loading} />
             </MyCard>

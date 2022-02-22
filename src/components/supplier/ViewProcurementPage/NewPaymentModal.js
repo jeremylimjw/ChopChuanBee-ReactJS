@@ -1,7 +1,7 @@
 import { Form, InputNumber, message, Select } from 'antd'
 import Modal from 'antd/lib/modal/Modal'
 import React, { useEffect, useState } from 'react'
-import { PurchaseOrderApiHelper } from '../../../api/purchaseOrder'
+import { PurchaseOrderApiHelper } from '../../../api/PurchaseOrderApiHelper';
 import { PaymentTerm } from '../../../enums/PaymentTerm';
 import { PurchaseOrder } from '../../../models/PurchaseOrder';
 import { useApp } from '../../../providers/AppProvider';

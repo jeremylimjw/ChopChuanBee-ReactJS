@@ -1,17 +1,17 @@
 import { SearchOutlined } from '@ant-design/icons/lib/icons';
 import { Button, Input, Table } from 'antd';
 import React, { useEffect, useState } from 'react'
-import { SupplierApiHelper } from '../../../api/supplier';
+import { SupplierAPIHelper } from '../../../api/SupplierAPIHelper';
 import { useApp } from '../../../providers/AppProvider';
 import { sortByString } from '../../../utilities/sorters';
-import MyToolbar from '../../layout/MyToolbar';
+import MyToolbar from '../../common/MyToolbar';
 
 const initialSearchForm = {
   company_name: '',
   name: '',
 }
 
-export default function SupplierTable({ setSelectedSupplier }) {
+export default function NP1SupplierTable({ setSelectedSupplier }) {
 
     const { handleHttpError } = useApp();
   
@@ -23,7 +23,7 @@ export default function SupplierTable({ setSelectedSupplier }) {
     useEffect(() => {
       setLoading(true);
           
-      SupplierApiHelper.search(searchForm.company_name, searchForm.name)
+      SupplierAPIHelper.search(searchForm.company_name, searchForm.name)
         .then(results => {
           setDataSource(results);
           setLoading(false);
@@ -37,7 +37,7 @@ export default function SupplierTable({ setSelectedSupplier }) {
       setSelectedSupplier({});
       setLoading(true);
   
-      SupplierApiHelper.getAll()
+      SupplierAPIHelper.getAll()
         .then(results => {
           setDataSource(results);
           setLoading(false);
