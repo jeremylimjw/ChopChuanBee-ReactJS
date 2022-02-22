@@ -10,9 +10,9 @@ import { parseDate, parseDateTime } from '../../utilities/datetime';
 import { sortByDate, sortByNumber, sortByString } from '../../utilities/sorters';
 import { showTotal } from '../../utilities/table';
 import MyCard from '../common/MyCard';
-import MyLayout from '../common/MyLayout/MyLayout';
+import MyLayout from '../common/MyLayout';
 import MyToolbar from '../common/MyToolbar';
-import NewLeaveFormModal from '../humanResource/ManageLeaves/NewLeaveFormModal';
+import NewLeaveFormModal from '../humanResource/ManageLeavesPage/NewLeaveFormModal';
 
 const breadcrumbs = [{ url: '/myLeaves', name: 'Leaves' }];
 

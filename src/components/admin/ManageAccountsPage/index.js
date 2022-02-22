@@ -6,7 +6,7 @@ import debounce from 'lodash.debounce';
 import { useApp } from '../../../providers/AppProvider';
 import { EmployeeApiHelper } from '../../../api/EmployeeApiHelper';
 import { getRole, getRoleTag, Role } from '../../../enums/Role';
-import MyLayout from '../../common/MyLayout/MyLayout';
+import MyLayout from '../../common/MyLayout';
 import MyCard from '../../common/MyCard';
 import MyToolbar from '../../common/MyToolbar';
 import { getAccessRightTag, View } from '../../../enums/View';

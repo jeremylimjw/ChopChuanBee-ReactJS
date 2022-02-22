@@ -6,7 +6,7 @@ import { CustomerApiHelper } from '../../../api/CustomerApiHelper';
 import { View } from '../../../enums/View';
 import { useApp } from '../../../providers/AppProvider';
 import MyCard from '../../common/MyCard';
-import MyLayout from '../../common/MyLayout/MyLayout';
+import MyLayout from '../../common/MyLayout';
 import C1Form from './C1Form';
 import C2Menu from './C2Menu';
 import C3History from './C3History';

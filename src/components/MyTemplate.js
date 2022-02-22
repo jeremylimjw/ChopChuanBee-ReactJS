@@ -3,7 +3,7 @@ import { Button, Col, DatePicker, Dropdown, Form, Input, InputNumber, Menu, Row,
 import React from 'react'
 import MyToolbar from './common/MyToolbar'
 import MyCard from './common/MyCard'
-import MyLayout from './common/MyLayout/MyLayout'
+import MyLayout from './common/MyLayout'
 import moment from 'moment';
 
 const breadcrumbs = [{ url: '/', name: 'Home' }];

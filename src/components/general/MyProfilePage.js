@@ -7,7 +7,7 @@ import { View } from '../../enums/View';
 import { useApp } from '../../providers/AppProvider';
 import { EMAIL, REQUIRED } from '../../utilities/form';
 import MyCard from '../common/MyCard';
-import MyLayout from '../common/MyLayout/MyLayout';
+import MyLayout from '../common/MyLayout';
 import MyToolbar from '../common/MyToolbar';
 
 const breadcrumbs = [{ url: '/myProfile', name: 'Profile' }];

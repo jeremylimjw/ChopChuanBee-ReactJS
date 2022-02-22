@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import debounce from "lodash.debounce";
 import { useApp } from "../../../providers/AppProvider";
 import { SupplierAPIHelper } from "../../../api/SupplierAPIHelper";
-import MyLayout from "../../common/MyLayout/MyLayout";
+import MyLayout from "../../common/MyLayout";
 import MyCard from "../../common/MyCard";
 import { showTotal } from "../../../utilities/table";
 import NewSupplierModal from "./NewSupplierModal";

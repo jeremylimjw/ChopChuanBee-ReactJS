@@ -6,7 +6,7 @@ import { ProductApiHelper } from '../../../api/ProductApiHelper';
 import { View } from '../../../enums/View';
 import { useApp } from '../../../providers/AppProvider';
 import MyCard from '../../common/MyCard';
-import MyLayout from '../../common/MyLayout/MyLayout';
+import MyLayout from '../../common/MyLayout';
 import P1Form from './P1Form';
 import P2PriceTable from './P2PriceTable';
 import P3InventoryTable from './P3InventoryTable';

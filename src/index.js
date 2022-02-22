@@ -11,20 +11,20 @@ import { View } from './enums/View';
 
 import LoginPage from './components/LoginPage';
 import MyTemplate from './components/MyTemplate';
-import ManageAccountsPage from './components/admin/ManageAccounts/ManageAccountsPage';
-import ViewAccountPage from './components/admin/ViewAccount/ViewAccountPage';
+import ManageAccountsPage from './components/admin/ManageAccountsPage';
+import ViewAccountPage from './components/admin/ViewAccountPage';
 import ViewLogsPage from './components/admin/ViewLogsPage';
 import MyProfilePage from './components/general/MyProfilePage';
 import MyLeavePage from './components/general/MyLeavePage';
-import ManageEmployeesPage from './components/humanResource/ManageEmployees';
-import ViewEmployeePage from './components/humanResource/ViewEmployee/ViewEmployeePage';
-import ManageLeavesPage from './components/humanResource/ManageLeaves/ManageLeavesPage';
-import ManageProductsPage from './components/inventory/ManageProduct/ManageProductsPage';
-import ViewProductPage from './components/inventory/ViewProduct/ViewProductPage';
-import ManageSuppliersPage from './components/supplier/ManageSuppliers/ManageSuppliersPage';
-import ViewSupplierPage from './components/supplier/ViewSupplier/ViewSupplierPage';
-import ManageCustomersPage from './components/customer/ManageCustomer/ManageCustomersPage';
-import ViewCustomerPage from './components/customer/ViewCustomer/ViewCustomerPage';
+import ManageEmployeesPage from './components/humanResource/ManageEmployeesPage';
+import ViewEmployeePage from './components/humanResource/ViewEmployeePage';
+import ManageLeavesPage from './components/humanResource/ManageLeavesPage';
+import ManageProductsPage from './components/inventory/ManageProductsPage';
+import ViewProductPage from './components/inventory/ViewProductPage';
+import ManageSuppliersPage from './components/supplier/ManageSuppliersPage';
+import ViewSupplierPage from './components/supplier/ViewSupplierPage';
+import ManageCustomersPage from './components/customer/ManageCustomersPage';
+import ViewCustomerPage from './components/customer/ViewCustomerPage';
 
 // Add on more routes here
 const routes = [

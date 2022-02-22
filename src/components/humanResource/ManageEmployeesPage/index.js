@@ -1,6 +1,6 @@
 import React from 'react';
 import MyCard from '../../common/MyCard';
-import MyLayout from '../../common/MyLayout/MyLayout';
+import MyLayout from '../../common/MyLayout';
 import EmployeeTable from './EmployeeTable';
 
 const ManageEmployeesPage = () => {

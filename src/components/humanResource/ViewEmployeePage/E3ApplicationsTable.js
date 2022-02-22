@@ -11,7 +11,7 @@ import { sortByDate, sortByNumber, sortByString } from '../../../utilities/sorte
 import { getLeaveTypeTag, LeaveType } from '../../../enums/LeaveType';
 import { getLeaveStatusTag, LeaveStatus } from '../../../enums/LeaveStatus';
 import { View } from '../../../enums/View';
-import NewLeaveFormModal from '../ManageLeaves/NewLeaveFormModal';
+import NewLeaveFormModal from '../ManageLeavesPage/NewLeaveFormModal';
 
 export default function E3ApplicationsTable({ employee, refreshBalances }) {
     

@@ -5,7 +5,7 @@ import debounce from 'lodash.debounce';
 import { SearchOutlined } from '@ant-design/icons';
 import { useApp } from '../../providers/AppProvider';
 import { LogApiHelper } from '../../api/LogApiHelper';
-import MyLayout from '../common/MyLayout/MyLayout';
+import MyLayout from '../common/MyLayout';
 import MyCard from '../common/MyCard';
 import MyToolbar from '../common/MyToolbar';
 import { getViewTag, View } from '../../enums/View';

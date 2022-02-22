@@ -5,7 +5,7 @@ import { EmployeeApiHelper } from '../../../api/EmployeeApiHelper';
 import { HRApiHelper } from '../../../api/HRApiHelper';
 import { useApp } from '../../../providers/AppProvider';
 import MyCard from '../../common/MyCard';
-import MyLayout from '../../common/MyLayout/MyLayout';
+import MyLayout from '../../common/MyLayout';
 import E1Form from './E1Form';
 import E2LeaveBalance from './E2LeaveBalance';
 import E3ApplicationsTable from './E3ApplicationsTable';

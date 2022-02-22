@@ -6,7 +6,7 @@ import { EmployeeApiHelper } from '../../../api/EmployeeApiHelper';
 import { View } from '../../../enums/View';
 import { useApp } from '../../../providers/AppProvider';
 import MyCard from '../../common/MyCard';
-import MyLayout from '../../common/MyLayout/MyLayout';
+import MyLayout from '../../common/MyLayout';
 import A1Form from './A1Form';
 import A2Form from './A2Form';
 

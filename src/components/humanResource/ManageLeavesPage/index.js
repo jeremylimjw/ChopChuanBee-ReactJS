@@ -14,7 +14,7 @@ import { getLeaveTypeTag, LeaveType } from '../../../enums/LeaveType';
 import NewLeaveFormModal from './NewLeaveFormModal';
 import MyCard from '../../common/MyCard';
 import MyToolbar from '../../common/MyToolbar';
-import MyLayout from '../../common/MyLayout/MyLayout';
+import MyLayout from '../../common/MyLayout';
 
 const breadcrumbs = [
     { url: '/humanResource/leaveApplications', name: 'Human Resource' },

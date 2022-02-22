@@ -7,7 +7,7 @@ import S2Menu from "./S2Menu";
 import { useApp } from "../../../providers/AppProvider";
 import { SupplierAPIHelper } from "../../../api/SupplierAPIHelper";
 import { View } from "../../../enums/View";
-import MyLayout from "../../common/MyLayout/MyLayout";
+import MyLayout from "../../common/MyLayout";
 import MyCard from "../../common/MyCard";
 import S3History from "./S3History";
 

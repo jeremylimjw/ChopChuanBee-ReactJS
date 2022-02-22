@@ -6,7 +6,7 @@ import { PlusOutlined, SearchOutlined } from '@ant-design/icons/lib/icons';
 import debounce from 'lodash.debounce';
 import { useApp } from '../../../providers/AppProvider';
 import { CustomerApiHelper } from '../../../api/CustomerApiHelper';
-import MyLayout from '../../common/MyLayout/MyLayout';
+import MyLayout from '../../common/MyLayout';
 import MyCard from '../../common/MyCard';
 import MyToolbar from '../../common/MyToolbar';
 import { View } from '../../../enums/View';

@@ -5,7 +5,7 @@ import { PlusOutlined, SearchOutlined, ExclamationCircleFilled } from '@ant-desi
 import debounce from 'lodash.debounce';
 import { useApp } from '../../../providers/AppProvider';
 import { ProductApiHelper } from '../../../api/ProductApiHelper';
-import MyLayout from '../../common/MyLayout/MyLayout';
+import MyLayout from '../../common/MyLayout';
 import MyCard from '../../common/MyCard';
 import MyToolbar from '../../common/MyToolbar';
 import NewProductModal from './NewProductModal';
