@@ -43,7 +43,7 @@ export default function SOFPPage() {
         let start_date, end_date;
         if (form.date && form.date[0] && form.date[1]) {
             start_date = moment(form.date[0]).set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toDate();
-            end_date = moment(form.date[0]).set({ hour: 23, minute: 59, second: 59, millisecond: 999 }).toDate();
+            end_date = moment(form.date[1]).set({ hour: 23, minute: 59, second: 59, millisecond: 999 }).toDate();
         }
         AccountingAPIHelper.getSOFP(form, start_date, end_date)
         .then(results => {
