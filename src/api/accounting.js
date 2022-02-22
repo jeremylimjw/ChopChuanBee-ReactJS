@@ -45,16 +45,16 @@ export class AccountingAPIHelper {
     }
 
     static async deactivateSOFP(id) {
-      return axiosObject.delete("/accounting/SOFP", { id: id })
+      return axiosObject.post("/accounting/SOFP/deactivate", { id: id })
         .then((res) => res.data);
     }
 
     static async activateSOFP(id) {
-      return axiosObject.delete("/accounting/SOFP", { id: id })
+      return axiosObject.post("/accounting/SOFP/activate", { id: id })
         .then((res) => res.data);
     }
 
-    static async update(sofp) {
+    static async updateSOFP(sofp) {
       return axiosObject
         .put("/accounting/SOFP", {
           id: sofp.id, 
@@ -83,12 +83,12 @@ export class AccountingAPIHelper {
           salary_payable: sofp.salary_payable, 
           interest_payable: sofp.interest_payable, 
           taxes_payable: sofp.taxes_payable, 
-          warrent_payable: sofp.warrent_payable, 
+          warranty_payable: sofp.warranty_payable, 
           rental_payable: sofp.rental_payable, 
           notes_payable: sofp.notes_payable, 
           bonds_payable: sofp.bonds_payable, 
-          other_libility_1: sofp.other_libility_1, 
-          other_libility_2: sofp.other_libility_2, 
+          other_liability_1: sofp.other_liability_1, 
+          other_liability_2: sofp.other_liability_2, 
           share_capital: sofp.share_capital, 
           less_withdrawal: sofp.less_withdrawal, 
           retained_earning: sofp.retained_earning, 
