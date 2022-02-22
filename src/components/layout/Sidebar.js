@@ -2,7 +2,11 @@ import React from 'react'
 import { Layout, Menu } from 'antd'
 import { Link } from 'react-router-dom'
 import { useApp } from '../../providers/AppProvider'
+<<<<<<< HEAD
 import { HomeOutlined, InboxOutlined, ShopOutlined, ShoppingOutlined, SolutionOutlined, TeamOutlined, UserOutlined, AccountBookOutlined } from '@ant-design/icons/lib/icons'
+=======
+import { HomeOutlined, InboxOutlined, ShoppingOutlined, SolutionOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons/lib/icons'
+>>>>>>> first-release
 
 
 // Add on more menu items here
@@ -22,12 +26,22 @@ const menu = [
     icon: <TeamOutlined />,
     items: [
       { route: '/humanResource/employees', name: 'Manage Employees' },
-      { route: '/humanResource/employees/leaves', name: 'Leaves' },
+      { route: '/humanResource/leaves', name: 'Leaves' },
+    ]
+  },
+  {
+    role: 'Inventory',
+    title: 'Inventory',
+    icon: <InboxOutlined />,
+    items: [
+      { route: '/products', name: 'Manage Products' },
+      // { route: '/inventory', name: 'Manage Inventory' },
+      // { route: '/inventory/supplier-invoices', name: 'Supplier Invoices' },
     ]
   },
   {
     role: 'SCM',
-    title: 'Suppliers',
+    title: 'Supplier',
     icon: <ShoppingOutlined />,
     items: [
       { route: '/suppliers', name: 'Manage Suppliers' },
@@ -43,18 +57,8 @@ const menu = [
   //   ]
   // },
   {
-    role: 'Inventory',
-    title: 'Inventory',
-    icon: <InboxOutlined />,
-    items: [
-      { route: '/products', name: 'Manage Products' },
-      // { route: '/inventory', name: 'Manage Inventory' },
-      // { route: '/inventory/supplier-invoices', name: 'Supplier Invoices' },
-    ]
-  },
-  {
     role: 'CRM',
-    title: 'Customers',
+    title: 'Customer',
     icon: <SolutionOutlined />,
     items: [
       { route: '/customers', name: 'Manage Customers' },
@@ -96,10 +100,6 @@ const Sidebar = () => {
             }
             return null;
           })}
-
-          <Menu.Item key='logoutMenu' icon={<UserOutlined />}>
-            <Link to='/'>Logout</Link>
-          </Menu.Item>
         </Menu>
       </Layout.Sider>
     );

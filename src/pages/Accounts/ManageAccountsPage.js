@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useApp } from '../../providers/AppProvider';
 import { Button, Form, Input, Select, Table } from 'antd';
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
-import { useNavigate } from "react-router-dom";
 import { EmployeeApiHelper } from '../../api/employees';
 import MyLayout from '../../components/layout/MyLayout';
 import MyCard from '../../components/layout/MyCard';
@@ -14,15 +13,19 @@ import { showTotal } from '../../utilities/table';
 import debounce from 'lodash.debounce';
 import { getAccessRightTag, View } from '../../enums/View';
 import { getActiveTag } from '../../enums/ActivationStatus';
-import { getRoleTag, Role } from '../../enums/Role';
+import { getRole, getRoleTag, Role } from '../../enums/Role';
+import NewAccountModal from '../../components/adminModule/NewAccountModal';
 
-const breadcrumbs = [{ url: '/accounts/', name: 'Accounts' }];
+const breadcrumbs = [
+    { url: '/accounts', name: 'Admin' },
+    { url: '/accounts', name: 'Accounts' },
+];
 
 export default function ManageAccountsPage() {
-    const navigate = useNavigate();
 
     const { handleHttpError, hasWriteAccessTo } = useApp();
 
+    const [isModalVisible, setIsModalVisible] = useState(false);
     const [loading, setLoading] = useState();
     const [employees, setEmployees] = useState([]);
     const [form] = Form.useForm();
@@ -53,8 +56,11 @@ export default function ManageAccountsPage() {
         onValuesChange(null, form.getFieldsValue());
     }
 
-    // Backend query by view_id is complicated to frontend handle this field
-    function filterAccessRights(x) {
+    function filterData(x) {
+        // Remove admins
+        if (getRole(x.role_id).name === 'Admin') return false;
+
+        // Backend query by view_id is complicated to frontend handle this field
         const view_id = form.getFieldValue('view_id');
         if (view_id == null) return true;
 
@@ -62,6 +68,10 @@ export default function ManageAccountsPage() {
             if (accessRight.view_id === view_id) return true;
         }
         return false;
+    }
+
+    function myCallback(newEmployee) {
+        setEmployees([newEmployee, ...employees]);
     }
 
     return (
@@ -77,7 +87,7 @@ export default function ManageAccountsPage() {
                                 <Select.Option value={null}>All</Select.Option>
                                 {Object.keys(Role)
                                     .filter(x => x !== 'ADMIN')
-                                    .map(key => <Select.Option value={Role[key].id}>{Role[key].name}</Select.Option>)}
+                                    .map((key, idx) => <Select.Option key={idx} value={Role[key].id}>{Role[key].name}</Select.Option>)}
                             </Select>
                         </Form.Item>
                         <Form.Item name="view_id">
@@ -85,7 +95,7 @@ export default function ManageAccountsPage() {
                                 <Select.Option value={null}>All</Select.Option>
                                 {Object.keys(View)
                                     .filter(x => x !== 'ADMIN' && x !== 'GENERAL')
-                                    .map(key => <Select.Option value={View[key].id}>{View[key].name}</Select.Option>)}
+                                    .map((key, idx) => <Select.Option key={idx} value={View[key].id}>{View[key].name}</Select.Option>)}
                             </Select>
                         </Form.Item>
                         <Form.Item name="status">
@@ -97,18 +107,21 @@ export default function ManageAccountsPage() {
                         </Form.Item>
                         <Button onClick={resetForm}>Reset</Button>
                     </Form>
-                    
-                    <Button type='primary' icon={<PlusOutlined />} onClick={() => navigate('./new')} disabled={!hasWriteAccessTo(View.ADMIN.name)}>New</Button>
+                    { hasWriteAccessTo(View.ADMIN.name) && 
+                        <Button type='primary' icon={<PlusOutlined />} onClick={() => setIsModalVisible(true)}>New</Button>
+                    }
                 </MyToolbar>
 
                 <Table 
-                    dataSource={employees.filter(filterAccessRights)} 
+                    dataSource={employees.filter(filterData)} 
                     columns={columns} 
                     loading={loading} 
                     rowKey="id" 
                     pagination={{ showTotal }}
                 />
             </MyCard>
+
+            <NewAccountModal isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} myCallback={myCallback} />
         </MyLayout>
     );
 };
@@ -117,6 +130,7 @@ const columns = [
     {
         title: 'Created At',
         dataIndex: 'created_at',
+        key: 'created_at',
         width: 150,
         ellipsis: true,
         render: (created_at) => parseDate(created_at),
@@ -145,11 +159,12 @@ const columns = [
         dataIndex: 'access_rights',
         key: 'access_rights',
         ellipsis: true,
-        render: (access_rights) => access_rights?.map((accessRight) => getAccessRightTag(accessRight)),
+        render: (access_rights) => access_rights?.map((accessRight, idx) => <span key={idx}>{getAccessRightTag(accessRight)}</span>),
     },
     {
         title: 'Last Active',
         dataIndex: 'last_active',
+        key: 'last_active',
         width: 200,
         ellipsis: true,
         render: (last_active) => last_active ? parseDateTimeSeconds(last_active) : '-',

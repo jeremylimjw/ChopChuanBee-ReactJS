@@ -39,21 +39,23 @@ export default function A2Form({ employee, setEmployee }) {
     return (
         <>
             <MyToolbar title="Access Rights">
+                { hasWriteAccessTo(View.ADMIN.name) && 
                 <Form.Item>
                     { editing ? 
                         <Button type="primary" onClick={onFinish} icon={<SaveOutlined />} loading={loading} style={{ width: 85 }}>Save</Button>
                         :
-                        <Button onClick={() => setEditing(true)} icon={<EditOutlined />} style={{ width: 85 }} disabled={!hasWriteAccessTo(View.ADMIN.name)}>Edit</Button>
+                        <Button onClick={() => setEditing(true)} icon={<EditOutlined />} style={{ width: 85 }}>Edit</Button>
                     }
                 </Form.Item>
+                }
             </MyToolbar>
 
             <Form form={form} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }} autoComplete="off" labelAlign="left" initialValues={initialValues}>
                 { Object.keys(View)
                     .filter(x => x !== 'ADMIN' && x !== 'GENERAL')
-                    .map(key => <Form.Item label={View[key].name} name={View[key].id} initialValue={null}>
+                    .map((key, idx) => <Form.Item key={idx} label={View[key].name} name={View[key].id} initialValue={undefined}>
                             <Radio.Group disabled={!editing}>
-                                <Radio value={null}>None</Radio>
+                                <Radio value={undefined}>None</Radio>
                                 <Radio value={false}>View Only</Radio>
                                 <Radio value={true}>Full Access</Radio>
                             </Radio.Group>

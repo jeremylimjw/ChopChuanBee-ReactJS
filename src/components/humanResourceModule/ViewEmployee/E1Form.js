@@ -20,7 +20,6 @@ export default function E1Form({ employee, setEmployee }) {
         try {
             const values = await form.validateFields();
             setLoading(true);
-            console.log(values)
             EmployeeApiHelper.update(employee.id, values)
                 .then(() => {
                     setLoading(false);
@@ -57,14 +56,14 @@ export default function E1Form({ employee, setEmployee }) {
                         }
                     </Form.Item>
 
-                    <Form.Item label="Role" name="role_id">
+                    <Form.Item label="Role" name="role_id" rules={editing ? [REQUIRED] : []}>
                         {!editing ? 
                             getRoleTag(employee.role_id)
                         :
                             <Radio.Group disabled={!editing}>
                                 { Object.keys(Role)
                                     .filter(x => x !== 'ADMIN')
-                                    .map(key => <Radio value={Role[key].id}>{Role[key].name}</Radio>)
+                                    .map((key, idx) => <Radio key={idx} value={Role[key].id}>{Role[key].name}</Radio>)
                                 }
                             </Radio.Group>
                         }
@@ -78,7 +77,7 @@ export default function E1Form({ employee, setEmployee }) {
                         }
                     </Form.Item>
                     
-                    <Form.Item label="Contact Number" name="contact_number" rules={editing ? [REQUIRED] : []}>
+                    <Form.Item label="Contact Number" name="contact_number">
                         {!editing ? 
                             <Typography>{employee.contact_number || '-'}</Typography>
                         :

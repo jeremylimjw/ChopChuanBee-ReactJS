@@ -77,8 +77,12 @@ export default function S2Menu({ supplier }) {
     return (
         <>
             <MyToolbar title={`Menu`}>
-                <Button onClick={handleAddRow} icon={<PlusOutlined />} disabled={!hasWriteAccessTo(View.SCM.name)}>New</Button>
-                <Button type='primary' onClick={handleMenuUpdate} icon={<SaveOutlined />} loading={loading} disabled={!hasWriteAccessTo(View.SCM.name)}>Save</Button>
+                { hasWriteAccessTo(View.SCM.name) && 
+                <>
+                    <Button onClick={handleAddRow} icon={<PlusOutlined />}>New</Button>
+                    <Button type='primary' onClick={handleMenuUpdate} icon={<SaveOutlined />} loading={loading}>Save</Button>
+                </>
+                }
             </MyToolbar>
             
             <Table dataSource={items} 

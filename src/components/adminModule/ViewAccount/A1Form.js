@@ -35,13 +35,15 @@ export default function A1Form({ employee, setEmployee }) {
     return (
         <>
             <MyToolbar title="Personal Details">
-                <Form.Item>
-                    { editing ? 
-                        <Button type="primary" onClick={onFinish} icon={<SaveOutlined />} loading={loading} style={{ width: 85 }}>Save</Button>
-                        :
-                        <Button onClick={() => setEditing(true)} icon={<EditOutlined />} style={{ width: 85 }} disabled={!hasWriteAccessTo(View.ADMIN.name)}>Edit</Button>
-                    }
-                </Form.Item>
+                { hasWriteAccessTo(View.ADMIN.name) && 
+                    <Form.Item>
+                        { editing ? 
+                            <Button type="primary" onClick={onFinish} icon={<SaveOutlined />} loading={loading} style={{ width: 85 }}>Save</Button>
+                            :
+                            <Button onClick={() => setEditing(true)} icon={<EditOutlined />} style={{ width: 85 }}>Edit</Button>
+                        }
+                    </Form.Item>
+                }
             </MyToolbar>
 
             <Form form={form} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }} autoComplete="off" labelAlign="left" initialValues={{...employee}}>
@@ -54,14 +56,14 @@ export default function A1Form({ employee, setEmployee }) {
                     }
                 </Form.Item>
 
-                <Form.Item label="Role" name="role_id">
+                <Form.Item label="Role" name="role_id" rules={editing ? [REQUIRED] : []}>
                     {!editing ? 
                         getRoleTag(employee.role_id)
                     :
                         <Radio.Group disabled={!editing}>
                             { Object.keys(Role)
                                 .filter(x => x !== 'ADMIN')
-                                .map(key => <Radio value={Role[key].id}>{Role[key].name}</Radio>)
+                                .map((key, idx) => <Radio key={idx} value={Role[key].id}>{Role[key].name}</Radio>)
                             }
                         </Radio.Group>
                     }
@@ -75,7 +77,7 @@ export default function A1Form({ employee, setEmployee }) {
                     }
                 </Form.Item>
                 
-                <Form.Item label="Contact Number" name="contact_number" rules={editing ? [REQUIRED] : []}>
+                <Form.Item label="Contact Number" name="contact_number">
                     {!editing ? 
                         <Typography>{employee.contact_number || '-'}</Typography>
                     :

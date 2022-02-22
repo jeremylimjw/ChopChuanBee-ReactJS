@@ -7,14 +7,11 @@ import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom
 import { Layout } from 'antd';
 import LoginPage from './pages/LoginPage';
 import ManageAccountsPage from './pages/Accounts/ManageAccountsPage';
-import AdminNewAccountFormPage from './pages/Accounts/AdminNewAccountFormPage';
-import ProfilePage from './pages/ProfilePage';
+import MyProfilePage from './pages/User/MyProfilePage';
 import { AppProvider } from './providers/AppProvider';
 import RequireAuth from './auth/RequireAuth';
-import HRLeavePage from './pages/HRLeavePage'
 import ManageEmployeesPage from './pages/HumanResource/ManageEmployeesPage';
 import ViewEmployeePage from './pages/HumanResource/ViewEmployeePage';
-import MyLeavesPage from './pages/MyLeavesPage';
 import MyTemplate from './pages/MyTemplate';
 import { View } from './enums/View';
 import ViewLogs from './pages/Log/ViewLogs';
@@ -26,6 +23,8 @@ import ManageSuppliersPage from "./pages/Supplier/ManageSuppliersPage";
 import ViewSupplierPage from "./pages/Supplier/ViewSupplierPage";
 import ViewAccountPage from './pages/Accounts/ViewAccountPage';
 import ManageSOFPsPage from './pages/Accounting/ManageSOFPsPage';
+import ManageLeavesPage from './pages/HumanResource/ManageLeavesPage';
+import MyLeavePage from './pages/User/MyLeavePage';
 
 // Add on more routes here
 const routes = [
@@ -47,20 +46,15 @@ const routes = [
         component: <ViewAccountPage />,
         viewAccess: View.ADMIN.name,
       },
-      { 
-        path: 'new', 
-        component: <AdminNewAccountFormPage />,
-        viewAccess: View.ADMIN.name,
-      },
     ]
   },
   {
-    path: '/myprofile',
-    component: <ProfilePage />,
+    path: '/myProfile',
+    component: <MyProfilePage />,
   },
   {
-    path: '/myleaves',
-    component: <MyLeavesPage />,
+    path: '/myLeaves',
+    component: <MyLeavePage />,
   },
   {
     path: 'humanResource',
@@ -77,8 +71,8 @@ const routes = [
         viewAccess: View.HR.name
       },
       { 
-        path: 'employees/leaves', 
-        component: <HRLeavePage />,
+        path: 'leaves', 
+        component: <ManageLeavesPage />,
         viewAccess: View.HR.name
       },
     ]

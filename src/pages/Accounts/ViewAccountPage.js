@@ -21,6 +21,7 @@ export default function ViewAccountPage() {
     const [loading, setLoading] = useState(false);
 
     const breadcrumbs = [
+      { url: '/accounts', name: 'Admin' },
       { url: '/accounts', name: 'Accounts' },
       { url: `/accounts/${employee?.id}`, name: employee?.name },
     ]
@@ -50,15 +51,17 @@ export default function ViewAccountPage() {
     }
 
     function renderDeactivateButton() {
+      if (!hasWriteAccessTo(View.ADMIN.name)) return <></>
+
       return (
         <>
           { employee.discharge_date == null ? 
-            <Popconfirm title="Confirm deactivate?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading || !hasWriteAccessTo(View.ADMIN.name)}>
-              <Button type="danger" loading={loading} icon={<UserDeleteOutlined />} style={{ width: 120 }} disabled={!hasWriteAccessTo(View.ADMIN.name)}>Deactivate</Button>
+            <Popconfirm title="Confirm deactivate?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading}>
+              <Button type="danger" loading={loading} icon={<UserDeleteOutlined />} style={{ width: 120 }}>Deactivate</Button>
             </Popconfirm>
             :
-            <Popconfirm title="Confirm activate?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading || !hasWriteAccessTo(View.ADMIN.name)}>
-              <Button type="primary" loading={loading} icon={<UserAddOutlined />} style={{ width: 120 }} disabled={!hasWriteAccessTo(View.ADMIN.name)}>Activate</Button>
+            <Popconfirm title="Confirm activate?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading}>
+              <Button type="primary" loading={loading} icon={<UserAddOutlined />} style={{ width: 120 }}>Activate</Button>
             </Popconfirm>
           }
         </>

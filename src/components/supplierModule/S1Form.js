@@ -37,10 +37,14 @@ export default function S1Form({ supplier, setSupplier }) {
             <>
                 <MyToolbar title="Details">
                     <Form.Item>
-                        { editing ? 
-                            <Button type="primary" onClick={() => onFinish(form.getFieldsValue())} icon={<SaveOutlined />} loading={loading} style={{ width: 85 }}>Save</Button>
-                            :
-                            <Button onClick={() => setEditing(true)} icon={<EditOutlined />} style={{ width: 85 }} disabled={!hasWriteAccessTo(View.SCM.name)}>Edit</Button>
+                        { hasWriteAccessTo(View.SCM.name) && 
+                            <>
+                            { editing ? 
+                                <Button type="primary" onClick={() => onFinish(form.getFieldsValue())} icon={<SaveOutlined />} loading={loading} style={{ width: 85 }}>Save</Button>
+                                :
+                                <Button onClick={() => setEditing(true)} icon={<EditOutlined />} style={{ width: 85 }}>Edit</Button>
+                            }
+                            </>
                         }
                     </Form.Item>
                 </MyToolbar>

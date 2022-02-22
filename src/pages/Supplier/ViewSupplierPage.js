@@ -22,7 +22,8 @@ export default function SupplierDetailPage() {
   const [supplier, setSupplier] = useState();
 
   const breadcrumbs = [
-    { url: "/suppliers", name: "Supplier" },
+    { url: "/supplier", name: "Supplier" },
+    { url: "/suppliers", name: "Suppliers" },
     { url: `/suppliers/${supplier?.id}`, name: `${supplier?.company_name}` },
   ];
 
@@ -51,15 +52,19 @@ export default function SupplierDetailPage() {
   }
 
   function renderDeactivateButton() {
+    if (!hasWriteAccessTo(View.SCM.name)) {
+      return <></>
+    }
+    
     return (
       <>
         { supplier.deactivated_date == null ? 
-          <Popconfirm title="Confirm deactivate?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading || !hasWriteAccessTo(View.SCM.name)}>
-            <Button type="danger" loading={loading} icon={<UserDeleteOutlined />} style={{ width: 120 }} disabled={!hasWriteAccessTo(View.SCM.name)}>Deactivate</Button>
+          <Popconfirm title="Confirm deactivate?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading}>
+            <Button type="danger" loading={loading} icon={<UserDeleteOutlined />} style={{ width: 120 }}>Deactivate</Button>
           </Popconfirm>
           :
-          <Popconfirm title="Confirm activate?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading || !hasWriteAccessTo(View.SCM.name)}>
-            <Button type="primary" loading={loading} icon={<UserAddOutlined />} style={{ width: 120 }} disabled={!hasWriteAccessTo(View.SCM.name)}>Activate</Button>
+          <Popconfirm title="Confirm activate?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading}>
+            <Button type="primary" loading={loading} icon={<UserAddOutlined />} style={{ width: 120 }}>Activate</Button>
           </Popconfirm>
         }
       </>

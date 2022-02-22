@@ -3,7 +3,8 @@ import { axiosObject } from './axiosWrapper';
 export class EmployeeApiHelper {
     static async get(query) {
         const params = { order_by: 'created_at_desc' };
-
+        if (query?.limit)
+            params.limit = query.limit;
         if (query?.id)
             params.id = query.id;
         if (query?.name)
@@ -19,41 +20,21 @@ export class EmployeeApiHelper {
             .then((res) => res.data);
     }
 
-    static async createNewAccount(
-        name,
-        username,
-        email,
-        role_id,
-        contact_number,
-        nok_name,
-        nok_number,
-        address,
-        postal_code,
-        send_email,
-        access_rights
-    ) {
-        let result = axiosObject
-            .post('/employee', {
-                name: name,
-                username: username,
-                email: email,
-                role_id: role_id,
-                contact_number: contact_number,
-                nok_name: nok_name,
-                nok_number: nok_number,
-                address: address,
-                postal_code: postal_code,
-                send_email: send_email,
-                access_rights: access_rights,
-            })
-            .then((res) => {
-                // return res.data;
-                return res.status;
-            })
-            .catch((err) => {
-                return err.response.data;
-            });
-        return result;
+    static async createNewAccount(employee, access_rights) {
+        return axiosObject.post('/employee', {
+            name: employee.name,
+            username: employee.username,
+            email: employee.email,
+            role_id: employee.role_id,
+            contact_number: employee.contact_number,
+            nok_name: employee.nok_name,
+            nok_number: employee.nok_number,
+            address: employee.address,
+            postal_code: employee.postal_code,
+            send_email: true,
+            access_rights: access_rights,
+        })
+        .then((res) => res.data);
     }
 
     static async update(id, employee) {

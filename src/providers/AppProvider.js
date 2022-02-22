@@ -58,7 +58,7 @@ export function AppProvider({ children }) {
                 throw Error('Login session timed out. Please login again.');
             } else {
                 console.log(error.response.data)
-                message.error(JSON.stringify(error.response.data));
+                message.error(typeof error.response.data === 'string' ? error.response.data : JSON.stringify(error.response.data));
                 throw Error(error.response.data);
             }
         } else if (error.request) {

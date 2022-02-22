@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { MoreOutlined, SearchOutlined } from '@ant-design/icons/lib/icons';
-import { Button, Dropdown, Input, Menu, Table, Modal, Form } from 'antd';
+import { SearchOutlined } from '@ant-design/icons/lib/icons';
+import { Button, Input, Table, Form, Select } from 'antd';
 import { Link } from 'react-router-dom';
 import MyToolbar from '../../layout/MyToolbar';
-import { getActiveTag } from '../../../enums/ActivationStatus';
 import { sortByNumber, sortByString } from '../../../utilities/sorters';
 import { useApp } from '../../../providers/AppProvider';
 import { EmployeeApiHelper } from '../../../api/employees';
 import debounce from 'lodash.debounce';
-import { getRoleTag } from '../../../enums/Role';
+import { getRoleTag, Role } from '../../../enums/Role';
 
 const EmployeeTable = () => {
 
@@ -50,10 +49,18 @@ const EmployeeTable = () => {
             <Form.Item name="name">
                 <Input placeholder='Search Name' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
             </Form.Item>
+            <Form.Item name="role_id">
+              <Select style={{ width: 140 }} placeholder="Filter by Role">
+                <Select.Option value={null}>All</Select.Option>
+                {Object.keys(Role)
+                  .filter(x => x !== 'ADMIN')
+                  .map((key, idx) => <Select.Option key={idx} value={Role[key].id}>{Role[key].name}</Select.Option>)}
+              </Select>
+            </Form.Item>
             <Button onClick={resetForm}>Reset</Button>
         </Form>
       </MyToolbar>
-      <Table dataSource={employees} columns={tableColumns} loading={loading} />
+      <Table dataSource={employees} columns={tableColumns} loading={loading} rowKey="id" />
     </>
   );
 }
@@ -84,6 +91,7 @@ const tableColumns = [
     dataIndex: 'contact_number',
     width: 180,
     ellipsis: true,
+    render: (contact_number) => contact_number || '-',
     sorter: (a, b) => sortByString(a.contact_number, b.contact_number),
   },
   {
@@ -91,6 +99,7 @@ const tableColumns = [
     dataIndex: 'nok_name',
     width: 220,
     ellipsis: true,
+    render: (nok_name) => nok_name || '-',
     sorter: (a, b) => sortByString(a.nok_name, b.nok_name),
   },
   {
@@ -98,12 +107,14 @@ const tableColumns = [
     dataIndex: 'nok_number',
     width: 180,
     ellipsis: true,
+    render: (nok_number) => nok_number || '-',
     sorter: (a, b) => sortByString(a.nok_number, b.nok_number),
   },
   {
     title: 'Email',
     dataIndex: 'email',
     ellipsis: true,
+    render: (email) => email || '-',
     sorter: (a, b) => sortByString(a.email, b.email),
   },
   {
