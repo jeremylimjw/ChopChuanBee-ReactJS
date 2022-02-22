@@ -3,9 +3,10 @@ import { axiosObject } from "./axiosWrapper";
 export class AccountingAPIHelper {
 
     static async getAllSOFPs() {
-        // const params = {
-        // };
-        return axiosObject.get("/accounting/SOFP")
+        const params = {
+          order_by: 'created_at_desc'
+        };
+        return axiosObject.get("/accounting/SOFP", { params })
           .then((res) => res.data);
     }
 

@@ -70,8 +70,13 @@ export default function SOFPPage() {
                         <Form.Item name="date">
                             <DatePicker.RangePicker />
                         </Form.Item>
+                        <Button onClick={resetForm}>Reset</Button>
                     </Form>
+                    { hasWriteAccessTo(View.ACCOUNTING.name) &&
+                        <Button type="primary" icon={<PlusOutlined />} onClick={() => setIsModalVisible(true)}>New</Button>
+                    }
                 </MyToolbar>
+
                 <Table 
                     dataSource={SOFPs} 
                     columns={columns} 
@@ -80,6 +85,9 @@ export default function SOFPPage() {
                     pagination={{ showTotal }}
                 />
             </MyCard>
+
+            <NewSOFPModal SOFPs={SOFPs} setSOFPs={setSOFPs} isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} />
+
         </MyLayout>
     );
 }
