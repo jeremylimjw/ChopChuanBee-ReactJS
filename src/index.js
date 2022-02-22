@@ -25,6 +25,7 @@ import ViewSupplierPage from "./pages/Supplier/ViewSupplierPage";
 import ViewAccountPage from './pages/Accounts/ViewAccountPage';
 import ManageLeavesPage from './pages/HumanResource/ManageLeavesPage';
 import MyLeavePage from './pages/User/MyLeavePage';
+import ReportGenerationPage from './pages/Report/ReportGenerationPage';
 
 // Add on more routes here
 const routes = [
@@ -36,18 +37,18 @@ const routes = [
     path: '/accounts',
     component: <Outlet />,
     childRoutes: [
-      { 
-        path: '', 
+      {
+        path: '',
         component: <ManageAccountsPage />,
         viewAccess: View.ADMIN.name,
       },
-      { 
-        path: ':id', 
+      {
+        path: ':id',
         component: <ViewAccountPage />,
         viewAccess: View.ADMIN.name,
       },
-      { 
-        path: 'new', 
+      {
+        path: 'new',
         component: <AdminNewAccountFormPage />,
         viewAccess: View.ADMIN.name,
       },
@@ -65,18 +66,18 @@ const routes = [
     path: 'humanResource',
     component: <Outlet />,
     childRoutes: [
-      { 
-        path: 'employees', 
+      {
+        path: 'employees',
         component: <ManageEmployeesPage />,
         viewAccess: View.HR.name
       },
-      { 
-        path: 'employees/:id', 
+      {
+        path: 'employees/:id',
         component: <ViewEmployeePage />,
         viewAccess: View.HR.name
       },
-      { 
-        path: 'leaves', 
+      {
+        path: 'leaves',
         component: <ManageLeavesPage />,
         viewAccess: View.HR.name
       },
@@ -86,13 +87,13 @@ const routes = [
     path: '/customers',
     component: <Outlet />,
     childRoutes: [
-      { 
-        path: '', 
+      {
+        path: '',
         component: <ManageCustomersPage />,
         viewAccess: View.CRM.name,
       },
-      { 
-        path: ':id', 
+      {
+        path: ':id',
         component: <ViewCustomerPage />,
         viewAccess: View.CRM.name,
       },
@@ -102,13 +103,13 @@ const routes = [
     path: '/products',
     component: <Outlet />,
     childRoutes: [
-      { 
-        path: '', 
+      {
+        path: '',
         component: <ManageProductsPage />,
         viewAccess: View.INVENTORY.name,
       },
-      { 
-        path: ':id', 
+      {
+        path: ':id',
         component: <ViewProductPage />,
         viewAccess: View.INVENTORY.name,
       },
@@ -135,40 +136,44 @@ const routes = [
       },
     ],
   },
+  {
+    path: '/reports',
+    component: <ReportGenerationPage />
+  }
 ];
 
 function renderRoute(route, index) {
-    if (route.childRoutes == null) {
-        return (
-            <Route
-                path={route.path}
-                key={index}
-                element={<RequireAuth viewAccess={route.viewAccess}>{route.component}</RequireAuth>}
-            ></Route>
-        );
-    } else {
-        const childRoutes = route.childRoutes.map((childRoute, index2) => (
-            <Route
-                path={childRoute.path}
-                key={index2}
-                element={<RequireAuth viewAccess={childRoute.viewAccess}>{childRoute.component}</RequireAuth>}
-            ></Route>
-        ));
+  if (route.childRoutes == null) {
+    return (
+      <Route
+        path={route.path}
+        key={index}
+        element={<RequireAuth viewAccess={route.viewAccess}>{route.component}</RequireAuth>}
+      ></Route>
+    );
+  } else {
+    const childRoutes = route.childRoutes.map((childRoute, index2) => (
+      <Route
+        path={childRoute.path}
+        key={index2}
+        element={<RequireAuth viewAccess={childRoute.viewAccess}>{childRoute.component}</RequireAuth>}
+      ></Route>
+    ));
 
-        return (
-            <Route
-                path={route.path}
-                key={index}
-                element={
-                    <RequireAuth viewAccess={route.viewAccess}>
-                        <Outlet />
-                    </RequireAuth>
-                }
-            >
-                {childRoutes}
-            </Route>
-        );
-    }
+    return (
+      <Route
+        path={route.path}
+        key={index}
+        element={
+          <RequireAuth viewAccess={route.viewAccess}>
+            <Outlet />
+          </RequireAuth>
+        }
+      >
+        {childRoutes}
+      </Route>
+    );
+  }
 }
 
 ReactDOM.render(

@@ -19,6 +19,7 @@ const Navbar = () => {
         <Button style={{ padding: '0' }} onClick={() => navigate('/myProfile')} type="link">My Profile</Button>
         <Button style={{ padding: '0' }} onClick={() => navigate('/myLeaves')} type="link">My Leaves</Button>
         <Button style={{ padding: '0' }} onClick={() => setIsModalVisible(true)} type="link">Change Password</Button>
+        <Button style={{ padding: '0' }} onClick={() => navigate('/reports')} type="link">Report</Button>
         <Button style={{ padding: '0' }} type="link" onClick={logout}>Logout</Button>
       </Space>
     </>
