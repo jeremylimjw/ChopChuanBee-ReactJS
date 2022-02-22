@@ -19,7 +19,7 @@ export default function S2Menu({ supplier }) {
     const [disabledProducts, setDisabledProducts] = useState({});
     const [products, setProducts] = useState([]);
 
-    columns[1].onCell = (record) => ({ type: 'product_select', field: 'product',  items, setItems, record, products: products.filter(x => !disabledProducts[`${x.id}`]) });
+    columns[1].onCell = (record) => ({ type: 'product_select', toggleable: 'true', field: 'product', record, handleSave, products: products.filter(x => !disabledProducts[`${x.id}`]) });
     columns[3].render = (_, record) => <Button shape="circle" icon={<DeleteOutlined />} onClick={() => handleDeleteRow(record)} loading={loading} />;
 
     useEffect(() => {
@@ -63,6 +63,23 @@ export default function S2Menu({ supplier }) {
         setItems(newItems);
     };
 
+    function handleSave(newRecord) {
+      const newItems = [...items];
+      // Allow match record by 'id' or 'key'
+      const index = newItems.findIndex(x => {
+          if (newRecord.id) {
+              return (x.id === newRecord.id)
+          } else if (newRecord.key) {
+              return (x.key === newRecord.key)
+          } else {
+              return false;
+          }
+      });
+      const item = newItems[index];
+      newItems.splice(index, 1, { ...item, ...newRecord });
+      setItems(newItems);
+    }
+
     function handleMenuUpdate() {
         const newItems = items.filter(x => x.product != null)
         setLoading(true);
@@ -102,6 +119,7 @@ const columns = [
   {
       title: 'No',
       width: 50,
+      ellipsis: true,
       render: (_, record, index) => index+1,
   },
   {
@@ -109,6 +127,7 @@ const columns = [
     dataIndex: 'product',
     key: 'product',
     width: 280,
+    ellipsis: true,
     render: (product) => product?.name,
     sorter: (a, b) => sortByString(a.product?.name, b.product?.name),
   },
@@ -118,6 +137,7 @@ const columns = [
     key: 'id',
     align: 'center',
     width: 120,
+    ellipsis: true,
     render: (id) => '-',
     sorter: (a, b) => sortByString(a.product?.name, b.product?.name),
   },

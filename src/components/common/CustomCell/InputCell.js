@@ -1,35 +1,53 @@
-import { Input } from "antd";
-import { useEffect, useState } from "react";
+import { Form, Input, Typography } from "antd";
+import React, { useEffect, useRef, useState } from "react";
 
-export default function InputCell({ field, items, setItems, record, ...restProps }) {
-    const [value, setValue] = useState();
+export default function InputCell({ field, toggleable, record, handleSave, ...restProps }) {
+    const [form] = Form.useForm();
 
+    const [editing, setEditing] = useState(false);
+    const inputRef = useRef(null);
+
+    // Init form value for non-toggleable
     useEffect(() => {
-        setValue(record[`${field}`])
-    }, [record, field])
+        form.setFieldsValue({ [field]: record[field] });
+    }, [form, field, record])
+    
+    useEffect(() => {
+      if (editing) {
+        inputRef.current.focus();
+      }
+    }, [editing]);
+    
+    function toggleEdit() {
+        setEditing(!editing);
+        form.setFieldsValue({ [field]: record[field] });
+    };
 
     function save() {
-        const newItems = [...items]
-        // Allow match record by 'id' or 'key'
-        const index = newItems.findIndex(x => {
-            if (record.id) {
-                return (x.id === record.id)
-            } else if (record.key) {
-                return (x.key === record.key)
-            } else {
-                return false;
-            }
-        });
-        if (index >= 0) {
-            newItems[index][`${field}`] = value;
+        const values = form.getFieldsValue();
+        handleSave({ ...record, ...values })
+        
+        if (toggleable === 'true') {
+            toggleEdit();
         }
-        setItems(newItems);
     }
 
     return (
         <td {...restProps}>
-            <Input value={value} onChange={(e) => setValue(e.target.value)} onPressEnter={save} onBlur={save} />
+            <Form form={form}>
+            { (!toggleable || editing) ? 
+                <Form.Item style={{ margin: 0 }} name={field}>
+                    <Input ref={inputRef} onPressEnter={save} onBlur={save} />
+                </Form.Item>
+                :
+                <div onClick={toggleEdit}>
+                { record[field] ?
+                    record[field] : <Typography.Text type="secondary">Click to enter value</Typography.Text>
+                }
+                </div>
+            }
+            </Form>
         </td>
     )
-
+    
 }
