@@ -129,4 +129,12 @@ const columns = [
         render: (deleted_date) => getActiveTag(deleted_date),
         sorter: (a, b) => sortByNumber(a.deleted_date ? 1 : 0, b.deleted_date ? 1 : 0),
     },
-]
+    {
+        title: "Action",
+        dataIndex: "id",
+        key: "link",
+        width: 100,
+        ellipsis: true,
+        render: (id) => <Link to={`./${id}`}>View</Link>,
+    },
+];

@@ -20,7 +20,7 @@ export default function NewSupplierModal({ SOFPs, setSOFPs, isModalVisible, setI
         try {
           const values = await form.validateFields();
           setLoading(true);
-          AccountingAPIHelper.create(values)
+          AccountingAPIHelper.createSOFP(values)
             .then(newSOFP => {
               message.success('Statement of Financial Position has been successfully created!')
               setSOFPs([newSOFP, ...SOFPs]);

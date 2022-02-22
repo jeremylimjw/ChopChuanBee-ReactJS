@@ -23,6 +23,7 @@ import ManageSuppliersPage from "./pages/Supplier/ManageSuppliersPage";
 import ViewSupplierPage from "./pages/Supplier/ViewSupplierPage";
 import ViewAccountPage from './pages/Accounts/ViewAccountPage';
 import ManageSOFPsPage from './pages/Accounting/ManageSOFPsPage';
+import ViewSOFPPage from './pages/Accounting/ViewSOFPPage'
 import ManageLeavesPage from './pages/HumanResource/ManageLeavesPage';
 import MyLeavePage from './pages/User/MyLeavePage';
 
@@ -139,11 +140,11 @@ const routes = [
         component: <ManageSOFPsPage />,
         viewAccess: View.ACCOUNTING.name,
       },
-      // {
-      //   path: ":id",
-      //   component: <ViewSupplierPage />,
-      //   viewAccess: View.SCM.name,
-      // },
+      {
+        path: "SOFPS/:id",
+        component: <ViewSOFPPage />,
+        viewAccess: View.ACCOUNTING.name,
+      },
     ],
   },
 ];

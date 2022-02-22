@@ -35,7 +35,7 @@ export class AccountingAPIHelper {
           .then((res) => res.data);
     }
     
-    static async create(SOFP) {
+    static async createSOFP(SOFP) {
         return axiosObject
           .post("/accounting/SOFP", {
             name: SOFP.name,
@@ -44,4 +44,58 @@ export class AccountingAPIHelper {
           .then((res) => res.data)
     }
 
+    static async deactivateSOFP(id) {
+      return axiosObject.delete("/accounting/SOFP", { id: id })
+        .then((res) => res.data);
+    }
+
+    static async activateSOFP(id) {
+      return axiosObject.delete("/accounting/SOFP", { id: id })
+        .then((res) => res.data);
+    }
+
+    static async update(sofp) {
+      return axiosObject
+        .put("/accounting/SOFP", {
+          id: sofp.id, 
+          name: sofp.name,
+          cash_sales_of_goods: sofp.cash_sales_of_goods, 
+          cash_others: sofp.cash_others, 
+          account_receivable: sofp.account_receivable, 
+          inventory: sofp.inventory, 
+          supplies: sofp.supplies, 
+          prepaid_insurance: sofp.prepaid_insurance, 
+          prepaid_rent: sofp.prepaid_rent, 
+          other_current_asset_1: sofp.other_current_asset_1,
+          other_current_asset_2: sofp.other_current_asset_2, 
+          land: sofp.land, 
+          less_accumulated_depreciation_land: sofp.less_accumulated_depreciation_land, 
+          building: sofp.building, 
+          less_accumulated_depreciation_building: sofp.less_accumulated_depreciation_building, 
+          equipments: sofp.equipments, 
+          less_accumulated_depreciation_equipments: sofp.less_accumulated_depreciation_equipments, 
+          other_non_current_asset_1: sofp.other_non_current_asset_1, 
+          other_non_current_asset_2: sofp.other_non_current_asset_2, 
+          goodwill: sofp.goodwill, 
+          trade_names: sofp.trade_names, 
+          other_intangible_asset_1: sofp.other_intangible_asset_1, 
+          other_intangible_asset_2: sofp.other_intangible_asset_2, 
+          salary_payable: sofp.salary_payable, 
+          interest_payable: sofp.interest_payable, 
+          taxes_payable: sofp.taxes_payable, 
+          warrent_payable: sofp.warrent_payable, 
+          rental_payable: sofp.rental_payable, 
+          notes_payable: sofp.notes_payable, 
+          bonds_payable: sofp.bonds_payable, 
+          other_libility_1: sofp.other_libility_1, 
+          other_libility_2: sofp.other_libility_2, 
+          share_capital: sofp.share_capital, 
+          less_withdrawal: sofp.less_withdrawal, 
+          retained_earning: sofp.retained_earning, 
+          other_equity_1: sofp.other_equity_1, 
+          other_equity_2: sofp.other_equity_2,
+          end_date: sofp.end_date
+        })
+        .then((res) => res.data)
+    }
 }
