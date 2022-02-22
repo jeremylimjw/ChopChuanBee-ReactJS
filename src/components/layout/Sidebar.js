@@ -2,11 +2,7 @@ import React from 'react'
 import { Layout, Menu } from 'antd'
 import { Link } from 'react-router-dom'
 import { useApp } from '../../providers/AppProvider'
-<<<<<<< HEAD
-import { HomeOutlined, InboxOutlined, ShopOutlined, ShoppingOutlined, SolutionOutlined, TeamOutlined, UserOutlined, AccountBookOutlined } from '@ant-design/icons/lib/icons'
-=======
-import { HomeOutlined, InboxOutlined, ShoppingOutlined, SolutionOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons/lib/icons'
->>>>>>> first-release
+import { HomeOutlined, InboxOutlined, ShoppingOutlined, SolutionOutlined, TeamOutlined, UserOutlined, AccountBookOutlined } from '@ant-design/icons/lib/icons'
 
 
 // Add on more menu items here
