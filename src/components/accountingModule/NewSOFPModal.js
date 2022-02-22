@@ -47,7 +47,7 @@ export default function NewSupplierModal({ SOFPs, setSOFPs, isModalVisible, setI
             <Form {...layout} form={form} autoComplete="off" labelAlign="left">
                 <Form.Item
                     rules={[REQUIRED]}
-                    label="Statement of Financial Position Title"
+                    label="Title"
                     name="name"
                 >
                     <Input />
