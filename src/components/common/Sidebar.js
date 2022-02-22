@@ -4,12 +4,13 @@ import { Link } from 'react-router-dom'
 import { HomeOutlined, InboxOutlined, ShoppingOutlined, SolutionOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons/lib/icons'
 import { useApp } from '../../providers/AppProvider'
 import { useLocation } from "react-router-dom";
+import { View } from '../../enums/View'
 
 
 // Add on more menu items here
 const menu = [
   {
-    role: 'Admin',
+    role: View.ADMIN.name,
     title: 'Admin',
     icon: <UserOutlined />,
     items: [
@@ -18,7 +19,7 @@ const menu = [
     ]
   },
   {
-    role: 'HR',
+    role: View.HR.name,
     title: 'Human Resource',
     icon: <TeamOutlined />,
     items: [
@@ -27,7 +28,7 @@ const menu = [
     ]
   },
   {
-    role: 'Inventory',
+    role: View.INVENTORY.name,
     title: 'Inventory',
     icon: <InboxOutlined />,
     items: [
@@ -37,7 +38,7 @@ const menu = [
     ]
   },
   {
-    role: 'SCM',
+    role: View.SCM.name,
     title: 'Supplier',
     icon: <ShoppingOutlined />,
     items: [
@@ -46,7 +47,7 @@ const menu = [
     ]
   },
   {
-    role: 'CRM',
+    role: View.CRM.name,
     title: 'Customer',
     icon: <SolutionOutlined />,
     items: [
