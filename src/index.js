@@ -3,16 +3,31 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom'
-import { Layout } from 'antd'
-import LoginPage from './pages/LoginPage';
+import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
+import { Layout } from 'antd';
 import { AppProvider } from './providers/AppProvider';
 import RequireAuth from './auth/RequireAuth';
-import MyTemplate from './pages/MyTemplate';
+import { View } from './enums/View';
+
+import LoginPage from './components/LoginPage';
+import MyTemplate from './components/MyTemplate';
+import ManageAccountsPage from './components/admin/ManageAccountsPage';
+import ViewAccountPage from './components/admin/ViewAccountPage';
+import ViewLogsPage from './components/admin/ViewLogsPage';
+import MyProfilePage from './components/general/MyProfilePage';
+import MyLeavePage from './components/general/MyLeavePage';
+import ManageEmployeesPage from './components/humanResource/ManageEmployeesPage';
+import ViewEmployeePage from './components/humanResource/ViewEmployeePage';
+import ManageLeavesPage from './components/humanResource/ManageLeavesPage';
+import ManageProductsPage from './components/inventory/ManageProductsPage';
+import ViewProductPage from './components/inventory/ViewProductPage';
+import ManageSuppliersPage from './components/supplier/ManageSuppliersPage';
+import ViewSupplierPage from './components/supplier/ViewSupplierPage';
+import ManageCustomersPage from './components/customer/ManageCustomersPage';
+import ViewCustomerPage from './components/customer/ViewCustomerPage';
 import ManagePurchaseOrdersPage from './pages/ManagePurchaseOrdersPage';
 import NewPurchaseOrderPage from './pages/NewPurchaseOrderPage';
 import ViewPurchaseOrderPage from './pages/ViewPurchaseOrderPage';
-
 
 // Add on more routes here
 const routes = [
@@ -21,57 +36,152 @@ const routes = [
     component: <MyTemplate />,
   },
   {
-    path: '/customers',
-    component: <div>Customers Component</div>,
-    viewAccess: "CRM",
-  },
-  {
-    path: '/procurements',
+    path: '/admin',
     component: <Outlet />,
     childRoutes: [
       { 
-        path: '', 
+        path: 'accounts', 
+        component: <ManageAccountsPage />,
+        viewAccess: View.ADMIN.name,
+      },
+      { 
+        path: 'accounts/:id', 
+        component: <ViewAccountPage />,
+        viewAccess: View.ADMIN.name,
+      },
+      { 
+        path: 'logs', 
+        component: <ViewLogsPage />,
+        viewAccess: View.ADMIN.name,
+      },
+    ]
+  },
+  {
+    path: '/myProfile',
+    component: <MyProfilePage />,
+  },
+  {
+    path: '/myLeaves',
+    component: <MyLeavePage />,
+  },
+  {
+    path: 'humanResource',
+    component: <Outlet />,
+    childRoutes: [
+      { 
+        path: 'employees', 
+        component: <ManageEmployeesPage />,
+        viewAccess: View.HR.name
+      },
+      { 
+        path: 'employees/:id', 
+        component: <ViewEmployeePage />,
+        viewAccess: View.HR.name
+      },
+      { 
+        path: 'leaveApplications', 
+        component: <ManageLeavesPage />,
+        viewAccess: View.HR.name
+      },
+    ]
+  },
+  {
+    path: '/inventory',
+    component: <Outlet />,
+    childRoutes: [
+      { 
+        path: 'products', 
+        component: <ManageProductsPage />,
+        viewAccess: View.INVENTORY.name,
+      },
+      { 
+        path: 'products/:id', 
+        component: <ViewProductPage />,
+        viewAccess: View.INVENTORY.name,
+      },
+    ]
+  },
+  {
+    path: "/supplier",
+    component: <Outlet />,
+    childRoutes: [
+      {
+        path: "suppliers",
+        component: <ManageSuppliersPage />,
+        viewAccess: View.SCM.name,
+      },
+      {
+        path: "suppliers/:id",
+        component: <ViewSupplierPage />,
+        viewAccess: View.SCM.name,
+      },
+      { 
+        path: 'procurements', 
         component: <ManagePurchaseOrdersPage />,
         viewAccess: "CRM",
       },
       { 
-        path: 'new', 
+        path: 'procurements/new', 
         component: <NewPurchaseOrderPage />,
         viewAccess: "CRM",
       },
       { 
-        path: ':id', 
+        path: 'procurements/:id', 
         component: <ViewPurchaseOrderPage />,
         viewAccess: "CRM",
       },
+    ],
+  },
+  {
+    path: '/customer',
+    component: <Outlet />,
+    childRoutes: [
+      { 
+        path: 'customers', 
+        component: <ManageCustomersPage />,
+        viewAccess: View.CRM.name,
+      },
+      { 
+        path: 'customers/:id', 
+        component: <ViewCustomerPage />,
+        viewAccess: View.CRM.name,
+      },
     ]
   },
-
-]
+];
 
 function renderRoute(route, index) {
-  if (route.childRoutes == null) {
-    return (
-      <Route path={route.path} key={index} element={
-        <RequireAuth viewAccess={route.viewAccess}>
-          {route.component}
-        </RequireAuth>}>
-      </Route>);
+    if (route.childRoutes == null) {
+        return (
+            <Route
+                path={route.path}
+                key={index}
+                element={<RequireAuth viewAccess={route.viewAccess}>{route.component}</RequireAuth>}
+            ></Route>
+        );
+    } else {
+        const childRoutes = route.childRoutes.map((childRoute, index2) => (
+            <Route
+                path={childRoute.path}
+                key={index2}
+                element={<RequireAuth viewAccess={childRoute.viewAccess}>{childRoute.component}</RequireAuth>}
+            ></Route>
+        ));
 
-  } else {
-    const childRoutes = route.childRoutes.map((childRoute, index2) => 
-      <Route path={childRoute.path} key={index2} element={
-        <RequireAuth viewAccess={childRoute.viewAccess}>
-          {childRoute.component}
-        </RequireAuth>}>
-      </Route>);
-
-    return (
-      <Route path={route.path} key={index} element={<RequireAuth viewAccess={route.viewAccess}><Outlet /></RequireAuth>}>
-        {childRoutes}
-      </Route>);
-  }
-
+        return (
+            <Route
+                path={route.path}
+                key={index}
+                element={
+                    <RequireAuth viewAccess={route.viewAccess}>
+                        <Outlet />
+                    </RequireAuth>
+                }
+            >
+                {childRoutes}
+            </Route>
+        );
+    }
 }
 
 ReactDOM.render(
@@ -82,58 +192,7 @@ ReactDOM.render(
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/" element={<RequireAuth><App /></RequireAuth>}>
-
               {routes.map((route, index) => renderRoute(route, index))}
-
-              {/* <Route path='/suppliers' element={<RequireAuth viewAccess="SCM"><div>Suppliers Component</div></RequireAuth>} />
-              <Route path='/human-resource/' element={<RequireAuth viewAccess="HR"><div>Human resource Component</div></RequireAuth>} />
-              <Route path='/accounting/create/expense' element={<div />} />
-              <Route path='/accounting/create/income' element={<div />} />
-              <Route path='/accounting/pnl' element={<div />} />
-              <Route path='/accounting' element={<div>Accounting</div>} />
-
-              <Route path='/sales/return' element={<div />} />
-              <Route path='/sales/create' element={<div />} />
-              <Route path='/sales/:invoiceId' element={<div />} />
-              <Route path='/sales' element={<div />} />
-
-              <Route path='/customers/accounts' element={<div />} />
-              <Route path='/customers/create' element={<div />} />
-              <Route path='/customers/:custId' element={<div />} />
-
-              <Route path='/products/create' element={<div />} />
-              <Route path='/products/:productId' element={<div />} />
-              <Route path='/products' element={<div />} />
-
-              <Route path='/inventory/supplier-invoices/create' element={<div />} />
-              <Route path='/inventory/supplier-invoices' element={<div />} />
-              <Route path='/inventory/record/damaged' element={<div />} />
-              <Route path='/inventory/record/return' element={<div />} />
-              <Route path='/inventory/:inventoryId' element={<div />} />
-              <Route path='/inventory' element={<div />} />
-
-              <Route path='/suppliers/accounts' element={<div />} />
-              <Route path='/suppliers/create' element={<div />} />
-              <Route path='/suppliers/:supplierId' element={<div />} />
-
-              <Route path='/human-resource/leaves/:leaveId' element={<div />} />
-              <Route path='/human-resource/leaves/create' element={<div />} />
-              <Route path='/human-resource/leaves' element={<div />} />
-              <Route path='/human-resource/employees' element={<div />} />
-              <Route path='/human-resource/employees/:employeeId' element={<div />} />
-
-              <Route path='/admin/logs' element={<div />} />
-              <Route path='/admin/accounts/:accountId' element={<div />} />
-              <Route path='/admin/accounts/create' element={<div />} />
-              <Route path='/admin/accounts/' element={<div />} />
-
-              <Route path='/user/leave/apply' element={<div />} />
-              <Route path='/user/leave' element={<div />} />
-              <Route path='/user/profile' element={<div />} />
-
-              <Route path='/home' element={<div />} />
-              <Route path='/resetPassword' element={<div />} />
-              <Route path='/settings' element={<div />} /> */}
             </Route>
           </Routes>
         </Layout>
