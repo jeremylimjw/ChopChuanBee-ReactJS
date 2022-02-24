@@ -1,8 +1,11 @@
 import { FileDoneOutlined, FileTextOutlined, SaveOutlined, SendOutlined, StopOutlined } from '@ant-design/icons/lib/icons';
-import { Button, message, Popconfirm, Progress, Space, Typography } from 'antd';
+import { Button, Form, message, Popconfirm, Progress, Space, Typography } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router';
 import { PurchaseOrderApiHelper } from '../../../api/PurchaseOrderApiHelper';
+import { AccountingType } from '../../../enums/AccountingType';
+import { MovementType } from '../../../enums/MovementType';
+import { PaymentTerm } from '../../../enums/PaymentTerm';
 import { POStatus } from '../../../enums/PurchaseOrderStatus';
 import { PurchaseOrder } from '../../../models/PurchaseOrder';
 import { useApp } from '../../../providers/AppProvider';
@@ -20,6 +23,8 @@ export default function ViewProcurementPage() {
     const navigate = useNavigate();
 
     const { handleHttpError } = useApp();
+
+    const [form] = Form.useForm();
   
     const [loading, setLoading] = useState(false);
     const [purchaseOrder, setPurchaseOrder] = useState(null)
@@ -45,75 +50,94 @@ export default function ViewProcurementPage() {
     }, [id, handleHttpError, navigate]);
 
     function saveForLater() {
+      const values = form.getFieldsValue();
+      if (purchaseOrder.purchase_order_items.filter(x => x.product == null).length > 0) {
+        message.error('Each order item must have a product selected.')
+        return;
+      }
+      const newValues = {...purchaseOrder, ...values};
+
       setLoading(true);
-      PurchaseOrderApiHelper.update(purchaseOrder)
+      PurchaseOrderApiHelper.update(newValues)
         .then(() => {
           message.success("Purchase Order successfully updated!");
+          setPurchaseOrder(new PurchaseOrder(newValues));
           setLoading(false);
         })
         .catch(handleHttpError)
         .catch(() => setLoading(false));
     }
 
-    function convertToInvoice() {
-      setLoading(true);
+    async function convertToInvoice() {
+      try {
+        const values = await form.validateFields();
+        if (purchaseOrder.purchase_order_items.filter(x => x.product == null).length > 0) {
+          message.error('Each order item must have a product selected.')
+          return;
+        }
+        const newPurchaseOrder = new PurchaseOrder({...purchaseOrder, ...values});
+        newPurchaseOrder.convertToInvoice();
 
-      const newPurchaseOrder = purchaseOrder.convertToInvoice();
+        setLoading(true);
+        PurchaseOrderApiHelper.update(newPurchaseOrder)
+          .then(() => {
+            message.success("Purchase Order successfully updated!");
 
-      PurchaseOrderApiHelper.update(newPurchaseOrder)
-        .then(() => {
-          message.success("Purchase Order successfully updated!");
-
-          // Add new payment
-          let payment;
-          if (newPurchaseOrder.payment_term_id === 1) { // Cash
-            payment = { 
+            // Add new payment
+            const payment = {
               purchase_order_id: purchaseOrder.id, 
-              movement_type_id: 1,
-              amount: -newPurchaseOrder.getOrderTotal(), 
-              payment_method_id: newPurchaseOrder.payment_method_id,
-            };
-          } else { // Credit
-            payment = { 
-              purchase_order_id: purchaseOrder.id, 
-              movement_type_id: 1,
-              amount: newPurchaseOrder.getOrderTotal(), 
-              accounting_type_id: 1,
-            };
-          }
-          return PurchaseOrderApiHelper.createPayment(payment);
-        })
-        .then(newPayment => {
-          newPurchaseOrder.payments = [...purchaseOrder.payments]
-          newPurchaseOrder.payments.push(newPayment);
-          setPurchaseOrder(new PurchaseOrder({...newPurchaseOrder}))
-          setLoading(false);
-          setIsDeliveryModalVisible(1);
-        })
-        .catch(handleHttpError)
-        .catch(() => setLoading(false));
+              movement_type_id: MovementType.PURCHASE.id,
+            }
+            if (newPurchaseOrder.payment_term_id === PaymentTerm.CASH.id) {
+              payment.amount = -newPurchaseOrder.getOrderTotal();
+              payment.payment_method_id = newPurchaseOrder.payment_method_id;
+            } else if (newPurchaseOrder.payment_term_id === PaymentTerm.CREDIT.id) {
+              payment.amount = newPurchaseOrder.getOrderTotal();
+              payment.accounting_type_id = AccountingType.PAYABLE.id;
+            }
+            return PurchaseOrderApiHelper.createPayment(payment);
+          })
+          .then(newPayment => {
+            setPurchaseOrder(new PurchaseOrder({...newPurchaseOrder, payments: [...purchaseOrder.payments, newPayment] }))
+            setLoading(false);
+            setIsDeliveryModalVisible(1);
+          })
+          .catch(handleHttpError)
+          .catch(() => setLoading(false));
+
+      } catch (err) { }
 
     }
 
+    async function closeOrder() {
+      try {
+        const values = await form.validateFields();
+        if (purchaseOrder.purchase_order_items.filter(x => x.product == null).length > 0) {
+          message.error('Each order item must have a product selected.')
+          return;
+        }
+        const newPurchaseOrder = {...purchaseOrder, ...values, purchase_order_status_id: POStatus.CLOSED.id, closed_on: new Date()};
+
+        setLoading(true);
+        PurchaseOrderApiHelper.closeOrder(newPurchaseOrder)
+          .then(() => {
+            message.success("Purchase Order successfully closed!");
+            setPurchaseOrder(new PurchaseOrder({...newPurchaseOrder}))
+            setLoading(false);
+          })
+          .catch(handleHttpError)
+          .catch(() => setLoading(false));
+
+      } catch (err) { }
+    }
+
+    // TODO: remove all payments
     function cancelOrder() {
       setLoading(true);
       const newPurchaseOrder = {...purchaseOrder, purchase_order_status_id: POStatus.CANCELLED.id };
       PurchaseOrderApiHelper.updateStatusOnly(newPurchaseOrder)
         .then(() => {
           message.success("Purchase Order successfully cancelled!");
-          setPurchaseOrder(new PurchaseOrder({...newPurchaseOrder}))
-          setLoading(false);
-        })
-        .catch(handleHttpError)
-        .catch(() => setLoading(false));
-    }
-
-    function closeOrder() {
-      setLoading(true);
-      const newPurchaseOrder = {...purchaseOrder, purchase_order_status_id: POStatus.CLOSED.id, closed_on: new Date() };
-      PurchaseOrderApiHelper.closeOrder(newPurchaseOrder)
-        .then(() => {
-          message.success("Purchase Order successfully closed!");
           setPurchaseOrder(new PurchaseOrder({...newPurchaseOrder}))
           setLoading(false);
         })
@@ -134,7 +158,7 @@ export default function ViewProcurementPage() {
           </MyCard>
 
           <MyCard title="Order Details" style={{ flexGrow: 1, margin: '0 12px 12px 24px' }}>
-            <PO2Form purchaseOrder={purchaseOrder} setPurchaseOrder={setPurchaseOrder} loading={loading} saveForLater={saveForLater} />
+            <PO2Form form={form} purchaseOrder={purchaseOrder} loading={loading} saveForLater={saveForLater} />
           </MyCard>
 
           <MyCard style={{ width: 250, margin: '0 24px 12px 24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -191,8 +215,19 @@ export default function ViewProcurementPage() {
         { !purchaseOrder.isStatus(POStatus.PENDING) && 
         <div className='flex-side-by-side'>
 
-          <PO4PaymentsTable purchaseOrder={purchaseOrder} setPurchaseOrder={setPurchaseOrder} loading={loading} />
-          <PO5DeliveriesTable purchaseOrder={purchaseOrder} setPurchaseOrder={setPurchaseOrder} loading={loading} isModalVisible={isDeliveryModalVisible} setIsModalVisible={setIsDeliveryModalVisible} />
+          <PO4PaymentsTable 
+            purchaseOrder={purchaseOrder} 
+            setPurchaseOrder={setPurchaseOrder} 
+            loading={loading} 
+          />
+
+          <PO5DeliveriesTable 
+            purchaseOrder={purchaseOrder} 
+            setPurchaseOrder={setPurchaseOrder} 
+            loading={loading} 
+            isModalVisible={isDeliveryModalVisible} 
+            setIsModalVisible={setIsDeliveryModalVisible} 
+          />
 
         </div>
         }

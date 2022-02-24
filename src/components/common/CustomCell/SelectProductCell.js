@@ -32,7 +32,7 @@ export default function SelectProductCell({ field, toggleable, handleSave, recor
   }
 
   function onChange(_, option) {
-    handleSave({...record, [field]: option?.product })
+    handleSave({...record, [field]: option?.product, product_id: option?.product.id })
     
     if (toggleable === 'true') {
         toggleEdit();

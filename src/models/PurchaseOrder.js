@@ -98,18 +98,15 @@ export class PurchaseOrder {
     }
 
     convertToInvoice() {
-        const newPurchaseOrder = new PurchaseOrder({...this})
-        newPurchaseOrder.purchase_order_status_id = POStatus.ACCEPTED.id;
+        this.purchase_order_status_id = POStatus.ACCEPTED.id;
 
-        if (newPurchaseOrder.has_gst === 1) { // No GST
-            newPurchaseOrder.gst_rate = 0;
-        } else if (newPurchaseOrder.has_gst === 2) { // GST Inclusive
+        if (this.has_gst === 1) { // No GST
+            this.gst_rate = 0;
+        } else if (this.has_gst === 2) { // GST Inclusive
             // Convert items to GST exclusive
-            newPurchaseOrder.has_gst = 3;
-            newPurchaseOrder.purchase_order_items = this.purchase_order_items.map(item => ({...item, unit_cost: (item.unit_cost/(1+this.gst_rate/100)) }))
+            this.has_gst = 3; // Change to GST exclusive
+            this.purchase_order_items = this.purchase_order_items.map(item => ({...item, unit_cost: (item.unit_cost/(1+this.gst_rate/100)) }))
         }
-
-        return newPurchaseOrder;
     }
     
 }

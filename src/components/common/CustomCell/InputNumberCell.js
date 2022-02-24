@@ -37,7 +37,7 @@ export default function InputNumberCell({ field, toggleable, record, handleSave,
             <Form form={form}>
             { (!toggleable || editing) ? 
                 <Form.Item style={{ margin: 0 }} name={field}>
-                    <InputNumber ref={inputRef} onPressEnter={save} onBlur={save} />
+                    <InputNumber min={0} ref={inputRef} onPressEnter={save} onBlur={save} />
                 </Form.Item>
                 :
                 <div onClick={toggleEdit}>

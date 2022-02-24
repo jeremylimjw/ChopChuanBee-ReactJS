@@ -2,6 +2,7 @@ import { message, Table } from 'antd';
 import Modal from 'antd/lib/modal/Modal'
 import React, { useEffect, useState } from 'react'
 import { PurchaseOrderApiHelper } from '../../../api/PurchaseOrderApiHelper';
+import { MovementType } from '../../../enums/MovementType';
 import { PurchaseOrder } from '../../../models/PurchaseOrder';
 import { useApp } from '../../../providers/AppProvider';
 import { CustomCell } from '../../common/CustomCell';
@@ -12,6 +13,9 @@ export default function NewDeliveryOrderModal({ purchaseOrder, setPurchaseOrder,
     const [loading, setLoading] = useState(false);
 
     const [items, setItems] = useState([]);
+
+    tableColumns[4].title = isModalVisible === 1 ? 'Top Up' : 'Refund';
+    tableColumns[4].onCell = (record) => ({ type: 'input_number', field: 'top_up', record, handleSave });
 
     useEffect(() => {
         const newItems = purchaseOrder.purchase_order_items.map(item => {
@@ -33,26 +37,13 @@ export default function NewDeliveryOrderModal({ purchaseOrder, setPurchaseOrder,
         })
         setItems(newItems);
     }, [purchaseOrder, isModalVisible])
-    
-
-
-    const tableColumns = [
-        { title: 'No', dataIndex: 'no', render: (_, record, index) => index+1 },
-        { title: 'Product', dataIndex: 'product', key: 'product', render: (item) => item?.name, align: 'left'},
-        { title: 'Quantity', dataIndex: 'quantity', key: 'quantity', align: 'center' },
-        { title: 'Total Received', dataIndex: 'total_received', key: 'total_received', align: 'center' },
-        { title: `${isModalVisible === 1 ? 'Top Up' : 'Refund'}`, dataIndex: 'top_up', key: 'top_up', align: 'center', onCell: (record) => 
-            ({ editable: true, record, dataIndex: 'top_up', inputType: 'number', handleSave }) 
-        },
-    ]
   
-    function handleSave(record) {
-      const newData = [...items];
-      const index = newData.findIndex((item) => record.id === item.id);
-      if (newData && index >= 0) {
-        newData.splice(index, 1, { ...newData[index], ...record });
-        setItems(newData);
-      }
+    function handleSave(newRecord) {
+        const newItems = [...items];
+        const index = newItems.findIndex(x => x.id === newRecord.id);
+        const item = newItems[index];
+        newItems.splice(index, 1, { ...item, ...newRecord });
+        setItems(newItems);
     };
 
     function renderTitle() {
@@ -64,18 +55,33 @@ export default function NewDeliveryOrderModal({ purchaseOrder, setPurchaseOrder,
     }
 
     function handleFormSubmit() {
+        // Validation
+        if (isModalVisible === 1) { // Make movement
+            for (let item of items) {
+                if (item.top_up > (item.quantity - item.total_received)) {
+                    message.error('Top up cannot exceed total value.')
+                    return;
+                }
+            }
+        } else { // Make refund
+            for (let item of items) {
+                if (item.top_up > item.total_received) {
+                    message.error('Refund cannot exceed received quantity.')
+                    return;
+                }
+            }
+        }
+
         const inventoryMovements = items.filter(x => x.top_up !== 0).map(x => {
             const movement = {
                 purchase_order_item_id: x.id,
                 quantity: x.top_up,
                 unit_cost: x.unit_cost*(1+purchaseOrder.gst_rate/100),
             }
-            // movement_type_id: 1 is purchase
-            // movement_type_id: 3 is refund
             if (isModalVisible === 1) { // Make movement
-                return {...movement, movement_type_id: 1}
+                return {...movement, movement_type_id: MovementType.PURCHASE.id }
             } else if (isModalVisible === 2) { // Make refund
-                return {...movement, movement_type_id: 3, quantity: -x.top_up}
+                return {...movement, movement_type_id: MovementType.REFUND.id, quantity: -x.top_up}
             } else {
                 return {};
             }
@@ -123,9 +129,40 @@ export default function NewDeliveryOrderModal({ purchaseOrder, setPurchaseOrder,
             <Table dataSource={items} columns={tableColumns} 
                 components={{ body: { cell: CustomCell } }}
                 pagination={false} 
-                rowKey={(_, index) => index}
+                rowKey="id"
             />
 
         </Modal>
     )
 }
+    
+const tableColumns = [
+    { 
+        title: 'No', 
+        dataIndex: 'no', 
+        render: (_, record, index) => index+1 
+    },
+    { 
+        title: 'Product', 
+        dataIndex: 'product', 
+        key: 'product', 
+        render: (item) => item?.name, align: 'left'
+    },
+    { 
+        title: 'Quantity', 
+        dataIndex: 'quantity', 
+        key: 'quantity', 
+        align: 'center' 
+    },
+    { 
+        title: 'Total Received', 
+        dataIndex: 'total_received', 
+        key: 'total_received', 
+        align: 'center' 
+    },
+    { 
+        title: 'Top Up', 
+        dataIndex: 'top_up', 
+        key: 'top_up', align: 'center', 
+    }
+]

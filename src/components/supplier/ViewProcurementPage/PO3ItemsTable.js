@@ -1,47 +1,87 @@
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons/lib/icons';
 import { Button, InputNumber, Table, Typography } from 'antd';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { SupplierAPIHelper } from '../../../api/SupplierAPIHelper';
 import { POStatus } from '../../../enums/PurchaseOrderStatus';
 import { PurchaseOrder } from '../../../models/PurchaseOrder';
+import { useApp } from '../../../providers/AppProvider';
 import { CustomCell } from '../../common/CustomCell';
 import MyToolbar from '../../common/MyToolbar';
-import NewOrderItemModal from './NewOrderItemModal';
 
 export default function PO3ItemsTable({ purchaseOrder, setPurchaseOrder, loading, setLoading }) {
+
+  const { handleHttpError } = useApp();
   
-  const [isNewOrderItemModalVisible, setIsNewOrderItemModalVisible] = useState(false);
+  const [menuItems, setMenuItems] = useState([]);
+  const [disabledProductsMap, setDisabledProductsMap] = useState({});
+
+  columns[1].onCell = (record) => ({ 
+    type: 'product_select', 
+    toggleable: 'true', 
+    field: 'product', 
+    record, 
+    handleSave, 
+    products: menuItems,
+    disabledProductsMap,
+  });
+
+  columns[5].onCell = (record) => ({ type: 'input_number', field: 'quantity', record, handleSave })
+  columns[6].onCell = (record) => ({ type: 'input_number', field: 'unit_cost', record, handleSave })
+  columns[8].render = (_, record) => <Button shape="circle" icon={<DeleteOutlined />} onClick={() => handleDeleteRow(record)} disabled={!purchaseOrder.isStatus(POStatus.PENDING)} />
   
-  function handleDelete(record) {
-    const newItems = purchaseOrder?.purchase_order_items.filter((item) => item.id !== record.id);
+  useEffect(() => {
+    if (purchaseOrder.supplier != null) {
+      setLoading(true);
+      SupplierAPIHelper.getMenu(purchaseOrder.supplier.id)
+        .then(results => {
+          setMenuItems(results.map(x => ({ ...x.product })));
+          setLoading(false);
+        })
+        .catch(handleHttpError)
+        .catch(() => setLoading(false))
+    }
+
+  }, [handleHttpError, purchaseOrder.supplier, setMenuItems])
+
+  useEffect(() => {
+    const disabledProducts = purchaseOrder?.purchase_order_items.reduce((prev, current) => ({...prev, [current?.product?.id]: true }), {}) || {};
+    setDisabledProductsMap(disabledProducts);
+  }, [purchaseOrder.purchase_order_items])
+
+  function handleAddRow() {
+    const newRow = {
+      key: Math.random(),
+      product: null,
+      product_id: null, 
+      quantity: 0,
+      unit_cost: null,
+      inventory_movements: [],
+      purchase_order_id: purchaseOrder?.id,
+    }
+    setPurchaseOrder(new PurchaseOrder({ ...purchaseOrder, purchase_order_items: [newRow, ...purchaseOrder.purchase_order_items] }));
+  }
+
+  function handleDeleteRow(record) {
+    const newItems = purchaseOrder?.purchase_order_items.filter((item) => (item.id !== record.id || item.key !== record.key));
     setPurchaseOrder(new PurchaseOrder({ ...purchaseOrder, purchase_order_items: newItems }));
   };
 
-  function handleSave(record) {
-    const newData = [...purchaseOrder?.purchase_order_items];
-    const index = newData?.findIndex((item) => record.id === item.id);
-    if (newData && index >= 0) {
-      newData.splice(index, 1, { ...newData[index], ...record });
-      setPurchaseOrder(new PurchaseOrder({...purchaseOrder, purchase_order_items: newData }));
-    }
+  function handleSave(newRecord) {
+    const newItems = [...purchaseOrder?.purchase_order_items];
+    // Allow match record by 'id' or 'key'
+    const index = newItems.findIndex(x => {
+        if (newRecord.id) {
+            return (x.id === newRecord.id)
+        } else if (newRecord.key) {
+            return (x.key === newRecord.key)
+        } else {
+            return false;
+        }
+    });
+    const item = newItems[index];
+    newItems.splice(index, 1, { ...item, ...newRecord });
+    setPurchaseOrder(new PurchaseOrder({...purchaseOrder, purchase_order_items: newItems }));
   };
-
-  const columns = [
-    { width: 50, render: (_, record, index) => index+1 },
-    { title: 'Name', dataIndex: 'product', render: (product) => product.name },
-    { title: 'Description', dataIndex: 'product',  render: (product) => product.description || '-' },
-    { title: 'Unit', dataIndex: 'product', render: (product) => product.unit },
-    { title: 'Lastest Price', dataIndex: 'product', render: (product) => '-' },
-    { title: '* Quantity', dataIndex: 'quantity', align: 'center', onCell: (record) => 
-      ({ editable: purchaseOrder.isStatus(POStatus.PENDING), isToggleable: true, record, dataIndex: 'quantity', inputType: 'number', handleSave })
-    },
-    { title: '* Unit Price ($)', dataIndex: 'unit_cost', align: 'center', onCell: (record) => 
-      ({ editable: purchaseOrder.isStatus(POStatus.PENDING), record, dataIndex: 'unit_cost', inputType: 'number', displayType: 'currency', handleSave })
-    },
-    { title: 'Subtotal', dataIndex: '', key: 'subtotal', render: (_, record) => `$${(record.quantity*record.unit_cost).toFixed(2)}`, align: 'center' },
-    { align: 'center', width: 50, render: (_, record) => 
-      <Button shape="circle" icon={<DeleteOutlined />} onClick={() => handleDelete(record)} disabled={!purchaseOrder.isStatus(POStatus.PENDING)} />
-    },
-  ];
 
   return (
     <>
@@ -49,7 +89,7 @@ export default function PO3ItemsTable({ purchaseOrder, setPurchaseOrder, loading
         <>
         { purchaseOrder.isStatus(POStatus.PENDING, POStatus.SENT) && 
           <MyToolbar title="Order Items">
-              <Button icon={<PlusOutlined />} disabled={loading} onClick={() => setIsNewOrderItemModalVisible(true)}>Add More Items</Button>
+              <Button icon={<PlusOutlined />} disabled={loading} onClick={() => handleAddRow()}>Add More Items</Button>
           </MyToolbar>
         }
 
@@ -58,7 +98,7 @@ export default function PO3ItemsTable({ purchaseOrder, setPurchaseOrder, loading
             columns={columns}
             dataSource={purchaseOrder.purchase_order_items}
             rowKey={(_, index) => index}
-            components={{ body: { cell: CustomCell } }}
+            components={purchaseOrder.isStatus(POStatus.PENDING) ? { body: { cell: CustomCell } } : {}}
             summary={pageData => {
               if (purchaseOrder == null) return <></>
 
@@ -113,18 +153,71 @@ export default function PO3ItemsTable({ purchaseOrder, setPurchaseOrder, loading
               );
             }}
         />
-
-        <NewOrderItemModal 
-          supplier={purchaseOrder.supplier}
-          purchaseOrder={purchaseOrder}
-          setPurchaseOrder={setPurchaseOrder}
-          isModalVisible={isNewOrderItemModalVisible} 
-          setIsModalVisible={setIsNewOrderItemModalVisible} 
-          loading={loading}
-          setLoading={setLoading}
-        />
+        
         </>
       }
     </>
   )
 }
+
+const columns = [
+  { 
+    width: 50, 
+    render: (_, record, index) => index+1 
+  },
+  { 
+    title: 'Name', 
+    dataIndex: 'product', 
+    width: 300,
+    ellipsis: true,
+    render: (product) => product?.name 
+  },
+  { 
+    title: 'Description', 
+    dataIndex: 'product',  
+    width: '20%',
+    ellipsis: true,
+    render: (product) => product?.description || '-' 
+  },
+  { 
+    title: 'Unit', 
+    dataIndex: 'product', 
+    width: '10%',
+    ellipsis: true,
+    render: (product) => product?.unit 
+  },
+  { 
+    title: 'Lastest Price', 
+    dataIndex: 'product', 
+    render: (product) => '-',
+    width: '10%',
+    ellipsis: true,
+  },
+  { 
+    title: '* Quantity', 
+    dataIndex: 'quantity', 
+    align: 'center', 
+    width: '10%',
+    ellipsis: true,
+  },
+  { 
+    title: '* Unit Price ($)', 
+    dataIndex: 'unit_cost', 
+    align: 'center', 
+    width: '10%',
+    ellipsis: true,
+    render: (unit_cost) => `$${(+unit_cost).toFixed(2)}`
+  },
+  { 
+    title: 'Subtotal', 
+    dataIndex: '', 
+    key: 'subtotal', 
+    width: '10%',
+    ellipsis: true,
+    render: (_, record) => `$${(record.quantity*record.unit_cost).toFixed(2)}`, align: 'center' 
+  },
+  { 
+    align: 'center', 
+    width: 80, 
+  },
+];

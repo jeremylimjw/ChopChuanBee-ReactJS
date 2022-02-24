@@ -1,5 +1,5 @@
-import { DeleteOutlined, PlusOutlined, EditOutlined } from "@ant-design/icons/lib/icons";
-import { Button, Input, message, Popconfirm, Table, Typography } from "antd";
+import { DeleteOutlined, PlusOutlined } from "@ant-design/icons/lib/icons";
+import { Button, Table } from "antd";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { SupplierAPIHelper } from "../../../api/SupplierAPIHelper";
@@ -9,16 +9,16 @@ import { CustomCell } from "../../common/CustomCell";
 import MyToolbar from "../../common/MyToolbar";
 
 
-export default function NP2SupplierMenuTable({ selectedSupplier, selectedProducts, setSelectedProducts, disabledProductsMap = {} }) {
+export default function NP2SupplierMenuTable({ selectedSupplier, selectedProducts, setSelectedProducts }) {
 
   const { handleHttpError } = useApp();
 
   const [loading, setLoading] = useState(false);
   const [menuItems, setMenuItems] = useState([]);
 
-  // const disabledProductsMap = selectedProducts.reduce((prev, current) => ({...prev, [current.id]: 1 }), {});
+  const disabledProductsMap = selectedProducts.reduce((prev, current) => ({...prev, [current?.product?.id]: true }), {});
 
-  columns[1].onCell = (record) => ({ type: 'product_select', toggleable: 'true', field: 'product', record, handleSave, products: menuItems.filter(x => !disabledProductsMap[x.id]) });
+  columns[1].onCell = (record) => ({ type: 'product_select', toggleable: 'true', field: 'product', record, handleSave, products: menuItems, disabledProductsMap });
   columns[5].onCell = (record) => ({ type: 'input_number', field: 'quantity', record, handleSave });
   columns[6].render = (_, record) => <Button shape="circle" icon={<DeleteOutlined />} onClick={() => handleDeleteRow(record)} />
 
@@ -105,7 +105,7 @@ const columns = [
   {
     title: 'Unit',
     dataIndex: 'product',
-    width: '11%', 
+    width: 150, 
     ellipsis: true,
     render: (product) => product?.unit || '-',
     sorter: (a, b) => sortByString(a.product.unit, b.product.unit),
@@ -113,7 +113,7 @@ const columns = [
   {
     title: 'Lastest Price',
     dataIndex: 'latest_price',
-    width: '11%', 
+    width: 150, 
     ellipsis: true,
     render: (product) => product?.description || '-',
     sorter: (a, b) => sortByString(a.latest_price, b.latest_price),
@@ -122,7 +122,7 @@ const columns = [
     title: '* Quantity',
     dataIndex: 'quantity',
     align: 'center',
-    width: '11%', 
+    width: 150, 
   },
   {
     align: 'center',
