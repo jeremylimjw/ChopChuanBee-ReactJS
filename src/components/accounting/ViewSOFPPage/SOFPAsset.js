@@ -1,10 +1,11 @@
 import { EditOutlined, SaveOutlined } from '@ant-design/icons/lib/icons';
-import { Row, Col, Button, Form, Input, InputNumber, message, Typography } from 'antd'
+import { Row, Col, Button, Form, Input, Divider, InputNumber, message, Typography } from 'antd'
 import React, { useState } from 'react'
 import { AccountingAPIHelper } from '../../../api/AccountingAPIHelper';
 import { View } from '../../../enums/View';
 import { useApp } from '../../../providers/AppProvider';
 import { REQUIRED } from '../../../utilities/form';
+import { parseDate } from '../../../utilities/datetime';
 import MyCard from '../../common/MyCard';
 import MyToolbar from '../../common/MyToolbar';
 
@@ -35,30 +36,38 @@ export default function SOFPAsset({ SOFP, setSOFP }) {
         <>
         { SOFP != null &&
             <>
-                <MyToolbar title="Title">
-                    { hasWriteAccessTo(View.ACCOUNTING.name) && 
-                    <>
-                        <Form.Item>
-                            { editing ? 
-                                <Button type="primary" onClick={onFinish} icon={<SaveOutlined />} loading={loading} style={{ width: 85 }}>Save</Button>
-                                :
-                                <Button onClick={() => setEditing(true)} icon={<EditOutlined />} style={{ width: 85 }}>Edit</Button>
+                <Form form={form} labelCol={{ span: 14 }} wrapperCol={{ span: 24 }} autoComplete="off" labelAlign="left" initialValues={{...SOFP}}>
+                    <MyCard>
+                        <MyToolbar title="Statement Details">
+                            { hasWriteAccessTo(View.ACCOUNTING.name) && 
+                            <>
+                                <Form.Item>
+                                    { editing ? 
+                                        <Button type="primary" onClick={onFinish} icon={<SaveOutlined />} loading={loading} style={{ width: 85 }}>Save</Button>
+                                        :
+                                        <Button onClick={() => setEditing(true)} icon={<EditOutlined />} style={{ width: 85 }}>Edit</Button>
+                                    }
+                                </Form.Item>
+                            </>
                             }
-                        </Form.Item>
-                    </>
-                    }
-                </MyToolbar>
-
-                <Form form={form} labelCol={{ span: 10 }} wrapperCol={{ span: 14 }} autoComplete="off" labelAlign="left" initialValues={{...SOFP}}>
-                    <Form.Item label="Title" name="name">
-                        <Typography>{SOFP.name || '-'}</Typography>
-                    </Form.Item> as at
-                    <Form.Item name="end_date">
-                        <Typography>{SOFP.end_date || '-'}</Typography>
-                    </Form.Item>
+                        </MyToolbar>
+                        <Row>
+                            <Form.Item name="name" rules={editing ? [REQUIRED] : []}>
+                                {!editing ? 
+                                    <Typography>{SOFP.name || '-'}&nbsp;AS AT&nbsp;</Typography>
+                                :
+                                    <Input />
+                                }
+                            </Form.Item>
+                            <Form.Item name="end_date">
+                                <Typography>{parseDate(SOFP.end_date) || '-'}</Typography>
+                            </Form.Item>
+                        </Row>
+                    </MyCard>
                     <Row>
                         <Col xl={10} xs={24}> 
-                            <MyCard>
+                            <MyCard title="Assets">
+                                <Typography.Title level={5}>Current Assets</Typography.Title>
                                 <Form.Item label="Cash (Sales of Goods)" name="cash_sales_of_goods" rules={editing ? [REQUIRED] : []}>
                                     {!editing ? 
                                         <Typography>{SOFP.cash_sales_of_goods || '-'}</Typography>
@@ -122,6 +131,10 @@ export default function SOFPAsset({ SOFP, setSOFP }) {
                                         <Input />
                                     }
                                 </Form.Item>
+
+                                <Divider />
+                                <Typography.Title level={5}>Non-Current Assets</Typography.Title>
+
                                 <Form.Item label="Land" name="land" rules={editing ? [REQUIRED] : []}>
                                     {!editing ? 
                                         <Typography>{SOFP.land || '-'}</Typography>
@@ -178,6 +191,10 @@ export default function SOFPAsset({ SOFP, setSOFP }) {
                                         <Input />
                                     }
                                 </Form.Item>
+
+                                <Divider />
+                                <Typography.Title level={5}>Intangible Assets</Typography.Title>
+
                                 <Form.Item label="Goodwill" name="goodwill" rules={editing ? [REQUIRED] : []}>
                                     {!editing ? 
                                         <Typography>{SOFP.goodwill || '-'}</Typography>
@@ -209,7 +226,7 @@ export default function SOFPAsset({ SOFP, setSOFP }) {
                             </MyCard>
                         </Col>
                         <Col xl={10} xs={24}>
-                            <MyCard>
+                            <MyCard title="Liabilities">
                                 <Form.Item label="Account Payable" name="account_payable" rules={editing ? [REQUIRED] : []}>
                                     {!editing ? 
                                         <Typography>{SOFP.account_payable || '-'}</Typography>
@@ -281,45 +298,45 @@ export default function SOFPAsset({ SOFP, setSOFP }) {
                                     }
                                 </Form.Item>
                             </MyCard>
+                            <MyCard title="Equity">
+                                <Form.Item label="Share Capital" name="share_capital" rules={editing ? [REQUIRED] : []}>
+                                    {!editing ? 
+                                        <Typography>{SOFP.share_capital || '-'}</Typography>
+                                    :
+                                        <Input />
+                                    }
+                                </Form.Item>
+                                <Form.Item label="Less Withdrawal" name="less_withdrawal" rules={editing ? [REQUIRED] : []}>
+                                    {!editing ? 
+                                        <Typography>{SOFP.less_withdrawal || '-'}</Typography>
+                                    :
+                                        <Input />
+                                    }
+                                </Form.Item>
+                                <Form.Item label="Retained Earning" name="retained_earning" rules={editing ? [REQUIRED] : []}>
+                                    {!editing ? 
+                                        <Typography>{SOFP.retained_earning || '-'}</Typography>
+                                    :
+                                        <Input />
+                                    }
+                                </Form.Item>
+                                <Form.Item label="Other Equity (1)" name="other_equity_1" rules={editing ? [REQUIRED] : []}>
+                                    {!editing ? 
+                                        <Typography>{SOFP.other_equity_1 || '-'}</Typography>
+                                    :
+                                        <Input />
+                                    }
+                                </Form.Item>
+                                <Form.Item label="Other Equity (2)" name="other_equity_2" rules={editing ? [REQUIRED] : []}>
+                                    {!editing ? 
+                                        <Typography>{SOFP.other_equity_2 || '-'}</Typography>
+                                    :
+                                        <Input />
+                                    }
+                                </Form.Item>
+                            </MyCard>
                         </Col>
                     </Row>
-                    <MyCard>
-                        <Form.Item label="Share Capital" name="share_capital" rules={editing ? [REQUIRED] : []}>
-                            {!editing ? 
-                                <Typography>{SOFP.share_capital || '-'}</Typography>
-                            :
-                                <Input />
-                            }
-                        </Form.Item>
-                        <Form.Item label="Less Withdrawal" name="less_withdrawal" rules={editing ? [REQUIRED] : []}>
-                            {!editing ? 
-                                <Typography>{SOFP.less_withdrawal || '-'}</Typography>
-                            :
-                                <Input />
-                            }
-                        </Form.Item>
-                        <Form.Item label="Retained Earning" name="retained_earning" rules={editing ? [REQUIRED] : []}>
-                            {!editing ? 
-                                <Typography>{SOFP.retained_earning || '-'}</Typography>
-                            :
-                                <Input />
-                            }
-                        </Form.Item>
-                        <Form.Item label="Other Equity (1)" name="other_equity_1" rules={editing ? [REQUIRED] : []}>
-                            {!editing ? 
-                                <Typography>{SOFP.other_equity_1 || '-'}</Typography>
-                            :
-                                <Input />
-                            }
-                        </Form.Item>
-                        <Form.Item label="Other Equity (2)" name="other_equity_2" rules={editing ? [REQUIRED] : []}>
-                            {!editing ? 
-                                <Typography>{SOFP.other_equity_2 || '-'}</Typography>
-                            :
-                                <Input />
-                            }
-                        </Form.Item>
-                    </MyCard>
                 </Form>
             </>
         }
