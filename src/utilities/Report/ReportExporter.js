@@ -18,7 +18,8 @@ const A4_REPORT_SIZE = {
 
 const generatePdf = async (doc) => {
   try {
-    pdfMake.createPdf(doc).open()
+    let pdf = pdfMake.createPdf(doc)
+    pdf.open()
   } catch (err) {
     console.log(err)
   }

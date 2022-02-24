@@ -5,11 +5,6 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export class PDFTools {
 
-  constructor(styles) {
-    this.styles = styles
-  }
-
-
   static formatText(text, style) {
     return { text, style }
   }
@@ -23,7 +18,7 @@ export class PDFTools {
             x1: 0,
             y1: 0,
             x2: 0,
-            y2: length || 200,
+            y2: length || 300,
             lineWidth: 1
           }]
         }
@@ -33,7 +28,7 @@ export class PDFTools {
             type: 'line',
             x1: 0,
             y1: 0,
-            x2: length || 200,
+            x2: length || 300,
             y2: 0,
             lineWidth: 1
           }]
@@ -89,53 +84,20 @@ export class PDFTools {
       poDate: moment(new Date())
     }
   }
-  static generateBusinessInfo() {
-    let FORM_WIDTH = '20%'
-    let businessInfo = {
-      addr: {
-        columns: [
-          { width: FORM_WIDTH, text: 'ADDRESS' },
-          { width: '*', text: 'Blk 123 Singapore Street, Singapore 123456' }
-        ]
-      },
-      contactNum: {
-        columns: [
-          { width: FORM_WIDTH, text: 'CONTACT NO.' },
-          { width: '*', text: '+65 61234567 / 91234567 (Mobile)' }
-        ]
-      },
-      bizRegNum: {
-        columns: [
-          { width: FORM_WIDTH, text: 'BUSINESS REG NO.' },
-          { width: '*', text: '12345678BIZREG' }
-        ]
-      },
-      gstRegNum: {
-        columns: [
-          { width: FORM_WIDTH, text: 'GST REG NO.' },
-          { width: '*', text: '12345678GST' }
-        ]
-      }
-    }
-    return businessInfo
-  }
 
-  static generateForm(data) {
-    let FORM_ITEM_WIDTH = '20%'
-    let formattedDataArray = Object.entries(data) // [['id', '1'], ['name', 'john'], ...]
-    let formObject = formattedDataArray.map((row) => {
-      let [key, value] = [...row]
-      formObject = {
-        ...formObject,
-        [key]: {
-          columns: [
-            { width: FORM_ITEM_WIDTH, text: key },
-            { width: '*', text: value }
-          ]
-        }
-      }
-      return formObject
+  static generateForm(data, style) {
+    let FORM_ITEM_WIDTH = style.formWidth || '40%'
+    let objArray = Object.entries(data) // [['id', {text: 'ADDRESS', val:'Blk 123'}], ...]
+    let formData = []
+    objArray.map((row) => {
+      let [key, data] = [...row]
+      formData.push({
+        columns: [
+          { width: FORM_ITEM_WIDTH, text: this.formatText(data.text, style) },
+          { width: '*', text: this.formatText(data.value, style) }
+        ]
+      })
     })
-    return formObject
+    return formData
   }
 } 
