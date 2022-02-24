@@ -16,7 +16,7 @@ export default function S2Menu({ supplier }) {
 
     const [loading, setLoading] = useState(false);
     const [items, setItems] = useState([]);
-    const [disabledProducts, setDisabledProducts] = useState({});
+    const [disabledProductsMap, setDisabledProductsMap] = useState({});
     const [products, setProducts] = useState([]);
 
     columns[1].onCell = (record) => ({ 
@@ -26,7 +26,7 @@ export default function S2Menu({ supplier }) {
         record, 
         handleSave, 
         products: products,
-        disabledProducts: disabledProducts,
+        disabledProductsMap,
     });
     columns[3].render = (_, record) => <Button shape="circle" icon={<DeleteOutlined />} onClick={() => handleDeleteRow(record)} loading={loading} />;
 
@@ -57,7 +57,7 @@ export default function S2Menu({ supplier }) {
             }
             return prev;
         }, {})
-        setDisabledProducts(disabledProducts);
+        setDisabledProductsMap(disabledProducts);
     }, [items])
     
 
