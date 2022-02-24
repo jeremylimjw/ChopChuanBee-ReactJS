@@ -19,7 +19,15 @@ export default function S2Menu({ supplier }) {
     const [disabledProducts, setDisabledProducts] = useState({});
     const [products, setProducts] = useState([]);
 
-    columns[1].onCell = (record) => ({ type: 'product_select', toggleable: 'true', field: 'product', record, handleSave, products: products.filter(x => !disabledProducts[`${x.id}`]) });
+    columns[1].onCell = (record) => ({ 
+        type: 'product_select', 
+        toggleable: 'true', 
+        field: 'product', 
+        record, 
+        handleSave, 
+        products: products,
+        disabledProducts: disabledProducts,
+    });
     columns[3].render = (_, record) => <Button shape="circle" icon={<DeleteOutlined />} onClick={() => handleDeleteRow(record)} loading={loading} />;
 
     useEffect(() => {
@@ -113,6 +121,7 @@ export default function S2Menu({ supplier }) {
             />
         </>  
     )
+
 }
 
 const columns = [
