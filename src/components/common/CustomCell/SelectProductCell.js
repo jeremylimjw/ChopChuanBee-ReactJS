@@ -1,7 +1,7 @@
 import { Form, Select, Typography } from "antd";
 import { useEffect, useRef, useState } from "react";
 
-export default function SelectProductCell({ field, toggleable, handleSave, record, products, disabledProducts, ...restProps }) {
+export default function SelectProductCell({ field, toggleable, handleSave, record, products, disabledProductsMap, ...restProps }) {
   const [form] = Form.useForm();
 
   const [editing, setEditing] = useState(false);
@@ -56,7 +56,7 @@ export default function SelectProductCell({ field, toggleable, handleSave, recor
             onChange={onChange} 
             onSearch={onSearch}
             onBlur={onBlur}
-            filterOption={(_, option) => !disabledProducts[option.product.id]}
+            filterOption={(_, option) => !disabledProductsMap[option.product.id]}
           />
         </Form.Item>
 				:
