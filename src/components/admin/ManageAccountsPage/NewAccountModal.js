@@ -4,7 +4,7 @@ import { EmployeeApiHelper } from '../../../api/EmployeeApiHelper';
 import { Role } from '../../../enums/Role';
 import { View } from '../../../enums/View';
 import { useApp } from '../../../providers/AppProvider';
-import { EMAIL, REQUIRED } from '../../../utilities/form';
+import { EMAIL, minLength, REQUIRED } from '../../../utilities/form';
 
 export default function NewAccountModal({ isModalVisible, setIsModalVisible, myCallback }) {
     const { handleHttpError } = useApp();
@@ -75,7 +75,7 @@ function MyForm({ form, accessRightsForm }) {
                             <Input />
                         </Form.Item>
                         
-                        <Form.Item label="Contact Number" name="contact_number">
+                        <Form.Item label="Contact Number" name="contact_number" rules={[minLength(8)]}>
                             <Input />
                         </Form.Item>
                         
