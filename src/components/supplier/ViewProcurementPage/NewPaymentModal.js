@@ -2,6 +2,7 @@ import { Form, InputNumber, message, Select } from 'antd'
 import Modal from 'antd/lib/modal/Modal'
 import React, { useEffect, useState } from 'react'
 import { PurchaseOrderApiHelper } from '../../../api/PurchaseOrderApiHelper';
+import { MovementType } from '../../../enums/MovementType';
 import { PaymentTerm } from '../../../enums/PaymentTerm';
 import { PurchaseOrder } from '../../../models/PurchaseOrder';
 import { useApp } from '../../../providers/AppProvider';
@@ -37,13 +38,11 @@ export default function NewPaymentModal({ purchaseOrder, setPurchaseOrder, isMod
     function handleFormSubmit() {
         const payment = { ...form, purchase_order_id: purchaseOrder.id };
 
-        // movement_type_id: 1 is purchase
-        // movement_type_id: 3 is refund
         if (isModalVisible === 1) { // Make payment
-            payment.movement_type_id = 1;
+            payment.movement_type_id = MovementType.PURCHASE.id;
             payment.amount = -payment.amount;
         } else if (isModalVisible === 2) { // Make refund
-            payment.movement_type_id = 3;
+            payment.movement_type_id = MovementType.REFUND.id;
             payment.amount = +payment.amount;
         }
 

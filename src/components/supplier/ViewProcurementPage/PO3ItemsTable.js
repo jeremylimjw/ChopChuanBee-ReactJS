@@ -41,7 +41,7 @@ export default function PO3ItemsTable({ purchaseOrder, setPurchaseOrder, loading
         .catch(() => setLoading(false))
     }
 
-  }, [handleHttpError, purchaseOrder.supplier, setMenuItems])
+  }, [handleHttpError, purchaseOrder.supplier, setMenuItems, setLoading])
 
   useEffect(() => {
     const disabledProducts = purchaseOrder?.purchase_order_items.reduce((prev, current) => ({...prev, [current?.product?.id]: true }), {}) || {};

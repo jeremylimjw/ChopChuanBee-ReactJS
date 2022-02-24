@@ -5,6 +5,7 @@ import { useNavigate, useParams } from 'react-router';
 import { PurchaseOrderApiHelper } from '../../../api/PurchaseOrderApiHelper';
 import { AccountingType } from '../../../enums/AccountingType';
 import { MovementType } from '../../../enums/MovementType';
+import { PaymentMethod } from '../../../enums/PaymentMethod';
 import { PaymentTerm } from '../../../enums/PaymentTerm';
 import { POStatus } from '../../../enums/PurchaseOrderStatus';
 import { PurchaseOrder } from '../../../models/PurchaseOrder';
@@ -131,14 +132,33 @@ export default function ViewProcurementPage() {
       } catch (err) { }
     }
 
-    // TODO: remove all payments
     function cancelOrder() {
+      const payment = {
+        purchase_order_id: purchaseOrder.id,
+        amount: purchaseOrder.isPaymentTerm(PaymentTerm.CREDIT) ? +purchaseOrder.getPaymentsTotal() : -purchaseOrder.getPaymentsTotal(),
+        movement_type_id: MovementType.REFUND.id,
+        accounting_type_id: purchaseOrder.isPaymentTerm(PaymentTerm.CREDIT) ? 1 : null,
+        payment_method_id: PaymentMethod.CASH.id,
+      }
+
+      const inventoryMovements = purchaseOrder.purchase_order_items.map(x => {
+        const movement = {
+            purchase_order_item_id: x.id,
+            quantity: x.inventory_movements.reduce((prev, current) => prev - current.quantity, 0),
+            unit_cost: x.unit_cost*(1+purchaseOrder.gst_rate/100),
+            movement_type_id: MovementType.REFUND.id,
+        }
+        return movement;
+      })
+      
       setLoading(true);
-      const newPurchaseOrder = {...purchaseOrder, purchase_order_status_id: POStatus.CANCELLED.id };
-      PurchaseOrderApiHelper.updateStatusOnly(newPurchaseOrder)
-        .then(() => {
+      PurchaseOrderApiHelper.createPayment(payment)
+        .then(() => PurchaseOrderApiHelper.createInventoryMovement(inventoryMovements))
+        .then(() => PurchaseOrderApiHelper.updateStatusOnly({...purchaseOrder, purchase_order_status_id: POStatus.CANCELLED.id}))
+        .then(() => PurchaseOrderApiHelper.get({ id: purchaseOrder.id }))
+        .then(results => {
           message.success("Purchase Order successfully cancelled!");
-          setPurchaseOrder(new PurchaseOrder({...newPurchaseOrder}))
+          setPurchaseOrder(new PurchaseOrder(results[0]));
           setLoading(false);
         })
         .catch(handleHttpError)
@@ -192,7 +212,7 @@ export default function ViewProcurementPage() {
                   <Button icon={<StopOutlined />} disabled={loading || !purchaseOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED)}>Cancel Order</Button>
                 </Popconfirm>
 
-                <Button icon={<SaveOutlined />} disabled={loading || !purchaseOrder.isStatus(purchaseOrder, POStatus.PENDING, POStatus.ACCEPTED)} onClick={saveForLater}>Save for later</Button>
+                <Button icon={<SaveOutlined />} disabled={loading || !purchaseOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED)} onClick={saveForLater}>Save for later</Button>
                 
                 { purchaseOrder.isStatus(POStatus.PENDING) && 
                   <Popconfirm title="Are you sure?" onConfirm={convertToInvoice} disabled={loading}>

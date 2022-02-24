@@ -14,7 +14,6 @@ export default function PO2Form({ form, purchaseOrder, loading, saveForLater }) 
 
     // Form value initiation
     useEffect(() => {
-        form.setFieldsValue({...purchaseOrder});
         if (purchaseOrder.has_gst === 2 || purchaseOrder.has_gst === 3) {
             setShowGstRate(true);
         }
@@ -32,7 +31,7 @@ export default function PO2Form({ form, purchaseOrder, loading, saveForLater }) 
     return (
         <>
             { purchaseOrder != null &&
-            <Form form={form} layout='horizontal' labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} onValuesChange={onValuesChange}>
+            <Form form={form} layout='horizontal' labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} onValuesChange={onValuesChange} initialValues={{...purchaseOrder}}>
 
                 <Form.Item label="Order Status">
                     {purchaseOrder.getStatusTag()}
@@ -75,7 +74,7 @@ export default function PO2Form({ form, purchaseOrder, loading, saveForLater }) 
                 </Form.Item>
 
                 <Form.Item wrapperCol={{ offset: 6 }}>
-                    <Button icon={<SaveOutlined />} disabled={loading || !purchaseOrder.isStatus(purchaseOrder, POStatus.PENDING, POStatus.ACCEPTED)} onClick={saveForLater}>Save for later</Button>
+                    <Button icon={<SaveOutlined />} disabled={loading || !purchaseOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED)} onClick={saveForLater}>Save for later</Button>
                 </Form.Item>
 
             </Form>
