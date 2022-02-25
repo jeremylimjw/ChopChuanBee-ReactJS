@@ -1,4 +1,4 @@
-import { FileDoneOutlined, FileTextOutlined, SaveOutlined, SendOutlined, StopOutlined } from '@ant-design/icons/lib/icons';
+import { FileDoneOutlined, FileTextOutlined, RedoOutlined, SaveOutlined, SendOutlined, StopOutlined } from '@ant-design/icons/lib/icons';
 import { Button, Form, message, Popconfirm, Progress, Space, Typography } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router';
@@ -165,6 +165,15 @@ export default function ViewProcurementPage() {
         .catch(() => setLoading(false));
     }
 
+    function navigateToCreateForm() {
+
+    }
+
+
+    function sendOrder() {
+      console.log(purchaseOrder)
+    }
+
 
 
     return (
@@ -203,10 +212,12 @@ export default function ViewProcurementPage() {
 
           <div style={{ display: 'flex', marginTop: 30 }}>
 
-            <Button icon={<SendOutlined />} disabled={loading || !purchaseOrder.isStatus(POStatus.PENDING)}>Send Order</Button>
+            <Button icon={<SendOutlined />} disabled={loading || !purchaseOrder.isStatus(POStatus.PENDING)} onClick={sendOrder}>Send Order</Button>
 
             <div style={{ marginLeft: 'auto' }}>
               <Space size="middle">
+
+                <Button icon={<RedoOutlined />} onClick={navigateToCreateForm}>Reorder</Button>
                 
                 <Popconfirm title="Are you sure? This action cannot be undone." onConfirm={cancelOrder} disabled={loading || !purchaseOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED)}>
                   <Button icon={<StopOutlined />} disabled={loading || !purchaseOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED)}>Cancel Order</Button>

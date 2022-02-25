@@ -43,6 +43,7 @@ export class PurchaseOrderApiHelper {
             id: purchaseOrder.id,
             has_gst: purchaseOrder.has_gst,
             gst_rate: purchaseOrder.gst_rate,
+            charged_under_id: purchaseOrder.charged_under_id,
             offset: purchaseOrder.offset,
             supplier_invoice_id: purchaseOrder.supplier_invoice_id,
             remarks: purchaseOrder.remarks,

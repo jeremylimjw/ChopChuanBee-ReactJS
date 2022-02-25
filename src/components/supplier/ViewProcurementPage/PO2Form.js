@@ -6,11 +6,24 @@ import { PaymentMethod } from '../../../enums/PaymentMethod'
 import { POStatus } from '../../../enums/PurchaseOrderStatus'
 import { PaymentTerm } from '../../../enums/PaymentTerm'
 import { REQUIRED } from '../../../utilities/form'
+import { ChargedUnderApiHelper } from '../../../api/ChargedUnderApiHelper'
+import { useApp } from '../../../providers/AppProvider'
 
 export default function PO2Form({ form, purchaseOrder, loading, saveForLater }) {
 
+    const { handleHttpError } = useApp();
+
     const [showGstRate, setShowGstRate] = useState(false);
     const [showPaymentMethod, setShowPaymentMethod] = useState(false);
+    const [chargedUnders, setChargedUnders] = useState([]);
+
+    useEffect(() => {
+        ChargedUnderApiHelper.get()
+            .then(results => {
+                setChargedUnders(results)
+            })
+            .catch(handleHttpError);
+    }, [handleHttpError])
 
     // Form value initiation
     useEffect(() => {
@@ -28,6 +41,11 @@ export default function PO2Form({ form, purchaseOrder, loading, saveForLater }) 
         setShowPaymentMethod(newValues.payment_term_id === PaymentTerm.CASH.id);
     }
 
+    function handleChargedUnderChange(id) {
+        const index = chargedUnders.findIndex(x => x.id === id);
+        form.setFieldsValue({ charged_under: (id == null ? null : {...chargedUnders[index] }) });
+    }
+
     return (
         <>
             { purchaseOrder != null &&
@@ -39,6 +57,14 @@ export default function PO2Form({ form, purchaseOrder, loading, saveForLater }) 
 
                 <Form.Item label="Invoice ID" name="supplier_invoice_id" rules={purchaseOrder.isStatus(POStatus.ACCEPTED) ? [REQUIRED] : []}>
                     <Input disabled={!purchaseOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED)} />
+                </Form.Item>
+
+                <Form.Item name="charged_under" hidden />
+                <Form.Item name="charged_under_id" label="Charged Under" rules={[REQUIRED]}>
+                    <Select style={{ width: 140 }} onSelect={handleChargedUnderChange}>
+                        <Select.Option value={null}>None</Select.Option>
+                        { chargedUnders.map((x, idx) => <Select.Option key={idx} value={x.id}>{x.name}</Select.Option>)}
+                    </Select>
                 </Form.Item>
 
                 <Form.Item label="GST" name="has_gst" rules={[REQUIRED]}>

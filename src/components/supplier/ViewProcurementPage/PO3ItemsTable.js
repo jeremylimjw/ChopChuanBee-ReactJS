@@ -168,7 +168,7 @@ const columns = [
   { 
     title: 'Name', 
     dataIndex: 'product', 
-    width: 300,
+    width: '20%',
     ellipsis: true,
     render: (product) => product?.name 
   },
