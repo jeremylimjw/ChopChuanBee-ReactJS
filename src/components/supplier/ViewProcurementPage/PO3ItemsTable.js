@@ -100,7 +100,7 @@ export default function PO3ItemsTable({ purchaseOrder, setPurchaseOrder, loading
             pagination={{ position: ['none', 'none'] }}
             columns={columns}
             dataSource={purchaseOrder.purchase_order_items}
-            rowKey={(_, index) => index}
+            rowKey={() => Math.random()}
             components={purchaseOrder.isStatus(POStatus.PENDING) ? { body: { cell: CustomCell } } : {}}
             summary={pageData => {
               if (purchaseOrder == null) return <></>

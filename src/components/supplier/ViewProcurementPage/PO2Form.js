@@ -60,7 +60,7 @@ export default function PO2Form({ form, purchaseOrder, loading, saveForLater }) 
                     <Input disabled={!purchaseOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED)} />
                 </Form.Item>
 
-                <Form.Item name="charged_under" hidden />
+                <Form.Item name="charged_under" hidden><Input /></Form.Item>
                 <Form.Item name="charged_under_id" label="Charged Under" rules={[REQUIRED]}>
                     <Select style={{ width: 140 }} onSelect={handleChargedUnderChange}>
                         <Select.Option value={null}>None</Select.Option>
@@ -84,14 +84,14 @@ export default function PO2Form({ form, purchaseOrder, loading, saveForLater }) 
 
                 <Form.Item label="Payment Term" name="payment_term_id" rules={[REQUIRED]}>
                     <Radio.Group disabled={!purchaseOrder.isStatus(POStatus.PENDING)}>
-                        {Object.keys(PaymentTerm).map(key => <Radio value={PaymentTerm[key].id}>{PaymentTerm[key].name}</Radio>)}
+                        {Object.keys(PaymentTerm).map((key, idx) => <Radio key={idx} value={PaymentTerm[key].id}>{PaymentTerm[key].name}</Radio>)}
                     </Radio.Group>
                 </Form.Item>
 
                 {showPaymentMethod &&
                     <Form.Item label="Payment Method" name="payment_method_id" rules={[REQUIRED]}>
                         <Select style={{ width: 150 }} disabled={!purchaseOrder.isStatus(POStatus.PENDING)}>
-                            {Object.keys(PaymentMethod).map(key => <Select.Option value={PaymentMethod[key].id}>{PaymentMethod[key].name}</Select.Option>)}
+                            {Object.keys(PaymentMethod).map((key, idx) => <Select.Option key={idx} value={PaymentMethod[key].id}>{PaymentMethod[key].name}</Select.Option>)}
                         </Select>
                     </Form.Item>
                 }

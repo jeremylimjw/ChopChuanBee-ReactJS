@@ -27,11 +27,12 @@ export default function NewProcurementPage() {
   const [selectedProducts, setSelectedProducts] = useState([]);
 
   useEffect(() => {
-    if (location?.state?.supplier) {
-      setSelectedSupplier(location.state.supplier);
+    if (location?.state?.purchaseOrder) {
+      setSelectedSupplier(location.state.purchaseOrder.supplier);
       setStep(1);
-      if (location?.state?.purchase_order_items) {
-        setSelectedProducts(location.state.purchase_order_items);
+      if (location?.state?.purchaseOrder.purchase_order_items) {
+        const orderItems = location.state.purchaseOrder.purchase_order_items;
+        setSelectedProducts(orderItems.map(x => ({...x, key: Math.random() })));
       }
     }
   }, [location.state, setSelectedSupplier, setStep, setSelectedProducts])
@@ -42,6 +43,15 @@ export default function NewProcurementPage() {
       supplier_id: selectedSupplier.id,
       purchase_order_status_id: 1,
       purchase_order_items: selectedProducts.filter(x => x.product != null).map(x => ({ product_id: x.product.id, quantity: x.quantity })),
+    }
+
+    if (location?.state?.purchaseOrder) {
+      const copy = location.state.purchaseOrder;
+      purchaseOrder.charged_under_id = copy.charged_under_id;
+      purchaseOrder.has_gst = copy.has_gst;
+      purchaseOrder.gst_rate = copy.gst_rate;
+      purchaseOrder.payment_term_id = copy.payment_term_id;
+      purchaseOrder.payment_method_id = copy.payment_method_id;
     }
 
     PurchaseOrderApiHelper.create(purchaseOrder)
