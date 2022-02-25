@@ -52,4 +52,9 @@ export class ProductApiHelper {
         return axiosObject.post(`/product/deactivate`, { id: id })
             .then(res => res.data);
     }
+
+    static async getLatestPrices(id) {
+        return axiosObject.get(`/product/latestPrice`, { params: { id: id } })
+            .then(res => res.data);
+    }
 }

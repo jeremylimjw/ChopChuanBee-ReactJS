@@ -23,20 +23,6 @@ export class PurchaseOrderApiHelper {
         return axiosObject.get(`/purchaseOrder`, { params: params })
             .then(res => res.data);
     }
-
-    static async getAll(from, to) {
-        let queryString = "";
-        if (from && to) {
-            queryString += `&created_at_from=${from.toISOString()}&created_at_to=${to.toISOString()}`;
-        }
-        return axiosObject.get(`/purchaseOrder?order_by=created_at_desc${queryString}`)
-            .then(res => res.data);
-    }
-
-    static async getById(id) {
-        return axiosObject.get(`/purchaseOrder?id=${id}`)
-            .then(res => res.data);
-    }
     
     static async update(purchaseOrder) {
         return axiosObject.put(`/purchaseOrder`, {

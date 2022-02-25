@@ -40,7 +40,7 @@ export default function ViewProcurementPage() {
     ]
   
     useEffect(() => {
-      PurchaseOrderApiHelper.getById(id)
+      PurchaseOrderApiHelper.get({ id: id })
         .then(result => {
           if (result.length === 0) {
             navigate('../');

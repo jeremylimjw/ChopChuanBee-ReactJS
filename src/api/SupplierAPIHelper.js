@@ -1,14 +1,11 @@
 import { axiosObject } from "./axiosWrapper";
 
 export class SupplierAPIHelper {
-  static async getById(id) {
-    return axiosObject.get("/supplier", { params: { id: id } })
-      .then((res) => res.data);
-  }
-
   static async get(query) {
     const params = {};
     
+    if (query?.id)
+      params.id = query.id;
     if (query?.company_name)
       params.company_name_like = query.company_name;
     if (query?.s1_name)

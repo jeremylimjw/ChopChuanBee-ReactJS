@@ -88,7 +88,7 @@ export default function ViewProductPage() {
           <Col xl={14} xs={24}>
 
             <MyCard>
-              <P2PriceTable />
+              <P2PriceTable product={product} />
             </MyCard>
           </Col>
         </Row>

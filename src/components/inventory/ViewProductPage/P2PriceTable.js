@@ -1,34 +1,35 @@
 import { Table } from 'antd'
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { sortByDate, sortByNumber, sortByString } from '../../../utilities/sorters'
 import MyToolbar from '../../common/MyToolbar'
+import { useNavigate } from 'react-router';
 import { showTotal } from '../../../utilities/table';
 import { useApp } from '../../../providers/AppProvider'
-import { SupplierAPIHelper } from '../../../api/SupplierAPIHelper'
 import { parseDate } from '../../../utilities/datetime'
+import { ProductApiHelper } from '../../../api/ProductApiHelper'
+import { Link } from 'react-router-dom';
 
-export default function P2PriceTable() {
+export default function P2PriceTable({ product }) {
+
+    const { handleHttpError } = useApp();
+
+    const navigate = useNavigate();
+
     const [loading, setLoading] = useState(false);
     const [items, setItems] = useState([]);
 
-    const { handleHttpError } = useApp();
+    columns[4].render = (id) => <Link to={`/supplier/procurements/${id}`}>View</Link>
 
     useEffect(() => {
       setItems([]);
       setLoading(true);
-      SupplierAPIHelper.get({ limit: Math.round(Math.random()*3)+1 })
+      ProductApiHelper.getLatestPrices(product?.id)
         .then(results => {
-          setItems(results.map(x => ({ 
-            supplier: x, 
-            id: Math.round(Math.random()*10)+1, 
-            created_at: new Date(), 
-            unit_cost: Math.round(Math.random()*100)/10
-          })))
+          setItems(results)
           setLoading(false);
         })
         .catch(handleHttpError)
-    }, [handleHttpError, setItems]);
+    }, [handleHttpError, setItems, product]);
 
     return (
       <>
@@ -65,11 +66,10 @@ const columns = [
     },
     {
       title: 'Supplier',
-      dataIndex: 'supplier',
-      key: 'supplier',
+      dataIndex: 'company_name',
+      key: 'company_name',
       ellipsis: true,
-      render: (supplier) => supplier?.company_name,
-      sorter: (a, b) => sortByString(a.supplier?.company_name, b.supplier?.company_name),
+      sorter: (a, b) => sortByString(a.company_name, b.company_name),
     },
     {
       title: 'Unit Cost',
@@ -77,13 +77,12 @@ const columns = [
       key: 'unit_cost',
       width: 120,
       ellipsis: true,
-      render: (unit_cost) => `$${unit_cost.toFixed(2)}`,
+      render: (unit_cost) => `$${(+unit_cost).toFixed(2)}`,
       sorter: (a, b) => sortByNumber(+a.unit_cost, +b.unit_cost),
     },
     { 
       title: 'Action',
       dataIndex: 'id',
       width: 100,
-      render: (id) => <Link to='/'>Re-order</Link>,
     },
 ]
