@@ -17,7 +17,7 @@ export class CustomerApiHelper {
     }
 
     static async getById(id) {
-        return axiosObject.get(`/customer?id=${id}`)
+        return axiosObject.get(`/customer?include=charged_under&id=${id}`)
             .then(res => res.data);
     }
 
