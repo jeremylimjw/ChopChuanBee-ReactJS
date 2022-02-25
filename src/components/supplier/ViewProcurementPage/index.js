@@ -167,9 +167,8 @@ export default function ViewProcurementPage() {
     }
 
     function navigateToCreateForm() {
-
+      navigate('./../new', { state: { supplier: purchaseOrder.supplier, purchase_order_items: purchaseOrder.purchase_order_items }});
     }
-
 
     function sendOrder() {
       console.log(purchaseOrder)

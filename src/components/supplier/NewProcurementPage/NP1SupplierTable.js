@@ -8,7 +8,7 @@ import { sortByString } from '../../../utilities/sorters';
 import { showTotal } from '../../../utilities/table';
 import MyToolbar from '../../common/MyToolbar';
 
-export default function NP1SupplierTable({ selectedSupplier,  setSelectedSupplier }) {
+export default function NP1SupplierTable({ selectedSupplier,  setSelectedSupplier, setSelectedProducts }) {
 
     const { handleHttpError } = useApp();
   
@@ -42,6 +42,16 @@ export default function NP1SupplierTable({ selectedSupplier,  setSelectedSupplie
       onValuesChange(null, form.getFieldsValue());
     }
 
+    function handleRowSelect(_, selectedRows) {
+      setSelectedSupplier(selectedRows[0]);
+      const newItem = {
+        product: null, 
+        key: Math.random(),
+        quantity: 0,
+      }
+      setSelectedProducts([newItem]);
+    }
+
     return (
         <>
             <MyToolbar title="All Suppliers">
@@ -57,7 +67,7 @@ export default function NP1SupplierTable({ selectedSupplier,  setSelectedSupplie
             </MyToolbar>
 
             <Table loading={loading}
-              rowSelection={{ type: 'radio', onChange: (_, selectedRows) => setSelectedSupplier(selectedRows[0]), selectedRowKeys: [selectedSupplier?.id] }}
+              rowSelection={{ type: 'radio', onChange: handleRowSelect, selectedRowKeys: [selectedSupplier?.id] }}
               columns={columns}
               dataSource={suppliers}
               pagination={{ pageSize: 6, showTotal: showTotal }}

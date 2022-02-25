@@ -1,6 +1,6 @@
 import { Button, message, Steps } from 'antd';
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { PurchaseOrderApiHelper } from '../../../api/PurchaseOrderApiHelper';
 import { useApp } from '../../../providers/AppProvider';
 import MyCard from '../../common/MyCard';
@@ -20,23 +20,21 @@ export default function NewProcurementPage() {
 
   const { handleHttpError } = useApp();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [step, setStep] = useState(0)
   const [selectedSupplier, setSelectedSupplier] = useState({});
   const [selectedProducts, setSelectedProducts] = useState([]);
 
   useEffect(() => {
-    if (selectedSupplier != null) {
-      setSelectedProducts([]);
-      const newItem = {
-        product: null, 
-        key: Math.random(),
-        quantity: 0,
+    if (location?.state?.supplier) {
+      setSelectedSupplier(location.state.supplier);
+      setStep(1);
+      if (location?.state?.purchase_order_items) {
+        setSelectedProducts(location.state.purchase_order_items);
       }
-      const newItems = [newItem];
-      setSelectedProducts(newItems);
     }
-  }, [selectedSupplier, setSelectedProducts])
+  }, [location.state, setSelectedSupplier, setStep, setSelectedProducts])
 
   // Handles purchase order creation
   function handleSubmitEvent() {
@@ -68,7 +66,7 @@ export default function NewProcurementPage() {
 
       { step === 0 &&
         <MyCard>
-          <NP1SupplierTable selectedSupplier={selectedSupplier} setSelectedSupplier={setSelectedSupplier} />
+          <NP1SupplierTable selectedSupplier={selectedSupplier} setSelectedSupplier={setSelectedSupplier} setSelectedProducts={setSelectedProducts} />
           <MyToolbar style={{ marginTop: 15 }}>
             <Button type="primary" onClick={() => setStep(step+1)} disabled={selectedSupplier.id == null}>Next</Button>
           </MyToolbar>
