@@ -195,8 +195,8 @@ export default function NewLeaveFormModal({ selectedEmployee, isModalVisible, se
               {selectedDays.numDays} days
             </Typography.Text>
             <Typography.Text type='secondary'>
-              {selectedDays.weekends > 0 && ` (-${selectedDays.weekends} weekends)`}
-              {selectedDays.publicHolidays > 0 && ` (-${selectedDays.publicHolidays} public holidays)`}
+              {selectedDays.weekends > 0 && ` (Weekends: -${selectedDays.weekends})`}
+              {selectedDays.publicHolidays > 0 && ` (Public holidays: -${selectedDays.publicHolidays} )`}
             </Typography.Text>
           </Form.Item>
         }

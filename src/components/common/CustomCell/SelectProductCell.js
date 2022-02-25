@@ -1,7 +1,7 @@
 import { Form, Select, Typography } from "antd";
 import { useEffect, useRef, useState } from "react";
 
-export default function SelectProductCell({ field, toggleable, handleSave, record, products, disabledProductsMap, ...restProps }) {
+export default function SelectProductCell({ field, toggleable, handleSave, record, products, disabledProductsMap = {}, ...restProps }) {
   const [form] = Form.useForm();
 
   const [editing, setEditing] = useState(false);
@@ -62,7 +62,11 @@ export default function SelectProductCell({ field, toggleable, handleSave, recor
 				:
 				<div onClick={toggleEdit}>
         { record[field] ?
-					record[field].name : <Typography.Text type="secondary">Click to select product</Typography.Text>
+          <span>
+            { (record[field].deactivated_date != null ? '(Unlisted) ' : '') + record[field].name } 
+          </span>
+          : 
+          <Typography.Text type="secondary">Click to select product</Typography.Text>
         }
 				</div>
 			}
