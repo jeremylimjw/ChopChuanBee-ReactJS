@@ -18,6 +18,8 @@ export class SupplierAPIHelper {
     } else if (query.status === false) {
       params.deactivated_date_is_nn = 1;
     }
+    if (query.limit)
+      params.limit = query.limit;
     params.order_by = 'created_at_desc';
 
     return axiosObject.get("/supplier", { params })

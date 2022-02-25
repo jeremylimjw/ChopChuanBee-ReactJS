@@ -117,6 +117,7 @@ const columns = [
     dataIndex: 'product_alias',
     key: 'product_alias',
     ellipsis: true,
+    width: '20%',
     sorter: (a, b) => sortByString(a.product_alias, b.product_alias),
   },
   {
