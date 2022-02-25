@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useContext, createContext  } from "react";
+import { useState, useEffect, useContext, createContext } from "react";
 import { httpLogout } from "../api/auth";
 import { useNavigate } from "react-router-dom";
 import { message } from "antd";
@@ -12,7 +12,7 @@ export function useApp() {
 
 export function AppProvider({ children }) {
     const navigate = useNavigate();
-    
+
     const [user, setUser] = useState(null);
 
     /**
@@ -20,7 +20,7 @@ export function AppProvider({ children }) {
      */
     useEffect(() => {
         let userSession = JSON.parse(sessionStorage.getItem("user")) || null;
-        
+
         if (userSession != null) {
             setUser(userSession);
         }
@@ -44,7 +44,7 @@ export function AppProvider({ children }) {
             removeSession();
         })
     }
-    
+
     /**
      * Wrapper to handle HTTP errors
      */
@@ -58,7 +58,7 @@ export function AppProvider({ children }) {
                 throw Error('Login session timed out. Please login again.');
             } else {
                 console.log(error.response.data)
-                message.error(JSON.stringify(error.response.data));
+                message.error(typeof error.response.data === 'string' ? error.response.data : JSON.stringify(error.response.data));
                 throw Error(error.response.data);
             }
         } else if (error.request) {
@@ -92,16 +92,16 @@ export function AppProvider({ children }) {
      */
     function hasWriteAccessTo(view) {
         if (user == null) return false;
-        if (user.role_name === 'Admin' || user.access_rights[view]?.has_write_access) return true;
+        if (user.role.name === 'Admin' || user.access_rights[view]?.has_write_access) return true;
         return false;
     }
 
     const value = { user, setUser, logout, removeSession, hasViewAccessTo, hasWriteAccessTo, handleHttpError }
 
     return (
-        <AppContext.Provider 
+        <AppContext.Provider
             value={value}>
-            { children }
+            {children}
         </AppContext.Provider>
     )
 }
