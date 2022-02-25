@@ -3,12 +3,16 @@ import { Button, Table, Typography } from 'antd'
 import React, { useState } from 'react'
 import { getPaymentMethodTag } from '../../../enums/PaymentMethod';
 import { POStatus } from '../../../enums/PurchaseOrderStatus';
+import { View } from '../../../enums/View';
+import { useApp } from '../../../providers/AppProvider';
 import { parseDate } from '../../../utilities/datetime';
 import MyCard from '../../common/MyCard';
 import MyToolbar from '../../common/MyToolbar';
 import NewPaymentModal from './NewPaymentModal';
 
 export default function PO4PaymentsTable({ purchaseOrder, setPurchaseOrder, loading }) {
+
+    const { hasWriteAccessTo } = useApp();
     
     const [isModalVisible, setIsModalVisible] = useState(0);
 
@@ -19,8 +23,12 @@ export default function PO4PaymentsTable({ purchaseOrder, setPurchaseOrder, load
         
             { purchaseOrder.isStatus(POStatus.ACCEPTED) && 
                 <MyToolbar title="Payments">
-                    <Button icon={<UndoOutlined />} disabled={loading} onClick={() => setIsModalVisible(2)}>Refund</Button>
-                    <Button type="primary" icon={<PlusOutlined />} disabled={loading} onClick={() => setIsModalVisible(1)}>Add Payment</Button>
+                    {hasWriteAccessTo(View.SCM.id) &&
+                    <>
+                        <Button icon={<UndoOutlined />} disabled={loading} onClick={() => setIsModalVisible(2)}>Refund</Button>
+                        <Button type="primary" icon={<PlusOutlined />} disabled={loading} onClick={() => setIsModalVisible(1)}>Add Payment</Button>
+                    </>
+                    }
                 </MyToolbar>
             }
         

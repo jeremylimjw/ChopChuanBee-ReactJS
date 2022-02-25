@@ -2,12 +2,16 @@ import { MinusOutlined, PlusOutlined, UndoOutlined } from '@ant-design/icons/lib
 import { Avatar, Button, Collapse, List, Tag } from 'antd'
 import React from 'react'
 import { POStatus } from '../../../enums/PurchaseOrderStatus';
+import { View } from '../../../enums/View';
+import { useApp } from '../../../providers/AppProvider';
 import { parseDate } from '../../../utilities/datetime';
 import MyCard from '../../common/MyCard';
 import MyToolbar from '../../common/MyToolbar';
 import NewDeliveryOrderModal from './NewDeliveryOrderModal';
 
 export default function PO5DeliveriesTable({ purchaseOrder, setPurchaseOrder, loading, isModalVisible, setIsModalVisible }) {
+
+    const { hasWriteAccessTo } = useApp();
 
     return (
         <>
@@ -16,8 +20,12 @@ export default function PO5DeliveriesTable({ purchaseOrder, setPurchaseOrder, lo
         
             { purchaseOrder.isStatus(POStatus.ACCEPTED) && 
                 <MyToolbar title="Received Deliveries">
-                    <Button icon={<UndoOutlined />} disabled={loading} onClick={() => setIsModalVisible(2)}>Return</Button>
-                    <Button type="primary" icon={<PlusOutlined />} disabled={loading} onClick={() => setIsModalVisible(1)}>Receive New Delivery</Button>
+                    {hasWriteAccessTo(View.SCM.id) &&
+                    <>
+                        <Button icon={<UndoOutlined />} disabled={loading} onClick={() => setIsModalVisible(2)}>Return</Button>
+                        <Button type="primary" icon={<PlusOutlined />} disabled={loading} onClick={() => setIsModalVisible(1)}>Receive New Delivery</Button>
+                    </>
+                    }
                 </MyToolbar>
             }
 

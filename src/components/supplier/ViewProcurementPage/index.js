@@ -8,6 +8,7 @@ import { MovementType } from '../../../enums/MovementType';
 import { PaymentMethod } from '../../../enums/PaymentMethod';
 import { PaymentTerm } from '../../../enums/PaymentTerm';
 import { POStatus } from '../../../enums/PurchaseOrderStatus';
+import { View } from '../../../enums/View';
 import { PurchaseOrder } from '../../../models/PurchaseOrder';
 import { useApp } from '../../../providers/AppProvider';
 import MyCard from '../../common/MyCard';
@@ -23,7 +24,7 @@ export default function ViewProcurementPage() {
     const { id } = useParams();
     const navigate = useNavigate();
 
-    const { handleHttpError } = useApp();
+    const { handleHttpError, hasWriteAccessTo } = useApp();
 
     const [form] = Form.useForm();
   
@@ -210,6 +211,7 @@ export default function ViewProcurementPage() {
 
           <PO3ItemsTable purchaseOrder={purchaseOrder} setPurchaseOrder={setPurchaseOrder} loading={loading} setLoading={setLoading} />
 
+          { hasWriteAccessTo(View.SCM.name) && 
           <div style={{ display: 'flex', marginTop: 30 }}>
 
             <Button icon={<SendOutlined />} disabled={loading || !purchaseOrder.isStatus(POStatus.PENDING)} onClick={sendOrder}>Send Order</Button>
@@ -240,6 +242,7 @@ export default function ViewProcurementPage() {
             </div>
 
           </div>
+          }
 
         </MyCard>
 

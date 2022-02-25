@@ -3,6 +3,7 @@ import { Button, InputNumber, Table, Typography } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { SupplierAPIHelper } from '../../../api/SupplierAPIHelper';
 import { POStatus } from '../../../enums/PurchaseOrderStatus';
+import { View } from '../../../enums/View';
 import { PurchaseOrder } from '../../../models/PurchaseOrder';
 import { useApp } from '../../../providers/AppProvider';
 import { CustomCell } from '../../common/CustomCell';
@@ -10,7 +11,7 @@ import MyToolbar from '../../common/MyToolbar';
 
 export default function PO3ItemsTable({ purchaseOrder, setPurchaseOrder, loading, setLoading }) {
 
-  const { handleHttpError } = useApp();
+  const { handleHttpError, hasWriteAccessTo } = useApp();
   
   const [menuItems, setMenuItems] = useState([]);
   const [disabledProductsMap, setDisabledProductsMap] = useState({});
@@ -27,7 +28,7 @@ export default function PO3ItemsTable({ purchaseOrder, setPurchaseOrder, loading
 
   columns[5].onCell = (record) => ({ type: 'input_number', field: 'quantity', record, handleSave })
   columns[6].onCell = (record) => ({ type: 'input_number', field: 'unit_cost', record, handleSave })
-  columns[8].render = (_, record) => <Button shape="circle" icon={<DeleteOutlined />} onClick={() => handleDeleteRow(record)} disabled={!purchaseOrder.isStatus(POStatus.PENDING)} />
+  columns[8].render = (_, record) => <Button shape="circle" icon={<DeleteOutlined />} onClick={() => handleDeleteRow(record)} disabled={!hasWriteAccessTo(View.SCM.id) || !purchaseOrder.isStatus(POStatus.PENDING)} />
   
   useEffect(() => {
     if (purchaseOrder.supplier != null) {
@@ -89,7 +90,9 @@ export default function PO3ItemsTable({ purchaseOrder, setPurchaseOrder, loading
         <>
         { purchaseOrder.isStatus(POStatus.PENDING, POStatus.SENT) && 
           <MyToolbar title="Order Items">
+            { hasWriteAccessTo(View.SCM.name) && 
               <Button icon={<PlusOutlined />} disabled={loading} onClick={() => handleAddRow()}>Add More Items</Button>
+            }
           </MyToolbar>
         }
 

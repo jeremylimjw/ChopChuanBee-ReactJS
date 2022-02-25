@@ -8,10 +8,11 @@ import { PaymentTerm } from '../../../enums/PaymentTerm'
 import { REQUIRED } from '../../../utilities/form'
 import { ChargedUnderApiHelper } from '../../../api/ChargedUnderApiHelper'
 import { useApp } from '../../../providers/AppProvider'
+import { View } from '../../../enums/View'
 
 export default function PO2Form({ form, purchaseOrder, loading, saveForLater }) {
 
-    const { handleHttpError } = useApp();
+    const { handleHttpError, hasWriteAccessTo } = useApp();
 
     const [showGstRate, setShowGstRate] = useState(false);
     const [showPaymentMethod, setShowPaymentMethod] = useState(false);
@@ -99,9 +100,11 @@ export default function PO2Form({ form, purchaseOrder, loading, saveForLater }) 
                     <TextArea disabled={!purchaseOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED)} />
                 </Form.Item>
 
+                {hasWriteAccessTo(View.SCM.id) &&
                 <Form.Item wrapperCol={{ offset: 6 }}>
                     <Button icon={<SaveOutlined />} disabled={loading || !purchaseOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED)} onClick={saveForLater}>Save for later</Button>
                 </Form.Item>
+                }
 
             </Form>
             }
