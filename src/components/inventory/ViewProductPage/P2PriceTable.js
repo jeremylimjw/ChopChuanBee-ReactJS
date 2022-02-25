@@ -9,18 +9,18 @@ export default function P2PriceTable() {
     // const [loading, setLoading] = useState(false);
 
     return (
-        <>
-            <MyToolbar title="Latest Prices">
-                    <Link to="./">Last Ordered:  21/2/2022</Link>
-            </MyToolbar>
-            
-            <Table dataSource={[]} 
-              columns={columns} 
-              // loading={loading} 
-              rowKey={() => Math.random()} 
-              pagination={{ pageSize: 6, showTotal }}
-            />
-        </>  
+      <>
+        <MyToolbar title="Latest Prices">
+          <Link to="./">Last Ordered:  Never</Link>
+        </MyToolbar>
+        
+        <Table dataSource={[]} 
+          columns={columns} 
+          // loading={loading} 
+          rowKey={() => Math.random()} 
+          pagination={{ pageSize: 6, showTotal }}
+        />
+      </>  
     )
 }
 
