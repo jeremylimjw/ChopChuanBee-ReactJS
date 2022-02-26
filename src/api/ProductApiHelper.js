@@ -46,4 +46,14 @@ export class ProductApiHelper {
         return axiosObject.get(`/product/latestPrice`, { params: { id: id } })
             .then(res => res.data);
     }
+
+    static async getInventoryMovements(id) {
+        const params = {
+            product_id: id,
+            order_by: 'created_at_desc',
+        }
+
+        return axiosObject.get(`/product/inventoryMovement`, { params: params })
+            .then(res => res.data);
+    }
 }

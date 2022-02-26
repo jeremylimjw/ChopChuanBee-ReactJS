@@ -77,7 +77,7 @@ export default function ViewProductPage() {
         <Row>
           <Col xl={10} xs={24}>
             <MyCard title="Quick View">
-              <Typography.Title level={4} style={{ display: 'inline-block'}}>0</Typography.Title> units in stock
+              <Typography.Title level={4} style={{ display: 'inline-block'}}>{product?.total_quantity}</Typography.Title> units in stock
             </MyCard>
 
             <MyCard>
@@ -94,7 +94,7 @@ export default function ViewProductPage() {
         </Row>
 
         <MyCard style={{ marginTop: 0 }}>
-          <P3InventoryTable />
+          <P3InventoryTable product={product} />
         </MyCard>
       
       </MyLayout>
