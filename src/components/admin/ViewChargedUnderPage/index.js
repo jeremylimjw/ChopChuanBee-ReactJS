@@ -1,4 +1,4 @@
-import { UserAddOutlined, UserDeleteOutlined } from '@ant-design/icons/lib/icons';
+import { PlusCircleOutlined, MinusCircleOutlined } from '@ant-design/icons/lib/icons';
 import { Popconfirm, Button, message } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router';
@@ -43,7 +43,7 @@ export default function ViewChargedUnderPage() {
         promise.then(newFields => {
             setLoading(false);
             setChargedUnder({...chargedUnder, ...newFields });
-            message.success(`Scheme successfully ${chargedUnder.deactivated_date == null ? 'deactivated' : 'activated' }!`);
+            message.success(`Scheme successfully ${chargedUnder.deactivated_date == null ? 'unlisted' : 'relisted' }!`);
         })
         .catch(handleHttpError)
         .catch(() => setLoading(false));
@@ -55,12 +55,12 @@ export default function ViewChargedUnderPage() {
       return (
         <>
           { chargedUnder.deactivated_date == null ? 
-            <Popconfirm title="Confirm deactivate?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading}>
-              <Button type="danger" loading={loading} icon={<UserDeleteOutlined />} style={{ width: 120 }}>Deactivate</Button>
+            <Popconfirm title="Confirm unlist?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading}>
+              <Button type="danger" loading={loading} icon={<MinusCircleOutlined />} style={{ width: 100 }}>Unlist</Button>
             </Popconfirm>
             :
-            <Popconfirm title="Confirm activate?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading}>
-              <Button type="primary" loading={loading} icon={<UserAddOutlined />} style={{ width: 120 }}>Activate</Button>
+            <Popconfirm title="Confirm relist?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading}>
+              <Button type="primary" loading={loading} icon={<PlusCircleOutlined />} style={{ width: 100 }}>List</Button>
             </Popconfirm>
           }
         </>
@@ -70,7 +70,7 @@ export default function ViewChargedUnderPage() {
     return (
       <>
         {chargedUnder != null && 
-            <MyLayout breadcrumbs={breadcrumbs} bannerTitle={`${chargedUnder.name} ${ chargedUnder.deactivated_date == null ? '' : '(Deactivated)' }`} bannerRight={renderDeactivateButton()}>
+            <MyLayout breadcrumbs={breadcrumbs} bannerTitle={`${chargedUnder.name} ${ chargedUnder.deactivated_date == null ? '' : '(Unlisted)' }`} bannerRight={renderDeactivateButton()}>
             
                 <MyCard style={{ width: 550 }}>
                     <CU1Form chargedUnder={chargedUnder} setChargedUnder={setChargedUnder} />

@@ -70,8 +70,8 @@ export default function ManageChargedUndersPage() {
                         <Form.Item name="status">
                             <Select style={{ width: 140 }} placeholder="Filter by Status">
                                 <Select.Option value={null}>All</Select.Option>
-                                <Select.Option value={true}>Active</Select.Option>
-                                <Select.Option value={false}>Inactive</Select.Option>
+                                <Select.Option value={true}>Listed</Select.Option>
+                                <Select.Option value={false}>Unlisted</Select.Option>
                             </Select>
                         </Form.Item>
                         <Button onClick={resetForm}>Reset</Button>
@@ -146,7 +146,7 @@ const columns = [
         width: 120,
         align: 'center',
         ellipsis: true,
-        render: (deactivated_date) => getActiveTag(deactivated_date),
+        render: (deactivated_date) => getActiveTag(deactivated_date, ['Listed', 'Unlisted']),
         sorter: (a, b) => sortByNumber(a.deactivated_date ? 1 : 0, b.deactivated_date ? 1 : 0),
     },
     { 
