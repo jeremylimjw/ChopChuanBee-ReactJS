@@ -1,4 +1,4 @@
-import { UserAddOutlined, UserDeleteOutlined } from '@ant-design/icons/lib/icons';
+import { MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons/lib/icons';
 import { Row, Col, Popconfirm, Button, message, Typography } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router';
@@ -58,11 +58,11 @@ export default function ViewProductPage() {
       <>
         { product.deactivated_date == null ? 
           <Popconfirm title="Confirm unlist?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading}>
-            <Button type="danger" loading={loading} icon={<UserDeleteOutlined />} style={{ width: 100 }}>Unlist</Button>
+            <Button type="danger" loading={loading} icon={<MinusCircleOutlined />} style={{ width: 100 }}>Unlist</Button>
           </Popconfirm>
           :
           <Popconfirm title="Confirm relist?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading}>
-            <Button type="primary" loading={loading} icon={<UserAddOutlined />} style={{ width: 100 }}>Relist</Button>
+            <Button type="primary" loading={loading} icon={<PlusCircleOutlined />} style={{ width: 100 }}>Relist</Button>
           </Popconfirm>
         }
       </>
