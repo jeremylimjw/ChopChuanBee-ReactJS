@@ -19,7 +19,7 @@ export default function PO2Form({ form, purchaseOrder, loading, saveForLater }) 
     const [chargedUnders, setChargedUnders] = useState([]);
 
     useEffect(() => {
-        ChargedUnderApiHelper.get()
+        ChargedUnderApiHelper.getAvailable()
             .then(results => {
                 setChargedUnders(results)
             })

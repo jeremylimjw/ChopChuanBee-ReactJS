@@ -28,6 +28,8 @@ import ViewCustomerPage from './components/customer/ViewCustomerPage';
 import ManageProcurementsPage from './components/supplier/ManageProcurementsPage';
 import NewProcurementPage from './components/supplier/NewProcurementPage';
 import ViewProcurementPage from './components/supplier/ViewProcurementPage';
+import ManageChargedUndersPage from './components/admin/ManageChargedUndersPage';
+import ViewChargedUnderPage from './components/admin/ViewChargedUnderPage';
 
 // Add on more routes here
 const routes = [
@@ -47,6 +49,16 @@ const routes = [
       { 
         path: 'accounts/:id', 
         component: <ViewAccountPage />,
+        viewAccess: View.ADMIN.name,
+      },
+      { 
+        path: 'schemes', 
+        component: <ManageChargedUndersPage />,
+        viewAccess: View.ADMIN.name,
+      },
+      { 
+        path: 'schemes/:id', 
+        component: <ViewChargedUnderPage />,
         viewAccess: View.ADMIN.name,
       },
       { 

@@ -15,6 +15,7 @@ const menu = [
     icon: <UserOutlined />,
     items: [
       { route: '/admin/accounts', name: 'Manage Accounts' },
+      { route: '/admin/schemes', name: 'Manage Schemes' },
       { route: '/admin/logs', name: 'Logs' },
     ]
   },

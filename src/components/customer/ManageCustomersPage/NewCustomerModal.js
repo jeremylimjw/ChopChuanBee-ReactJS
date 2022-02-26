@@ -17,7 +17,7 @@ export default function NewCustomerModal({ isModalVisible, setIsModalVisible, cu
     const [expand, setExpand] = useState(false);
 
     useEffect(() => {
-        ChargedUnderApiHelper.get()
+        ChargedUnderApiHelper.getAvailable()
             .then(results => {
                 setChargedUnders(results)
             })

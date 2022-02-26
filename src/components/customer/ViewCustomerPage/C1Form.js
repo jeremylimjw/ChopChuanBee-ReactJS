@@ -18,7 +18,7 @@ export default function C1Form({ customer, setCustomer }) {
     const [chargedUnders, setChargedUnders] = useState([]);
     
     useEffect(() => {
-        ChargedUnderApiHelper.get()
+        ChargedUnderApiHelper.getAvailable()
             .then(results => {
                 setChargedUnders(results)
             })
