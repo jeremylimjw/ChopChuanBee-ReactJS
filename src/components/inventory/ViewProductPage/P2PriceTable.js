@@ -2,7 +2,6 @@ import { Table } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { sortByDate, sortByNumber, sortByString } from '../../../utilities/sorters'
 import MyToolbar from '../../common/MyToolbar'
-import { useNavigate } from 'react-router';
 import { showTotal } from '../../../utilities/table';
 import { useApp } from '../../../providers/AppProvider'
 import { parseDate } from '../../../utilities/datetime'
@@ -12,8 +11,6 @@ import { Link } from 'react-router-dom';
 export default function P2PriceTable({ product }) {
 
     const { handleHttpError } = useApp();
-
-    const navigate = useNavigate();
 
     const [loading, setLoading] = useState(false);
     const [items, setItems] = useState([]);
@@ -25,7 +22,7 @@ export default function P2PriceTable({ product }) {
       setLoading(true);
       ProductApiHelper.getLatestPrices(product?.id)
         .then(results => {
-          setItems(results)
+          setItems(results);
           setLoading(false);
         })
         .catch(handleHttpError)

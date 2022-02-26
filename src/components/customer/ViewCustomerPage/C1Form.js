@@ -5,7 +5,7 @@ import { ChargedUnderApiHelper } from '../../../api/ChargedUnderApiHelper';
 import { CustomerApiHelper } from '../../../api/CustomerApiHelper';
 import { View } from '../../../enums/View';
 import { useApp } from '../../../providers/AppProvider';
-import { EMAIL, REQUIRED } from '../../../utilities/form';
+import { EMAIL, REQUIRED, NUMBER, exactLength } from '../../../utilities/form';
 import MyToolbar from '../../common/MyToolbar';
 
 export default function C1Form({ customer, setCustomer }) {
@@ -75,7 +75,7 @@ export default function C1Form({ customer, setCustomer }) {
                         }
                     </Form.Item>
 
-                    <Form.Item label="Postal Code" name="postal_code" rules={editing ? [REQUIRED] : []}>
+                    <Form.Item label="Postal Code" name="postal_code" rules={editing ? [REQUIRED, exactLength(6), NUMBER] : []}>
                         {!editing ? 
                             <Typography>{customer.postal_code || '-'}</Typography>
                         :
