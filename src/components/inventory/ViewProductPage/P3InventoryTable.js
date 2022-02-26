@@ -5,7 +5,8 @@ import { ProductApiHelper } from '../../../api/ProductApiHelper';
 import { getMovementTypeTag } from '../../../enums/MovementType';
 import { useApp } from '../../../providers/AppProvider';
 import { parseDateTime } from '../../../utilities/datetime';
-import { sortByDate, sortByNumber, sortByString } from '../../../utilities/sorters';
+import { sortByDate, sortByNumber } from '../../../utilities/sorters';
+import { showTotal } from '../../../utilities/table';
 import MyToolbar from '../../common/MyToolbar';
 
 export default function P3InventoryTable({ product }) {
@@ -36,6 +37,7 @@ export default function P3InventoryTable({ product }) {
           <Table dataSource={movements} 
             columns={columns} 
             loading={loading} 
+            pagination={{ showTotal: showTotal }}
             rowKey="id"
           />
       </>  
@@ -59,7 +61,7 @@ const columns = [
     align: 'center',
     width: '20%',
     render: (movement_type_id) => getMovementTypeTag(movement_type_id),
-    sorter: (a, b) => sortByString(a.movement_type_id, b.movement_type_id),
+    sorter: (a, b) => sortByNumber(a.movement_type_id, b.movement_type_id),
   },
   {
     title: 'Quantity',
@@ -74,7 +76,7 @@ const columns = [
     key: 'unit_cost',
     width: '20%',
     render: (unit_cost) => unit_cost ? `$${(+unit_cost).toFixed(2)}` : '-',
-    sorter: (a, b) => sortByString(a.unit_cost || 0, b.unit_cost || 0),
+    sorter: (a, b) => sortByNumber(a.unit_cost || 0, b.unit_cost || 0),
   },
   {
     title: 'Unit Price',
@@ -82,7 +84,7 @@ const columns = [
     key: 'unit_price',
     width: '20%',
     render: (unit_price) => unit_price ? `$${(+unit_price).toFixed(2)}` : '-',
-    sorter: (a, b) => sortByString(a.unit_price || 0, b.unit_price || 0),
+    sorter: (a, b) => sortByNumber(a.unit_price || 0, b.unit_price || 0),
   },
   {
     title: "Action",

@@ -93,4 +93,9 @@ export class SupplierAPIHelper {
     return axiosObject.get(`/supplier/latestPrice`, { params: { supplier_id: id } })
       .then(res => res.data);
   }
+
+  static async getMyAccountPayable(id) {
+    return axiosObject.get(`/supplier/ap`, { params: { supplier_id: id } })
+      .then(res => res.data);
+  }
 }
