@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { SupplierAPIHelper } from "../../../api/SupplierAPIHelper";
 import { useApp } from "../../../providers/AppProvider";
-import { sortByString } from "../../../utilities/sorters";
+import { sortByNumber, sortByString } from "../../../utilities/sorters";
 import { CustomCell } from "../../common/CustomCell";
 import MyToolbar from "../../common/MyToolbar";
 
@@ -15,10 +15,13 @@ export default function NP2SupplierMenuTable({ selectedSupplier, selectedProduct
 
   const [loading, setLoading] = useState(false);
   const [menuItems, setMenuItems] = useState([]);
+  const [myPrices, setMyPrices] = useState({});
 
   const disabledProductsMap = selectedProducts.reduce((prev, current) => ({...prev, [current?.product?.id]: true }), {});
 
   columns[1].onCell = (record) => ({ type: 'product_select', toggleable: 'true', field: 'product', record, handleSave, products: menuItems, disabledProductsMap });
+  columns[4].render = (product) => product?.id ? (myPrices[product.id] ? `$${(+myPrices[product.id]).toFixed(2)}` : '-') : '-';
+  columns[4].sorter = (a, b) => sortByNumber(+myPrices[a.product?.id] || 0, +myPrices[b.product?.id] || 0);
   columns[5].onCell = (record) => ({ type: 'input_number', field: 'quantity', record, handleSave });
   columns[6].render = (_, record) => <Button shape="circle" icon={<DeleteOutlined />} onClick={() => handleDeleteRow(record)} />
 
@@ -32,6 +35,13 @@ export default function NP2SupplierMenuTable({ selectedSupplier, selectedProduct
         })
         .catch(handleHttpError)
         .catch(() => setLoading(false))
+
+      // Get supplier's latest prices for all products
+      SupplierAPIHelper.getMyLatestPrices(selectedSupplier.id)
+          .then(results => {
+              setMyPrices(results.reduce((prev, current) => ({...prev, [current.product_id]: current.unit_cost }), {}));
+          })
+          .catch(handleHttpError)
     }
 
   }, [handleHttpError, selectedSupplier, setSelectedProducts, setMenuItems])
@@ -111,12 +121,14 @@ const columns = [
     sorter: (a, b) => sortByString(a.product.unit, b.product.unit),
   },
   {
-    title: 'Lastest Price',
-    dataIndex: 'latest_price',
-    width: 150, 
+    title: 'Latest Price',
+    dataIndex: 'product',
+    key: 'latest_unit_cost',
+    align: 'center',
+    width: 120,
     ellipsis: true,
-    render: (product) => product?.description || '-',
-    sorter: (a, b) => sortByString(a.latest_price, b.latest_price),
+    render: (product) => product?.latest_unit_cost ? `$${(+product?.latest_unit_cost).toFixed(2)}` : '-',
+    sorter: (a, b) => sortByString(a.product?.latest_unit_cost, b.product?.latest_unit_cost),
   },
   {
     title: '* Quantity',

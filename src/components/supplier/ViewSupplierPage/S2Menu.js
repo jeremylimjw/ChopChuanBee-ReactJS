@@ -5,7 +5,7 @@ import { ProductApiHelper } from '../../../api/ProductApiHelper';
 import { SupplierAPIHelper } from '../../../api/SupplierAPIHelper';
 import { View } from '../../../enums/View';
 import { useApp } from '../../../providers/AppProvider';
-import { sortByString } from '../../../utilities/sorters';
+import { sortByNumber, sortByString } from '../../../utilities/sorters';
 import { showTotal } from '../../../utilities/table';
 import { CustomCell } from '../../common/CustomCell';
 import MyToolbar from '../../common/MyToolbar';
@@ -16,8 +16,12 @@ export default function S2Menu({ supplier }) {
 
     const [loading, setLoading] = useState(false);
     const [items, setItems] = useState([]);
+    const [myPrices, setMyPrices] = useState({});
     const [disabledProductsMap, setDisabledProductsMap] = useState({});
     const [products, setProducts] = useState([]);
+
+    columns[2].render = (product) => product?.id ? (myPrices[product.id] ? `$${(+myPrices[product.id]).toFixed(2)}` : '-') : '-';
+    columns[2].sorter = (a, b) => sortByNumber(+myPrices[a.product?.id] || 0, +myPrices[b.product?.id] || 0);
 
     columns[1].onCell = (record) => ({ 
         type: 'product_select', 
@@ -33,12 +37,21 @@ export default function S2Menu({ supplier }) {
     useEffect(() => {
         setLoading(true);
         if (supplier) {
-        SupplierAPIHelper.getMenu(supplier.id).then(results => {
-            setItems(results.map(x => ({...x, key: Math.random() })));
-            setLoading(false);
-        })
-        .catch(handleHttpError)
-        .catch(() => setLoading(false))
+            // Get supplier's menu
+            SupplierAPIHelper.getMenu(supplier.id)
+                .then(results => {
+                    setItems(results.map(x => ({...x, key: Math.random() })));
+                    setLoading(false);
+                })
+                .catch(handleHttpError)
+                .catch(() => setLoading(false))
+            
+            // Get supplier's latest prices for all products
+            SupplierAPIHelper.getMyLatestPrices(supplier.id)
+                .then(results => {
+                    setMyPrices(results.reduce((prev, current) => ({...prev, [current.product_id]: current.unit_cost }), {}));
+                })
+                .catch(handleHttpError)
         }
     }, [supplier, setLoading, handleHttpError])
 
@@ -142,13 +155,11 @@ const columns = [
   },
   {
     title: 'Latest Price',
-    dataIndex: 'id',
-    key: 'id',
+    dataIndex: 'product',
+    key: 'latest_unit_cost',
     align: 'center',
     width: 120,
     ellipsis: true,
-    render: (id) => '-',
-    sorter: (a, b) => sortByString(a.product?.name, b.product?.name),
   },
   { 
     align: 'center', 

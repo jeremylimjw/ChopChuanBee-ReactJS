@@ -100,7 +100,7 @@ export default function ViewSupplierPage() {
           </Row>
 
           <MyCard style={{ marginTop: 0 }}>
-            <S3History />
+            <S3History supplier={supplier} />
           </MyCard>
 
         </MyLayout>

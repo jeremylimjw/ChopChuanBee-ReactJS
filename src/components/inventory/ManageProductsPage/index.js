@@ -123,21 +123,23 @@ const columns = [
   },
   {
     title: 'Stock',
-    dataIndex: 'quantity',
-    key: 'quantity',
+    dataIndex: 'total_quantity',
+    key: 'total_quantity',
     align: 'center',
     width: 120,
     defaultSortOrder: 'ascend',
     ellipsis: true,
-    render: (quantity) => {
+    render: (_, record) => {
       return (
         <Space>
-          <Typography.Text>{quantity || 0}</Typography.Text>
-          <ExclamationCircleFilled style={{ color: '#CD5C5C' }} />
+          <Typography.Text>{record.total_quantity || 0}</Typography.Text>
+          { record.total_quantity <= record.min_inventory_level && 
+            <ExclamationCircleFilled style={{ color: '#CD5C5C' }} />
+          }
         </Space>
       )
     },
-    sorter: (a, b) => sortByNumber(a.quantity - a.min_inventory_level, b.quantity - b.min_inventory_level),
+    sorter: (a, b) => sortByNumber(a.total_quantity - a.min_inventory_level, b.total_quantity - b.min_inventory_level),
   },
   {
     title: 'Unit',

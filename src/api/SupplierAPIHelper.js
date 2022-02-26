@@ -77,15 +77,20 @@ export class SupplierAPIHelper {
   }
 
   static async updateMenu(supplierId, menuItems) {
-      const newMenu = menuItems.map(x => ({ 
-            ...x, 
-            supplier_id: supplierId,
-            product_id: x.product.id,
-        }))
-      return axiosObject.put(`/supplier/menu`, {
-          supplier_id: supplierId,
-          supplier_menus: newMenu,
-      })
+    const newMenu = menuItems.map(x => ({ 
+      ...x, 
+      supplier_id: supplierId,
+      product_id: x.product.id,
+    }))
+    return axiosObject.put(`/supplier/menu`, {
+      supplier_id: supplierId,
+      supplier_menus: newMenu,
+    })
+    .then(res => res.data);
+  }
+
+  static async getMyLatestPrices(id) {
+    return axiosObject.get(`/supplier/latestPrice`, { params: { supplier_id: id } })
       .then(res => res.data);
   }
 }

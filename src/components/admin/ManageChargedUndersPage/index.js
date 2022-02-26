@@ -119,7 +119,7 @@ const columns = [
         key: 'gst_rate',
         width: 100,
         ellipsis: true,
-        render: (gst_rate) => (gst_rate && gst_rate != 0) ? `${gst_rate}%` : '-',
+        render: (gst_rate) => (gst_rate && gst_rate !== 0) ? `${gst_rate}%` : '-',
         sorter: (a, b) => sortByNumber(a.gst_rate, b.gst_rate),
     },
     {

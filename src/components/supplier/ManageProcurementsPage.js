@@ -15,6 +15,7 @@ import debounce from 'lodash.debounce';
 import moment from 'moment';
 import { View } from '../../enums/View';
 import { PurchaseOrder } from '../../models/PurchaseOrder';
+import { PaymentTerm } from '../../enums/PaymentTerm';
 
 const breadcrumbs = [
     { url: '/supplier/procurements', name: 'Supplier' },
@@ -72,6 +73,14 @@ export default function ManageProcurementsPage() {
                         </Form.Item>
                         <Form.Item name="date">
                             <DatePicker.RangePicker />
+                        </Form.Item>
+                        <Form.Item name="payment_term_id">
+                            <Select style={{ width: 180 }} placeholder="Filter by Payment Term">
+                                <Select.Option value={null}>All</Select.Option>
+                                {Object.keys(PaymentTerm).map((key, idx) => 
+                                    <Select.Option key={idx} value={PaymentTerm[key].id}>{PaymentTerm[key].name}</Select.Option>)
+                                }
+                            </Select>
                         </Form.Item>
                         <Form.Item name="purchase_order_status_id">
                             <Select style={{ width: 180 }} placeholder="Filter by Status">

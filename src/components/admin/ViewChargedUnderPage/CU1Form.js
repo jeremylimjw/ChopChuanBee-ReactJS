@@ -89,7 +89,7 @@ export default function CU1Form({ chargedUnder, setChargedUnder }) {
                 
                 <Form.Item label="GST Rate" name="gst_rate">
                     {!editing ? 
-                        <Typography>{(chargedUnder.gst_rate && chargedUnder.gst_rate != 0) ? `${chargedUnder.gst_rate}%` : '-'}</Typography>
+                        <Typography>{(chargedUnder.gst_rate && chargedUnder.gst_rate !== 0) ? `${chargedUnder.gst_rate}%` : '-'}</Typography>
                     :
                         <InputNumber min={0} addonAfter="%" style={{ width: 100 }} />
                     }
