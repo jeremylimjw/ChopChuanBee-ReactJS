@@ -16,6 +16,7 @@ export default function P2PriceTable() {
 
     useEffect(() => {
       setItems([]);
+      setLoading(true);
       SupplierAPIHelper.get({ limit: Math.round(Math.random()*3)+1 })
         .then(results => {
           setItems(results.map(x => ({ 
@@ -24,6 +25,7 @@ export default function P2PriceTable() {
             created_at: new Date(), 
             unit_cost: Math.round(Math.random()*100)/10
           })))
+          setLoading(false);
         })
         .catch(handleHttpError)
     }, [handleHttpError, setItems]);

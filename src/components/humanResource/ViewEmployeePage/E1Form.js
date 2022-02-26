@@ -5,7 +5,7 @@ import { EmployeeApiHelper } from '../../../api/EmployeeApiHelper';
 import { getRoleTag, Role } from '../../../enums/Role';
 import { View } from '../../../enums/View';
 import { useApp } from '../../../providers/AppProvider';
-import { EMAIL, REQUIRED } from '../../../utilities/form';
+import { EMAIL, REQUIRED, NUMBER, exactLength } from '../../../utilities/form';
 import MyToolbar from '../../common/MyToolbar';
 
 export default function E1Form({ employee, setEmployee }) {
@@ -57,7 +57,7 @@ export default function E1Form({ employee, setEmployee }) {
                     </Form.Item>
 
                     <Form.Item label="Role" name="role_id" rules={editing ? [REQUIRED] : []}>
-                        {!editing ? 
+                        {!editing || employee.role_id === Role.ADMIN.id ? 
                             getRoleTag(employee.role_id)
                         :
                             <Radio.Group disabled={!editing}>
@@ -93,7 +93,7 @@ export default function E1Form({ employee, setEmployee }) {
                         }
                     </Form.Item>
                     
-                    <Form.Item label="Postal Code" name="postal_code">
+                    <Form.Item label="Postal Code" name="postal_code" rules={editing ? [exactLength(6), NUMBER] : []}>
                         {!editing ? 
                             <Typography>{employee.postal_code || '-'}</Typography>
                         :
@@ -103,7 +103,7 @@ export default function E1Form({ employee, setEmployee }) {
                     
                     <Form.Item label="NOK Name" name="nok_name">
                         {!editing ? 
-                            <Typography>{employee.contact_number || '-'}</Typography>
+                            <Typography>{employee.nok_name || '-'}</Typography>
                         :
                             <Input />
                         }

@@ -12,7 +12,7 @@ export default function MyTemplate() {
     return (
         <MyLayout breadcrumbs={breadcrumbs} bannerTitle='Dashboard'>
 
-            {/* <MyCard>
+            <MyCard>
                 <MyToolbar title='Extreme Table'>
                     <Input
                         style={{ width: 180 }}
@@ -105,7 +105,7 @@ export default function MyTemplate() {
                     <MyCard title='Past Deliveries'>Bill is a cat.</MyCard>
 
                 </Col>
-            </Row> */}
+            </Row>
             
         </MyLayout>
     );
