@@ -1,6 +1,6 @@
 import { PaymentMethod } from "../enums/PaymentMethod";
 import { getPaymentTerm, getPaymentTermTag } from "../enums/PaymentTerm";
-import { getPurchaseOrderStatus, getPurchaseOrderStatusTag, POStatus } from "../enums/PurchaseOrderStatus";
+import { getPurchaseOrderStatus, getPurchaseOrderStatusTag } from "../enums/PurchaseOrderStatus";
 
 export class SalesOrder {
     constructor(args) {
