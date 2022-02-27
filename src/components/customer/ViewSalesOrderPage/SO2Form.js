@@ -9,8 +9,9 @@ import { REQUIRED } from '../../../utilities/form'
 import { ChargedUnderApiHelper } from '../../../api/ChargedUnderApiHelper'
 import { useApp } from '../../../providers/AppProvider'
 import { View } from '../../../enums/View'
+import { SalesOrder } from '../../../models/SalesOrder'
 
-export default function SO2Form({ form, salesOrder, loading, saveForLater }) {
+export default function SO2Form({ form, salesOrder, setSalesOrder, loading, saveForLater }) {
 
     const { handleHttpError, hasWriteAccessTo } = useApp();
 
@@ -38,9 +39,20 @@ export default function SO2Form({ form, salesOrder, loading, saveForLater }) {
     }, [form, salesOrder])
 
     // Whether to render the dependent form values or not
-    function onValuesChange(_, newValues) {
+    function onValuesChange(field, newValues) {
         setShowGstRate(newValues.has_gst === 2);
         setShowPaymentMethod(newValues.payment_term_id === PaymentTerm.CASH.id);
+
+        // Update fields to charged under fields
+        if (field.charged_under_id != null) {
+            const index = chargedUnders.findIndex(x => x.id === field.charged_under_id)
+            const initialFields = { has_gst: chargedUnders[index].gst_rate == 0 ? 1 : 2, gst_rate: chargedUnders[index].gst_rate };
+            form.setFieldsValue(initialFields);
+            setSalesOrder(new SalesOrder({...salesOrder, ...initialFields }))
+        } else {
+            // This is for updating the order items table whenever user changes the input
+            setSalesOrder(new SalesOrder({...salesOrder, has_gst: newValues.has_gst, gst_rate: newValues.gst_rate }))
+        }
     }
 
     function handleChargedUnderChange(id) {
@@ -67,8 +79,8 @@ export default function SO2Form({ form, salesOrder, loading, saveForLater }) {
 
                 <Form.Item label="GST" name="has_gst" rules={[REQUIRED]}>
                     <Radio.Group disabled={!salesOrder.isStatus(POStatus.PENDING)}>
-                        <Radio value={1}>No</Radio>
                         <Radio value={2}>Yes</Radio>
+                        <Radio value={1}>No</Radio>
                     </Radio.Group>
                 </Form.Item>
 

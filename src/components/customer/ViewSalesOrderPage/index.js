@@ -195,7 +195,7 @@ export default function ViewSalesOrderPage() {
           </MyCard>
 
           <MyCard title="Order Details" style={{ flexGrow: 1, margin: '0 12px 12px 24px' }}>
-            <SO2Form form={form} salesOrder={salesOrder} loading={loading} saveForLater={saveForLater} />
+            <SO2Form form={form} salesOrder={salesOrder} setSalesOrder={setSalesOrder} loading={loading} saveForLater={saveForLater} />
           </MyCard>
 
           <MyCard style={{ width: 250, margin: '0 24px 12px 24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

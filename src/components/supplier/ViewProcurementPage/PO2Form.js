@@ -9,8 +9,9 @@ import { REQUIRED } from '../../../utilities/form'
 import { ChargedUnderApiHelper } from '../../../api/ChargedUnderApiHelper'
 import { useApp } from '../../../providers/AppProvider'
 import { View } from '../../../enums/View'
+import { PurchaseOrder } from '../../../models/PurchaseOrder'
 
-export default function PO2Form({ form, purchaseOrder, loading, saveForLater }) {
+export default function PO2Form({ form, purchaseOrder, setPurchaseOrder, loading, saveForLater }) {
 
     const { handleHttpError, hasWriteAccessTo } = useApp();
 
@@ -41,6 +42,9 @@ export default function PO2Form({ form, purchaseOrder, loading, saveForLater }) 
     function onValuesChange(_, newValues) {
         setShowGstRate(newValues.has_gst === 2 || newValues.has_gst === 3);
         setShowPaymentMethod(newValues.payment_term_id === PaymentTerm.CASH.id);
+
+        // This is for updating the order items table whenever user changes the input
+        setPurchaseOrder(new PurchaseOrder({...purchaseOrder, has_gst: newValues.has_gst, gst_rate: newValues.gst_rate }))
     }
 
     function handleChargedUnderChange(id) {
@@ -63,7 +67,7 @@ export default function PO2Form({ form, purchaseOrder, loading, saveForLater }) 
 
                 <Form.Item name="charged_under" hidden><Input /></Form.Item>
                 <Form.Item name="charged_under_id" label="Charged Under" rules={[REQUIRED]}>
-                    <Select style={{ width: 140 }} onSelect={handleChargedUnderChange}>
+                    <Select style={{ width: 140 }} onSelect={handleChargedUnderChange} disabled={!purchaseOrder.isStatus(POStatus.PENDING)}>
                         <Select.Option value={null}>None</Select.Option>
                         { chargedUnders.map((x, idx) => <Select.Option key={idx} value={x.id}>{x.name}</Select.Option>)}
                     </Select>
