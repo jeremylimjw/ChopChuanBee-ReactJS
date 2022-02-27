@@ -26,10 +26,6 @@ export class SalesOrder {
     }
     
     getOrderTotal() {
-        if (this.has_gst === 1) {
-            const total = this.sumItemSubtotals() + (+this.offset);
-            return Math.floor(total*100)/100; // Truncate trailing decimals
-        }
         const total = this.sumItemSubtotals() * (1+this.gst_rate/100) + (+this.offset);
         return Math.floor(total*100)/100; // Truncate trailing decimals
     }

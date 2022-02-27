@@ -26,7 +26,7 @@ export class PurchaseOrder {
     }
 
     getOrderTotal() {
-        if (this.has_gst === 2) {
+        if (this.has_gst === 2) { // If GST Inclusive
             const total = this.sumItemSubtotals() + (+this.offset);
             return Math.floor(total*100)/100; // Truncate trailing decimals
         }
