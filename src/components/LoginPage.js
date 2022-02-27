@@ -65,13 +65,13 @@ const LoginPage = () => {
               <Button type="link" style={{ width: '100%'}} onClick={() => setIsModalVisible(true)}>Forgot password</Button>
             </Form.Item>
             
-            <Form.Item>
+            {/* <Form.Item>
               <Button disabled={loading} onClick={() => quickLogin("admin", "password")} style={{ width: '100%'}}>Quick Login (Admin)</Button>
             </Form.Item>
 
             <Form.Item>
               <Button disabled={loading} onClick={() => quickLogin("alice", "password")} style={{ width: '100%'}}>Quick Login (Staff)</Button>
-            </Form.Item>
+            </Form.Item> */}
           </Form>
 
         </div>
