@@ -27,26 +27,16 @@ export default function SO2Form({ form, salesOrder, setSalesOrder, loading, save
             .catch(handleHttpError);
     }, [handleHttpError])
 
-    // Form value initiation
-    useEffect(() => {
-        // 1: None, 2: Exclusive
-        if (salesOrder.has_gst === 2) {
-            setShowGstRate(true);
-        }
-        if (salesOrder.payment_term_id === PaymentTerm.CASH.id) {
-            setShowPaymentMethod(true);
-        }
-    }, [form, salesOrder])
-
     // Whether to render the dependent form values or not
     function onValuesChange(field, newValues) {
         setShowGstRate(newValues.has_gst === 2);
         setShowPaymentMethod(newValues.payment_term_id === PaymentTerm.CASH.id);
 
         // Update fields to charged under fields
-        if (field.charged_under_id != null) {
+        if (field.charged_under_id != null) { // If is changing charged_under_id
             const index = chargedUnders.findIndex(x => x.id === field.charged_under_id)
-            const initialFields = { has_gst: chargedUnders[index].gst_rate == 0 ? 1 : 2, gst_rate: chargedUnders[index].gst_rate };
+            const initialFields = { has_gst: +chargedUnders[index].gst_rate === 0 ? 1 : 2, gst_rate: chargedUnders[index].gst_rate };
+            setShowGstRate(initialFields.has_gst === 2);
             form.setFieldsValue(initialFields);
             setSalesOrder(new SalesOrder({...salesOrder, ...initialFields }))
         } else {

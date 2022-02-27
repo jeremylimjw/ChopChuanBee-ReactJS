@@ -6,6 +6,7 @@ import { SOStatus } from '../../../enums/SalesOrderStatus';
 import { View } from '../../../enums/View';
 import { SalesOrder } from '../../../models/SalesOrder';
 import { useApp } from '../../../providers/AppProvider';
+import { sortByNumber } from '../../../utilities/sorters';
 import { CustomCell } from '../../common/CustomCell';
 import MyToolbar from '../../common/MyToolbar';
 
@@ -15,6 +16,7 @@ export default function SO3ItemsTable({ salesOrder, setSalesOrder, loading, setL
     
     const [menuItems, setMenuItems] = useState([]);
     const [disabledProductsMap, setDisabledProductsMap] = useState({});
+    const [myPrices, setMyPrices] = useState({});
 
     columns[1].onCell = (record) => ({ 
         type: 'product_select', 
@@ -26,6 +28,8 @@ export default function SO3ItemsTable({ salesOrder, setSalesOrder, loading, setL
         disabledProductsMap,
     });
 
+    columns[4].render = (product) => product?.id ? (myPrices[product.id] ? `$${(+myPrices[product.id]).toFixed(2)}` : '-') : '-';
+    columns[4].sorter = (a, b) => sortByNumber(+myPrices[a.product?.id] || 0, +myPrices[b.product?.id] || 0);
     columns[5].onCell = (record) => ({ type: 'input_number', field: 'quantity', record, handleSave })
     columns[6].onCell = (record) => ({ type: 'input_number', field: 'unit_price', record, handleSave })
     columns[8].render = (_, record) => <Button shape="circle" icon={<DeleteOutlined />} onClick={() => handleDeleteRow(record)} disabled={!hasWriteAccessTo(View.CRM.id) || !salesOrder.isStatus(SOStatus.PENDING)} />
@@ -40,6 +44,13 @@ export default function SO3ItemsTable({ salesOrder, setSalesOrder, loading, setL
                 })
                 .catch(handleHttpError)
                 .catch(() => setLoading(false))
+        
+            // Get customer's latest prices for all products
+            CustomerApiHelper.getMyLatestPrices(salesOrder.customer.id)
+                .then(results => {
+                    setMyPrices(results.reduce((prev, current) => ({...prev, [current.product_id]: current.unit_price }), {}));
+                })
+                .catch(handleHttpError)
         }
 
     }, [handleHttpError, salesOrder.customer, setMenuItems, setLoading])
@@ -188,12 +199,13 @@ const columns = [
         ellipsis: true,
         render: (product) => product?.unit 
     },
-    { 
-        title: 'Lastest Price', 
-        dataIndex: 'product', 
-        render: (product) => '-',
-        width: '10%',
-        ellipsis: true,
+    {
+      title: 'Latest Price',
+      dataIndex: 'product',
+      key: 'latest_unit_price',
+      align: 'center',
+      width: 120,
+      ellipsis: true,
     },
     { 
         title: '* Quantity', 
