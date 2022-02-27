@@ -15,8 +15,8 @@ export default function SO2Form({ form, salesOrder, setSalesOrder, loading, save
 
     const { handleHttpError, hasWriteAccessTo } = useApp();
 
-    const [showGstRate, setShowGstRate] = useState(false);
-    const [showPaymentMethod, setShowPaymentMethod] = useState(false);
+    const [showGstRate, setShowGstRate] = useState(salesOrder.has_gst === 2 || salesOrder.has_gst === 3);
+    const [showPaymentMethod, setShowPaymentMethod] = useState(salesOrder.payment_term_id === PaymentTerm.CASH.id);
     const [chargedUnders, setChargedUnders] = useState([]);
 
     useEffect(() => {
