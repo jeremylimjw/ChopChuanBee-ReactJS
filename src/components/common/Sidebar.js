@@ -51,7 +51,7 @@ const menu = [
     icon: <SolutionOutlined />,
     items: [
       { route: '/customer/customers', name: 'Manage Customers' },
-      { route: '/supplier/sales', name: 'Manage Sales' },
+      { route: '/customer/sales', name: 'Manage Sales' },
     ]
   },
 ]

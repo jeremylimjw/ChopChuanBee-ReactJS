@@ -16,7 +16,7 @@ export class SalesOrderApiHelper {
             params.created_at_to = query.endDate;
         }
         if (query?.sales_order_status_id)
-          params.purchase_order_status_id = query.sales_order_status_id;
+          params.sales_order_status_id = query.sales_order_status_id;
         if (query?.payment_term_id)
             params.payment_term_id = query.payment_term_id;
         if (query?.supplier_id)

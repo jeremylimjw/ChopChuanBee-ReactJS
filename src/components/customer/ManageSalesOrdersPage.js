@@ -16,6 +16,8 @@ import moment from 'moment';
 import { View } from '../../enums/View';
 import { PurchaseOrder } from '../../models/PurchaseOrder';
 import { PaymentTerm } from '../../enums/PaymentTerm';
+import { SalesOrder } from '../../models/SalesOrder';
+import { SalesOrderApiHelper } from '../../api/SalesOrderApiHelper';
 
 const breadcrumbs = [
     { url: '/customer/sales', name: 'Customer' },
@@ -27,14 +29,14 @@ export default function ManageSalesOrdersPage() {
     const { handleHttpError, hasWriteAccessTo } = useApp();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
-    const [purchaseOrders, setPurchaseOrders] = useState([])
+    const [salesOrders, setSalesOrders] = useState([])
     const [form] = Form.useForm();
 
     useEffect(() => {
         setLoading(true);
-        PurchaseOrderApiHelper.get()
+        SalesOrderApiHelper.get()
             .then(results => {
-                setPurchaseOrders(results.map(x => new PurchaseOrder(x)));
+                setSalesOrders(results.map(x => new SalesOrder(x)));
                 setLoading(false);
             })
             .catch(handleHttpError)
@@ -48,9 +50,9 @@ export default function ManageSalesOrdersPage() {
             startDate = moment(form.date[0]).set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toDate();
             endDate = moment(form.date[1]).set({ hour: 23, minute: 59, second: 59, millisecond: 999 }).toDate();
         }
-        PurchaseOrderApiHelper.get({...form, startDate, endDate })
+        SalesOrderApiHelper.get({...form, startDate, endDate })
             .then(results => {
-                setPurchaseOrders(results.map(x => new PurchaseOrder(x)));
+                setSalesOrders(results.map(x => new SalesOrder(x)));
                 setLoading(false);
             })
             .catch(handleHttpError)
@@ -63,10 +65,10 @@ export default function ManageSalesOrdersPage() {
     }
 
     return (
-        <MyLayout breadcrumbs={breadcrumbs} bannerTitle="Manage Procurements">
+        <MyLayout breadcrumbs={breadcrumbs} bannerTitle="Manage Sales Orders">
 
             <MyCard>
-                <MyToolbar title="Procurements">
+                <MyToolbar title="Sales Orders">
                     <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
                         <Form.Item name="id">
                             <Input placeholder='Search Order ID' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
@@ -82,7 +84,7 @@ export default function ManageSalesOrdersPage() {
                                 }
                             </Select>
                         </Form.Item>
-                        <Form.Item name="purchase_order_status_id">
+                        <Form.Item name="sales_order_status_id">
                             <Select style={{ width: 180 }} placeholder="Filter by Status">
                                 <Select.Option value={null}>All</Select.Option>
                                 {Object.keys(POStatus).map((key, idx) => 
@@ -92,11 +94,11 @@ export default function ManageSalesOrdersPage() {
                         </Form.Item>
                         <Button onClick={resetForm}>Reset</Button>
                     </Form>
-                    { hasWriteAccessTo(View.SCM.name) && 
+                    { hasWriteAccessTo(View.CRM.name) && 
                         <Button type="primary" icon={<PlusOutlined />} onClick={() => navigate('./new')}>New</Button>
                     }
                 </MyToolbar>
-                <Table dataSource={purchaseOrders} columns={tableColumns} rowKey="id" loading={loading} />
+                <Table dataSource={salesOrders} columns={tableColumns} rowKey="id" loading={loading} />
             </MyCard>
             
         </MyLayout>
@@ -122,12 +124,12 @@ const tableColumns = [
         sorter: (a, b) => sortByNumber(a.id, b.id),
     },
     { 
-        title: 'Supplier', 
-        dataIndex: 'supplier', 
-        key: 'supplier', 
+        title: 'Customer', 
+        dataIndex: 'customer', 
+        key: 'customer', 
         ellipsis: true,
-        render: (supplier) => supplier.company_name,
-        sorter: (a, b) => sortByString(a.supplier.company_name, b.supplier.company_name),
+        render: (customer) => customer.company_name,
+        sorter: (a, b) => sortByString(a.customer.company_name, b.customer.company_name),
     },
     { 
         title: 'Payment Term', 
@@ -154,15 +156,6 @@ const tableColumns = [
         width: 100, 
         render: (_, record) => <Progress type="circle" percent={record.getPaymentProgress()} width={40} />,
         sorter: (a, b) => sortByNumber(a.getPaymentProgress(), b.getPaymentProgress()), 
-    },
-    { 
-        title: 'Delivery', 
-        dataIndex: '', 
-        key: 'delivery', 
-        width: 100, 
-        align: 'center', 
-        render: (_, record) => <Progress type="circle" percent={record.getQuantityProgress()} width={40} />,
-        sorter: (a, b) => sortByNumber(a.getQuantityProgress(), b.getQuantityProgress()), 
     },
     { 
         title: 'Status', 
