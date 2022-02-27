@@ -39,7 +39,7 @@ export default function NS2CustomerMenuTable({ selectedCustomer, selectedProduct
         // Get supplier's latest prices for all products
         CustomerApiHelper.getMyLatestPrices(selectedCustomer.id)
             .then(results => {
-                setMyPrices(results.reduce((prev, current) => ({...prev, [current.product_id]: current.unit_cost }), {}));
+                setMyPrices(results.reduce((prev, current) => ({...prev, [current.product_id]: current.unit_price }), {}));
             })
             .catch(handleHttpError)
         }
@@ -136,8 +136,6 @@ const columns = [
         align: 'center',
         width: 120,
         ellipsis: true,
-        render: (product) => product?.latest_unit_cost ? `$${(+product?.latest_unit_cost).toFixed(2)}` : '-',
-        sorter: (a, b) => sortByString(a.product?.latest_unit_cost, b.product?.latest_unit_cost),
     },
     {
         title: '* Quantity',
