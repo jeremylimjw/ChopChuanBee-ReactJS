@@ -74,6 +74,7 @@ export default function NewDeliveryOrderModal({ purchaseOrder, setPurchaseOrder,
 
         const inventoryMovements = items.filter(x => x.top_up !== 0).map(x => {
             const movement = {
+                product_id: x.product_id,
                 purchase_order_item_id: x.id,
                 quantity: x.top_up,
                 unit_cost: x.unit_cost*(1+purchaseOrder.gst_rate/100),

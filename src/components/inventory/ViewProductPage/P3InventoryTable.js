@@ -95,7 +95,7 @@ const columns = [
       record.purchase_order_item ? 
         <Link to={`/supplier/procurements/${record.purchase_order_item.purchase_order_id}`}>View</Link> 
         : 
-        <Link to={`/customer/procurements/${record.sales_order_item.sales_order_id}`}>View</Link>, // TODO
+        <Link to={`/customer/sales/${record.sales_order_item.sales_order_id}`}>View</Link>,
   },
 ]
 

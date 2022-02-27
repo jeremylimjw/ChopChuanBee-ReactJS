@@ -1,6 +1,6 @@
 import { PaymentMethod } from "../enums/PaymentMethod";
 import { getPaymentTerm, getPaymentTermTag } from "../enums/PaymentTerm";
-import { getPurchaseOrderStatus, getPurchaseOrderStatusTag } from "../enums/PurchaseOrderStatus";
+import { getSalesOrderStatus, getSalesOrderStatusTag } from "../enums/SalesOrderStatus";
 
 export class SalesOrder {
     constructor(args) {
@@ -18,15 +18,15 @@ export class SalesOrder {
     }
 
     sumItemSubtotals() {
-        return this.sales_order_items?.reduce((prev, current) => prev + current.quantity * (current?.unit_cost || 0), 0) || 0;
+        return this.sales_order_items?.reduce((prev, current) => prev + current.quantity * (current?.unit_price || 0), 0) || 0;
     }
 
     getGstAmount() {
         return this.sumItemSubtotals()*this.gst_rate/100;
     }
-
+    
     getOrderTotal() {
-        if (this.has_gst === 2) {
+        if (this.has_gst === 1) {
             const total = this.sumItemSubtotals() + (+this.offset);
             return Math.floor(total*100)/100; // Truncate trailing decimals
         }
@@ -49,11 +49,11 @@ export class SalesOrder {
     }
     
     getStatus() {
-        return getPurchaseOrderStatus(this.sales_order_status_id);
+        return getSalesOrderStatus(this.sales_order_status_id);
     }
     
     getStatusTag() {
-        return getPurchaseOrderStatusTag(this.sales_order_status_id);
+        return getSalesOrderStatusTag(this.sales_order_status_id);
     }
 
     isStatus(...args) {

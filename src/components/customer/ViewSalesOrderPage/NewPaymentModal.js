@@ -1,15 +1,15 @@
 import { Form, InputNumber, message, Select } from 'antd'
 import Modal from 'antd/lib/modal/Modal'
 import React, { useEffect, useState } from 'react'
-import { PurchaseOrderApiHelper } from '../../../api/PurchaseOrderApiHelper';
+import { SalesOrderApiHelper } from '../../../api/SalesOrderApiHelper';
 import { AccountingType } from '../../../enums/AccountingType';
 import { MovementType } from '../../../enums/MovementType';
 import { PaymentMethod } from '../../../enums/PaymentMethod';
 import { PaymentTerm } from '../../../enums/PaymentTerm';
-import { PurchaseOrder } from '../../../models/PurchaseOrder';
+import { SalesOrder } from '../../../models/SalesOrder';
 import { useApp } from '../../../providers/AppProvider';
 
-export default function NewPaymentModal({ purchaseOrder, setPurchaseOrder, isModalVisible, setIsModalVisible }) {
+export default function NewPaymentModal({ salesOrder, setSalesOrder, isModalVisible, setIsModalVisible }) {
 
     const { handleHttpError } = useApp();
 
@@ -20,41 +20,41 @@ export default function NewPaymentModal({ purchaseOrder, setPurchaseOrder, isMod
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        if (purchaseOrder != null) {
-            const remaining_total = purchaseOrder.getOrderTotal() - purchaseOrder.getPaymentsTotal();
+        if (salesOrder != null) {
+            const remaining_total = salesOrder.getOrderTotal() - salesOrder.getPaymentsTotal();
             setForm({ 
                 amount: remaining_total > 0 ? remaining_total : 0, 
                 payment_method_id: 1 
             })
         }
-    }, [purchaseOrder])
+    }, [salesOrder])
 
     function renderTitle() {
         switch(isModalVisible) {
             case 1: return 'Create New Payment';
-            case 2 : return 'Refund to Supplier';
+            case 2 : return 'Register a Refund';
             default: return '';
         }
     }
 
     function handleFormSubmit() {
-        const payment = { ...form, purchase_order_id: purchaseOrder.id };
+        const payment = { ...form, sales_order_id: salesOrder.id };
 
         if (isModalVisible === 1) { // Make payment
-            payment.movement_type_id = MovementType.PURCHASE.id;
-            payment.amount = -payment.amount;
+            payment.movement_type_id = MovementType.SALE.id;
+            payment.amount = +payment.amount;
         } else if (isModalVisible === 2) { // Make refund
             payment.movement_type_id = MovementType.REFUND.id;
-            payment.amount = +payment.amount;
+            payment.amount = -payment.amount;
         }
 
-        if (purchaseOrder.isPaymentTerm(PaymentTerm.CREDIT)) {
-            payment.accounting_type_id = AccountingType.PAYABLE.id;
+        if (salesOrder.isPaymentTerm(PaymentTerm.CREDIT)) {
+            payment.accounting_type_id = AccountingType.RECEIVABLE.id;
         }
 
-        PurchaseOrderApiHelper.createPayment(payment)
+        SalesOrderApiHelper.createPayment(payment)
             .then(newPayment => {
-                const newPayments = [...purchaseOrder.payments];
+                const newPayments = [...salesOrder.payments];
                 newPayments.push(newPayment);
                 setLoading(false);
                 setIsModalVisible(0);
@@ -65,7 +65,7 @@ export default function NewPaymentModal({ purchaseOrder, setPurchaseOrder, isMod
                     message.success("Refund successfully registered!");
                 }
                 
-                setPurchaseOrder(new PurchaseOrder({...purchaseOrder, payments: newPayments}));
+                setSalesOrder(new SalesOrder({...salesOrder, payments: newPayments}));
 
             })
             .catch(handleHttpError)

@@ -144,10 +144,11 @@ export default function ViewProcurementPage() {
 
       const inventoryMovements = purchaseOrder.purchase_order_items.map(x => {
         const movement = {
-            purchase_order_item_id: x.id,
-            quantity: x.inventory_movements.reduce((prev, current) => prev - current.quantity, 0),
-            unit_cost: x.unit_cost*(1+purchaseOrder.gst_rate/100),
-            movement_type_id: MovementType.REFUND.id,
+          product_id: x.product_id,
+          purchase_order_item_id: x.id,
+          quantity: x.inventory_movements.reduce((prev, current) => prev - current.quantity, 0),
+          unit_cost: x.unit_cost*(1+purchaseOrder.gst_rate/100),
+          movement_type_id: MovementType.REFUND.id,
         }
         return movement;
       })
