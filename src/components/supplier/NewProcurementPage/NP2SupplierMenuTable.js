@@ -38,10 +38,10 @@ export default function NP2SupplierMenuTable({ selectedSupplier, selectedProduct
 
       // Get supplier's latest prices for all products
       SupplierAPIHelper.getMyLatestPrices(selectedSupplier.id)
-          .then(results => {
-              setMyPrices(results.reduce((prev, current) => ({...prev, [current.product_id]: current.unit_cost }), {}));
-          })
-          .catch(handleHttpError)
+        .then(results => {
+            setMyPrices(results.reduce((prev, current) => ({...prev, [current.product_id]: current.unit_cost }), {}));
+        })
+        .catch(handleHttpError)
     }
 
   }, [handleHttpError, selectedSupplier, setSelectedProducts, setMenuItems])
@@ -127,8 +127,6 @@ const columns = [
     align: 'center',
     width: 120,
     ellipsis: true,
-    render: (product) => product?.latest_unit_cost ? `$${(+product?.latest_unit_cost).toFixed(2)}` : '-',
-    sorter: (a, b) => sortByString(a.product?.latest_unit_cost, b.product?.latest_unit_cost),
   },
   {
     title: '* Quantity',

@@ -6,6 +6,7 @@ import { POStatus } from '../../../enums/PurchaseOrderStatus';
 import { View } from '../../../enums/View';
 import { PurchaseOrder } from '../../../models/PurchaseOrder';
 import { useApp } from '../../../providers/AppProvider';
+import { sortByNumber } from '../../../utilities/sorters';
 import { CustomCell } from '../../common/CustomCell';
 import MyToolbar from '../../common/MyToolbar';
 
@@ -15,6 +16,7 @@ export default function PO3ItemsTable({ purchaseOrder, setPurchaseOrder, loading
   
   const [menuItems, setMenuItems] = useState([]);
   const [disabledProductsMap, setDisabledProductsMap] = useState({});
+  const [myPrices, setMyPrices] = useState({});
 
   columns[1].onCell = (record) => ({ 
     type: 'product_select', 
@@ -26,6 +28,8 @@ export default function PO3ItemsTable({ purchaseOrder, setPurchaseOrder, loading
     disabledProductsMap,
   });
 
+  columns[4].render = (product) => product?.id ? (myPrices[product.id] ? `$${(+myPrices[product.id]).toFixed(2)}` : '-') : '-';
+  columns[4].sorter = (a, b) => sortByNumber(+myPrices[a.product?.id] || 0, +myPrices[b.product?.id] || 0);
   columns[5].onCell = (record) => ({ type: 'input_number', field: 'quantity', record, handleSave })
   columns[6].onCell = (record) => ({ type: 'input_number', field: 'unit_cost', record, handleSave })
   columns[8].render = (_, record) => <Button shape="circle" icon={<DeleteOutlined />} onClick={() => handleDeleteRow(record)} disabled={!hasWriteAccessTo(View.SCM.id) || !purchaseOrder.isStatus(POStatus.PENDING)} />
@@ -40,6 +44,13 @@ export default function PO3ItemsTable({ purchaseOrder, setPurchaseOrder, loading
         })
         .catch(handleHttpError)
         .catch(() => setLoading(false))
+        
+      // Get supplier's latest prices for all products
+      SupplierAPIHelper.getMyLatestPrices(purchaseOrder.supplier.id)
+        .then(results => {
+            setMyPrices(results.reduce((prev, current) => ({...prev, [current.product_id]: current.unit_cost }), {}));
+        })
+        .catch(handleHttpError)
     }
 
   }, [handleHttpError, purchaseOrder.supplier, setMenuItems, setLoading])
@@ -189,11 +200,12 @@ const columns = [
     ellipsis: true,
     render: (product) => product?.unit 
   },
-  { 
-    title: 'Lastest Price', 
-    dataIndex: 'product', 
-    render: (product) => '-',
-    width: '10%',
+  {
+    title: 'Latest Price',
+    dataIndex: 'product',
+    key: 'latest_unit_cost',
+    align: 'center',
+    width: 120,
     ellipsis: true,
   },
   { 
