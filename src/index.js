@@ -30,6 +30,9 @@ import NewProcurementPage from './components/supplier/NewProcurementPage';
 import ViewProcurementPage from './components/supplier/ViewProcurementPage';
 import ManageChargedUndersPage from './components/admin/ManageChargedUndersPage';
 import ViewChargedUnderPage from './components/admin/ViewChargedUnderPage';
+import ManageSalesOrdersPage from './components/customer/ManageSalesOrdersPage';
+import NewSalesOrderPage from './components/customer/NewSalesOrderPage';
+import ViewSalesOrderPage from './components/customer/ViewSalesOrderPage';
 
 // Add on more routes here
 const routes = [
@@ -157,6 +160,21 @@ const routes = [
         path: 'customers/:id', 
         component: <ViewCustomerPage />,
         viewAccess: View.CRM.name,
+      },
+      { 
+        path: 'sales', 
+        component: <ManageSalesOrdersPage />,
+        viewAccess: View.SCM.name,
+      },
+      { 
+        path: 'sales/new', 
+        component: <NewSalesOrderPage />,
+        viewAccess: View.SCM.name,
+      },
+      { 
+        path: 'sales/:id', 
+        component: <ViewSalesOrderPage />,
+        viewAccess: View.SCM.name,
       },
     ]
   },
