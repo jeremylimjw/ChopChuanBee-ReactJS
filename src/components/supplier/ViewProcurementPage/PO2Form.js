@@ -14,8 +14,8 @@ export default function PO2Form({ form, purchaseOrder, loading, saveForLater }) 
 
     const { handleHttpError, hasWriteAccessTo } = useApp();
 
-    const [showGstRate, setShowGstRate] = useState(false);
-    const [showPaymentMethod, setShowPaymentMethod] = useState(false);
+    const [showGstRate, setShowGstRate] = useState(purchaseOrder.has_gst === 2 || purchaseOrder.has_gst === 3);
+    const [showPaymentMethod, setShowPaymentMethod] = useState(purchaseOrder.payment_term_id === PaymentTerm.CASH.id);
     const [chargedUnders, setChargedUnders] = useState([]);
 
     useEffect(() => {
@@ -25,16 +25,6 @@ export default function PO2Form({ form, purchaseOrder, loading, saveForLater }) 
             })
             .catch(handleHttpError);
     }, [handleHttpError])
-
-    // Form value initiation
-    useEffect(() => {
-        if (purchaseOrder.has_gst === 2 || purchaseOrder.has_gst === 3) {
-            setShowGstRate(true);
-        }
-        if (purchaseOrder.payment_term_id === PaymentTerm.CASH.id) {
-            setShowPaymentMethod(true);
-        }
-    }, [form, purchaseOrder])
 
     // Whether to render the dependent form values or not
     function onValuesChange(_, newValues) {
