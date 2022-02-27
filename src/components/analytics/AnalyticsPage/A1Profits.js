@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Line } from '@ant-design/plots';
 
-export default function ProfitsDashboard() {
+export default function A1Profits() {
     const [data, setData] = useState([]);
 
     useEffect(() => {
