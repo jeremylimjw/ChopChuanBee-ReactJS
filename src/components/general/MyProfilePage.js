@@ -3,7 +3,6 @@ import { Button, Form, Input, message, Typography } from 'antd';
 import React, { useState } from 'react'
 import { EmployeeApiHelper } from '../../api/EmployeeApiHelper';
 import { getRoleTag } from '../../enums/Role';
-import { View } from '../../enums/View';
 import { useApp } from '../../providers/AppProvider';
 import { EMAIL, exactLength, minLength, NUMBER, REQUIRED } from '../../utilities/form';
 import MyCard from '../common/MyCard';
@@ -14,7 +13,7 @@ const breadcrumbs = [{ url: '/myProfile', name: 'Profile' }];
 
 export default function MyProfilePage() {
 
-    const { user, setUser, handleHttpError, hasWriteAccessTo } = useApp();
+    const { user, setUser, handleHttpError } = useApp();
 
     const [editing, setEditing] = useState(false);
     const [loading, setLoading] = useState(false);
