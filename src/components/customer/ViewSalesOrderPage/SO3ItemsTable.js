@@ -31,7 +31,7 @@ export default function SO3ItemsTable({ salesOrder, setSalesOrder, loading, setL
     columns[4].render = (product) => product?.id ? (myPrices[product.id] ? `$${(+myPrices[product.id]).toFixed(2)}` : '-') : '-';
     columns[4].sorter = (a, b) => sortByNumber(+myPrices[a.product?.id] || 0, +myPrices[b.product?.id] || 0);
     columns[5].onCell = (record) => ({ type: 'input_number', field: 'quantity', record, handleSave })
-    columns[6].onCell = (record) => ({ type: 'input_number', field: 'unit_price', record, handleSave })
+    columns[6].onCell = (record) => ({ type: 'input_number', field: 'unit_price', currency: 'true', record, handleSave })
     columns[8].render = (_, record) => <Button shape="circle" icon={<DeleteOutlined />} onClick={() => handleDeleteRow(record)} disabled={!hasWriteAccessTo(View.CRM.id) || !salesOrder.isStatus(SOStatus.PENDING)} />
     
     useEffect(() => {
@@ -215,7 +215,7 @@ const columns = [
         ellipsis: true,
     },
     { 
-        title: '* Unit Price ($)', 
+        title: '* Unit Price', 
         dataIndex: 'unit_price', 
         align: 'center', 
         width: '10%',
