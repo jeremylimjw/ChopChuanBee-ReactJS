@@ -16,10 +16,10 @@ export default function PO5DeliveriesTable({ purchaseOrder, setPurchaseOrder, lo
     return (
         <>
         { purchaseOrder != null && 
-            <MyCard title={ !purchaseOrder.isStatus(POStatus.ACCEPTED) ? "Past Deliveries" : "" }>
+            <MyCard title={ !purchaseOrder.isStatus(POStatus.ACCEPTED) ? "Items Received" : "" }>
         
             { purchaseOrder.isStatus(POStatus.ACCEPTED) && 
-                <MyToolbar title="Received Deliveries">
+                <MyToolbar title="Received Items">
                     {hasWriteAccessTo(View.SCM.id) &&
                     <>
                         <Button icon={<UndoOutlined />} disabled={loading} onClick={() => setIsModalVisible(2)}>Return</Button>

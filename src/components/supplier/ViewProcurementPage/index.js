@@ -77,6 +77,16 @@ export default function ViewProcurementPage() {
           message.error('Each order item must have a product selected.')
           return;
         }
+        for (let item of purchaseOrder.purchase_order_items) {
+          if (item.unit_cost == null) {
+            message.error('Each order item must have a unit cost.')
+            return;
+          }
+          if (item.quantity <= 0) {
+            message.error('Each order item must have a valid quantity.')
+            return;
+          }
+        }
         const newPurchaseOrder = new PurchaseOrder({...purchaseOrder, ...values});
         newPurchaseOrder.convertToInvoice();
 

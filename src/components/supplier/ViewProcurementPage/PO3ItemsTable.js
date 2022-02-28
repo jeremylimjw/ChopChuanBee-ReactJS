@@ -201,11 +201,11 @@ const columns = [
     render: (product) => product?.unit 
   },
   {
-    title: 'Latest Price',
+    title: 'Latest Cost Price',
     dataIndex: 'product',
     key: 'latest_unit_cost',
     align: 'center',
-    width: 120,
+    width: 170,
     ellipsis: true,
   },
   { 
@@ -216,7 +216,7 @@ const columns = [
     ellipsis: true,
   },
   { 
-    title: '* Unit Price ($)', 
+    title: '* Unit Cost ($)', 
     dataIndex: 'unit_cost', 
     align: 'center', 
     width: '10%',

@@ -34,7 +34,7 @@ export default function PO4PaymentsTable({ purchaseOrder, setPurchaseOrder, load
         
             <Table 
                 columns={columns} dataSource={purchaseOrder.getPayments()} 
-                rowKey={(_, index) => index}
+                rowKey={() => Math.random()}
                 summary={pageData => (
                 <>
                     <Table.Summary.Row>
