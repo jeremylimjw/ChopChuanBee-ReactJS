@@ -30,13 +30,13 @@ export default function ManageProductsPage() {
     const [form] = Form.useForm();
 
     useEffect(() => {
-        ProductApiHelper.get()
-            .then(results => {
-                setProducts(results);
-                setLoading(false);
-            })
-            .catch(handleHttpError)
-            .catch(() => setLoading(false))
+      ProductApiHelper.get()
+        .then(results => {
+            setProducts(results);
+            setLoading(false);
+        })
+        .catch(handleHttpError)
+        .catch(() => setLoading(false))
     }, [handleHttpError, setLoading])
 
     function onValuesChange(_, form) {
@@ -165,15 +165,8 @@ const columns = [
     dataIndex: "id", 
     title: "Action", 
     key: "link", 
-    width: 130,
+    width: 100,
     ellipsis: true,
-    render: (id) => {
-     return (
-      <Space size="middle">
-        <Link to={`./${id}`}>View</Link>
-        <Link to={`./${id}`}>Restock</Link>
-      </Space>
-      )
-    }
+    render: (id) => <Link to={`./${id}`}>View</Link>
   }
 ]

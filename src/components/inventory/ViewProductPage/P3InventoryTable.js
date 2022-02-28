@@ -1,46 +1,51 @@
-import { Table } from 'antd';
+import { PlusOutlined } from '@ant-design/icons/lib/icons';
+import { Button, Table, Tag } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import { ProductApiHelper } from '../../../api/ProductApiHelper';
-import { getMovementTypeTag } from '../../../enums/MovementType';
+import { getMovementType, MovementType } from '../../../enums/MovementType';
+import { View } from '../../../enums/View';
 import { useApp } from '../../../providers/AppProvider';
 import { parseDateTime } from '../../../utilities/datetime';
-import { sortByDate, sortByNumber } from '../../../utilities/sorters';
+import { sortByDate, sortByNumber, sortByString } from '../../../utilities/sorters';
 import { showTotal } from '../../../utilities/table';
 import MyToolbar from '../../common/MyToolbar';
 
 export default function P3InventoryTable({ product }) {
 
-  const { handleHttpError } = useApp();
+  const { handleHttpError, hasWriteAccessTo } = useApp();
 
   const [loading, setLoading] = useState(false);
   const [movements, setMovements] = useState([]);
 
   useEffect(() => {
-      setLoading(true);
-      if (product) {
-        ProductApiHelper.getInventoryMovements(product.id)
-          .then(results => {
-            setMovements(results);
-            setLoading(false);
-          })
-          .catch(handleHttpError)
-          .catch(() => setLoading(false))
-      }
+    setLoading(true);
+    if (product) {
+      ProductApiHelper.getInventoryMovements(product.id)
+        .then(results => {
+          setMovements(results);
+          setLoading(false);
+        })
+        .catch(handleHttpError)
+        .catch(() => setLoading(false))
+    }
   }, [product, setLoading, handleHttpError])
 
   return (
-      <>
-          <MyToolbar title="Inventory">
-          </MyToolbar>
-          
-          <Table dataSource={movements} 
-            columns={columns} 
-            loading={loading} 
-            pagination={{ showTotal: showTotal }}
-            rowKey="id"
-          />
-      </>  
+    <>
+      <MyToolbar title="Inventory">
+        { hasWriteAccessTo(View.INVENTORY.name) && 
+          <Button type="primary" icon={<PlusOutlined />} loading={loading}>Record Damaged Goods (WIP)</Button> // MovementType.DAMAGED and unit_price = 0
+        }
+      </MyToolbar>
+      
+      <Table dataSource={movements} 
+        columns={columns} 
+        loading={loading} 
+        pagination={{ showTotal: showTotal }}
+        rowKey="id"
+      />
+    </>  
   )
 }
 
@@ -55,12 +60,20 @@ const columns = [
     sorter: (a, b) => sortByDate(a.created_at, b.created_at),
   },
   {
+    title: 'Name',
+    key: 'company_name',
+    ellipsis: true,
+    width: '20%',
+    render: (_, record) => getCompanyName(record),
+    sorter: (a, b) => sortByString(getCompanyName(a), getCompanyName(b)),
+  },
+  {
     title: 'Movement Type',
     dataIndex: 'movement_type_id',
     key: 'movement_type_id',
     align: 'center',
     width: '20%',
-    render: (movement_type_id) => getMovementTypeTag(movement_type_id),
+    render: (_, record) => renderSpecialMovementTag(record),
     sorter: (a, b) => sortByNumber(a.movement_type_id, b.movement_type_id),
   },
   {
@@ -99,3 +112,25 @@ const columns = [
   },
 ]
 
+function getCompanyName(record) {
+  if (record.purchase_order_item) {
+    return record.purchase_order_item.purchase_order.supplier.company_name;
+  } else if (record.sales_order_item) {
+    return record.sales_order_item.sales_order.customer.company_name;
+  } else {
+    return '-';
+  }
+}
+
+function renderSpecialMovementTag(record) {
+  const movement = getMovementType(record.movement_type_id);
+  if (movement == null) return '-';
+  if (movement.id === MovementType.REFUND.id) {
+    if (record.purchase_order_item != null) {
+      return <Tag color={movement.color}>{`Supplier ${movement.name}`}</Tag>
+    } else {
+      return <Tag color={movement.color}>{`Customer ${movement.name}`}</Tag>
+    }
+  }
+  return <Tag color={movement.color}>{movement.name}</Tag>
+}
