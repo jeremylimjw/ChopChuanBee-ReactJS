@@ -34,7 +34,7 @@ export default function SO4PaymentsTable({ salesOrder, setSalesOrder, loading })
         
             <Table 
                 columns={columns} dataSource={salesOrder.getPayments()} 
-                rowKey={(_, index) => index}
+                rowKey={() => Math.random()}
                 summary={pageData => (
                 <>
                     <Table.Summary.Row>

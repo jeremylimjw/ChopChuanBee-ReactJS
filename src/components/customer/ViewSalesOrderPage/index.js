@@ -72,10 +72,23 @@ export default function ViewSalesOrderPage() {
     async function convertToInvoice() {
       try {
         const values = await form.validateFields();
+
+        // Validation
         if (salesOrder.sales_order_items.filter(x => x.product == null).length > 0) {
           message.error('Each order item must have a product selected.')
           return;
         }
+        for (let item of salesOrder.sales_order_items) {
+          if (item.unit_price == null) {
+            message.error('Each order item must have a unit price.')
+            return;
+          }
+          if (item.quantity <= 0) {
+            message.error('Each order item must have a valid quantity.')
+            return;
+          }
+        }
+
         const newSalesOrder = new SalesOrder({...salesOrder, ...values});
         newSalesOrder.sales_order_status_id = SOStatus.COMPLETED.id;
 

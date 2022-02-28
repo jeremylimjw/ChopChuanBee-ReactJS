@@ -73,6 +73,8 @@ export default function ViewProcurementPage() {
     async function convertToInvoice() {
       try {
         const values = await form.validateFields();
+
+        // Validation
         if (purchaseOrder.purchase_order_items.filter(x => x.product == null).length > 0) {
           message.error('Each order item must have a product selected.')
           return;
@@ -87,6 +89,7 @@ export default function ViewProcurementPage() {
             return;
           }
         }
+        
         const newPurchaseOrder = new PurchaseOrder({...purchaseOrder, ...values});
         newPurchaseOrder.convertToInvoice();
 
