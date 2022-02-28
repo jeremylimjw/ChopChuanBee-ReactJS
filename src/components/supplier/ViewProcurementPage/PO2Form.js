@@ -9,8 +9,9 @@ import { REQUIRED } from '../../../utilities/form'
 import { ChargedUnderApiHelper } from '../../../api/ChargedUnderApiHelper'
 import { useApp } from '../../../providers/AppProvider'
 import { View } from '../../../enums/View'
+import { PurchaseOrder } from '../../../models/PurchaseOrder'
 
-export default function PO2Form({ form, purchaseOrder, loading, saveForLater }) {
+export default function PO2Form({ form, purchaseOrder, setPurchaseOrder, loading, saveForLater }) {
 
     const { handleHttpError, hasWriteAccessTo } = useApp();
 
@@ -27,9 +28,22 @@ export default function PO2Form({ form, purchaseOrder, loading, saveForLater }) 
     }, [handleHttpError])
 
     // Whether to render the dependent form values or not
-    function onValuesChange(_, newValues) {
+    function onValuesChange(field, newValues) {
         setShowGstRate(newValues.has_gst === 2 || newValues.has_gst === 3);
         setShowPaymentMethod(newValues.payment_term_id === PaymentTerm.CASH.id);
+
+        // For real-time update of PO calculations
+        if (field.has_gst) {
+            if (+field.has_gst === 1) { // No GST
+                setPurchaseOrder(new PurchaseOrder({...purchaseOrder, has_gst: field.has_gst, gst_rate: 0 }));
+                form.setFieldsValue({ gst_rate: 0 })
+            } else { // Have GST (Inclusive or Exclusive)
+                setPurchaseOrder(new PurchaseOrder({...purchaseOrder, has_gst: field.has_gst }));
+            }
+        }
+        if (field.gst_rate) {
+            setPurchaseOrder(new PurchaseOrder({...purchaseOrder, gst_rate: field.gst_rate }))
+        }
     }
 
     function handleChargedUnderChange(id) {

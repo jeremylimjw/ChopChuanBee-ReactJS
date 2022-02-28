@@ -197,7 +197,7 @@ export default function ViewProcurementPage() {
           </MyCard>
 
           <MyCard title="Order Details" style={{ flexGrow: 1, margin: '0 12px 12px 24px' }}>
-            <PO2Form form={form} purchaseOrder={purchaseOrder} loading={loading} saveForLater={saveForLater} />
+            <PO2Form form={form} purchaseOrder={purchaseOrder} setPurchaseOrder={setPurchaseOrder} loading={loading} saveForLater={saveForLater} />
           </MyCard>
 
           <MyCard style={{ width: 250, margin: '0 24px 12px 24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
