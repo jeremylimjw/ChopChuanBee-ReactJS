@@ -23,8 +23,8 @@ export default function S3History({ supplier }) {
     const [form] = Form.useForm();
 
     useEffect(() => {
-        setLoading(true);
         if (supplier) {
+            setLoading(true);
             PurchaseOrderApiHelper.get({ supplier_id: supplier.id }).then(results => {
                 setItems(results.map(x => new PurchaseOrder(x)));
                 setLoading(false);
@@ -40,6 +40,7 @@ export default function S3History({ supplier }) {
             startDate = moment(form.date[0]).set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toDate();
             endDate = moment(form.date[1]).set({ hour: 23, minute: 59, second: 59, millisecond: 999 }).toDate();
         }
+        setLoading(true);
         PurchaseOrderApiHelper.get({...form, startDate, endDate, supplier_id: supplier.id })
             .then(results => {
                 setItems(results.map(x => new PurchaseOrder(x)));

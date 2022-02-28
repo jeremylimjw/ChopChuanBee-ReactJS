@@ -19,8 +19,8 @@ export class SalesOrderApiHelper {
           params.sales_order_status_id = query.sales_order_status_id;
         if (query?.payment_term_id)
             params.payment_term_id = query.payment_term_id;
-        if (query?.supplier_id)
-            params.supplier_id = query?.supplier_id;
+        if (query?.customer_id)
+            params.customer_id = query?.customer_id;
         params.order_by = 'created_at_desc';
 
         return axiosObject.get(`/salesOrder`, { params: params })

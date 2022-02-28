@@ -93,7 +93,7 @@ export default function ViewCustomerPage() {
           </Row>
 
           <MyCard style={{ marginTop: 0 }}>
-            <C3History />
+            <C3History customer={customer} />
           </MyCard>
         
         </MyLayout>
