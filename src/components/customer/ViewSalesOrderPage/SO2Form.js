@@ -82,8 +82,8 @@ export default function SO2Form({ form, salesOrder, setSalesOrder, loading, save
 
                 <Form.Item label="GST" name="has_gst" rules={[REQUIRED]}>
                     <Radio.Group disabled={!salesOrder.isStatus(POStatus.PENDING)}>
-                        <Radio value={2}>Yes</Radio>
                         <Radio value={1}>No</Radio>
+                        <Radio value={2}>Yes</Radio>
                     </Radio.Group>
                 </Form.Item>
 
@@ -94,8 +94,8 @@ export default function SO2Form({ form, salesOrder, setSalesOrder, loading, save
                     </Form.Item>
                     <Form.Item label="Show GST" name="show_gst" rules={[REQUIRED]}>
                         <Radio.Group disabled={!salesOrder.isStatus(POStatus.PENDING)}>
-                            <Radio value={true}>Yes</Radio>
                             <Radio value={false}>No</Radio>
+                            <Radio value={true}>Yes</Radio>
                         </Radio.Group>
                     </Form.Item>
                 </>

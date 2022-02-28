@@ -47,6 +47,7 @@ export default function NewSalesOrderPage() {
       has_gst: selectedCustomer.charged_under?.gst_rate ? 3 : 1,
       gst_rate: selectedCustomer.charged_under?.gst_rate || 0,
       charged_under_id: selectedCustomer.charged_under?.id,
+      show_gst: selectedCustomer.gst_show,
     }
 
     // Copy details from reorder if any
