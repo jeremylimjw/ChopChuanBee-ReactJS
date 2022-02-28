@@ -1,4 +1,4 @@
-import { Table } from 'antd'
+import { Button, Space, Table } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { sortByDate, sortByNumber, sortByString } from '../../../utilities/sorters'
 import MyToolbar from '../../common/MyToolbar'
@@ -7,15 +7,23 @@ import { useApp } from '../../../providers/AppProvider'
 import { parseDate } from '../../../utilities/datetime'
 import { ProductApiHelper } from '../../../api/ProductApiHelper'
 import { Link } from 'react-router-dom';
+import { PurchaseOrderApiHelper } from '../../../api/PurchaseOrderApiHelper';
+import { useNavigate } from 'react-router';
 
 export default function P2PriceTable({ product }) {
 
     const { handleHttpError } = useApp();
+    const navigate = useNavigate();
 
     const [loading, setLoading] = useState(false);
     const [items, setItems] = useState([]);
 
-    columns[4].render = (id) => <Link to={`/supplier/procurements/${id}`}>View</Link>
+    columns[4].render = (id) => (
+      <Space size="middle">
+        <Link to={`/supplier/procurements/${id}`}>View</Link>
+        <Button type="link" style={{ margin: 0, padding: 0}} onClick={() => redirect(id)}>Reorder</Button>
+      </Space>
+    )
 
     useEffect(() => {
       setItems([]);
@@ -27,6 +35,16 @@ export default function P2PriceTable({ product }) {
         })
         .catch(handleHttpError)
     }, [handleHttpError, setItems, product]);
+
+    function redirect(purchaseOrderId) {
+      PurchaseOrderApiHelper.get({ id: purchaseOrderId })
+        .then(results => {
+          if (results.length > 0) {
+            navigate(`/supplier/procurements/new`, { state: { purchaseOrder: {...results[0], purchase_order_items: results[0].purchase_order_items.filter(x => x.product_id === product.id) } } })
+          }
+        })
+        .catch(handleHttpError)
+    }
 
     return (
       <>
@@ -80,6 +98,6 @@ const columns = [
     { 
       title: 'Action',
       dataIndex: 'id',
-      width: 100,
+      width: 130,
     },
 ]
