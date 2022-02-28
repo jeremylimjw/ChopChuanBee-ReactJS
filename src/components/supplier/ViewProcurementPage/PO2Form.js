@@ -28,12 +28,25 @@ export default function PO2Form({ form, purchaseOrder, setPurchaseOrder, loading
     }, [handleHttpError])
 
     // Whether to render the dependent form values or not
-    function onValuesChange(_, newValues) {
-        setShowGstRate(newValues.has_gst === 2 || newValues.has_gst === 3);
-        setShowPaymentMethod(newValues.payment_term_id === PaymentTerm.CASH.id);
+    function onValuesChange(field) {
+        if (field.payment_term_id) {
+            setShowPaymentMethod(field.payment_term_id === PaymentTerm.CASH.id);
+        }
 
-        // This is for updating the order items table whenever user changes the input
-        setPurchaseOrder(new PurchaseOrder({...purchaseOrder, has_gst: newValues.has_gst, gst_rate: newValues.gst_rate }))
+        // For real-time update of PO calculations
+        if (field.has_gst) {
+            if (+field.has_gst === 1) { // No GST
+                setPurchaseOrder(new PurchaseOrder({...purchaseOrder, has_gst: field.has_gst, gst_rate: 0 }));
+                form.setFieldsValue({ gst_rate: 0 })
+                setShowGstRate(false);
+            } else { // Have GST (Inclusive or Exclusive)
+                setPurchaseOrder(new PurchaseOrder({...purchaseOrder, has_gst: field.has_gst }));
+                setShowGstRate(true);
+            }
+        }
+        if (field.gst_rate) {
+            setPurchaseOrder(new PurchaseOrder({...purchaseOrder, gst_rate: field.gst_rate }))
+        }
     }
 
     function handleChargedUnderChange(id) {

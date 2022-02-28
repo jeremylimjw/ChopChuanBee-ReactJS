@@ -28,20 +28,33 @@ export default function SO2Form({ form, salesOrder, setSalesOrder, loading, save
     }, [handleHttpError])
 
     // Whether to render the dependent form values or not
-    function onValuesChange(field, newValues) {
-        setShowGstRate(newValues.has_gst === 2);
-        setShowPaymentMethod(newValues.payment_term_id === PaymentTerm.CASH.id);
+    function onValuesChange(field) {
+        if (field.payment_term_id) {
+            setShowPaymentMethod(field.payment_term_id === PaymentTerm.CASH.id);
+        }
+
+        // For real-time update of PO calculations
+        if (field.has_gst) {
+            if (+field.has_gst === 1) { // No GST
+                setSalesOrder(new SalesOrder({...salesOrder, has_gst: field.has_gst, gst_rate: 0 }));
+                form.setFieldsValue({ gst_rate: 0 })
+                setShowGstRate(false);
+            } else { // Have GST
+                setSalesOrder(new SalesOrder({...salesOrder, has_gst: field.has_gst }));
+                setShowGstRate(true);
+            }
+        }
+        if (field.gst_rate) {
+            setSalesOrder(new SalesOrder({...salesOrder, gst_rate: field.gst_rate }))
+        }
 
         // Update fields to charged under fields
-        if (field.charged_under_id != null) { // If is changing charged_under_id
+        if (field.charged_under_id && field.charged_under_id != null) { // If is changing charged_under_id
             const index = chargedUnders.findIndex(x => x.id === field.charged_under_id)
             const initialFields = { has_gst: +chargedUnders[index].gst_rate === 0 ? 1 : 2, gst_rate: chargedUnders[index].gst_rate };
-            setShowGstRate(initialFields.has_gst === 2);
             form.setFieldsValue(initialFields);
+            setShowGstRate(initialFields.has_gst === 2);
             setSalesOrder(new SalesOrder({...salesOrder, ...initialFields }))
-        } else {
-            // This is for updating the order items table whenever user changes the input
-            setSalesOrder(new SalesOrder({...salesOrder, has_gst: newValues.has_gst, gst_rate: newValues.gst_rate }))
         }
     }
 
