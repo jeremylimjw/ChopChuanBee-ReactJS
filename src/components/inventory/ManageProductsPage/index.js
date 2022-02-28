@@ -165,13 +165,12 @@ const columns = [
     dataIndex: "id", 
     title: "Action", 
     key: "link", 
-    width: 130,
+    width: 100,
     ellipsis: true,
     render: (id) => {
      return (
       <Space size="middle">
         <Link to={`./${id}`}>View</Link>
-        <Link to={`./${id}`}>Restock</Link>
       </Space>
       )
     }

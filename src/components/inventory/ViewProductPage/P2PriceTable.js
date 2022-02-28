@@ -30,7 +30,7 @@ export default function P2PriceTable({ product }) {
 
     return (
       <>
-        <MyToolbar title="Latest Prices">
+        <MyToolbar title="Latest Cost Price for Each Supplier">
         </MyToolbar>
         
         <Table dataSource={items} 
