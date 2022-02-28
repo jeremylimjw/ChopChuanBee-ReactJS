@@ -1,7 +1,7 @@
 import { Form, InputNumber, Typography } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 
-export default function InputNumberCell({ field, toggleable, record, handleSave, ...restProps }) {
+export default function InputNumberCell({ field, toggleable, currency, record, handleSave, ...restProps }) {
     const [form] = Form.useForm();
 
     const [editing, setEditing] = useState(false);
@@ -37,7 +37,7 @@ export default function InputNumberCell({ field, toggleable, record, handleSave,
             <Form form={form}>
             { (!toggleable || editing) ? 
                 <Form.Item style={{ margin: 0 }} name={field}>
-                    <InputNumber min={0} ref={inputRef} onPressEnter={save} onBlur={save} />
+                    <InputNumber min={0} ref={inputRef} onPressEnter={save} onBlur={save} prefix={currency === 'true' ? '$' : false} />
                 </Form.Item>
                 :
                 <div onClick={toggleEdit}>
