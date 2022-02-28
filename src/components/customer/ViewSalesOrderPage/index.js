@@ -231,7 +231,7 @@ export default function ViewSalesOrderPage() {
 
             <Space size="middle">
               <Button icon={<SendOutlined />} disabled={loading || !salesOrder.isStatus(SOStatus.PENDING)} onClick={sendOrder}>Send Order</Button>
-              <Button icon={<PrinterOutlined />} disabled={loading || !salesOrder.isStatus(SOStatus.PENDING)} onClick={sendOrder}>Print</Button>
+              <Button icon={<PrinterOutlined />} disabled={loading || !salesOrder.isStatus(SOStatus.PENDING)} onClick={sendOrder}>View as PDF</Button>
             </Space>
 
             <div style={{ marginLeft: 'auto' }}>

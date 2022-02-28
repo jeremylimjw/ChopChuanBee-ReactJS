@@ -130,11 +130,11 @@ const columns = [
         sorter: (a, b) => sortByString(a.product.unit, b.product.unit),
     },
     {
-        title: 'Latest Price',
+        title: 'Latest Selling Price',
         dataIndex: 'product',
-        key: 'latest_unit_cost',
+        key: 'latest_unit_price',
         align: 'center',
-        width: 120,
+        width: 170,
         ellipsis: true,
     },
     {
