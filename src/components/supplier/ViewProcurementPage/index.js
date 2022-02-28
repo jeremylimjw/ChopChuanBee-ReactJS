@@ -13,6 +13,7 @@ import { PurchaseOrder } from '../../../models/PurchaseOrder';
 import { useApp } from '../../../providers/AppProvider';
 import MyCard from '../../common/MyCard';
 import MyLayout from '../../common/MyLayout';
+import CopyAsTextButton from './CopyAsTextButton';
 import PO1SupplierInfo from './PO1SupplierInfo';
 import PO2Form from './PO2Form';
 import PO3ItemsTable from './PO3ItemsTable';
@@ -227,7 +228,10 @@ export default function ViewProcurementPage() {
           { hasWriteAccessTo(View.SCM.name) && 
           <div style={{ display: 'flex', marginTop: 30 }}>
 
-            <Button icon={<SendOutlined />} disabled={loading || !purchaseOrder.isStatus(POStatus.PENDING)} onClick={sendOrder}>Send Order</Button>
+            <Space size="middle">
+              <Button icon={<SendOutlined />} disabled={loading || !purchaseOrder.isStatus(POStatus.PENDING)} onClick={sendOrder}>Send Order</Button>
+              <CopyAsTextButton loading={loading} purchaseOrder={purchaseOrder} />
+            </Space>
 
             <div style={{ marginLeft: 'auto' }}>
               <Space size="middle">

@@ -77,7 +77,7 @@ export default function NewCustomerModal({ isModalVisible, setIsModalVisible, cu
                 </Form.Item>
 
                 <Form.Item name="charged_under_id" label="Charged Under" initialValue={null}>
-                    <Select style={{ width: 140 }}>
+                    <Select style={{ width: 180 }}>
                         <Select.Option value={null}>None</Select.Option>
                         { chargedUnders.map((x, idx) => <Select.Option key={idx} value={x.id}>{x.name}</Select.Option>)}
                     </Select>

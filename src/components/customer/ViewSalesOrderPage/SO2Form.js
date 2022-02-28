@@ -74,7 +74,7 @@ export default function SO2Form({ form, salesOrder, setSalesOrder, loading, save
 
                 <Form.Item name="charged_under" hidden><Input /></Form.Item>
                 <Form.Item name="charged_under_id" label="Charged Under" rules={[REQUIRED]}>
-                    <Select style={{ width: 140 }} onSelect={handleChargedUnderChange} disabled={!salesOrder.isStatus(POStatus.PENDING)}>
+                    <Select style={{ width: 180 }} onSelect={handleChargedUnderChange} disabled={!salesOrder.isStatus(POStatus.PENDING)}>
                         <Select.Option value={null}>None</Select.Option>
                         { chargedUnders.map((x, idx) => <Select.Option key={idx} value={x.id}>{x.name}</Select.Option>)}
                     </Select>

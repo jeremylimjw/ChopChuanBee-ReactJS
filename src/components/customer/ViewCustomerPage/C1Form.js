@@ -107,7 +107,7 @@ export default function C1Form({ customer, setCustomer }) {
                         {!editing ? 
                             <Typography>{customer.charged_under?.name || '-'}</Typography>
                         :
-                            <Select style={{ width: 140 }}>
+                            <Select style={{ width: 180 }}>
                                 <Select.Option value={null}>None</Select.Option>
                                 { chargedUnders.map((x, idx) => <Select.Option key={idx} value={x.id}>{x.name}</Select.Option>)}
                             </Select>

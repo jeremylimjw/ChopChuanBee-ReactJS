@@ -51,7 +51,14 @@ export default function PO2Form({ form, purchaseOrder, setPurchaseOrder, loading
 
     function handleChargedUnderChange(id) {
         const index = chargedUnders.findIndex(x => x.id === id);
-        form.setFieldsValue({ charged_under: (id == null ? null : {...chargedUnders[index] }) });
+        if (index >= 0) {
+            const chargedUnder = chargedUnders[index];
+            setPurchaseOrder(new PurchaseOrder({...purchaseOrder, charged_under: {...chargedUnder } }))
+            form.setFieldsValue({ charged_under: {...chargedUnder } });
+        } else {
+            setPurchaseOrder(new PurchaseOrder({...purchaseOrder, charged_under: null }))
+            form.setFieldsValue({ charged_under: null });
+        }
     }
 
     return (
@@ -69,7 +76,7 @@ export default function PO2Form({ form, purchaseOrder, setPurchaseOrder, loading
 
                 <Form.Item name="charged_under" hidden><Input /></Form.Item>
                 <Form.Item name="charged_under_id" label="Charged Under" rules={[REQUIRED]}>
-                    <Select style={{ width: 140 }} onSelect={handleChargedUnderChange} disabled={!purchaseOrder.isStatus(POStatus.PENDING)}>
+                    <Select style={{ width: 180 }} onSelect={handleChargedUnderChange} disabled={!purchaseOrder.isStatus(POStatus.PENDING)}>
                         <Select.Option value={null}>None</Select.Option>
                         { chargedUnders.map((x, idx) => <Select.Option key={idx} value={x.id}>{x.name}</Select.Option>)}
                     </Select>
