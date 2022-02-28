@@ -16,8 +16,8 @@ import { ChargedUnderApiHelper } from '../../../api/ChargedUnderApiHelper';
 import NewChargedUnderModal from './NewChargedUnderModal';
 
 const breadcrumbs = [
-    { url: '/admin/schemes', name: 'Admin' },
-    { url: '/admin/schemes', name: 'Schemes' },
+    { url: '/admin/companyDetails', name: 'Admin' },
+    { url: '/admin/companyDetails', name: 'Company Details' },
 ];
 
 export default function ManageChargedUndersPage() {
@@ -60,9 +60,9 @@ export default function ManageChargedUndersPage() {
     }
 
     return (
-        <MyLayout breadcrumbs={breadcrumbs} bannerTitle='Manage Accounts'>
+        <MyLayout breadcrumbs={breadcrumbs} bannerTitle='Manage Company Details'>
             <MyCard>
-                <MyToolbar title='Accounts'>
+                <MyToolbar title='Company Details'>
                     <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
                         <Form.Item name="name">
                             <Input placeholder='Search Name' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />

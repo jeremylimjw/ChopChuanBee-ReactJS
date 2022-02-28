@@ -41,9 +41,23 @@ export default function NewPaymentModal({ purchaseOrder, setPurchaseOrder, isMod
         const payment = { ...form, purchase_order_id: purchaseOrder.id };
 
         if (isModalVisible === 1) { // Make payment
+            // Validation
+            const max = purchaseOrder.getOrderTotal() - purchaseOrder.getPaymentsTotal();
+            if (payment.amount > max) {
+                message.error('Cannot pay more than the balance amount.')
+                return;
+            }
+
             payment.movement_type_id = MovementType.PURCHASE.id;
             payment.amount = -payment.amount;
         } else if (isModalVisible === 2) { // Make refund
+            // Validation
+            const max = purchaseOrder.getPaymentsTotal();
+            if (payment.amount > max) {
+                message.error('Cannot refund more than amount paid.')
+                return;
+            }
+            
             payment.movement_type_id = MovementType.REFUND.id;
             payment.amount = +payment.amount;
         }

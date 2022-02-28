@@ -55,12 +55,12 @@ const routes = [
         viewAccess: View.ADMIN.name,
       },
       { 
-        path: 'schemes', 
+        path: 'companyDetails', 
         component: <ManageChargedUndersPage />,
         viewAccess: View.ADMIN.name,
       },
       { 
-        path: 'schemes/:id', 
+        path: 'companyDetails/:id', 
         component: <ViewChargedUnderPage />,
         viewAccess: View.ADMIN.name,
       },

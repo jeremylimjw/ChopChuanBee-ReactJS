@@ -20,9 +20,9 @@ export default function ViewChargedUnderPage() {
     const [loading, setLoading] = useState(false);
 
     const breadcrumbs = [
-        { url: '/admin/schemes', name: 'Admin' },
-        { url: '/admin/schemes', name: 'Schemes' },
-        { url: `/admin/schemes/${chargedUnder?.id}`, name: chargedUnder?.name },
+      { url: '/admin/companyDetails', name: 'Admin' },
+      { url: '/admin/companyDetails', name: 'Company Details' },
+      { url: `/admin/companyDetails/${chargedUnder?.id}`, name: chargedUnder?.name },
     ]
   
     useEffect(() => {
