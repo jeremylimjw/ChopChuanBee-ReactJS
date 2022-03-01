@@ -22,7 +22,7 @@ export default function Navbar() {
           Analytics
         </Menu.Item>
         
-        <Menu.SubMenu key="subMenu" icon={<UserOutlined />} title={user.name} style={{ width: 100 }}>
+        <Menu.SubMenu key="subMenu" icon={<UserOutlined />} title={user?.name} style={{ width: 100 }}>
             <Menu.Item key="/myProfile" onClick={() => navigate('/myProfile')} icon={<UserOutlined />}>My Profile</Menu.Item>
             <Menu.Item key="/myLeaves" onClick={() => navigate('/myLeaves')} icon={<ContainerOutlined />}>My Leaves</Menu.Item>
             <Menu.Item key="changePassword" onClick={() => setIsModalVisible(true)} icon={<KeyOutlined />}>Change Password</Menu.Item>
