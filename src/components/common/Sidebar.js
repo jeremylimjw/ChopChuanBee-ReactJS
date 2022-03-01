@@ -17,6 +17,7 @@ const menu = [
       { route: '/admin/accounts', name: 'Manage Accounts' },
       { route: '/admin/companyDetails', name: 'Company Details' },
       { route: '/admin/logs', name: 'Logs' },
+      { route: '/admin/movements', name: 'Inv. Movements' },
     ]
   },
   {

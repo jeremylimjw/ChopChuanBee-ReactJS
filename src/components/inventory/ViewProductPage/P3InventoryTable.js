@@ -1,9 +1,9 @@
 import { PlusOutlined } from '@ant-design/icons/lib/icons';
-import { Button, Table, Tag } from 'antd';
+import { Button, Table } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import { ProductApiHelper } from '../../../api/ProductApiHelper';
-import { getMovementType, MovementType } from '../../../enums/MovementType';
+import { getSpecialMovementTypeTag } from '../../../enums/MovementType';
 import { View } from '../../../enums/View';
 import { useApp } from '../../../providers/AppProvider';
 import { parseDateTime } from '../../../utilities/datetime';
@@ -73,7 +73,7 @@ const columns = [
     key: 'movement_type_id',
     align: 'center',
     width: '20%',
-    render: (_, record) => renderSpecialMovementTag(record),
+    render: (_, record) => getSpecialMovementTypeTag(record),
     sorter: (a, b) => sortByNumber(a.movement_type_id, b.movement_type_id),
   },
   {
@@ -120,17 +120,4 @@ function getCompanyName(record) {
   } else {
     return '-';
   }
-}
-
-function renderSpecialMovementTag(record) {
-  const movement = getMovementType(record.movement_type_id);
-  if (movement == null) return '-';
-  if (movement.id === MovementType.REFUND.id) {
-    if (record.purchase_order_item != null) {
-      return <Tag color={movement.color}>{`Supplier ${movement.name}`}</Tag>
-    } else {
-      return <Tag color={movement.color}>{`Customer ${movement.name}`}</Tag>
-    }
-  }
-  return <Tag color={movement.color}>{movement.name}</Tag>
 }

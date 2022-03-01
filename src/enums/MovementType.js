@@ -20,3 +20,16 @@ export function getMovementTypeTag(id) {
     if (item == null) return '-';
     return <Tag color={item.color}>{item.name}</Tag>
 }
+
+export function getSpecialMovementTypeTag(record) {
+    const movement = getMovementType(record.movement_type_id);
+    if (movement == null) return '-';
+    if (movement.id === MovementType.REFUND.id) {
+      if (record.purchase_order_item != null) {
+        return <Tag color={movement.color}>{`Supplier ${movement.name}`}</Tag>
+      } else {
+        return <Tag color={movement.color}>{`Customer ${movement.name}`}</Tag>
+      }
+    }
+    return <Tag color={movement.color}>{movement.name}</Tag>
+  }

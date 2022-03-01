@@ -33,6 +33,7 @@ import ViewChargedUnderPage from './components/admin/ViewChargedUnderPage';
 import ManageSalesOrdersPage from './components/customer/ManageSalesOrdersPage';
 import NewSalesOrderPage from './components/customer/NewSalesOrderPage';
 import ViewSalesOrderPage from './components/customer/ViewSalesOrderPage';
+import ViewInventoryMovementsPage from './components/inventory/ViewInventoryMovementsPage';
 
 // Add on more routes here
 const routes = [
@@ -67,6 +68,11 @@ const routes = [
       { 
         path: 'logs', 
         component: <ViewLogsPage />,
+        viewAccess: View.ADMIN.name,
+      },
+      { 
+        path: 'movements', 
+        component: <ViewInventoryMovementsPage />,
         viewAccess: View.ADMIN.name,
       },
     ]
