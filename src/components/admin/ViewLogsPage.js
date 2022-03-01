@@ -74,6 +74,7 @@ export default function ViewLogsPage() {
                         </Form.Item>
                         <Form.Item name="view_id">
                             <Select style={{ width: 150 }} placeholder="Filter by View" >
+                                <Select.Option value={null}>All</Select.Option>
                                 { Object.keys(View).map((key, index) => <Select.Option key={index} value={View[key].id}>{View[key].name}</Select.Option>) }
                             </Select>
                         </Form.Item>

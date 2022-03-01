@@ -52,9 +52,7 @@ const EmployeeTable = () => {
             <Form.Item name="role_id">
               <Select style={{ width: 140 }} placeholder="Filter by Role">
                 <Select.Option value={null}>All</Select.Option>
-                {Object.keys(Role)
-                  .filter(x => x !== 'ADMIN')
-                  .map((key, idx) => <Select.Option key={idx} value={Role[key].id}>{Role[key].name}</Select.Option>)}
+                {Object.keys(Role).map((key, idx) => <Select.Option key={idx} value={Role[key].id}>{Role[key].name}</Select.Option>)}
               </Select>
             </Form.Item>
             <Button onClick={resetForm}>Reset</Button>

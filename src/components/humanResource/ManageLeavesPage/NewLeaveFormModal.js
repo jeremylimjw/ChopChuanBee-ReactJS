@@ -5,7 +5,7 @@ import { EmployeeApiHelper } from '../../../api/EmployeeApiHelper'
 import { HRApiHelper } from '../../../api/HRApiHelper'
 import { getLeaveType } from '../../../enums/LeaveType'
 import { useApp } from '../../../providers/AppProvider'
-import { minLength, REQUIRED } from '../../../utilities/form'
+import { REQUIRED } from '../../../utilities/form'
 
 export default function NewLeaveFormModal({ selectedEmployee, isModalVisible, setIsModalVisible, myCallback }) {
 
