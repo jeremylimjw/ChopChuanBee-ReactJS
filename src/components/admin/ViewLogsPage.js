@@ -57,7 +57,6 @@ export default function ViewLogsPage() {
         form.resetFields();
         onValuesChange(null, form.getFieldsValue());
     }
-    
 
     return (
         <MyLayout breadcrumbs={breadcrumbs} bannerTitle="View Logs">

@@ -15,7 +15,9 @@ const menu = [
     icon: <UserOutlined />,
     items: [
       { route: '/admin/accounts', name: 'Manage Accounts' },
+      { route: '/admin/companyDetails', name: 'Company Details' },
       { route: '/admin/logs', name: 'Logs' },
+      { route: '/admin/movements', name: 'Inv. Movements' },
     ]
   },
   {
@@ -33,8 +35,6 @@ const menu = [
     icon: <InboxOutlined />,
     items: [
       { route: '/inventory/products', name: 'Manage Products' },
-      // { route: '/inventory', name: 'Manage Inventory' },
-      // { route: '/inventory/supplier-invoices', name: 'Supplier Invoices' },
     ]
   },
   {
@@ -43,7 +43,7 @@ const menu = [
     icon: <ShoppingOutlined />,
     items: [
       { route: '/supplier/suppliers', name: 'Manage Suppliers' },
-      // { route: '/suppliers/accounts', name: 'Accounts Payable' },
+      { route: '/supplier/procurements', name: 'Procurements' },
     ]
   },
   {
@@ -52,6 +52,7 @@ const menu = [
     icon: <SolutionOutlined />,
     items: [
       { route: '/customer/customers', name: 'Manage Customers' },
+      { route: '/customer/sales', name: 'Manage Sales' },
     ]
   },
 ]

@@ -2,28 +2,17 @@ import { axiosObject } from "./axiosWrapper";
 
 export class ProductApiHelper {
     static async getById(id) {
-        return axiosObject.get(`/product?id=${id}`)
+        return axiosObject.get(`/product`, { params: { id: id }})
             .then(res => res.data);
     }
 
     static async get(name, status) {
-        let query = '';
-        if (name)
-            query += `&name_like=${name}`
-        if (status === true) {
-            query += `&deactivated_date_is_null=1`;
-        } else if (status === false) {
-            query += `&deactivated_date_is_nn=1`;
-        }
-        return axiosObject.get(`/product?order_by=created_at_desc${query}`)
+        return axiosObject.get(`/product`, { params: { name, status } })
             .then(res => res.data);
     }
 
     static async getAllAvailable(name) {
-        let query = '';
-        if (name)
-            query += `&name_like=${name}`
-        return axiosObject.get(`/product?deactivated_date_is_null=1&order_by=name${query}`)
+        return axiosObject.get(`/product`, { params: { name, status: true } })
             .then(res => res.data);
     }
 
@@ -50,6 +39,21 @@ export class ProductApiHelper {
 
     static async deactivate(id) {
         return axiosObject.post(`/product/deactivate`, { id: id })
+            .then(res => res.data);
+    }
+
+    static async getLatestPrices(id) {
+        return axiosObject.get(`/product/latestPrice`, { params: { id: id } })
+            .then(res => res.data);
+    }
+
+    static async getInventoryMovements(id) {
+        const params = {
+            product_id: id,
+            order_by: 'created_at_desc',
+        }
+
+        return axiosObject.get(`/product/inventoryMovement`, { params: params })
             .then(res => res.data);
     }
 }

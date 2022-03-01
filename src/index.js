@@ -25,6 +25,15 @@ import ManageSuppliersPage from './components/supplier/ManageSuppliersPage';
 import ViewSupplierPage from './components/supplier/ViewSupplierPage';
 import ManageCustomersPage from './components/customer/ManageCustomersPage';
 import ViewCustomerPage from './components/customer/ViewCustomerPage';
+import ManageProcurementsPage from './components/supplier/ManageProcurementsPage';
+import NewProcurementPage from './components/supplier/NewProcurementPage';
+import ViewProcurementPage from './components/supplier/ViewProcurementPage';
+import ManageChargedUndersPage from './components/admin/ManageChargedUndersPage';
+import ViewChargedUnderPage from './components/admin/ViewChargedUnderPage';
+import ManageSalesOrdersPage from './components/customer/ManageSalesOrdersPage';
+import NewSalesOrderPage from './components/customer/NewSalesOrderPage';
+import ViewSalesOrderPage from './components/customer/ViewSalesOrderPage';
+import ViewInventoryMovementsPage from './components/inventory/ViewInventoryMovementsPage';
 
 // Add on more routes here
 const routes = [
@@ -47,8 +56,23 @@ const routes = [
         viewAccess: View.ADMIN.name,
       },
       { 
+        path: 'companyDetails', 
+        component: <ManageChargedUndersPage />,
+        viewAccess: View.ADMIN.name,
+      },
+      { 
+        path: 'companyDetails/:id', 
+        component: <ViewChargedUnderPage />,
+        viewAccess: View.ADMIN.name,
+      },
+      { 
         path: 'logs', 
         component: <ViewLogsPage />,
+        viewAccess: View.ADMIN.name,
+      },
+      { 
+        path: 'movements', 
+        component: <ViewInventoryMovementsPage />,
         viewAccess: View.ADMIN.name,
       },
     ]
@@ -112,6 +136,21 @@ const routes = [
         component: <ViewSupplierPage />,
         viewAccess: View.SCM.name,
       },
+      { 
+        path: 'procurements', 
+        component: <ManageProcurementsPage />,
+        viewAccess: View.SCM.name,
+      },
+      { 
+        path: 'procurements/new', 
+        component: <NewProcurementPage />,
+        viewAccess: View.SCM.name,
+      },
+      { 
+        path: 'procurements/:id', 
+        component: <ViewProcurementPage />,
+        viewAccess: View.SCM.name,
+      },
     ],
   },
   {
@@ -127,6 +166,21 @@ const routes = [
         path: 'customers/:id', 
         component: <ViewCustomerPage />,
         viewAccess: View.CRM.name,
+      },
+      { 
+        path: 'sales', 
+        component: <ManageSalesOrdersPage />,
+        viewAccess: View.SCM.name,
+      },
+      { 
+        path: 'sales/new', 
+        component: <NewSalesOrderPage />,
+        viewAccess: View.SCM.name,
+      },
+      { 
+        path: 'sales/:id', 
+        component: <ViewSalesOrderPage />,
+        viewAccess: View.SCM.name,
       },
     ]
   },

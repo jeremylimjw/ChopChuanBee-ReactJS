@@ -20,6 +20,7 @@ export default function ViewSupplierPage() {
 
   const [loading, setLoading] = useState(false);
   const [supplier, setSupplier] = useState();
+  const [accountPayable, setAccountPayable] = useState(0);
 
   const breadcrumbs = [
     { url: "/supplier/supplier", name: "Supplier" },
@@ -28,7 +29,7 @@ export default function ViewSupplierPage() {
   ];
 
   useEffect(() => {
-    SupplierAPIHelper.getById(id)
+    SupplierAPIHelper.get({ id: id })
       .then((result) => {
         if (result.length === 0) {
           navigate('../');
@@ -38,6 +39,16 @@ export default function ViewSupplierPage() {
       })
       .catch(handleHttpError);
   }, [id, handleHttpError, navigate]);
+
+  useEffect(() => {
+    if (supplier) {
+      SupplierAPIHelper.getMyAccountPayable(supplier.id)
+        .then((result) => {
+          setAccountPayable(result[0].total);
+        })
+        .catch(handleHttpError);
+    }
+  }, [supplier, handleHttpError]);
 
   function handleDeactivate() {
     setLoading(true);
@@ -88,7 +99,7 @@ export default function ViewSupplierPage() {
 
               <MyCard title="Quick View">
                 {supplier.company_name} has outstanding account payables of&nbsp;
-                <Typography.Title level={5} style={{ display: 'inline-block'}}>$0.00</Typography.Title>.
+                <Typography.Title level={5} style={{ display: 'inline-block'}}>{`$${(+accountPayable).toFixed(2)}`}</Typography.Title>.
               </MyCard>
 
               <MyCard style={{ flexGrow: 1 }}>
@@ -100,7 +111,7 @@ export default function ViewSupplierPage() {
           </Row>
 
           <MyCard style={{ marginTop: 0 }}>
-            <S3History />
+            <S3History supplier={supplier} />
           </MyCard>
 
         </MyLayout>

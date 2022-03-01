@@ -12,7 +12,7 @@ export class CustomerApiHelper {
         } else if (status === false) {
             query += `&deactivated_date_is_nn=1`;
         }
-        return axiosObject.get(`/customer?order_by=created_at_desc${query}`)
+        return axiosObject.get(`/customer?order_by=created_at_desc&include=charged_under${query}`)
             .then(res => res.data);
     }
 
@@ -70,6 +70,16 @@ export class CustomerApiHelper {
             customer_id: customer_id,
             customer_menus: newMenu,
         })
+        .then(res => res.data);
+    }
+
+    static async getMyLatestPrices(id) {
+      return axiosObject.get(`/customer/latestPrice`, { params: { customer_id: id } })
+        .then(res => res.data);
+    }
+  
+    static async getMyAccountPayable(id) {
+      return axiosObject.get(`/customer/ar`, { params: { customer_id: id } })
         .then(res => res.data);
     }
 

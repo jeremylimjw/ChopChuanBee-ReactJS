@@ -1,35 +1,24 @@
 import { axiosObject } from "./axiosWrapper";
 
 export class SupplierAPIHelper {
-  static async getById(id) {
-    return axiosObject.get("/supplier", { params: { id: id } })
-      .then((res) => res.data);
-  }
-
   static async get(query) {
     const params = {};
     
-    if (query.company_name)
+    if (query?.id)
+      params.id = query.id;
+    if (query?.company_name)
       params.company_name_like = query.company_name;
-    if (query.s1_name)
+    if (query?.s1_name)
       params.s1_name_like = query.s1_name;
-    if (query.status === true) {
+    if (query?.status === true) {
       params.deactivated_date_is_null = 1;
-    } else if (query.status === false) {
+    } else if (query?.status === false) {
       params.deactivated_date_is_nn = 1;
     }
-    if (query.limit)
+    if (query?.limit)
       params.limit = query.limit;
     params.order_by = 'created_at_desc';
 
-    return axiosObject.get("/supplier", { params })
-      .then((res) => res.data);
-  }
-
-  static async getAll() {
-    const params = {
-      order_by: 'created_at_desc'
-    };
     return axiosObject.get("/supplier", { params })
       .then((res) => res.data);
   }
@@ -88,15 +77,25 @@ export class SupplierAPIHelper {
   }
 
   static async updateMenu(supplierId, menuItems) {
-      const newMenu = menuItems.map(x => ({ 
-            ...x, 
-            supplier_id: supplierId,
-            product_id: x.product.id,
-        }))
-      return axiosObject.put(`/supplier/menu`, {
-          supplier_id: supplierId,
-          supplier_menus: newMenu,
-      })
+    const newMenu = menuItems.map(x => ({ 
+      ...x, 
+      supplier_id: supplierId,
+      product_id: x.product.id,
+    }))
+    return axiosObject.put(`/supplier/menu`, {
+      supplier_id: supplierId,
+      supplier_menus: newMenu,
+    })
+    .then(res => res.data);
+  }
+
+  static async getMyLatestPrices(id) {
+    return axiosObject.get(`/supplier/latestPrice`, { params: { supplier_id: id } })
+      .then(res => res.data);
+  }
+
+  static async getMyAccountPayable(id) {
+    return axiosObject.get(`/supplier/ap`, { params: { supplier_id: id } })
       .then(res => res.data);
   }
 }
