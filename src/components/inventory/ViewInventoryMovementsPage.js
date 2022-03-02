@@ -15,8 +15,8 @@ import { Link } from 'react-router-dom';
 import { parseDateTime } from '../../utilities/datetime';
 
 const breadcrumbs = [
-    { url: '/admin/movements', name: 'Admin' },
-    { url: '/admin/movements', name: 'Movements' },
+    { url: '/inventory/movements', name: 'Inventory' },
+    { url: '/inventory/movements', name: 'Movements' },
 ]
 
 export default function ViewInventoryMovementsPage() {
@@ -31,7 +31,6 @@ export default function ViewInventoryMovementsPage() {
         setLoading(true);
         InventoryMovementsApiHelper.get()
             .then(results => {
-                console.log(results)
                 setItems(results);
                 setLoading(false);
             })

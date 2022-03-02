@@ -17,7 +17,6 @@ const menu = [
       { route: '/admin/accounts', name: 'Manage Accounts' },
       { route: '/admin/companyDetails', name: 'Company Details' },
       { route: '/admin/logs', name: 'Logs' },
-      { route: '/admin/movements', name: 'Inv. Movements' },
     ]
   },
   {
@@ -35,6 +34,7 @@ const menu = [
     icon: <InboxOutlined />,
     items: [
       { route: '/inventory/products', name: 'Manage Products' },
+      { route: '/inventory/movements', name: 'Inv. Movements' },
     ]
   },
   {
