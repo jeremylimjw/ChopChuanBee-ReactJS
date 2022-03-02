@@ -116,9 +116,9 @@ export default function ViewSalesOrderPage() {
         })
 
         setLoading(true);
-        SalesOrderApiHelper.update(newSalesOrder)
+        SalesOrderApiHelper.createInventoryMovement(inventoryMovements)
           .then(() => SalesOrderApiHelper.createPayment(payment))
-          .then(() => SalesOrderApiHelper.createInventoryMovement(inventoryMovements))
+          .then(() => SalesOrderApiHelper.update(newSalesOrder))
           .then(() => SalesOrderApiHelper.get({ id: salesOrder.id }))
           .then(results => {
             message.success("Sales Order successfully confirmed!");
