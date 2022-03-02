@@ -17,6 +17,7 @@ import SO1CustomerInfo from './SO1CustomerInfo';
 import SO2Form from './SO2Form';
 import SO3ItemsTable from './SO3ItemsTable';
 import SO4PaymentsTable from './SO4PaymentsTable';
+import SO5DeliveriesTable from './SO5DeliveriesTable';
 
 export default function ViewSalesOrderPage() {
 
@@ -30,7 +31,7 @@ export default function ViewSalesOrderPage() {
     const [loading, setLoading] = useState(false);
     const [salesOrder, setSalesOrder] = useState(null)
     
-    // const [isDeliveryModalVisible, setIsDeliveryModalVisible] = useState(0);
+    const [isDeliveryModalVisible, setIsDeliveryModalVisible] = useState(0);
 
     const breadcrumbs = [
       { url: '/customer/sales', name: 'Customer' },
@@ -273,13 +274,13 @@ export default function ViewSalesOrderPage() {
             loading={loading} 
           />
 
-          {/* <PO5DeliveriesTable 
-            purchaseOrder={salesOrder} 
-            setPurchaseOrder={setSalesOrder} 
+          <SO5DeliveriesTable 
+            salesOrder={salesOrder} 
+            setSalesOrder={setSalesOrder} 
             loading={loading} 
             isModalVisible={isDeliveryModalVisible} 
             setIsModalVisible={setIsDeliveryModalVisible} 
-          /> */}
+          />
 
         </div>
         }

@@ -54,7 +54,7 @@ export class SalesOrder {
 
     isStatus(...args) {
         for (let statusType of args) {
-            if (statusType.id === this.sales_order_status_id) {
+            if (statusType?.id === this.sales_order_status_id) {
                 return true;
             }
         }

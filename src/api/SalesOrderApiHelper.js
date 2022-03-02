@@ -69,4 +69,9 @@ export class SalesOrderApiHelper {
         return axiosObject.post(`/salesOrder/inventory`, { inventory_movements: inventoryMovements })
             .then(res => res.data);
     }
+
+    static async refundInventoryMovement(inventoryMovements) {
+        return axiosObject.post(`/salesOrder/inventory/refund`, { inventory_movements: inventoryMovements })
+            .then(res => res.data);
+    }
 }
