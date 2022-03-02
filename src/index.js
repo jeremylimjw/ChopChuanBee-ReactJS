@@ -70,11 +70,6 @@ const routes = [
         component: <ViewLogsPage />,
         viewAccess: View.ADMIN.name,
       },
-      { 
-        path: 'movements', 
-        component: <ViewInventoryMovementsPage />,
-        viewAccess: View.ADMIN.name,
-      },
     ]
   },
   {
@@ -118,6 +113,11 @@ const routes = [
       { 
         path: 'products/:id', 
         component: <ViewProductPage />,
+        viewAccess: View.INVENTORY.name,
+      },
+      { 
+        path: 'movements', 
+        component: <ViewInventoryMovementsPage />,
         viewAccess: View.INVENTORY.name,
       },
     ]
