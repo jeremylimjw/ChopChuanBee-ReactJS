@@ -27,6 +27,8 @@ import ManageCustomersPage from './components/customer/ManageCustomersPage';
 import ViewCustomerPage from './components/customer/ViewCustomerPage';
 import ManageSOFPsPage from './components/accounting/ManageSOFPsPage';
 import ViewSOFPPage from './components/accounting/ViewSOFPPage';
+import ViewIncomeStatementPage from './components/accounting/ViewIncomeStatementPage';
+import ManageIncomeStatementPage from './components/accounting/ManageIncomeStatementPage';
 
 // Add on more routes here
 const routes = [
@@ -144,6 +146,16 @@ const routes = [
       {
         path: "sofps/:id",
         component: <ViewSOFPPage />,
+        viewAccess: View.ACCOUNTING.name,
+      },
+      {
+        path: "incomeStatements/:id",
+        component: <ViewIncomeStatementPage />,
+        viewAccess: View.ACCOUNTING.name,
+      },
+      {
+        path: "incomeStatements",
+        component: <ManageIncomeStatementPage />,
         viewAccess: View.ACCOUNTING.name,
       },
     ],

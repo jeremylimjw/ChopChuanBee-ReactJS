@@ -98,4 +98,80 @@ export class AccountingAPIHelper {
         })
         .then((res) => res.data)
     }
+
+    static async getAllIncomeStatements() {
+      const params = {
+        order_by: 'created_at_desc'
+      };
+      return axiosObject.get("/accounting/income_statement", { params })
+        .then((res) => res.data);
+  }
+  static async getIncome(query,start_date, end_date) {
+    const params = {};
+    
+    if (query?.name)
+      params.name = query.name;
+    if (start_date && end_date){
+      params.start_date = start_date;
+      params.end_date = end_date;
+    }
+    // if (query?.deleted === true) {
+    //   params.deleted_date_is_null = 1;
+    // } else if (query?.deleted === false) {
+    //   params.deleted_date_is_nn = 1;
+    // }
+    params.order_by = 'created_at_desc';
+    
+   return axiosObject.get("/accounting/income_statement", { params })
+      .then((res) => res.data);
+}
+  static async createIncome(income) {
+    return axiosObject
+      .post("/accounting/income_statement", income)
+      .then((res) => res.data)
+  }
+
+  static async getIncomeStatementById(id) {
+    return axiosObject.get("/accounting/income_statement", { params: { id: id } })
+      .then((res) => res.data);
+  }
+
+  static async deactivateIncomeStatement(id) {
+    return axiosObject.post("/accounting/income_statement/deactivate", { id: id })
+      .then((res) => res.data);
+  }
+
+  static async activateIncomeStatement(id) {
+    return axiosObject.post("/accounting/income_statement/activate", { id: id })
+      .then((res) => res.data);
+  }
+
+  static async updateIncomeStatement(income) {
+    return axiosObject
+      .put("/accounting/income_statement", {
+        id: income.id, 
+        name: income.name,
+        revenue: income.revenue,
+        less_cost_of_goods_sold: income.less_cost_of_goods_sold,
+        less_customer_sales_return:income.less_customer_sales_return,
+        gain_on_sale_of_asset:income.gain_on_sale_of_asset,
+        other_income_1:income.other_income_1,
+        other_income_2:income.other_income_2,
+        damaged_inventory:income.damaged_inventory,
+        salary_expense:income.salary_expense,
+        interest_expense:income.interest_expense,
+        tax_expense:income.tax_expense,
+        warranty_expense:income.warranty_expense,
+        rental_expense:income.rental_expense,
+        advertising_expense:income.advertising_expense,
+        commissions_expense:income.commissions_expense,
+        other_expense_1:income.other_expense_1,
+        other_expense_2:income.other_expense_2,
+        loss_on_sale_of_asset:income.loss_on_sale_of_asset,
+        start_date:income.start_date,
+        end_date:income.end_date
+      })
+      .then((res) => res.data)
+  }
+
 }

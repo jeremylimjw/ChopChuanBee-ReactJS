@@ -4,8 +4,9 @@ import { PlusOutlined, MinusOutlined } from "@ant-design/icons/lib/icons";
 import { useApp } from "../../../providers/AppProvider";
 import { AccountingAPIHelper } from "../../../api/AccountingAPIHelper";
 import { REQUIRED } from "../../../utilities/form";
+import moment from 'moment';
 
-export default function NewSOFPModal({ SOFPs, setSOFPs, isModalVisible, setIsModalVisible }) {
+export default function NewIncomeStatementModal({ incomes, setIncomes, isModalVisible, setIsModalVisible }) {
     const { handleHttpError } = useApp();
 
     const [loading, setLoading] = useState(false);
@@ -19,11 +20,17 @@ export default function NewSOFPModal({ SOFPs, setSOFPs, isModalVisible, setIsMod
     async function handleOk() {
         try {
           const values = await form.validateFields();
+            const [startDate, endDate] = values.dateRange
+            const incomeStatement = {
+              name: values.name,
+              start_date: startDate.format('YYYY-MM-DD HH:mm:ss'),
+              end_date: endDate.format('YYYY-MM-DD HH:mm:ss'),
+            }
           setLoading(true);
-          AccountingAPIHelper.createSOFP(values)
-            .then(newSOFP => {
-              message.success('Statement of Financial Position has been successfully created!')
-              setSOFPs([newSOFP, ...SOFPs]);
+          AccountingAPIHelper.createIncome(incomeStatement)
+            .then(newIncome => {
+              message.success('Income Statement has been successfully created!')
+              setIncomes([newIncome, ...incomes]);
               setLoading(false);
               setIsModalVisible(false);
               form.resetFields();
@@ -35,7 +42,7 @@ export default function NewSOFPModal({ SOFPs, setSOFPs, isModalVisible, setIsMod
 
     return(
         <Modal
-            title="Create A SOFP"
+            title="Create A Income Statement"
             visible={isModalVisible}
             onCancel={() => setIsModalVisible(false)}
             onOk={handleOk} 
@@ -52,13 +59,14 @@ export default function NewSOFPModal({ SOFPs, setSOFPs, isModalVisible, setIsMod
                 >
                     <Input />
                 </Form.Item>
-                <Form.Item
-                    rules={[REQUIRED]}
-                    label="Date"
-                    name="end_date"
-                >
-                    <DatePicker />
-                </Form.Item>
+              
+               
+            <Form.Item label='Date' name='dateRange' rules={[REQUIRED]}>
+            <DatePicker.RangePicker style={{ width: '100%' }} allowClear={false}
+                placeholder={['Start Date', 'End Date']}
+            
+            />
+            </Form.Item>
             </Form>
 
         </Modal>
