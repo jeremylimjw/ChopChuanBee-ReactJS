@@ -17,6 +17,7 @@ export default function SO2Form({ form, salesOrder, setSalesOrder, loading, save
 
     const [showGstRate, setShowGstRate] = useState(salesOrder.has_gst === 2 || salesOrder.has_gst === 3);
     const [showPaymentMethod, setShowPaymentMethod] = useState(salesOrder.payment_term_id === PaymentTerm.CASH.id);
+    const [showDelivery, setShowDelivery] = useState(salesOrder.has_delivery);
     const [chargedUnders, setChargedUnders] = useState([]);
 
     useEffect(() => {
@@ -31,6 +32,9 @@ export default function SO2Form({ form, salesOrder, setSalesOrder, loading, save
     function onValuesChange(field) {
         if (field.payment_term_id) {
             setShowPaymentMethod(field.payment_term_id === PaymentTerm.CASH.id);
+        }
+        if (field.has_delivery != null) {
+            setShowDelivery(field.has_delivery);
         }
 
         // For real-time update of PO calculations
@@ -118,6 +122,27 @@ export default function SO2Form({ form, salesOrder, setSalesOrder, loading, save
                 <Form.Item label="Remarks" name="remarks">
                     <TextArea disabled={!salesOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED)} />
                 </Form.Item>
+
+                <Form.Item label="Delivery" name="has_delivery" rules={[REQUIRED]}>
+                    <Radio.Group disabled={!salesOrder.isStatus(POStatus.PENDING)}>
+                        <Radio value={false}>No</Radio>
+                        <Radio value={true}>Yes</Radio>
+                    </Radio.Group>
+                </Form.Item>
+
+                {showDelivery &&
+                    <>
+                        <Form.Item label="Delivery Address" name="delivery_address" rules={[REQUIRED]}>
+                            <Input disabled={!salesOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED)} />
+                        </Form.Item>
+                        <Form.Item label="Delivery Postal Code" name="delivery_postal_code" rules={[REQUIRED]}>
+                            <Input disabled={!salesOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED)} />
+                        </Form.Item>
+                        <Form.Item label="Delivery Remarks" name="delivery_remarks">
+                            <TextArea disabled={!salesOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED)} />
+                        </Form.Item>
+                    </>
+                }
 
                 {hasWriteAccessTo(View.CRM.id) &&
                 <Form.Item wrapperCol={{ offset: 6 }}>

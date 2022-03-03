@@ -22,7 +22,6 @@ export default function NewDeliveryOrderModal({ salesOrder, setSalesOrder, isMod
             top_up: 0, 
             total_balance: item.inventory_movements.reduce((prev, current) => prev += -current.quantity, 0),
         }))
-        console.log(newItems)
         setItems(newItems);
     }, [salesOrder, isModalVisible])
   

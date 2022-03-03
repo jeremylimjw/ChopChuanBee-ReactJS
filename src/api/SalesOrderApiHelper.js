@@ -37,8 +37,13 @@ export class SalesOrderApiHelper {
             offset: salesOrder.offset,
             remarks: salesOrder.remarks,
             payment_term_id: salesOrder.payment_term_id,
+            payment_method_id: salesOrder.payment_method_id,
             sales_order_items: salesOrder.sales_order_items,
             sales_order_status_id: salesOrder.sales_order_status_id, 
+            has_delivery: salesOrder.has_delivery,
+            delivery_address: salesOrder.delivery_address,
+            delivery_postal_code: salesOrder.delivery_postal_code,
+            delivery_remarks: salesOrder.delivery_remarks,
         })
         .then(res => res.data);
     }
@@ -49,6 +54,11 @@ export class SalesOrderApiHelper {
             sales_order_status_id: salesOrder.sales_order_status_id 
         })
         .then(res => res.data);
+    }
+    
+    static async confirmOrder(salesOrder) {
+        return axiosObject.post(`/salesOrder/confirm`, { id: salesOrder.id })
+            .then(res => res.data);
     }
     
     static async closeOrder(salesOrder) {

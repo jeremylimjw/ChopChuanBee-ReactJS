@@ -48,6 +48,9 @@ export default function NewSalesOrderPage() {
       gst_rate: selectedCustomer.charged_under?.gst_rate || 0,
       charged_under_id: selectedCustomer.charged_under?.id,
       show_gst: selectedCustomer.gst_show,
+      has_delivery: false,
+      delivery_address: selectedCustomer.address,
+      delivery_postal_code: selectedCustomer.postal_code,
     }
 
     // Copy details from reorder if any
@@ -60,6 +63,9 @@ export default function NewSalesOrderPage() {
       salesOrder.payment_method_id = copy.payment_method_id;
       salesOrder.show_gst = copy.show_gst;
       salesOrder.charged_under_id = copy.charged_under?.id;
+      salesOrder.has_delivery = copy.has_delivery;
+      salesOrder.delivery_address = copy.address;
+      salesOrder.delivery_postal_code = copy.postal_code;
     }
 
     SalesOrderApiHelper.create(salesOrder)

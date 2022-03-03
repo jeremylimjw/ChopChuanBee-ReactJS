@@ -3,7 +3,6 @@ import { Button, Form, message, Popconfirm, Progress, Space, Typography } from '
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router';
 import { SalesOrderApiHelper } from '../../../api/SalesOrderApiHelper';
-import { AccountingType } from '../../../enums/AccountingType';
 import { MovementType } from '../../../enums/MovementType';
 import { PaymentMethod } from '../../../enums/PaymentMethod';
 import { PaymentTerm } from '../../../enums/PaymentTerm';
@@ -51,7 +50,9 @@ export default function ViewSalesOrderPage() {
         .catch(handleHttpError)
     }, [id, handleHttpError, navigate]);
 
-    function saveForLater() {
+
+    // Save a sales order
+    async function saveForLater(showSuccessMessage = true) {
       const values = form.getFieldsValue();
       if (salesOrder.sales_order_items.filter(x => x.product == null).length > 0) {
         message.error('Each order item must have a product selected.')
@@ -59,26 +60,23 @@ export default function ViewSalesOrderPage() {
       }
       const newValues = {...salesOrder, ...values};
 
-      setLoading(true);
-      SalesOrderApiHelper.update(newValues)
-        .then(() => {
+      try {
+        await SalesOrderApiHelper.update(newValues);
+        if (showSuccessMessage) {
           message.success("Sales Order successfully updated!");
-          setSalesOrder(new SalesOrder(newValues));
-          setLoading(false);
-        })
-        .catch(handleHttpError)
-        .catch(() => setLoading(false));
+        }
+        setSalesOrder(new SalesOrder(newValues));
+      } catch (err) {
+        handleHttpError(err);
+      }
+
+      setLoading(false);
     }
 
-    async function convertToInvoice() {
+    // Confirm a sales order
+    async function confirmOrder() {
       try {
         const values = await form.validateFields();
-
-        // Validation
-        if (salesOrder.sales_order_items.filter(x => x.product == null).length > 0) {
-          message.error('Each order item must have a product selected.')
-          return;
-        }
         for (let item of salesOrder.sales_order_items) {
           if (item.unit_price == null) {
             message.error('Each order item must have a unit price.')
@@ -90,40 +88,16 @@ export default function ViewSalesOrderPage() {
           }
         }
 
+        // Update sales order values first
+        await saveForLater(false);
+
         const newSalesOrder = new SalesOrder({...salesOrder, ...values});
-        newSalesOrder.sales_order_status_id = SOStatus.COMPLETED.id;
-
-        const payment = {
-          sales_order_id: salesOrder.id, 
-          movement_type_id: MovementType.SALE.id,
-        }
-        if (newSalesOrder.payment_term_id === PaymentTerm.CASH.id) {
-          payment.amount = newSalesOrder.getOrderTotal();
-          payment.payment_method_id = newSalesOrder.payment_method_id;
-        } else if (newSalesOrder.payment_term_id === PaymentTerm.CREDIT.id) {
-          payment.amount = -newSalesOrder.getOrderTotal();
-          payment.accounting_type_id = AccountingType.RECEIVABLE.id;
-        }
-
-        const inventoryMovements = salesOrder.sales_order_items.map(x => {
-          const movement = {
-            product_id: x.product_id,
-            sales_order_item_id: x.id,
-            quantity: -x.quantity,
-            unit_price: x.unit_price*(1+salesOrder.gst_rate/100),
-            movement_type_id: MovementType.SALE.id,
-          }
-          return movement;
-        })
 
         setLoading(true);
-        SalesOrderApiHelper.createInventoryMovement(inventoryMovements)
-          .then(() => SalesOrderApiHelper.createPayment(payment))
-          .then(() => SalesOrderApiHelper.update(newSalesOrder))
-          .then(() => SalesOrderApiHelper.get({ id: salesOrder.id }))
-          .then(results => {
+        SalesOrderApiHelper.confirmOrder(newSalesOrder)
+          .then(result => {
             message.success("Sales Order successfully confirmed!");
-            setSalesOrder(new SalesOrder(results[0]));
+            setSalesOrder(new SalesOrder(result));
             setLoading(false);
           })
           .catch(handleHttpError)
@@ -133,6 +107,8 @@ export default function ViewSalesOrderPage() {
 
     }
 
+
+    // Close a sales order
     async function closeOrder() {
       try {
         const values = await form.validateFields();
@@ -154,7 +130,9 @@ export default function ViewSalesOrderPage() {
 
       } catch (err) { }
     }
+    
 
+    // Cancel a sales order
     function cancelOrder() {
       const payment = {
         sales_order_id: salesOrder.id,
@@ -247,7 +225,7 @@ export default function ViewSalesOrderPage() {
                 <Button icon={<SaveOutlined />} disabled={loading || !salesOrder.isStatus(SOStatus.PENDING, SOStatus.COMPLETED)} onClick={saveForLater}>Save for later</Button>
                 
                 { salesOrder.isStatus(SOStatus.PENDING) && 
-                  <Popconfirm title="Are you sure?" onConfirm={convertToInvoice} disabled={loading}>
+                  <Popconfirm title="Are you sure?" onConfirm={confirmOrder} disabled={loading}>
                     <Button type="primary" icon={<FileTextOutlined />} disabled={loading}>Confirm Order</Button>
                   </Popconfirm>
                 }
