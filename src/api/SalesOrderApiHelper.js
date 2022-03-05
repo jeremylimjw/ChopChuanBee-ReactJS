@@ -69,6 +69,11 @@ export class SalesOrderApiHelper {
         })
         .then(res => res.data);
     }
+    
+    static async cancelOrder(salesOrder) {
+        return axiosObject.post(`/salesOrder/cancel`, { id: salesOrder.id })
+            .then(res => res.data);
+    }
 
     static async createPayment(payment) {
         return axiosObject.post(`/salesOrder/payment`, payment)

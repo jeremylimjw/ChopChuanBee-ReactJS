@@ -95,9 +95,9 @@ export default function ViewSalesOrderPage() {
 
         setLoading(true);
         SalesOrderApiHelper.confirmOrder(newSalesOrder)
-          .then(result => {
+          .then(updatedSalesOrder => {
             message.success("Sales Order successfully confirmed!");
-            setSalesOrder(new SalesOrder(result));
+            setSalesOrder(new SalesOrder(updatedSalesOrder));
             setLoading(false);
           })
           .catch(handleHttpError)
@@ -134,32 +134,11 @@ export default function ViewSalesOrderPage() {
 
     // Cancel a sales order
     function cancelOrder() {
-      const payment = {
-        sales_order_id: salesOrder.id,
-        amount: salesOrder.isPaymentTerm(PaymentTerm.CREDIT) ? +salesOrder.getPaymentsTotal() : -salesOrder.getPaymentsTotal(),
-        movement_type_id: MovementType.REFUND.id,
-        accounting_type_id: salesOrder.isPaymentTerm(PaymentTerm.CREDIT) ? 1 : null,
-        payment_method_id: PaymentMethod.CASH.id,
-      }
-
-      const inventoryMovements = salesOrder.sales_order_items.map(x => {
-        const movement = {
-            sales_order_item_id: x.id,
-            quantity: x.inventory_movements.reduce((prev, current) => prev + current.quantity, 0),
-            unit_price: x.unit_price*(1+salesOrder.gst_rate/100),
-            movement_type_id: MovementType.REFUND.id,
-        }
-        return movement;
-      })
-      
       setLoading(true);
-      SalesOrderApiHelper.createPayment(payment)
-        .then(() => SalesOrderApiHelper.createInventoryMovement(inventoryMovements))
-        .then(() => SalesOrderApiHelper.updateStatusOnly({...salesOrder, sales_order_status_id: SOStatus.CANCELLED.id}))
-        .then(() => SalesOrderApiHelper.get({ id: salesOrder.id }))
-        .then(results => {
+      SalesOrderApiHelper.cancelOrder(salesOrder)
+        .then(updatedSalesOrder => {
           message.success("Sales Order successfully cancelled!");
-          setSalesOrder(new SalesOrder(results[0]));
+          setSalesOrder(new SalesOrder(updatedSalesOrder));
           setLoading(false);
         })
         .catch(handleHttpError)
