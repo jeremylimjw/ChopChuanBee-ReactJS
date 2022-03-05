@@ -3,9 +3,6 @@ import { Button, Form, message, Popconfirm, Progress, Space, Typography } from '
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router';
 import { SalesOrderApiHelper } from '../../../api/SalesOrderApiHelper';
-import { MovementType } from '../../../enums/MovementType';
-import { PaymentMethod } from '../../../enums/PaymentMethod';
-import { PaymentTerm } from '../../../enums/PaymentTerm';
 import { SOStatus } from '../../../enums/SalesOrderStatus';
 import { View } from '../../../enums/View';
 import { SalesOrder } from '../../../models/SalesOrder';
