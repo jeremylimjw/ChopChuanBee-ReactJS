@@ -64,8 +64,8 @@ export default function NewSalesOrderPage() {
       salesOrder.show_gst = copy.show_gst;
       salesOrder.charged_under_id = copy.charged_under?.id;
       salesOrder.has_delivery = copy.has_delivery;
-      salesOrder.delivery_address = copy.address;
-      salesOrder.delivery_postal_code = copy.postal_code;
+      salesOrder.delivery_address = copy.delivery_address;
+      salesOrder.delivery_postal_code = copy.delivery_postal_code;
     }
 
     SalesOrderApiHelper.create(salesOrder)

@@ -48,14 +48,6 @@ export class SalesOrderApiHelper {
         .then(res => res.data);
     }
     
-    static async updateStatusOnly(salesOrder) {
-        return axiosObject.put(`/salesOrder`, { 
-            id: salesOrder.id, 
-            sales_order_status_id: salesOrder.sales_order_status_id 
-        })
-        .then(res => res.data);
-    }
-    
     static async confirmOrder(salesOrder) {
         return axiosObject.post(`/salesOrder/confirm`, { id: salesOrder.id })
             .then(res => res.data);
@@ -77,11 +69,6 @@ export class SalesOrderApiHelper {
 
     static async createPayment(payment) {
         return axiosObject.post(`/salesOrder/payment`, payment)
-            .then(res => res.data);
-    }
-
-    static async createInventoryMovement(inventoryMovements) {
-        return axiosObject.post(`/salesOrder/inventory`, { inventory_movements: inventoryMovements })
             .then(res => res.data);
     }
 

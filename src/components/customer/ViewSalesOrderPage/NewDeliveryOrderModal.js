@@ -2,7 +2,6 @@ import { message, Table } from 'antd';
 import Modal from 'antd/lib/modal/Modal'
 import React, { useEffect, useState } from 'react'
 import { SalesOrderApiHelper } from '../../../api/SalesOrderApiHelper';
-import { MovementType } from '../../../enums/MovementType';
 import { SalesOrder } from '../../../models/SalesOrder';
 import { useApp } from '../../../providers/AppProvider';
 import { CustomCell } from '../../common/CustomCell';
@@ -42,28 +41,10 @@ export default function NewDeliveryOrderModal({ salesOrder, setSalesOrder, isMod
             }
         }
 
-        const inventoryMovements = items.filter(x => x.top_up !== 0).map(x => {
-            let unitCost = 0;
-            for (var i = x.inventory_movements.length - 1; i >= 0; i--) { // iterate backwards
-                if (x.inventory_movements[i].quantity < 0) {
-                    unitCost = x.inventory_movements[i].unit_cost; // if first inventory movement from the bottom of the array has negative quantity, it is the latest
-                    break;
-                }
-            }
-        
-            return {
-                product_id: x.product_id,
-                sales_order_item_id: x.id,
-                quantity: x.top_up,
-                unit_cost: unitCost,
-                movement_type_id: MovementType.REFUND.id,
-            }
-        })
-
-        if (inventoryMovements.length === 0) return;
+        if (items.length === 0) return;
 
         setLoading(true);
-        SalesOrderApiHelper.refundInventoryMovement(inventoryMovements)
+        SalesOrderApiHelper.refundInventoryMovement(items.filter(x => x.top_up > 0))
             .then(newInventoryMovements => {
                 const newSalesOrder = JSON.parse(JSON.stringify(salesOrder));
                 for (let inventoryMovement of newInventoryMovements) {

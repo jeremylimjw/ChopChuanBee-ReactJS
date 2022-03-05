@@ -23,11 +23,11 @@ export default function NewPaymentModal({ salesOrder, setSalesOrder, isModalVisi
         if (salesOrder != null) {
             const remaining_total = salesOrder.getOrderTotal() - salesOrder.getPaymentsTotal();
             setForm({ 
-                amount: remaining_total > 0 ? remaining_total : 0, 
+                amount: isModalVisible === 1 && remaining_total > 0 ? remaining_total : 0, 
                 payment_method_id: 1 
             })
         }
-    }, [salesOrder])
+    }, [isModalVisible, salesOrder])
 
     function renderTitle() {
         switch(isModalVisible) {
@@ -38,35 +38,30 @@ export default function NewPaymentModal({ salesOrder, setSalesOrder, isModalVisi
     }
 
     function handleFormSubmit() {
-        const payment = { ...form, sales_order_id: salesOrder.id };
-
         if (isModalVisible === 1) { // Make payment
             // Validation
             const max = salesOrder.getOrderTotal() - salesOrder.getPaymentsTotal();
-            if (payment.amount > max) {
+            if (form.amount > max) {
                 message.error('Cannot pay more than the balance amount.')
                 return;
             }
-
-            payment.movement_type_id = MovementType.SALE.id;
-            payment.amount = +payment.amount;
         } else if (isModalVisible === 2) { // Make refund
             // Validation
             const max = salesOrder.getPaymentsTotal();
-            if (payment.amount > max) {
+            if (form.amount > max) {
                 message.error('Cannot refund more than amount paid.')
                 return;
             }
-
-            payment.movement_type_id = MovementType.REFUND.id;
-            payment.amount = -payment.amount;
         }
 
-        if (salesOrder.isPaymentTerm(PaymentTerm.CREDIT)) {
-            payment.accounting_type_id = AccountingType.RECEIVABLE.id;
+        const body = {
+            sales_order_id: salesOrder.id,
+            amount: form.amount,
+            type: isModalVisible === 1 ? 'NEW' : 'REFUND',
+            payment_method_id: form.payment_method_id,
         }
 
-        SalesOrderApiHelper.createPayment(payment)
+        SalesOrderApiHelper.createPayment(body)
             .then(newPayment => {
                 const newPayments = [...salesOrder.payments];
                 newPayments.push(newPayment);
