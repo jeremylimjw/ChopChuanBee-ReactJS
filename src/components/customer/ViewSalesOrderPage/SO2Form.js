@@ -1,8 +1,8 @@
 import { SaveOutlined } from '@ant-design/icons/lib/icons'
-import { Button, Form, Input, InputNumber, Radio, Select } from 'antd'
+import { Button, Form, Input, InputNumber, Radio, Select, Typography } from 'antd'
 import TextArea from 'antd/lib/input/TextArea'
 import React, { useEffect, useState } from 'react'
-import { PaymentMethod } from '../../../enums/PaymentMethod'
+import { getPaymentMethodTag, PaymentMethod } from '../../../enums/PaymentMethod'
 import { POStatus } from '../../../enums/PurchaseOrderStatus'
 import { PaymentTerm } from '../../../enums/PaymentTerm'
 import { REQUIRED } from '../../../utilities/form'
@@ -77,69 +77,116 @@ export default function SO2Form({ form, salesOrder, setSalesOrder, loading, save
                 </Form.Item>
 
                 <Form.Item name="charged_under" hidden><Input /></Form.Item>
-                <Form.Item name="charged_under_id" label="Charged Under" rules={[REQUIRED]}>
-                    <Select style={{ width: 180 }} onSelect={handleChargedUnderChange} disabled={!salesOrder.isStatus(POStatus.PENDING)}>
-                        <Select.Option value={null}>None</Select.Option>
-                        { chargedUnders.map((x, idx) => <Select.Option key={idx} value={x.id}>{x.name}</Select.Option>)}
-                    </Select>
+                <Form.Item name="charged_under_id" label="Charged Under" rules={salesOrder.isStatus(POStatus.PENDING) ? [REQUIRED] : []}>
+                    { salesOrder.isStatus(POStatus.PENDING) ? 
+                        <Select style={{ width: 180 }} onSelect={handleChargedUnderChange}>
+                            <Select.Option value={null}>None</Select.Option>
+                            { chargedUnders.map((x, idx) => <Select.Option key={idx} value={x.id}>{x.name}</Select.Option>)}
+                        </Select>
+                    :
+                        <Typography.Text>{salesOrder.charged_under.name}</Typography.Text>
+                    }
                 </Form.Item>
 
-                <Form.Item label="GST" name="has_gst" rules={[REQUIRED]}>
-                    <Radio.Group disabled={!salesOrder.isStatus(POStatus.PENDING)}>
-                        <Radio value={1}>No</Radio>
-                        <Radio value={2}>Yes</Radio>
-                    </Radio.Group>
+                <Form.Item label="GST" name="has_gst" rules={ salesOrder.isStatus(POStatus.PENDING) ? [REQUIRED] : []}>
+                    { salesOrder.isStatus(POStatus.PENDING) ? 
+                        <Radio.Group>
+                            <Radio value={1}>No</Radio>
+                            <Radio value={2}>Yes</Radio>
+                        </Radio.Group>
+                    :
+                        <Typography.Text>{salesOrder.has_gst ? 'Yes' : 'No'}</Typography.Text>
+                    }
                 </Form.Item>
 
                 {showGstRate &&
                 <>
-                    <Form.Item label="GST Rate" name="gst_rate" rules={[REQUIRED]}>
-                        <InputNumber min={0} addonAfter="%" style={{ width: 100 }} disabled={!salesOrder.isStatus(POStatus.PENDING)} />
+                    <Form.Item label="GST Rate" name="gst_rate" rules={salesOrder.isStatus(POStatus.PENDING) ? [REQUIRED] : []}>
+                        {salesOrder.isStatus(POStatus.PENDING) ? 
+                            <InputNumber min={0} addonAfter="%" style={{ width: 100 }} />
+                        :
+                            <Typography.Text>{salesOrder.gst_rate} %</Typography.Text>
+                        }
                     </Form.Item>
-                    <Form.Item label="Show GST" name="show_gst" rules={[REQUIRED]}>
-                        <Radio.Group disabled={!salesOrder.isStatus(POStatus.PENDING)}>
-                            <Radio value={false}>No</Radio>
-                            <Radio value={true}>Yes</Radio>
-                        </Radio.Group>
+
+                    <Form.Item label="Show GST" name="show_gst" rules={salesOrder.isStatus(POStatus.PENDING) ? [REQUIRED] : []}>
+                        {salesOrder.isStatus(POStatus.PENDING) ? 
+                            <Radio.Group>
+                                <Radio value={false}>No</Radio>
+                                <Radio value={true}>Yes</Radio>
+                            </Radio.Group>
+                        :
+                            <Typography.Text>{salesOrder.show_gst ? 'Yes' : 'No'}</Typography.Text>
+                        }
                     </Form.Item>
                 </>
                 }
 
-                <Form.Item label="Payment Term" name="payment_term_id" rules={[REQUIRED]}>
-                    <Radio.Group disabled={!salesOrder.isStatus(POStatus.PENDING)}>
-                        {Object.keys(PaymentTerm).map((key, idx) => <Radio key={idx} value={PaymentTerm[key].id}>{PaymentTerm[key].name}</Radio>)}
-                    </Radio.Group>
+                <Form.Item label="Payment Term" name="payment_term_id" rules={salesOrder.isStatus(POStatus.PENDING) ? [REQUIRED] : []}>
+                    {salesOrder.isStatus(POStatus.PENDING) ? 
+                        <Radio.Group>
+                            {Object.keys(PaymentTerm).map((key, idx) => <Radio key={idx} value={PaymentTerm[key].id}>{PaymentTerm[key].name}</Radio>)}
+                        </Radio.Group>
+                    :
+                        <Typography.Text>{salesOrder.getPaymentTermTag()}</Typography.Text>
+                    }
                 </Form.Item>
 
                 {showPaymentMethod &&
-                    <Form.Item label="Payment Method" name="payment_method_id" rules={[REQUIRED]}>
-                        <Select style={{ width: 150 }} disabled={!salesOrder.isStatus(POStatus.PENDING)}>
-                            {Object.keys(PaymentMethod).map((key, idx) => <Select.Option key={idx} value={PaymentMethod[key].id}>{PaymentMethod[key].name}</Select.Option>)}
-                        </Select>
+                    <Form.Item label="Payment Method" name="payment_method_id" rules={salesOrder.isStatus(POStatus.PENDING) ? [REQUIRED] : []}>
+                        {salesOrder.isStatus(POStatus.PENDING) ? 
+                            <Select style={{ width: 150 }}>
+                                {Object.keys(PaymentMethod).map((key, idx) => <Select.Option key={idx} value={PaymentMethod[key].id}>{PaymentMethod[key].name}</Select.Option>)}
+                            </Select>
+                        :
+                            <Typography.Text>{getPaymentMethodTag(salesOrder.payment_method_id)}</Typography.Text>
+                        }
                     </Form.Item>
                 }
 
                 <Form.Item label="Remarks" name="remarks">
-                    <TextArea disabled={!salesOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED)} />
+                    {salesOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED) ? 
+                        <TextArea />
+                    :
+                        <Typography.Text>{salesOrder.remarks || '-'}</Typography.Text>
+                    }
                 </Form.Item>
 
-                <Form.Item label="Delivery" name="has_delivery" rules={[REQUIRED]}>
-                    <Radio.Group disabled={!salesOrder.isStatus(POStatus.PENDING)}>
-                        <Radio value={false}>No</Radio>
-                        <Radio value={true}>Yes</Radio>
-                    </Radio.Group>
+                <Form.Item label="Delivery" name="has_delivery" rules={salesOrder.isStatus(POStatus.PENDING) ? [REQUIRED] : []}>
+                    {salesOrder.isStatus(POStatus.PENDING) ? 
+                        <Radio.Group>
+                            <Radio value={false}>No</Radio>
+                            <Radio value={true}>Yes</Radio>
+                        </Radio.Group>
+                    :
+                        <Typography.Text>{salesOrder.has_delivery ? 'Yes' : 'No'}</Typography.Text>
+                    }
                 </Form.Item>
 
                 {showDelivery &&
                     <>
-                        <Form.Item label="Delivery Address" name="delivery_address" rules={[REQUIRED]}>
-                            <Input disabled={!salesOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED)} />
+                        <Form.Item label="Delivery Address" name="delivery_address" rules={salesOrder.isStatus(POStatus.PENDING) ? [REQUIRED] : []}>
+                            {salesOrder.isStatus(POStatus.PENDING) ? 
+                                <Input />
+                            :
+                                <Typography.Text>{salesOrder.delivery_address}</Typography.Text>
+                            }
                         </Form.Item>
-                        <Form.Item label="Delivery Postal Code" name="delivery_postal_code" rules={[REQUIRED]}>
-                            <Input disabled={!salesOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED)} />
+
+                        <Form.Item label="Delivery Postal Code" name="delivery_postal_code" rules={salesOrder.isStatus(POStatus.PENDING) ? [REQUIRED] : []}>
+                            {salesOrder.isStatus(POStatus.PENDING) ? 
+                                <Input />
+                            :
+                                <Typography.Text>{salesOrder.delivery_postal_code}</Typography.Text>
+                            }
                         </Form.Item>
+
                         <Form.Item label="Delivery Remarks" name="delivery_remarks">
-                            <TextArea disabled={!salesOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED)} />
+                            {salesOrder.isStatus(POStatus.PENDING) ? 
+                                <TextArea />
+                            :
+                                <Typography.Text>{salesOrder.delivery_remarks || '-'}</Typography.Text>
+                            }
                         </Form.Item>
                     </>
                 }
