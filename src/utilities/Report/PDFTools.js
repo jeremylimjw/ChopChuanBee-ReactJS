@@ -1,7 +1,4 @@
 import moment from "moment";
-import pdfMake from "pdfmake/build/pdfmake";
-import pdfFonts from "pdfmake/build/vfs_fonts";
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export class PDFTools {
 
@@ -61,7 +58,7 @@ export class PDFTools {
         body: []
       },
       style: {
-        margin: 10
+        margin: [0, 20, 0, 0]
       }
     }
     tableHeaders.map((val) => {
@@ -70,10 +67,11 @@ export class PDFTools {
     tableComponent.table.body.push(tableHeaders)
     data.map((row) => {
       row.map((val) => {
-        return this.formatText(val, { fontSize: '12' })
+        return this.formatText(val, { fontSize: '10' })
       })
       tableComponent.table.body.push(row)
     })
+
     return tableComponent
   }
 
@@ -82,6 +80,20 @@ export class PDFTools {
       title: 'PURCHASE ORDER',
       poNum: 'PO_123',
       poDate: moment(new Date())
+    }
+  }
+
+  static generateEmptyBox(width, height) {
+    return {
+      canvas: [{
+        type: 'rect',
+        x: 0,
+        y: 0,
+        w: width,
+        h: height,
+        r: 1,
+        lineWidth: 1
+      }]
     }
   }
 

@@ -1,26 +1,23 @@
+import { message } from "antd";
 import pdfMake from "pdfmake/build/pdfmake";
-import pdfFonts from "pdfmake/build/vfs_fonts";
+import pdfFonts from './vfs_fonts.js'
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
-const A4_REPORT_SIZE = {
-  length: 842,
-  width: 595
+pdfMake.fonts = {
+  NotoCh: {
+    normal: 'NotoSansSC-Regular.otf',
+    bold: 'NotoSansSC-Bold.otf',
+    italics: 'NotoSans-Italic.ttf',
+    bolditalics: 'NotoSans-BoldItalic.ttf',
+  }
 }
-
-// const fonts = {
-//   Roboto: {
-//     normal: 'fonts/Roboto-Regular.ttf',
-//     bold: 'fonts/Roboto-Medium.ttf',
-//     italics: 'fonts/Roboto-Italic.ttf',
-//     bolditalics: 'fonts/Roboto-MediumItalic.ttf'
-//   }
-// }
 
 const generatePdf = async (doc) => {
   try {
     let pdf = pdfMake.createPdf(doc)
     pdf.open()
   } catch (err) {
+    message.error('Error generating PDF report, please try again')
     console.log(err)
   }
 }
