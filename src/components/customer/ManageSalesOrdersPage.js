@@ -159,7 +159,7 @@ const tableColumns = [
         title: 'Status', 
         key: 'purchase_order_status_id', 
         align: 'center', 
-        width: 100, 
+        width: 120, 
         render: (_, record) => record.getStatusTag(),
         sorter: (a, b) => sortByNumber(a.purchase_order_status_id, b.purchase_order_status_id), 
     },

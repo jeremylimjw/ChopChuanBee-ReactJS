@@ -17,9 +17,8 @@ export default function NS2CustomerMenuTable({ selectedCustomer, selectedProduct
     const [menuItems, setMenuItems] = useState([]);
     const [myPrices, setMyPrices] = useState({});
 
-    const disabledProductsMap = selectedProducts.reduce((prev, current) => ({...prev, [current?.product?.id]: true }), {});
-
-    columns[2].onCell = (record) => ({ type: 'product_select', toggleable: 'true', field: 'product', record, handleSave, products: menuItems, disabledProductsMap });
+    columns[1].onCell = (record) => ({ type: 'alias_select', toggleable: 'true', field: 'product', record, handleSave, menuItems: menuItems, menuItemsMap: menuItems.reduce((prev, current) => ({...prev, [current.id]: current }), {}) });
+    columns[2].onCell = (record) => ({ type: 'product_select', toggleable: 'true', field: 'product', record, handleSave, products: menuItems });
     columns[5].render = (product) => product?.id ? (myPrices[product.id] ? `$${(+myPrices[product.id]).toFixed(2)}` : '-') : '-';
     columns[5].sorter = (a, b) => sortByNumber(+myPrices[a.product?.id] || 0, +myPrices[b.product?.id] || 0);
     columns[6].onCell = (record) => ({ type: 'input_number', field: 'quantity', record, handleSave });

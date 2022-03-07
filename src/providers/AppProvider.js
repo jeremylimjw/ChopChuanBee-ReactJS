@@ -52,7 +52,11 @@ export function AppProvider({ children }) {
         if (error.response) {
             // The request was made and the server responded with a status code
             // that falls out of the range of 2xx
-            if (error.response.status === 333) {
+            if (error.response.status === 401) {
+                removeSession();
+                message.error(error.response.data);
+                throw Error(error);
+            } else if (error.response.status === 333) {
                 removeSession();
                 message.error('Login session timed out. Please login again.');
                 throw Error('Login session timed out. Please login again.');

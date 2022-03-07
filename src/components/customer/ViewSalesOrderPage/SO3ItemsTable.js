@@ -68,7 +68,7 @@ export default function SO3ItemsTable({ salesOrder, setSalesOrder, loading, setL
             quantity: 0,
             unit_price: null,
             inventory_movements: [],
-            purchase_order_id: salesOrder?.id,
+            sales_order_id: salesOrder?.id,
         }
         setSalesOrder(new SalesOrder({ ...salesOrder, sales_order_items: [newRow, ...salesOrder.sales_order_items] }));
     }

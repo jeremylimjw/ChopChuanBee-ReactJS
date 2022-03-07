@@ -17,9 +17,7 @@ export default function NP2SupplierMenuTable({ selectedSupplier, selectedProduct
   const [menuItems, setMenuItems] = useState([]);
   const [myPrices, setMyPrices] = useState({});
 
-  const disabledProductsMap = selectedProducts.reduce((prev, current) => ({...prev, [current?.product?.id]: true }), {});
-
-  columns[1].onCell = (record) => ({ type: 'product_select', toggleable: 'true', field: 'product', record, handleSave, products: menuItems, disabledProductsMap });
+  columns[1].onCell = (record) => ({ type: 'product_select', toggleable: 'true', field: 'product', record, handleSave, products: menuItems });
   columns[4].render = (product) => product?.id ? (myPrices[product.id] ? `$${(+myPrices[product.id]).toFixed(2)}` : '-') : '-';
   columns[4].sorter = (a, b) => sortByNumber(+myPrices[a.product?.id] || 0, +myPrices[b.product?.id] || 0);
   columns[5].onCell = (record) => ({ type: 'input_number', field: 'quantity', record, handleSave });

@@ -37,18 +37,20 @@ export class SalesOrderApiHelper {
             offset: salesOrder.offset,
             remarks: salesOrder.remarks,
             payment_term_id: salesOrder.payment_term_id,
+            payment_method_id: salesOrder.payment_method_id,
             sales_order_items: salesOrder.sales_order_items,
             sales_order_status_id: salesOrder.sales_order_status_id, 
+            has_delivery: salesOrder.has_delivery,
+            delivery_address: salesOrder.delivery_address,
+            delivery_postal_code: salesOrder.delivery_postal_code,
+            delivery_remarks: salesOrder.delivery_remarks,
         })
         .then(res => res.data);
     }
     
-    static async updateStatusOnly(salesOrder) {
-        return axiosObject.put(`/salesOrder`, { 
-            id: salesOrder.id, 
-            sales_order_status_id: salesOrder.sales_order_status_id 
-        })
-        .then(res => res.data);
+    static async confirmOrder(salesOrder) {
+        return axiosObject.post(`/salesOrder/confirm`, { id: salesOrder.id })
+            .then(res => res.data);
     }
     
     static async closeOrder(salesOrder) {
@@ -59,14 +61,19 @@ export class SalesOrderApiHelper {
         })
         .then(res => res.data);
     }
+    
+    static async cancelOrder(salesOrder) {
+        return axiosObject.post(`/salesOrder/cancel`, { id: salesOrder.id })
+            .then(res => res.data);
+    }
 
     static async createPayment(payment) {
         return axiosObject.post(`/salesOrder/payment`, payment)
             .then(res => res.data);
     }
 
-    static async createInventoryMovement(inventoryMovements) {
-        return axiosObject.post(`/salesOrder/inventory`, { inventory_movements: inventoryMovements })
+    static async refundInventoryMovement(inventoryMovements) {
+        return axiosObject.post(`/salesOrder/inventory/refund`, { inventory_movements: inventoryMovements })
             .then(res => res.data);
     }
 }

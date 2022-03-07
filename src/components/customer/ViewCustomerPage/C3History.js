@@ -74,7 +74,7 @@ export default function C3History({ customer }) {
                             }
                         </Select>
                     </Form.Item>
-                    <Form.Item name="purchase_order_status_id">
+                    <Form.Item name="sales_order_status_id">
                         <Select style={{ width: 180 }} placeholder="Filter by Status">
                             <Select.Option value={null}>All</Select.Option>
                             {Object.keys(SOStatus).map((key, idx) => 

@@ -150,13 +150,13 @@ const tableColumns = [
         render: (item) => item?.name, align: 'left'
     },
     { 
-        title: 'Quantity', 
+        title: 'Ordered Quantity', 
         dataIndex: 'quantity', 
         key: 'quantity', 
         align: 'center' 
     },
     { 
-        title: 'Total Received', 
+        title: 'Received Quantity', 
         dataIndex: 'total_received', 
         key: 'total_received', 
         align: 'center' 

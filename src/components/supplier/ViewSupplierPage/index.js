@@ -23,7 +23,7 @@ export default function ViewSupplierPage() {
   const [accountPayable, setAccountPayable] = useState(0);
 
   const breadcrumbs = [
-    { url: "/supplier/supplier", name: "Supplier" },
+    { url: "/supplier/suppliers", name: "Supplier" },
     { url: "/supplier/suppliers", name: "Suppliers" },
     { url: `/supplier/suppliers/${supplier?.id}`, name: `${supplier?.company_name}` },
   ];

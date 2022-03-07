@@ -37,6 +37,7 @@ export class PurchaseOrderApiHelper {
             supplier_invoice_id: purchaseOrder.supplier_invoice_id,
             remarks: purchaseOrder.remarks,
             payment_term_id: purchaseOrder.payment_term_id,
+            payment_method_id: purchaseOrder.payment_method_id,
             purchase_order_items: purchaseOrder.purchase_order_items,
             purchase_order_status_id: purchaseOrder.purchase_order_status_id, 
         })

@@ -23,11 +23,11 @@ export default function NewPaymentModal({ purchaseOrder, setPurchaseOrder, isMod
         if (purchaseOrder != null) {
             const remaining_total = purchaseOrder.getOrderTotal() - purchaseOrder.getPaymentsTotal();
             setForm({ 
-                amount: remaining_total > 0 ? remaining_total : 0, 
+                amount: isModalVisible === 1 && remaining_total > 0 ? remaining_total : 0, 
                 payment_method_id: 1 
             })
         }
-    }, [purchaseOrder])
+    }, [isModalVisible, purchaseOrder])
 
     function renderTitle() {
         switch(isModalVisible) {
