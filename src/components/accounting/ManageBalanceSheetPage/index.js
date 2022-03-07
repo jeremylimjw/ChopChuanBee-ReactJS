@@ -10,29 +10,30 @@ import MyLayout from "../../common/MyLayout";
 import MyCard from "../../common/MyCard";
 import MyToolbar from "../../common/MyToolbar";
 import { View } from "../../../enums/View";
-import NewSOFPModal from "./NewSOFPModal";
+import NewBalanceSheetModal from "./NewBalanceSheetModal";
 import { parseDate } from "../../../utilities/datetime";
 import { sortByDate, sortByNumber, sortByString } from "../../../utilities/sorters";
 import { getActiveTag } from "../../../enums/ActivationStatus";
 import { showTotal } from "../../../utilities/table";
 
 const breadcrumbs = [
-    { url: "/accounting/SOFP", name: "Statement of Financial Position" },
+    { url: "/accounting/BalanceSheets", name: "Accounting" },    
+    { url: "/accounting/BalanceSheets", name: "Balance Sheets" },
 ];
 
-export default function ManageSOFPsPage() {
+export default function ManageBalanceSheetPage() {
     const { handleHttpError, hasWriteAccessTo } = useApp();
 
     const [form] = Form.useForm();
     const [loading, setLoading] = useState();
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [SOFPs, setSOFPs] = useState([]);
+    const [BalanceSheets, setBalanceSheets] = useState([]);
 
     useEffect(() => {
         setLoading(true);
-        AccountingAPIHelper.getAllSOFPs()
+        AccountingAPIHelper.getAllBalanceSheets()
           .then(results => {
-            setSOFPs(results);
+            setBalanceSheets(results);
             setLoading(false);
           })
           .catch(handleHttpError)
@@ -45,9 +46,9 @@ export default function ManageSOFPsPage() {
             start_date = moment(form.date[0]).set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toDate();
             end_date = moment(form.date[1]).set({ hour: 23, minute: 59, second: 59, millisecond: 999 }).toDate();
         }
-        AccountingAPIHelper.getSOFP(form, start_date, end_date)
+        AccountingAPIHelper.getBalanceSheet(form, start_date, end_date)
         .then(results => {
-          setSOFPs(results);
+          setBalanceSheets(results);
             setLoading(false);
         })
         .catch(handleHttpError)
@@ -60,9 +61,9 @@ export default function ManageSOFPsPage() {
     }
 
     return (
-        <MyLayout breadcrumbs={breadcrumbs} bannerTitle="Manage Statement of Financial Positions">
+        <MyLayout breadcrumbs={breadcrumbs} bannerTitle="Balance Sheets">
             <MyCard>
-                <MyToolbar title="Statement of Financial Positions">
+                <MyToolbar title="Balance Sheets">
                     <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
                         <Form.Item name="name">
                             <Input placeholder='Search Title' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
@@ -78,7 +79,7 @@ export default function ManageSOFPsPage() {
                 </MyToolbar>
 
                 <Table 
-                    dataSource={SOFPs} 
+                    dataSource={BalanceSheets} 
                     columns={columns} 
                     loading={loading} 
                     rowKey="id" 
@@ -86,7 +87,7 @@ export default function ManageSOFPsPage() {
                 />
             </MyCard>
 
-            <NewSOFPModal SOFPs={SOFPs} setSOFPs={setSOFPs} isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} />
+            <NewBalanceSheetModal BalanceSheets={BalanceSheets} setBalanceSheets={setBalanceSheets} isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} />
 
         </MyLayout>
     );
@@ -97,24 +98,24 @@ const columns = [
         title: 'Created At',
         dataIndex: 'created_at',
         key: 'created_at',
-        width: 150,
+        width: '10%',
         ellipsis: true,
         render: (created_at) => parseDate(created_at),
         sorter: (a, b) => sortByDate(a.created_at, b.created_at),
     },
     {
-        title: 'Title',
+        title: 'Name',
         dataIndex: 'name',
         key: 'name',
-        width: '14%',
+        width: '40%',
         ellipsis: true,
         sorter: (a, b) => sortByString(a.name, b.name),
     },
     {
-        title: 'Date',
+        title: 'End Date',
         dataIndex: 'end_date',
         key: 'end_date',
-        width: 150,
+        width: '10%',
         ellipsis: true,
         render: (end_date) => parseDate(end_date),
         sorter: (a, b) => sortByDate(a.end_date, b.end_date),
@@ -123,7 +124,7 @@ const columns = [
         title: 'Status',
         dataIndex: 'deleted_date',
         key: 'deleted_date',
-        width: 120,
+        width: '10%',
         align: 'center',
         ellipsis: true,
         render: (deleted_date) => getActiveTag(deleted_date),
@@ -133,7 +134,7 @@ const columns = [
         title: "Action",
         dataIndex: "id",
         key: "link",
-        width: 100,
+        width: '10%',
         ellipsis: true,
         render: (id) => <Link to={`./${id}`}>View</Link>,
     },

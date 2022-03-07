@@ -5,7 +5,7 @@ import { useApp } from "../../../providers/AppProvider";
 import { AccountingAPIHelper } from "../../../api/AccountingAPIHelper";
 import { REQUIRED } from "../../../utilities/form";
 
-export default function NewSOFPModal({ SOFPs, setSOFPs, isModalVisible, setIsModalVisible }) {
+export default function NewBalanceSheetModal({ BalanceSheets, setBalanceSheets, isModalVisible, setIsModalVisible }) {
     const { handleHttpError } = useApp();
 
     const [loading, setLoading] = useState(false);
@@ -20,10 +20,10 @@ export default function NewSOFPModal({ SOFPs, setSOFPs, isModalVisible, setIsMod
         try {
           const values = await form.validateFields();
           setLoading(true);
-          AccountingAPIHelper.createSOFP(values)
-            .then(newSOFP => {
-              message.success('Statement of Financial Position has been successfully created!')
-              setSOFPs([newSOFP, ...SOFPs]);
+          AccountingAPIHelper.createBalanceSheet(values)
+            .then(newBalanceSheet => {
+              message.success('Balance Sheet has been successfully created!')
+              setBalanceSheets([newBalanceSheet, ...BalanceSheets]);
               setLoading(false);
               setIsModalVisible(false);
               form.resetFields();
@@ -35,26 +35,25 @@ export default function NewSOFPModal({ SOFPs, setSOFPs, isModalVisible, setIsMod
 
     return(
         <Modal
-            title="Create A SOFP"
+            title="Create A Balance Sheet"
             visible={isModalVisible}
             onCancel={() => setIsModalVisible(false)}
             onOk={handleOk} 
             width={600}
             destroyOnClose={true}
-            bodyStyle={{ height: "60vh", overflowY: "scroll" }}
             okButtonProps={{ loading: loading }}  
         >
             <Form {...layout} form={form} autoComplete="off" labelAlign="left">
                 <Form.Item
                     rules={[REQUIRED]}
-                    label="Title"
+                    label="Name"
                     name="name"
                 >
                     <Input />
                 </Form.Item>
                 <Form.Item
                     rules={[REQUIRED]}
-                    label="Date"
+                    label="End Date"
                     name="end_date"
                 >
                     <DatePicker />

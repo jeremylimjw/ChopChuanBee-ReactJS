@@ -25,8 +25,8 @@ import ManageSuppliersPage from './components/supplier/ManageSuppliersPage';
 import ViewSupplierPage from './components/supplier/ViewSupplierPage';
 import ManageCustomersPage from './components/customer/ManageCustomersPage';
 import ViewCustomerPage from './components/customer/ViewCustomerPage';
-import ManageSOFPsPage from './components/accounting/ManageSOFPsPage';
-import ViewSOFPPage from './components/accounting/ViewSOFPPage';
+import ManageBalanceSheetPage from './components/accounting/ManageBalanceSheetPage';
+import ViewBalanceSheetPage from './components/accounting/ViewBalanceSheetPage';
 import ViewIncomeStatementPage from './components/accounting/ViewIncomeStatementPage';
 import ManageIncomeStatementPage from './components/accounting/ManageIncomeStatementPage';
 
@@ -139,13 +139,13 @@ const routes = [
     component: <Outlet />,
     childRoutes: [
       {
-        path: "sofps",
-        component: <ManageSOFPsPage />,
+        path: "balanceSheets",
+        component: <ManageBalanceSheetPage />,
         viewAccess: View.ACCOUNTING.name,
       },
       {
-        path: "sofps/:id",
-        component: <ViewSOFPPage />,
+        path: "balanceSheets/:id",
+        component: <ViewBalanceSheetPage />,
         viewAccess: View.ACCOUNTING.name,
       },
       {

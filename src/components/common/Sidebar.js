@@ -12,7 +12,7 @@ const menu = [
     title: 'Admin',
     icon: <UserOutlined />,
     items: [
-      { route: '/admin/accounts', name: 'Manage Accounts' },
+      { route: '/admin/accounts', name: 'Accounts' },
       { route: '/admin/logs', name: 'Logs' },
     ]
   },
@@ -21,7 +21,7 @@ const menu = [
     title: 'Human Resource',
     icon: <TeamOutlined />,
     items: [
-      { route: '/humanResource/employees', name: 'Manage Employees' },
+      { route: '/humanResource/employees', name: 'Employees' },
       { route: '/humanResource/leaveApplications', name: 'Leave Applications' },
     ]
   },
@@ -30,7 +30,7 @@ const menu = [
     title: 'Inventory',
     icon: <InboxOutlined />,
     items: [
-      { route: '/inventory/products', name: 'Manage Products' },
+      { route: '/inventory/products', name: 'Products' },
       // { route: '/inventory', name: 'Manage Inventory' },
       // { route: '/inventory/supplier-invoices', name: 'Supplier Invoices' },
     ]
@@ -40,7 +40,7 @@ const menu = [
     title: 'Supplier',
     icon: <ShoppingOutlined />,
     items: [
-      { route: '/supplier/suppliers', name: 'Manage Suppliers' },
+      { route: '/supplier/suppliers', name: 'Suppliers' },
       // { route: '/suppliers/accounts', name: 'Accounts Payable' },
     ]
   },
@@ -49,7 +49,7 @@ const menu = [
     title: 'Customer',
     icon: <SolutionOutlined />,
     items: [
-      { route: '/customer/customers', name: 'Manage Customers' },
+      { route: '/customer/customers', name: 'Customers' },
     ]
   },
   {
@@ -57,9 +57,9 @@ const menu = [
     title: 'Accounting',
     icon: <AccountBookOutlined />,
     items: [
-      { route: '/accounting/sofps', name: 'Manage Balance Sheets' },
-      { route: '/accounting/incomeStatements', name: 'Manage Income Statements' },
-      { route: '/accounting/taxes', name: 'Manage Taxes' },
+      { route: '/accounting/balanceSheets', name: 'Balance Sheets' },
+      { route: '/accounting/incomeStatements', name: 'Income Statements' },
+      { route: '/accounting/taxes', name: 'Taxes' },
     ]
   },
 ]

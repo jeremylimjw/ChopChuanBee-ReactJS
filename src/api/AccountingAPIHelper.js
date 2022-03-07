@@ -2,7 +2,7 @@ import { axiosObject } from "./axiosWrapper";
 
 export class AccountingAPIHelper {
 
-    static async getAllSOFPs() {
+    static async getAllBalanceSheets() {
         const params = {
           order_by: 'created_at_desc'
         };
@@ -10,12 +10,12 @@ export class AccountingAPIHelper {
           .then((res) => res.data);
     }
 
-    static async getSOFPById(id) {
+    static async getBalanceSheetById(id) {
         return axiosObject.get("/accounting/SOFP", { params: { id: id } })
           .then((res) => res.data);
     }
 
-    static async getSOFP(query, start_date, end_date) {
+    static async getBalanceSheet(query, start_date, end_date) {
         const params = {};
         
         if (query?.name)
@@ -35,7 +35,7 @@ export class AccountingAPIHelper {
           .then((res) => res.data);
     }
     
-    static async createSOFP(SOFP) {
+    static async createBalanceSheet(SOFP) {
         return axiosObject
           .post("/accounting/SOFP", {
             name: SOFP.name,
@@ -44,17 +44,17 @@ export class AccountingAPIHelper {
           .then((res) => res.data)
     }
 
-    static async deactivateSOFP(id) {
+    static async deactivateBalanceSheet(id) {
       return axiosObject.post("/accounting/SOFP/deactivate", { id: id })
         .then((res) => res.data);
     }
 
-    static async activateSOFP(id) {
+    static async activateBalanceSheet(id) {
       return axiosObject.post("/accounting/SOFP/activate", { id: id })
         .then((res) => res.data);
     }
 
-    static async updateSOFP(sofp) {
+    static async updateBalanceSheet(sofp) {
       return axiosObject
         .put("/accounting/SOFP", {
           id: sofp.id, 
