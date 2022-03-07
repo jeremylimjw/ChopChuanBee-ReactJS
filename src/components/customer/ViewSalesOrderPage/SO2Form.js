@@ -1,5 +1,5 @@
 import { SaveOutlined } from '@ant-design/icons/lib/icons'
-import { Button, Form, Input, InputNumber, Radio, Select, Typography } from 'antd'
+import { Button, Divider, Form, Input, InputNumber, Radio, Select, Typography } from 'antd'
 import TextArea from 'antd/lib/input/TextArea'
 import React, { useEffect, useState } from 'react'
 import { getPaymentMethodTag, PaymentMethod } from '../../../enums/PaymentMethod'
@@ -151,8 +151,11 @@ export default function SO2Form({ form, salesOrder, setSalesOrder, loading, save
                         <Typography.Text>{salesOrder.remarks || '-'}</Typography.Text>
                     }
                 </Form.Item>
+                
+                <Typography.Title level={5}>Delivery Details</Typography.Title>
+                <Divider/>
 
-                <Form.Item label="Delivery" name="has_delivery" rules={salesOrder.isStatus(POStatus.PENDING) ? [REQUIRED] : []}>
+                <Form.Item label="Delivery Required" name="has_delivery" rules={salesOrder.isStatus(POStatus.PENDING) ? [REQUIRED] : []}>
                     {salesOrder.isStatus(POStatus.PENDING) ? 
                         <Radio.Group>
                             <Radio value={false}>No</Radio>
@@ -165,7 +168,7 @@ export default function SO2Form({ form, salesOrder, setSalesOrder, loading, save
 
                 {showDelivery &&
                     <>
-                        <Form.Item label="Delivery Address" name="delivery_address" rules={salesOrder.isStatus(POStatus.PENDING) ? [REQUIRED] : []}>
+                        <Form.Item label="Address" name="delivery_address" rules={salesOrder.isStatus(POStatus.PENDING) ? [REQUIRED] : []}>
                             {salesOrder.isStatus(POStatus.PENDING) ? 
                                 <Input />
                             :
@@ -173,7 +176,7 @@ export default function SO2Form({ form, salesOrder, setSalesOrder, loading, save
                             }
                         </Form.Item>
 
-                        <Form.Item label="Delivery Postal Code" name="delivery_postal_code" rules={salesOrder.isStatus(POStatus.PENDING) ? [REQUIRED] : []}>
+                        <Form.Item label="Postal Code" name="delivery_postal_code" rules={salesOrder.isStatus(POStatus.PENDING) ? [REQUIRED] : []}>
                             {salesOrder.isStatus(POStatus.PENDING) ? 
                                 <Input />
                             :
@@ -181,7 +184,7 @@ export default function SO2Form({ form, salesOrder, setSalesOrder, loading, save
                             }
                         </Form.Item>
 
-                        <Form.Item label="Delivery Remarks" name="delivery_remarks">
+                        <Form.Item label="Remarks" name="delivery_remarks">
                             {salesOrder.isStatus(POStatus.PENDING) ? 
                                 <TextArea />
                             :
