@@ -142,11 +142,13 @@ const columns = [
   },
   {
     title: 'AR',
-    key: 'AR',
-    width: 80,
+    dataIndex: 'ar',
+    key: 'ar',
+    width: 100,
+    align: 'center',
     ellipsis: true,
-    render: (AR) => '-',
-    sorter: (a, b) => sortByString(a.company_email, b.company_email),
+    render: (ar) => `$${(+ar).toFixed(2)}`,
+    sorter: (a, b) => sortByNumber(a.ar, b.ar),
   },
   {
     title: 'Status',

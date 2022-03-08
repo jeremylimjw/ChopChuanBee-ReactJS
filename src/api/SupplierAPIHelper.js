@@ -7,17 +7,11 @@ export class SupplierAPIHelper {
     if (query?.id)
       params.id = query.id;
     if (query?.company_name)
-      params.company_name_like = query.company_name;
+      params.company_name = query.company_name;
     if (query?.s1_name)
-      params.s1_name_like = query.s1_name;
-    if (query?.status === true) {
-      params.deactivated_date_is_null = 1;
-    } else if (query?.status === false) {
-      params.deactivated_date_is_nn = 1;
-    }
-    if (query?.limit)
-      params.limit = query.limit;
-    params.order_by = 'created_at_desc';
+      params.s1_name = query.s1_name;
+    if (query?.status != null)
+      params.status = query.status;
 
     return axiosObject.get("/supplier", { params })
       .then((res) => res.data);
@@ -91,11 +85,6 @@ export class SupplierAPIHelper {
 
   static async getMyLatestPrices(id) {
     return axiosObject.get(`/supplier/latestPrice`, { params: { supplier_id: id } })
-      .then(res => res.data);
-  }
-
-  static async getMyAccountPayable(id) {
-    return axiosObject.get(`/supplier/ap`, { params: { supplier_id: id } })
       .then(res => res.data);
   }
 }

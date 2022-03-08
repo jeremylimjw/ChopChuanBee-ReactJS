@@ -127,18 +127,14 @@ const columns = [
     key: 'total_quantity',
     align: 'center',
     width: 120,
-    defaultSortOrder: 'ascend',
     ellipsis: true,
-    render: (_, record) => {
-      return (
-        <Space>
-          <Typography.Text>{record.total_quantity || 0}</Typography.Text>
-          { record.total_quantity <= record.min_inventory_level && 
-            <ExclamationCircleFilled style={{ color: '#CD5C5C' }} />
-          }
-        </Space>
-      )
-    },
+    render: (_, record) => 
+      <Space>
+        <Typography.Text>{record.total_quantity || 0}</Typography.Text>
+        { record.total_quantity <= record.min_inventory_level && 
+          <ExclamationCircleFilled style={{ color: '#CD5C5C' }} />
+        }
+      </Space>,
     sorter: (a, b) => sortByNumber(a.total_quantity - a.min_inventory_level, b.total_quantity - b.min_inventory_level),
   },
   {

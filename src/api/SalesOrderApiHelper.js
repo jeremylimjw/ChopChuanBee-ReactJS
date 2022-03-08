@@ -11,17 +11,18 @@ export class SalesOrderApiHelper {
         
         if (query?.id)
             params.id = query?.id;
-        if (query?.startDate && query?.endDate) {
-            params.created_at_from = query.startDate;
-            params.created_at_to = query.endDate;
-        }
         if (query?.sales_order_status_id)
           params.sales_order_status_id = query.sales_order_status_id;
         if (query?.payment_term_id)
             params.payment_term_id = query.payment_term_id;
         if (query?.customer_id)
-            params.customer_id = query?.customer_id;
-        params.order_by = 'created_at_desc';
+            params.customer_id = query.customer_id;
+        if (query?.customer_name)
+            params.customer_name = query.customer_name;
+        if (query?.startDate && query?.endDate) {
+            params.start_date = query.startDate;
+            params.end_date = query.endDate;
+        }
 
         return axiosObject.get(`/salesOrder`, { params: params })
             .then(res => res.data);

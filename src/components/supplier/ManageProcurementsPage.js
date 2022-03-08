@@ -69,13 +69,16 @@ export default function ManageProcurementsPage() {
                 <MyToolbar title="Procurements">
                     <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
                         <Form.Item name="id">
-                            <Input placeholder='Search Order ID' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
+                            <Input placeholder='Search Order ID' style={{ width: 160 }} suffix={<SearchOutlined className='grey' />} />
+                        </Form.Item>
+                        <Form.Item name="supplier_name">
+                            <Input placeholder='Search Supplier' style={{ width: 160 }} suffix={<SearchOutlined className='grey' />} />
                         </Form.Item>
                         <Form.Item name="date">
                             <DatePicker.RangePicker />
                         </Form.Item>
                         <Form.Item name="payment_term_id">
-                            <Select style={{ width: 180 }} placeholder="Filter by Payment Term">
+                            <Select style={{ width: 160 }} placeholder="Filter by Payment Term">
                                 <Select.Option value={null}>All</Select.Option>
                                 {Object.keys(PaymentTerm).map((key, idx) => 
                                     <Select.Option key={idx} value={PaymentTerm[key].id}>{PaymentTerm[key].name}</Select.Option>)
@@ -83,7 +86,7 @@ export default function ManageProcurementsPage() {
                             </Select>
                         </Form.Item>
                         <Form.Item name="purchase_order_status_id">
-                            <Select style={{ width: 180 }} placeholder="Filter by Status">
+                            <Select style={{ width: 160 }} placeholder="Filter by Status">
                                 <Select.Option value={null}>All</Select.Option>
                                 {Object.keys(POStatus).map((key, idx) => 
                                     <Select.Option key={idx} value={POStatus[key].id}>{POStatus[key].name}</Select.Option>)

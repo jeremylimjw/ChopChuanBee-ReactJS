@@ -11,17 +11,18 @@ export class PurchaseOrderApiHelper {
         
         if (query?.id)
             params.id = query?.id;
-        if (query?.startDate && query?.endDate) {
-            params.created_at_from = query.startDate;
-            params.created_at_to = query.endDate;
-        }
         if (query?.purchase_order_status_id)
-          params.purchase_order_status_id = query.purchase_order_status_id;
+            params.purchase_order_status_id = query.purchase_order_status_id;
         if (query?.payment_term_id)
             params.payment_term_id = query.payment_term_id;
         if (query?.supplier_id)
             params.supplier_id = query?.supplier_id;
-        params.order_by = 'created_at_desc';
+        if (query?.supplier_name)
+            params.supplier_name = query?.supplier_name;
+        if (query?.startDate && query?.endDate) {
+            params.start_date = query.startDate;
+            params.end_date = query.endDate;
+        }
 
         return axiosObject.get(`/purchaseOrder`, { params: params })
             .then(res => res.data);

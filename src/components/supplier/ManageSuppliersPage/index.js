@@ -138,11 +138,13 @@ const columns = [
   },
   {
     title: 'AP',
-    key: 'AP',
-    width: 80,
+    dataIndex: 'ap',
+    key: 'ap',
+    width: 100,
+    align: 'center',
     ellipsis: true,
-    render: (AR) => '-',
-    sorter: (a, b) => sortByString(a.company_email, b.company_email),
+    render: (ap) => `$${(+ap).toFixed(2)}`,
+    sorter: (a, b) => sortByNumber(a.ap, b.ap),
   },
   {
     title: 'Status',
