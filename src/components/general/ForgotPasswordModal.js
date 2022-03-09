@@ -14,9 +14,9 @@ export default function ForgotPasswordModal({ isModalVisible, setIsModalVisible 
         try {
             const values = await form.validateFields();
             setLoading(true);
-            GeneralApiHelper.resetPassword(values.username, values.email)
+            GeneralApiHelper.resetPassword(values.email)
                 .then(() => {
-                    message.success('We have sent you an email with a new password! Please login using the new password.')
+                    message.success('An email will be sent to reset your password!')
                     setLoading(false);
                     setIsModalVisible(false);
                     form.resetFields();
@@ -50,10 +50,6 @@ function MyForm({ form }) {
 
     return (
         <Form form={form} labelCol={{ span: 10 }} wrapperCol={{ span: 14 }} autoComplete="off" labelAlign="left">
-            <Form.Item label="Username" name="username" rules={[REQUIRED]}>
-                <Input />
-            </Form.Item>
-
             <Form.Item label="Email" name="email" rules={[REQUIRED, EMAIL]}>
                 <Input />
             </Form.Item>
