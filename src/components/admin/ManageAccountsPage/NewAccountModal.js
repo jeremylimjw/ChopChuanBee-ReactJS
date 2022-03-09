@@ -23,7 +23,7 @@ export default function NewAccountModal({ isModalVisible, setIsModalVisible, myC
                 .then(newEmployee => {
                     myCallback(newEmployee);
                     message.success('Employee successfully created!')
-                    message.success('Account details has been sent to the registered email!')
+                    message.success('Account activation instructions will been sent to the registered email!')
                     setLoading(false);
                     setIsModalVisible(false);
                 })
