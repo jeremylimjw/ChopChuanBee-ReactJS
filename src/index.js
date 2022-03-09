@@ -34,6 +34,7 @@ import ManageSalesOrdersPage from './components/customer/ManageSalesOrdersPage';
 import NewSalesOrderPage from './components/customer/NewSalesOrderPage';
 import ViewSalesOrderPage from './components/customer/ViewSalesOrderPage';
 import ViewInventoryMovementsPage from './components/inventory/ViewInventoryMovementsPage';
+import ManageDeliveriesPage from './components/dispatch/ManageDeliveriesPage';
 
 // Add on more routes here
 const routes = [
@@ -181,6 +182,17 @@ const routes = [
         path: 'sales/:id', 
         component: <ViewSalesOrderPage />,
         viewAccess: View.SCM.name,
+      },
+    ]
+  },
+  {
+    path: '/dispatch',
+    component: <Outlet />,
+    childRoutes: [
+      { 
+        path: 'deliveryOrders', 
+        component: <ManageDeliveriesPage />,
+        viewAccess: View.DISPATCH.name,
       },
     ]
   },

@@ -55,6 +55,14 @@ const menu = [
       { route: '/customer/sales', name: 'Sales' },
     ]
   },
+  {
+    role: View.DISPATCH.name,
+    title: 'Dispatch',
+    icon: <SolutionOutlined />,
+    items: [
+      { route: '/dispatch/deliveryOrders', name: 'Manage Deliveries' },
+    ]
+  },
 ]
 
 export default function Sidebar() {
