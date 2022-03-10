@@ -1,20 +1,16 @@
 import { Button, Table, Input, Select, Form } from "antd";
 import React, { useEffect, useState } from "react";
-import { PlusOutlined, SearchOutlined } from "@ant-design/icons/lib/icons";
-import { Link } from "react-router-dom";
+import { SearchOutlined } from "@ant-design/icons/lib/icons";
 import debounce from "lodash.debounce";
 import { useApp } from "../../../providers/AppProvider";
-import { SupplierAPIHelper } from "../../../api/SupplierAPIHelper";
 import MyLayout from "../../common/MyLayout";
 import MyCard from "../../common/MyCard";
 import { showTotal } from "../../../utilities/table";
-import { parseDate, parseDateTimeSeconds } from "../../../utilities/datetime";
+import { parseDateTimeSeconds } from "../../../utilities/datetime";
 import { sortByDate, sortByNumber, sortByString } from "../../../utilities/sorters";
-import { getActiveTag } from "../../../enums/ActivationStatus";
 import MyToolbar from "../../common/MyToolbar";
-import { View } from "../../../enums/View";
 import { DeliveryApiHelper } from "../../../api/DeliveryApiHelper";
-import { getDeliveryStatus, getDeliveryStatusTag } from "../../../enums/DeliveryStatus";
+import { DeliveryStatus, getDeliveryStatusTag } from "../../../enums/DeliveryStatus";
 
 const breadcrumbs = [
   { url: "/dispatch/deliveryOrders", name: "Dispatch" },
@@ -41,13 +37,13 @@ export default function ManageDeliveriesPage() {
   }, [handleHttpError, setLoading])
 
   function onValuesChange(_, form) {
-    SupplierAPIHelper.get(form)
-        .then(results => {
-          setOrders(results);
-            setLoading(false);
-        })
-        .catch(handleHttpError)
-        .catch(() => setLoading(false))
+    DeliveryApiHelper.getOrders(form)
+      .then(results => {
+        setOrders(results);
+          setLoading(false);
+      })
+      .catch(handleHttpError)
+      .catch(() => setLoading(false))
   }
 
   function resetForm() {
@@ -60,17 +56,16 @@ export default function ManageDeliveriesPage() {
       <MyCard>
         <MyToolbar title="Delivery Orders">
           <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
-            <Form.Item name="company_name">
+            <Form.Item name="customer_company_name">
                 <Input placeholder='Search Company' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
             </Form.Item>
-            <Form.Item name="s1_name">
-                <Input placeholder='Search Person Name' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
+            <Form.Item name="customer_p1_name">
+                <Input placeholder='Search Customer' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
             </Form.Item>
-            <Form.Item name="status">
+            <Form.Item name="delivery_status_id">
               <Select style={{ width: 140 }} placeholder="Filter by Status">
                 <Select.Option value={null}>All</Select.Option>
-                <Select.Option value={true}>Active</Select.Option>
-                <Select.Option value={false}>Inactive</Select.Option>
+                {Object.keys(DeliveryStatus).map((key, idx) => <Select.Option key={idx} value={DeliveryStatus[key].id}>{DeliveryStatus[key].name}</Select.Option>)}
               </Select>
             </Form.Item>
             <Button onClick={resetForm}>Reset</Button>
@@ -107,6 +102,33 @@ const columns = [
     width: 120,
     ellipsis: true,
     sorter: (a, b) => sortByNumber(a.sales_order_id, b.sales_order_id),
+  },
+  {
+    title: 'Company',
+    dataIndex: 'customer_company_name',
+    key: 'customer_company_name',
+    width: '20%',
+    ellipsis: true,
+    render: (customer_company_name) => customer_company_name || '-',
+    sorter: (a, b) => sortByString(a.customer_company_name || '-', b.customer_company_name || '-'),
+  },
+  {
+    title: 'Customer',
+    dataIndex: 'customer_p1_name',
+    key: 'customer_p1_name',
+    width: '20%',
+    ellipsis: true,
+    render: (customer_p1_name) => customer_p1_name || '-',
+    sorter: (a, b) => sortByString(a.customer_p1_name || '-', b.customer_p1_name || '-'),
+  },
+  {
+    title: 'Contact Number',
+    dataIndex: 'customer_phone_number',
+    key: 'customer_phone_number',
+    width: '20%',
+    ellipsis: true,
+    render: (customer_phone_number) => customer_phone_number || '-',
+    sorter: (a, b) => sortByString(a.customer_phone_number || '-', b.customer_phone_number || '-'),
   },
   {
     title: 'Address',

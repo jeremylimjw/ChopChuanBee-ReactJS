@@ -8,13 +8,11 @@ import { SupplierAPIHelper } from "../../api/SupplierAPIHelper";
 import MyLayout from "../common/MyLayout";
 import MyCard from "../common/MyCard";
 import { showTotal } from "../../utilities/table";
-import { parseDate, parseDateTimeSeconds } from "../../utilities/datetime";
+import { parseDate } from "../../utilities/datetime";
 import { sortByDate, sortByNumber, sortByString } from "../../utilities/sorters";
-import { getActiveTag } from "../../enums/ActivationStatus";
 import MyToolbar from "../common/MyToolbar";
 import { View } from "../../enums/View";
 import { DeliveryApiHelper } from "../../api/DeliveryApiHelper";
-import { getDeliveryStatus, getDeliveryStatusTag } from "../../enums/DeliveryStatus";
 
 const breadcrumbs = [
     { url: "/dispatch/itinerarys", name: "Dispatch" },

@@ -17,24 +17,24 @@ export default function NS1CustomerTable({ selectedCustomer, setSelectedCustomer
     const [customers, setCustomers] = useState([]);
 
     useEffect(() => {
-        setLoading(true);
-        CustomerApiHelper.get(null, null, true)
-            .then(results => {
-                setCustomers(results);
-                setLoading(false);
-            })
-            .catch(handleHttpError)
-            .catch(() => setLoading(false))
+      setLoading(true);
+      CustomerApiHelper.get(null, null, true)
+        .then(results => {
+          setCustomers(results);
+          setLoading(false);
+        })
+        .catch(handleHttpError)
+        .catch(() => setLoading(false))
     }, [handleHttpError, setLoading])
   
     function onValuesChange(_, form) {
-        CustomerApiHelper.get({ ...form, status: true })
-            .then(results => {
-                setCustomers(results);
-                setLoading(false);
-            })
-            .catch(handleHttpError)
-            .catch(() => setLoading(false))
+      CustomerApiHelper.get(form.company_name, form.p1_name, true)
+        .then(results => {
+          setCustomers(results);
+          setLoading(false);
+        })
+        .catch(handleHttpError)
+        .catch(() => setLoading(false))
     }
   
     function resetForm() {
