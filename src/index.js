@@ -36,6 +36,9 @@ import ViewSalesOrderPage from './components/customer/ViewSalesOrderPage';
 import ViewInventoryMovementsPage from './components/inventory/ViewInventoryMovementsPage';
 import ManageDeliveriesPage from './components/dispatch/ManageDeliveriesPage';
 import ActivatePage from './components/ActivatePage';
+import ManageItinerarysPage from './components/dispatch/ManageItinerarysPage';
+import NewItineraryPage from './components/dispatch/NewItineraryPage';
+import ViewItineraryPage from './components/dispatch/ViewItineraryPage';
 
 // Add on more routes here
 const routes = [
@@ -190,6 +193,21 @@ const routes = [
     path: '/dispatch',
     component: <Outlet />,
     childRoutes: [
+      { 
+        path: 'itinerarys', 
+        component: <ManageItinerarysPage />,
+        viewAccess: View.DISPATCH.name,
+      },
+      { 
+        path: 'itinerarys/new', 
+        component: <NewItineraryPage />,
+        viewAccess: View.DISPATCH.name,
+      },
+      { 
+        path: 'itinerarys/:id', 
+        component: <ViewItineraryPage />,
+        viewAccess: View.DISPATCH.name,
+      },
       { 
         path: 'deliveryOrders', 
         component: <ManageDeliveriesPage />,

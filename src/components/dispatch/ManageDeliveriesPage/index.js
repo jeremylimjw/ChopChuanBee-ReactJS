@@ -13,7 +13,7 @@ import { sortByDate, sortByNumber, sortByString } from "../../../utilities/sorte
 import { getActiveTag } from "../../../enums/ActivationStatus";
 import MyToolbar from "../../common/MyToolbar";
 import { View } from "../../../enums/View";
-import { DeliveryOrderApiHelper } from "../../../api/DeliveryOrderApiHelper";
+import { DeliveryApiHelper } from "../../../api/DeliveryApiHelper";
 import { getDeliveryStatus, getDeliveryStatusTag } from "../../../enums/DeliveryStatus";
 
 const breadcrumbs = [
@@ -31,7 +31,7 @@ export default function ManageDeliveriesPage() {
 
   useEffect(() => {
     setLoading(true);
-    DeliveryOrderApiHelper.get()
+    DeliveryApiHelper.getOrders()
       .then(results => {
         setOrders(results);
         setLoading(false);
@@ -56,7 +56,7 @@ export default function ManageDeliveriesPage() {
   }
 
   return (
-    <MyLayout breadcrumbs={breadcrumbs} bannerTitle="Manage Suppliers">
+    <MyLayout breadcrumbs={breadcrumbs} bannerTitle="Manage Delivery Orders">
       <MyCard>
         <MyToolbar title="Delivery Orders">
           <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
