@@ -2,7 +2,6 @@ import { message } from "antd";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from './vfs_fonts.js'
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
-
 pdfMake.fonts = {
   NotoCh: {
     normal: 'NotoSansSC-Regular.otf',
@@ -18,7 +17,6 @@ const generatePdf = async (doc) => {
     pdf.open()
   } catch (err) {
     message.error('Error generating PDF report, please try again')
-    console.log(err)
   }
 }
 

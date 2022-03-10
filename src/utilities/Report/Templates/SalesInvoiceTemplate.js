@@ -1,15 +1,15 @@
 import moment from "moment"
 import { PDFTools } from "../PDFTools"
 
-const formatPOData = (data) => {
+const formatSOData = (data) => {
   return {
     po_num: {
-      text: 'PURCHASE ORDER NO: ',
-      value: data.id || ''
+      text: 'SALES ORDER NO: ',
+      value: data.id || '_____________________________________________'
     },
     po_date: {
-      text: 'PURCHASE ORDER DATE: ',
-      value: moment(data.created_at).format('ll') || ''
+      text: 'SALES ORDER DATE: ',
+      value: moment(data.created_at).format('ll') || '_____________________________________________'
     }
   }
 }
@@ -37,7 +37,7 @@ const formatCompanyData = (data) => {
 }
 
 const formatVendorData = (data) => {
-  let vendorData = data.supplier
+  let vendorData = data.customer
   return {
     vendorName: {
       text: 'VENDOR NAME: ',
@@ -45,20 +45,20 @@ const formatVendorData = (data) => {
     },
     contactPerson: {
       text: 'CONTACT PERSON: ',
-      value: vendorData.s1_name || '',
+      value: vendorData.p1_name || '',
     },
     contactNum: {
       text: 'CONTACT NO: ',
-      value: vendorData.s1_phone_number || '',
+      value: vendorData.p1_phone_number || '',
     },
   }
 }
 
-export const purchaseOrderTemplate = (data) => {
-  let poData = formatPOData(data)
+export const salesInvoiceTemplate = (data) => {
+  let soData = formatSOData(data)
   let companyData = formatCompanyData(data)
   let vendorData = formatVendorData(data)
-  let POTableItems = data.purchase_order_items.map((item, index) => {
+  let SOTableItems = data.sales_order_items.map((item, index) => {
     let arr = []
     arr.push(index + 1)
     arr.push(item.product.name)
@@ -66,15 +66,15 @@ export const purchaseOrderTemplate = (data) => {
     arr.push(item.product.unit)
     return arr
   })
-  let POTableHeaders = ['No.', 'Item Name', 'Quantity', 'Unit']
+  let SOTableHeaders = ['No.', 'Item Name', 'Quantity', 'Unit']
   let document = {
     pageSize: 'A4',
     defaultStyle: {
       font: 'NotoCh'
     },
     content: [
-      PDFTools.formatText('PURCHASE ORDER', 'header'),
-      PDFTools.generateForm(poData, { formWidth: '15%', margin: [200] }),
+      PDFTools.formatText('SALES ORDER', 'header'),
+      PDFTools.generateForm(soData, { formWidth: '30%', margin: [200] }),
       PDFTools.dividerLine('horizontal', 515),
       {
         columns: [
@@ -89,7 +89,7 @@ export const purchaseOrderTemplate = (data) => {
         ]
       },
       PDFTools.formatText('', 'header'),
-      PDFTools.tableBuilder(POTableHeaders, POTableItems, ['5%', '*', '20%', '20%']),
+      PDFTools.tableBuilder(SOTableHeaders, SOTableItems, ['5%', '*', '20%', '20%']),
       PDFTools.formatText('SPECIAL INSTRUCTIONS OR REMARKS', 'subHeader'),
       PDFTools.generateEmptyBox(515, 200),
       PDFTools.formatText('If you have any questions about this purchase order, please contact 61234567', 'footerText')
