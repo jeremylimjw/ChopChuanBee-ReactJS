@@ -80,6 +80,7 @@ export class AccountingAPIHelper {
           trade_names: sofp.trade_names, 
           other_intangible_asset_1: sofp.other_intangible_asset_1, 
           other_intangible_asset_2: sofp.other_intangible_asset_2, 
+          account_payable: sofp.account_payable,
           salary_payable: sofp.salary_payable, 
           interest_payable: sofp.interest_payable, 
           taxes_payable: sofp.taxes_payable, 
