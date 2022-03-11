@@ -42,30 +42,21 @@ export default function NewIncomeStatementModal({ incomes, setIncomes, isModalVi
 
     return(
         <Modal
-            title="Create A Income Statement"
+            title="Create An Income Statement"
             visible={isModalVisible}
             onCancel={() => setIsModalVisible(false)}
             onOk={handleOk} 
             width={600}
             destroyOnClose={true}
-            bodyStyle={{ height: "60vh", overflowY: "scroll" }}
             okButtonProps={{ loading: loading }}  
         >
             <Form {...layout} form={form} autoComplete="off" labelAlign="left">
-                <Form.Item
-                    rules={[REQUIRED]}
-                    label="Title"
-                    name="name"
-                >
-                    <Input />
-                </Form.Item>
-              
-               
-            <Form.Item label='Date' name='dateRange' rules={[REQUIRED]}>
-            <DatePicker.RangePicker style={{ width: '100%' }} allowClear={false}
-                placeholder={['Start Date', 'End Date']}
+            <Form.Item rules={[REQUIRED]} label="Name" name="name">
+                <Input />
+            </Form.Item>
             
-            />
+            <Form.Item label='Date' name='dateRange' rules={[REQUIRED]}>
+                <DatePicker.RangePicker style={{ width: '100%' }} allowClear={false} placeholder={['Start Date', 'End Date']}/>
             </Form.Item>
             </Form>
 

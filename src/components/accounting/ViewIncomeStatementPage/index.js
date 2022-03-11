@@ -41,7 +41,7 @@ export default function ViewIncomeStatementPage() {
         promise.then(newFields => {
           setLoading(false);
           setIncome({...income, ...newFields });
-          message.success(`income statement successfully ${income.deleted_date == null ? 'deactivated' : 'activated' }!`);
+          message.success(`Income statement successfully ${income.deleted_date == null ? 'deactivated' : 'activated' }!`);
         })
         .catch(handleHttpError)
         .catch(() => setLoading(false));
@@ -53,12 +53,12 @@ export default function ViewIncomeStatementPage() {
         return (
           <>
             { income.deleted_date == null ? 
-              <Popconfirm title="Confirm unlist?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading}>
-                <Button type="danger" loading={loading} icon={<UserDeleteOutlined />} style={{ width: 100 }}>Unlist</Button>
+              <Popconfirm title="Confirm deactivate?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading}>
+                <Button type="danger" loading={loading} icon={<UserDeleteOutlined />} style={{ width: 120 }}>Deactivate</Button>
               </Popconfirm>
               :
-              <Popconfirm title="Confirm relist?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading}>
-                <Button type="primary" loading={loading} icon={<UserAddOutlined />} style={{ width: 100 }}>Relist</Button>
+              <Popconfirm title="Confirm activate?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading}>
+                <Button type="primary" loading={loading} icon={<UserAddOutlined />} style={{ width: 120 }}>Activate</Button>
               </Popconfirm>
             }
           </>
@@ -68,7 +68,7 @@ export default function ViewIncomeStatementPage() {
     return (
         <>
         {income != null && 
-          <MyLayout breadcrumbs={breadcrumbs} bannerTitle={`${income.name} ${ income.deleted_date == null ? '' : '(Unlisted)' }`} bannerRight={renderDeactivateButton()}>
+          <MyLayout breadcrumbs={breadcrumbs} bannerTitle={`${income.name} ${ income.deleted_date == null ? '' : '(Deactivated)' }`} bannerRight={renderDeactivateButton()}>
             <IncomeStatementAsset income={income} setIncome={setIncome} />     
           </MyLayout>
         }

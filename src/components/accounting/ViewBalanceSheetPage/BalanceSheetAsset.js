@@ -43,7 +43,7 @@ export default function BalanceSheetAsset({ BalanceSheet, setBalanceSheet }) {
         }
     }
 
-    const handleExport =() => {
+    const handleExport = () => {
         setShowPopConfirm(false);
     }
 
@@ -78,7 +78,7 @@ export default function BalanceSheetAsset({ BalanceSheet, setBalanceSheet }) {
                                         :
                                         <>
                                             <Popconfirm title="The balance sheet is not balanced. Continue exporting?" placement='leftTop' visible={showPopConfirm} onConfirm={handleExport} disabled={loading}>
-                                            <Button onClick={checkPopConfirmVisibility} icon={<ExportOutlined />} loading={loading} style={{ marginRight: '1rem' }}>Export as PDF</Button>
+                                                <Button onClick={checkPopConfirmVisibility} icon={<ExportOutlined />} loading={loading} style={{ marginRight: '1rem' }}>Export as PDF</Button>
                                             </Popconfirm>
                                             <Button onClick={() => setEditing(true)} icon={<EditOutlined />} style={{ width: 85 }}>Edit</Button>
                                         </>
@@ -88,16 +88,16 @@ export default function BalanceSheetAsset({ BalanceSheet, setBalanceSheet }) {
                             }
                         </MyToolbar>
 
-                            <Form.Item labelCol={{ span: 3 }} wrapperCol={{ span: 24 }} label="Name" name="name" rules={editing ? [REQUIRED] : []}>
-                                {!editing ? 
-                                    <Typography>{BalanceSheet.name || '-'}</Typography>
-                                :
-                                    <Input />
-                                }
-                            </Form.Item>
-                            <Form.Item labelCol={{ span: 3 }} wrapperCol={{ span: 24 }} label="End Date" name="end_date">
-                                <Typography>{parseDate(BalanceSheet.end_date) || '-'}</Typography>
-                            </Form.Item>
+                        <Form.Item labelCol={{ span: 3 }} wrapperCol={{ span: 24 }} label="Name" name="name" rules={editing ? [REQUIRED] : []}>
+                            {!editing ? 
+                                <Typography>{BalanceSheet.name || '-'}</Typography>
+                            :
+                                <Input />
+                            }
+                        </Form.Item>
+                        <Form.Item labelCol={{ span: 3 }} wrapperCol={{ span: 24 }} label="End Date" name="end_date">
+                            <Typography>{parseDate(BalanceSheet.end_date) || '-'}</Typography>
+                        </Form.Item>
                     </MyCard>
 
                     <MyCard>

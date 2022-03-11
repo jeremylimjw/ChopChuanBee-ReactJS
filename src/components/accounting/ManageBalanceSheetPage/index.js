@@ -48,7 +48,7 @@ export default function ManageBalanceSheetPage() {
         }
         AccountingAPIHelper.getBalanceSheet(form, start_date, end_date, form.status)
         .then(results => {
-          setBalanceSheets(results);
+            setBalanceSheets(results);
             setLoading(false);
         })
         .catch(handleHttpError)
@@ -61,7 +61,7 @@ export default function ManageBalanceSheetPage() {
     }
 
     return (
-        <MyLayout breadcrumbs={breadcrumbs} bannerTitle="Balance Sheets">
+        <MyLayout breadcrumbs={breadcrumbs} bannerTitle="Manage Balance Sheets">
             <MyCard>
                 <MyToolbar title="Balance Sheets">
                     <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
