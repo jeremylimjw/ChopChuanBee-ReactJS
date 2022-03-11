@@ -1,11 +1,22 @@
 import { Button, Table, Descriptions } from 'antd';
 import React from 'react'
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import { getRoleTag } from '../../../enums/Role';
 import { parseDateTimeSeconds } from '../../../utilities/datetime';
+import DraggableTableRow from '../../common/DraggableTableRow';
 import MyCard from '../../common/MyCard';
 import MyToolbar from '../../common/MyToolbar';
 
-export default function NI3Confirm({ selectedEmployee, selectedOrders, step, setStep, handleSubmitEvent }) {
+export default function NI3Confirm({ selectedEmployee, selectedOrders, setSelectedOrders, step, setStep, handleSubmitEvent }) {
+
+    function moveRow(dragIndex, hoverIndex) {
+        const dragRow = selectedOrders[dragIndex];
+        const newSelectedOrders = [...selectedOrders];
+        newSelectedOrders.splice(dragIndex, 1);
+        newSelectedOrders.splice(hoverIndex, 0, dragRow);
+        setSelectedOrders(newSelectedOrders)
+    }
 
     return (
         <>
@@ -23,7 +34,15 @@ export default function NI3Confirm({ selectedEmployee, selectedOrders, step, set
 
             <MyCard title="Delivery Itinerary" style={{ flexGrow: 1, margin: '0 12px 24px 24px' }}>
 
-                <Table columns={columns} dataSource={selectedOrders} rowKey="id" />
+                <DndProvider backend={HTML5Backend}>
+                    <Table 
+                        columns={columns} 
+                        dataSource={selectedOrders} 
+                        components={{ body: { row: DraggableTableRow } }}
+                        onRow={(record, index) => ({ index, moveRow })}
+                        rowKey="id" 
+                    />
+                </DndProvider>
 
                 <MyToolbar style={{ marginTop: 15 }}>
                     <Button onClick={() => setStep(step-1)}>Back</Button>

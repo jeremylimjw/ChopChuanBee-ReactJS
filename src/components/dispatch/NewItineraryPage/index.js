@@ -89,6 +89,7 @@ export default function NewItineraryPage() {
           <NI3Confirm 
             selectedEmployee={selectedEmployee} 
             selectedOrders={selectedOrders} 
+            setSelectedOrders={setSelectedOrders} 
             step={step} setStep={setStep} 
             handleSubmitEvent={handleSubmitEvent} 
           />

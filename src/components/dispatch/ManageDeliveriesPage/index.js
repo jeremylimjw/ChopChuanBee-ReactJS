@@ -166,6 +166,15 @@ const columns = [
     sorter: (a, b) => sortByNumber(a.delivery_status_id, b.delivery_status_id),
   },
   {
+    title: 'Completed At',
+    dataIndex: 'deliver_at',
+    key: 'deliver_at',
+    width: 200,
+    ellipsis: true,
+    render: (deliver_at) => deliver_at ? parseDateTimeSeconds(deliver_at) : '-',
+    sorter: (a, b) => sortByDate(a.deliver_at || 0, b.deliver_at || 0),
+  },
+  {
     title: "Action",
     dataIndex: "sales_order_id",
     key: "link",
