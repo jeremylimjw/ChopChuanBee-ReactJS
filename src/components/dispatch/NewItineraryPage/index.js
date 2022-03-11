@@ -1,12 +1,11 @@
-import { Button, message, Steps } from 'antd';
-import React, { useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router';
-import { SalesOrderApiHelper } from '../../../api/SalesOrderApiHelper';
+import { message, Steps } from 'antd';
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router';
+import { DeliveryApiHelper } from '../../../api/DeliveryApiHelper';
 import { useApp } from '../../../providers/AppProvider';
 import MyCard from '../../common/MyCard';
 import MyLayout from '../../common/MyLayout';
-import MyToolbar from '../../common/MyToolbar';
-import NI1DriverTable from './NI1DriverTable';
+import NI1Form from './NI1Form';
 import NI2OrdersTable from './NI2OrdersTable';
 import NI3Confirm from './NI3Confirm';
 
@@ -20,33 +19,28 @@ export default function NewItineraryPage() {
 
   const { handleHttpError } = useApp();
   const navigate = useNavigate();
-  const location = useLocation();
 
   const [step, setStep] = useState(0)
+  const [itinerary, setItinerary] = useState({});
   const [selectedEmployee, setSelectedEmployee] = useState({});
   const [selectedOrders, setSelectedOrders] = useState([]);
 
   // Handles sales order creation
   function handleSubmitEvent() {
-    // const salesOrder = {
-    //   customer_id: selectedEmployee.id,
-    //   sales_order_status_id: 1,
-    //   sales_order_items: selectedOrders.filter(x => x.product != null).map(x => ({ product_id: x.product.id, quantity: x.quantity })),
-    //   has_gst: selectedEmployee.charged_under?.gst_rate ? 3 : 1,
-    //   gst_rate: selectedEmployee.charged_under?.gst_rate || 0,
-    //   charged_under_id: selectedEmployee.charged_under?.id,
-    //   show_gst: selectedEmployee.gst_show,
-    //   has_delivery: false,
-    //   delivery_address: selectedEmployee.address,
-    //   delivery_postal_code: selectedEmployee.postal_code,
-    // }
+    const newItinerary = {
+      ...itinerary,
+      start_time:  itinerary.start_time.toDate(),
+      driver_id: selectedEmployee.id,
+      delivery_orders: selectedOrders.map((x, idx) => ({...x, sequence: idx })),
+    }
 
-    // SalesOrderApiHelper.create(salesOrder)
-    //   .then(result => {
-    //     message.success(`Sales Order with ID ${result.id} successfully created!`);
-    //     navigate(`./../${result.id}`);
-    //   })
-    //   .catch(handleHttpError);
+    DeliveryApiHelper.createItinerary(newItinerary)
+      .then(result => {
+        console.log(result)
+        message.success(`Itinerary successfully created!`);
+        navigate(`./../${result.id}`);
+      })
+      .catch(handleHttpError);
 
   }
 
@@ -62,31 +56,30 @@ export default function NewItineraryPage() {
       </MyCard>
 
       { step === 0 &&
-        <MyCard>
-          <NI1DriverTable selectedEmployee={selectedEmployee} setSelectedEmployee={setSelectedEmployee} />
-          <MyToolbar style={{ marginTop: 15 }}>
-            <Button type="primary" onClick={() => setStep(step+1)} disabled={selectedEmployee.id == null}>Next</Button>
-          </MyToolbar>
-        </MyCard>
+        <NI1Form 
+          itinerary={itinerary}
+          setItinerary={setItinerary}
+          selectedEmployee={selectedEmployee} 
+          setSelectedEmployee={setSelectedEmployee} 
+          step={step} 
+          setStep={setStep} 
+        />
       }
       { step === 1 &&
-        <MyCard>
-          <NI2OrdersTable 
-            selectedEmployee={selectedEmployee} 
-            selectedOrders={selectedOrders} 
-            setSelectedOrders={setSelectedOrders} 
-          />
-
-          <MyToolbar style={{ marginTop: 15 }}>
-            <Button onClick={() => setStep(step-1)}>Back</Button>
-            <Button type="primary" onClick={() => setStep(step+1)} disabled={selectedOrders.length === 0}>Optimize</Button>
-          </MyToolbar>
-        </MyCard>
+        <NI2OrdersTable 
+          itinerary={itinerary}
+          setItinerary={setItinerary}
+          selectedOrders={selectedOrders} 
+          setSelectedOrders={setSelectedOrders} 
+          step={step} 
+          setStep={setStep} 
+        />
       }
 
       { step === 2 && 
         <>
           <NI3Confirm 
+            itinerary={itinerary}
             selectedEmployee={selectedEmployee} 
             selectedOrders={selectedOrders} 
             setSelectedOrders={setSelectedOrders} 

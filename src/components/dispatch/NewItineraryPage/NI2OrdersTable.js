@@ -3,14 +3,15 @@ import { Button, Form, Input, Table } from 'antd';
 import debounce from 'lodash.debounce';
 import React, { useEffect, useState } from 'react'
 import { DeliveryApiHelper } from '../../../api/DeliveryApiHelper';
-import { DeliveryStatus, getDeliveryStatusTag } from '../../../enums/DeliveryStatus';
+import { DeliveryStatus } from '../../../enums/DeliveryStatus';
 import { useApp } from '../../../providers/AppProvider';
 import { parseDateTimeSeconds } from '../../../utilities/datetime';
 import { sortByDate, sortByNumber, sortByString } from '../../../utilities/sorters';
 import { showTotal } from '../../../utilities/table';
+import MyCard from '../../common/MyCard';
 import MyToolbar from '../../common/MyToolbar';
 
-export default function NI2OrdersTable({ selectedEmployee, selectedOrders, setSelectedOrders }) {
+export default function NI2OrdersTable({ itinerary, setItinerary, selectedOrders, setSelectedOrders, step, setStep }) {
 
   const { handleHttpError } = useApp();
 
@@ -48,27 +49,51 @@ export default function NI2OrdersTable({ selectedEmployee, selectedOrders, setSe
     setSelectedOrders(selectedRows);
   }
 
+  async function nextStep() {
+    try {
+      // call api to convert postal code here
+      const { longitude, latitude } = await DeliveryApiHelper.getGeocode(itinerary.origin_postal_code);
+      setItinerary({
+          ...itinerary, 
+          longitude: longitude, 
+          latitude: latitude,
+      })
+
+      setStep(step+1);
+
+    } catch (err) { 
+      handleHttpError(err);
+    }
+  }
+
   return (
     <>
-      <MyToolbar title="Outstanding Delivery Orders">
-        <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
-          <Form.Item name="customer_company_name">
-            <Input placeholder='Search Company' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
-          </Form.Item>
-          <Form.Item name="customer_p1_name">
-            <Input placeholder='Search Customer' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
-          </Form.Item>
-          <Button onClick={resetForm}>Reset</Button>
-        </Form>
-      </MyToolbar>
+      <MyCard>
+        <MyToolbar title="Outstanding Delivery Orders">
+          <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
+            <Form.Item name="customer_company_name">
+              <Input placeholder='Search Company' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
+            </Form.Item>
+            <Form.Item name="customer_p1_name">
+              <Input placeholder='Search Customer' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
+            </Form.Item>
+            <Button onClick={resetForm}>Reset</Button>
+          </Form>
+        </MyToolbar>
 
-      <Table loading={loading}
-        rowSelection={{ type: 'checkbox', onChange: handleRowSelect, selectedRowKeys: selectedOrders.map(x => x.id) }}
-        columns={columns}
-        dataSource={orders}
-        pagination={{ pageSize: 6, showTotal: showTotal }}
-        rowKey="id"
-      />
+        <Table loading={loading}
+          rowSelection={{ type: 'checkbox', onChange: handleRowSelect, selectedRowKeys: selectedOrders.map(x => x.id) }}
+          columns={columns}
+          dataSource={orders}
+          pagination={{ pageSize: 6, showTotal: showTotal }}
+          rowKey="id"
+        />
+
+        <MyToolbar style={{ marginTop: 15 }}>
+          <Button onClick={() => setStep(step-1)}>Back</Button>
+          <Button type="primary" onClick={nextStep} disabled={selectedOrders.length === 0}>Optimize</Button>
+        </MyToolbar>
+      </MyCard>
     </>
   )
 }

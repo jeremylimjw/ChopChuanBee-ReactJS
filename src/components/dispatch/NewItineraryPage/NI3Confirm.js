@@ -1,4 +1,4 @@
-import { Button, Table, Descriptions } from 'antd';
+import { Button, Table, Descriptions, Row } from 'antd';
 import React from 'react'
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -8,7 +8,7 @@ import DraggableTableRow from '../../common/DraggableTableRow';
 import MyCard from '../../common/MyCard';
 import MyToolbar from '../../common/MyToolbar';
 
-export default function NI3Confirm({ selectedEmployee, selectedOrders, setSelectedOrders, step, setStep, handleSubmitEvent }) {
+export default function NI3Confirm({ itinerary, selectedEmployee, selectedOrders, setSelectedOrders, step, setStep, handleSubmitEvent }) {
 
     function moveRow(dragIndex, hoverIndex) {
         const dragRow = selectedOrders[dragIndex];
@@ -20,17 +20,28 @@ export default function NI3Confirm({ selectedEmployee, selectedOrders, setSelect
 
     return (
         <>
+            <Row  style={{ marginTop: -24}}>
+                <MyCard style={{ width: 450 }} title="Itinerary Details">
+                    
+                    <Descriptions bordered size="small" layout='horizontal' column={1}>
+                        <Descriptions.Item label="Start Time">{parseDateTimeSeconds(itinerary.start_time)}</Descriptions.Item>
+                        <Descriptions.Item label="Session">{itinerary.session}</Descriptions.Item>
+                        <Descriptions.Item label="Origin Postal Code">{itinerary.origin_postal_code}</Descriptions.Item>
+                    </Descriptions>
 
-            <MyCard title="Driver Details" style={{ width: 400, margin: '0 12px 24px 24px' }}>
-                
-                <Descriptions bordered size="small" layout='horizontal' column={1}>
-                <Descriptions.Item label="Name">{selectedEmployee.name}</Descriptions.Item>
-                <Descriptions.Item label="Role">{getRoleTag(selectedEmployee.role_id)}</Descriptions.Item>
-                <Descriptions.Item label="Contact">{selectedEmployee.contact_number}</Descriptions.Item>
-                <Descriptions.Item label="Email">{selectedEmployee.email || '-'}</Descriptions.Item>
-                </Descriptions>
-                
-            </MyCard>
+                </MyCard>
+
+                <MyCard title="Driver Details" style={{ width: 400 }}>
+                    
+                    <Descriptions bordered size="small" layout='horizontal' column={1}>
+                        <Descriptions.Item label="Name">{selectedEmployee.name}</Descriptions.Item>
+                        <Descriptions.Item label="Role">{getRoleTag(selectedEmployee.role_id)}</Descriptions.Item>
+                        <Descriptions.Item label="Contact">{selectedEmployee.contact_number}</Descriptions.Item>
+                        <Descriptions.Item label="Email">{selectedEmployee.email || '-'}</Descriptions.Item>
+                    </Descriptions>
+                    
+                </MyCard>
+            </Row>
 
             <MyCard title="Delivery Itinerary" style={{ flexGrow: 1, margin: '0 12px 24px 24px' }}>
 
@@ -78,20 +89,28 @@ const columns = [
         ellipsis: true,
     },
     {
-        title: 'Customer',
-        dataIndex: 'sales_order',
+        title: 'Company',
+        dataIndex: 'customer_company_name',
         key: 'customer_company_name',
         width: '20%',
         ellipsis: true,
-        render: (sales_order) => sales_order?.customer?.company_name || '-',
+        render: (customer_company_name) => customer_company_name || '-',
+    },
+    {
+        title: 'Customer',
+        dataIndex: 'customer_p1_name',
+        key: 'customer_p1_name',
+        width: '20%',
+        ellipsis: true,
+        render: (customer_p1_name) => customer_p1_name || '-',
     },
     {
         title: 'Contact Number',
-        dataIndex: 'sales_order',
-        key: 'customer_contact_number',
+        dataIndex: 'customer_phone_number',
+        key: 'customer_phone_number',
         width: '20%',
         ellipsis: true,
-        render: (sales_order) => sales_order?.customer?.p1_phone_number || '-',
+        render: (customer_phone_number) => customer_phone_number || '-',
     },
     {
         title: 'Address',

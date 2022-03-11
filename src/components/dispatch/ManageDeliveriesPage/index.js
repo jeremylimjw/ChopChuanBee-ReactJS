@@ -18,11 +18,10 @@ const breadcrumbs = [
 ];
 
 export default function ManageDeliveriesPage() {
-  const { handleHttpError, hasWriteAccessTo } = useApp();
+  const { handleHttpError } = useApp();
 
   const [form] = Form.useForm();
   const [loading, setLoading] = useState();
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
