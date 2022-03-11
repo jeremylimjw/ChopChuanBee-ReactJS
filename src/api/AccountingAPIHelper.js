@@ -15,7 +15,7 @@ export class AccountingAPIHelper {
           .then((res) => res.data);
     }
 
-    static async getBalanceSheet(query, start_date, end_date) {
+    static async getBalanceSheet(query, start_date, end_date, status) {
         const params = {};
         
         if (query?.name)
@@ -24,11 +24,11 @@ export class AccountingAPIHelper {
           params.end_date_from = start_date.toISOString();
           params.end_date_to = end_date.toISOString();
         }
-        // if (query?.deleted === true) {
-        //   params.deleted_date_is_null = 1;
-        // } else if (query?.deleted === false) {
-        //   params.deleted_date_is_nn = 1;
-        // }
+        if (status === true) {
+          params.deleted_date_is_null = 1;
+        } else if (status === false) {
+          params.deleted_date_is_nn = 1;
+        }
         params.order_by = 'created_at_desc';
         
        return axiosObject.get("/accounting/SOFP", { params })

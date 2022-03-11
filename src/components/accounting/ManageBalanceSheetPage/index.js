@@ -46,7 +46,7 @@ export default function ManageBalanceSheetPage() {
             start_date = moment(form.date[0]).set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toDate();
             end_date = moment(form.date[1]).set({ hour: 23, minute: 59, second: 59, millisecond: 999 }).toDate();
         }
-        AccountingAPIHelper.getBalanceSheet(form, start_date, end_date)
+        AccountingAPIHelper.getBalanceSheet(form, start_date, end_date, form.status)
         .then(results => {
           setBalanceSheets(results);
             setLoading(false);
@@ -70,6 +70,13 @@ export default function ManageBalanceSheetPage() {
                         </Form.Item>
                         <Form.Item name="date">
                             <DatePicker.RangePicker />
+                        </Form.Item>
+                        <Form.Item name="status">
+                            <Select style={{ width: 140 }} placeholder="Filter by Status">
+                            <Select.Option value={null}>All</Select.Option>
+                            <Select.Option value={true}>Active</Select.Option>
+                            <Select.Option value={false}>Inactive</Select.Option>
+                            </Select>
                         </Form.Item>
                         <Button onClick={resetForm}>Reset</Button>
                     </Form>
