@@ -1,5 +1,5 @@
 import { SearchOutlined } from '@ant-design/icons/lib/icons';
-import { Button, DatePicker, Form, Input, Select, Table } from 'antd';
+import { Button, Col, DatePicker, Form, Input, Row, Select, Table } from 'antd';
 import debounce from 'lodash.debounce';
 import React, { useEffect, useState } from 'react'
 import { EmployeeApiHelper } from '../../../api/EmployeeApiHelper';
@@ -72,51 +72,53 @@ export default function NI1Form({ itinerary, setItinerary, selectedEmployee, set
 
     return (
         <>
-            <MyCard style={{ width: 450 }} title="Itinerary Details">
+            <div style={{ display: 'flex', marginTop: -24 }}>
+                <MyCard style={{ width: 450, flexShrink: 0 }} title="Itinerary Details">
 
-                <Form labelCol={{ span: 12 }} wrapperCol={{ span: 12 }} form={form} autoComplete="off" labelAlign="left" onValuesChange={onFormValuesChange} initialValues={{...itinerary}}>
-                    
-                    <Form.Item name="start_time" label="Start Date" rules={[REQUIRED]}>
-                        <DatePicker showTime format="DD/MM/YYYY, H:mm:ss a"/>
-                    </Form.Item>
-
-                    <Form.Item name="session" label="Session" rules={[REQUIRED]}>
-                        <Select placeholder="Select Session">
-                            <Select.Option value="AM">AM</Select.Option>
-                            <Select.Option value="PM">PM</Select.Option>
-                        </Select>
-                    </Form.Item>
-
-                    <Form.Item label="Origin Postal Code" name="origin_postal_code" rules={[REQUIRED, NUMBER, exactLength(6)]}>
-                        <Input />
-                    </Form.Item>
-
-                </Form>
-            </MyCard>
-            
-            <MyCard>
-                <MyToolbar title="All Drivers">
-                    <Form form={searchForm} onValuesChange={debounce(onSearchFormValuesChange, 300)} layout='inline' autoComplete='off'>
-                        <Form.Item name="name">
-                            <Input placeholder='Search Name' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
+                    <Form labelCol={{ span: 12 }} wrapperCol={{ span: 12 }} form={form} autoComplete="off" labelAlign="left" onValuesChange={onFormValuesChange} initialValues={{...itinerary}}>
+                        
+                        <Form.Item name="start_time" label="Start Date" rules={[REQUIRED]}>
+                            <DatePicker showTime format="DD/MM/YYYY, H:mm:ss a"/>
                         </Form.Item>
-                        <Button onClick={resetForm}>Reset</Button>
+
+                        <Form.Item name="session" label="Session" rules={[REQUIRED]}>
+                            <Select placeholder="Select Session">
+                                <Select.Option value="AM">AM</Select.Option>
+                                <Select.Option value="PM">PM</Select.Option>
+                            </Select>
+                        </Form.Item>
+
+                        <Form.Item label="Origin Postal Code" name="origin_postal_code" rules={[REQUIRED, NUMBER, exactLength(6)]}>
+                            <Input />
+                        </Form.Item>
+
                     </Form>
-                </MyToolbar>
+                </MyCard>
+                
+                <MyCard style={{ marginLeft: 0 }}>
+                    <MyToolbar title="All Drivers">
+                        <Form form={searchForm} onValuesChange={debounce(onSearchFormValuesChange, 300)} layout='inline' autoComplete='off'>
+                            <Form.Item name="name">
+                                <Input placeholder='Search Name' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
+                            </Form.Item>
+                            <Button onClick={resetForm}>Reset</Button>
+                        </Form>
+                    </MyToolbar>
 
-                <Table loading={loading}
-                rowSelection={{ type: 'radio', onChange: handleRowSelect, selectedRowKeys: [selectedEmployee?.id] }}
-                columns={columns}
-                dataSource={employees}
-                pagination={{ pageSize: 6, showTotal: showTotal }}
-                rowKey="id"
-                />
+                    <Table loading={loading}
+                        rowSelection={{ type: 'radio', onChange: handleRowSelect, selectedRowKeys: [selectedEmployee?.id] }}
+                        columns={columns}
+                        dataSource={employees}
+                        pagination={{ pageSize: 6, showTotal: showTotal }}
+                        rowKey="id"
+                    />
 
-                <MyToolbar style={{ marginTop: 15 }}>
-                    <Button type="primary" onClick={nextStep} disabled={selectedEmployee.id == null}>Next</Button>
-                </MyToolbar>
+                    <MyToolbar style={{ marginTop: 15 }}>
+                        <Button type="primary" onClick={nextStep} disabled={selectedEmployee.id == null}>Next</Button>
+                    </MyToolbar>
 
-            </MyCard>
+                </MyCard>
+            </div>
         </>
     )
 }
@@ -125,7 +127,7 @@ const columns = [
     {
         title: 'Name',
         dataIndex: 'name',
-        width: 300,
+        width: '30%',
         ellipsis: true,
         sorter: (a, b) => sortByString(a.name, b.name),
     },
@@ -142,7 +144,7 @@ const columns = [
     {
         title: 'Contact Number',
         dataIndex: 'contact_number',
-        width: 250,
+        width: '20%',
         ellipsis: true,
         render: (contact_number) => contact_number || '-',
         sorter: (a, b) => sortByString(a.contact_number, b.contact_number),

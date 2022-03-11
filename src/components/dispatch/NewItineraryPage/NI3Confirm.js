@@ -20,7 +20,7 @@ export default function NI3Confirm({ itinerary, selectedEmployee, selectedOrders
 
     return (
         <>
-            <Row  style={{ marginTop: -24}}>
+            <Row style={{ marginTop: -24 }}>
                 <MyCard style={{ width: 450 }} title="Itinerary Details">
                     
                     <Descriptions bordered size="small" layout='horizontal' column={1}>
