@@ -94,14 +94,17 @@ export class AccountingAPIHelper {
         rental_payable: sofp.rental_payable,
         notes_payable: sofp.notes_payable,
         bonds_payable: sofp.bonds_payable,
-        other_liability_1: sofp.other_liability_1,
-        other_liability_2: sofp.other_liability_2,
+        other_current_liability_1: sofp.other_current_liability_1,
+        other_current_liability_2: sofp.other_current_liability_2,
+        other_non_current_liability_1: sofp.other_non_current_liability_1,
+        other_non_current_liability_2: sofp.other_non_current_liability_2,
         share_capital: sofp.share_capital,
         less_withdrawal: sofp.less_withdrawal,
         retained_earning: sofp.retained_earning,
         other_equity_1: sofp.other_equity_1,
         other_equity_2: sofp.other_equity_2,
         end_date: sofp.end_date,
+        remarks: sofp.remarks,
       })
       .then((res) => res.data);
   }

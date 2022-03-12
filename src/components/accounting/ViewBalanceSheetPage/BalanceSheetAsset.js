@@ -25,7 +25,7 @@ export default function BalanceSheetAsset({ BalanceSheet, setBalanceSheet }) {
 
     const totalAssets = (parseFloat(totalCurrentAssets) + parseFloat(totalNonCurrentAssets) + parseFloat(totalIntangibleAssets)).toFixed(2);
 
-    const totalCurrentLiabilities = (parseFloat(BalanceSheet.account_payable) + parseFloat(BalanceSheet.salary_payable) + parseFloat(BalanceSheet.interest_payable) + parseFloat(BalanceSheet.taxes_payable) + parseFloat(BalanceSheet.warranty_payable) + parseFloat(BalanceSheet.rental_payable) + parseFloat(BalanceSheet.other_liability_1) + parseFloat(BalanceSheet.other_liability_2)).toFixed(2);
+    const totalCurrentLiabilities = (parseFloat(BalanceSheet.account_payable) + parseFloat(BalanceSheet.salary_payable) + parseFloat(BalanceSheet.interest_payable) + parseFloat(BalanceSheet.taxes_payable) + parseFloat(BalanceSheet.warranty_payable) + parseFloat(BalanceSheet.rental_payable) + parseFloat(BalanceSheet.other_current_liability_1) + parseFloat(BalanceSheet.other_current_liability_2) + parseFloat(BalanceSheet.other_non_current_liability_1) + parseFloat(BalanceSheet.other_non_current_liability_2)).toFixed(2);
 
     const totalNonCurrentLiabilities = (parseFloat(BalanceSheet.notes_payable) + parseFloat(BalanceSheet.bonds_payable)).toFixed(2);
 
@@ -98,6 +98,14 @@ export default function BalanceSheetAsset({ BalanceSheet, setBalanceSheet }) {
                         <Form.Item labelCol={{ span: 3 }} wrapperCol={{ span: 24 }} label="End Date" name="end_date">
                             <Typography>{parseDate(BalanceSheet.end_date) || '-'}</Typography>
                         </Form.Item>
+                        <Form.Item labelCol={{ span: 3 }} wrapperCol={{ span: 24 }} label="Remarks" name="remarks">
+                            {!editing ? 
+                                <Typography>{BalanceSheet.remarks || '-'}</Typography>
+                            :
+                                <Input.TextArea autoSize={{ minRows: 3, maxRows: 6 }} />
+                            }
+                        </Form.Item>
+
                     </MyCard>
 
                     <MyCard>
@@ -316,16 +324,16 @@ export default function BalanceSheetAsset({ BalanceSheet, setBalanceSheet }) {
                                         <Input />
                                     }
                                 </Form.Item>
-                                <Form.Item label="Other Liability (1)" name="other_liability_1" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
+                                <Form.Item label="Other Current Liability (1)" name="other_current_liability_1" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
-                                        <Typography>{parseFloat(BalanceSheet.other_liability_1).toFixed(2) || '-'}</Typography>
+                                        <Typography>{parseFloat(BalanceSheet.other_current_liability_1).toFixed(2) || '-'}</Typography>
                                     :
                                         <Input />
                                     }
                                 </Form.Item>
-                                <Form.Item label="Other Liability (2)" name="other_liability_2" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
+                                <Form.Item label="Other Current Liability (2)" name="other_current_liability_2" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
-                                        <Typography>{parseFloat(BalanceSheet.other_liability_2).toFixed(2) || '-'}</Typography>
+                                        <Typography>{parseFloat(BalanceSheet.other_current_liability_2).toFixed(2) || '-'}</Typography>
                                     :
                                         <Input />
                                     }
@@ -344,6 +352,20 @@ export default function BalanceSheetAsset({ BalanceSheet, setBalanceSheet }) {
                                 <Form.Item label="Bonds Payable" name="bonds_payable" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
                                         <Typography>{parseFloat(BalanceSheet.bonds_payable).toFixed(2) || '-'}</Typography>
+                                    :
+                                        <Input />
+                                    }
+                                </Form.Item>
+                                <Form.Item label="Other Non-Current Liability (1)" name="other_non_current_liability_1" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
+                                    {!editing ? 
+                                        <Typography>{parseFloat(BalanceSheet.other_non_current_liability_1).toFixed(2) || '-'}</Typography>
+                                    :
+                                        <Input />
+                                    }
+                                </Form.Item>
+                                <Form.Item label="Other Non-Current Liability (2)" name="other_non_current_liability_2" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
+                                    {!editing ? 
+                                        <Typography>{parseFloat(BalanceSheet.other_non_current_liability_2).toFixed(2) || '-'}</Typography>
                                     :
                                         <Input />
                                     }

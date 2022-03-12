@@ -58,6 +58,12 @@ export default function NewBalanceSheetModal({ BalanceSheets, setBalanceSheets, 
                 >
                     <DatePicker />
                 </Form.Item>
+                <Form.Item
+                    label="Remarks"
+                    name="remarks"
+                >
+                    <Input.TextArea autoSize={{ minRows: 3, maxRows: 6 }} />
+                </Form.Item>
             </Form>
 
         </Modal>
