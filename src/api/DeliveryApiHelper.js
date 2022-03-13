@@ -16,6 +16,16 @@ export class DeliveryApiHelper {
             .then(res => res.data);
     }
 
+    static async updateItinerary(itinerary) {
+        return axiosObject.put(`/itinerary`, itinerary)
+            .then(res => res.data);
+    }
+
+    static async deleteItinerary(id) {
+        return axiosObject.delete(`/itinerary`, { params: { id: id }})
+            .then(res => res.data);
+    }
+
     static async getGeocode(postal_code) {
         return axiosObject.get(`/external/geocode`, { params: { postal_code: postal_code } })
             .then(res => res.data);

@@ -31,7 +31,7 @@ export default function NewItineraryPage() {
       ...itinerary,
       start_time:  itinerary.start_time.toDate(),
       driver_id: selectedEmployee.id,
-      delivery_orders: selectedOrders.map((x, idx) => ({...x, sequence: idx })),
+      delivery_orders: selectedOrders, // sequence is created by the backend based on the sent order
     }
 
     DeliveryApiHelper.createItinerary(newItinerary)

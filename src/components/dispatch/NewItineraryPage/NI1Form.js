@@ -1,6 +1,7 @@
 import { SearchOutlined } from '@ant-design/icons/lib/icons';
 import { Button, Col, DatePicker, Form, Input, Row, Select, Table } from 'antd';
 import debounce from 'lodash.debounce';
+import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { EmployeeApiHelper } from '../../../api/EmployeeApiHelper';
 import { getRoleTag, Role } from '../../../enums/Role';
@@ -78,7 +79,10 @@ export default function NI1Form({ itinerary, setItinerary, selectedEmployee, set
                     <Form labelCol={{ span: 12 }} wrapperCol={{ span: 12 }} form={form} autoComplete="off" labelAlign="left" onValuesChange={onFormValuesChange} initialValues={{...itinerary}}>
                         
                         <Form.Item name="start_time" label="Start Date" rules={[REQUIRED]}>
-                            <DatePicker showTime format="DD/MM/YYYY, H:mm:ss a"/>
+                            <DatePicker showTime 
+                                format="DD/MM/YYYY, H:mm:ss a"
+                                disabledDate={(prev) => (prev < moment().startOf('day'))}
+                            />
                         </Form.Item>
 
                         <Form.Item name="session" label="Session" rules={[REQUIRED]}>
