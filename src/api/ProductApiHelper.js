@@ -56,4 +56,9 @@ export class ProductApiHelper {
         return axiosObject.get(`/product/inventoryMovement`, { params: params })
             .then(res => res.data);
     }
+
+    static async createDamagedInventory(product_id, quantity) {
+        return axiosObject.post(`/product/inventoryMovement`, { product_id: product_id, quantity: quantity })
+            .then(res => res.data);
+    }
 }

@@ -14,7 +14,7 @@ export default function NewDeliveryOrderModal({ purchaseOrder, setPurchaseOrder,
 
     const [items, setItems] = useState([]);
 
-    tableColumns[4].title = isModalVisible === 1 ? 'Top Up' : 'Refund';
+    tableColumns[4].title = isModalVisible === 1 ? 'Top Up' : 'Return';
     tableColumns[4].onCell = (record) => ({ type: 'input_number', field: 'top_up', record, handleSave });
 
     useEffect(() => {
@@ -49,7 +49,7 @@ export default function NewDeliveryOrderModal({ purchaseOrder, setPurchaseOrder,
     function renderTitle() {
         switch(isModalVisible) {
             case 1: return 'Receive New Delivery';
-            case 2 : return 'Refund Delivery';
+            case 2 : return 'Return Delivery';
             default: return '';
         }
     }
@@ -66,7 +66,7 @@ export default function NewDeliveryOrderModal({ purchaseOrder, setPurchaseOrder,
         } else { // Make refund
             for (let item of items) {
                 if (item.top_up > item.total_received) {
-                    message.error('Refund cannot exceed received quantity.')
+                    message.error('Return cannot exceed received quantity.')
                     return;
                 }
             }
@@ -110,7 +110,7 @@ export default function NewDeliveryOrderModal({ purchaseOrder, setPurchaseOrder,
                 if (isModalVisible === 1) { // Make payment
                     message.success("Deliveries successfully registered!");
                 } else if (isModalVisible === 2) { // Make refund
-                    message.success("Refunds successfully registered!");
+                    message.success("Returns successfully registered!");
                 }
                 
                 setPurchaseOrder(new PurchaseOrder(newPurchaseOrder));

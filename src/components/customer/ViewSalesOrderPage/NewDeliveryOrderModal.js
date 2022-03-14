@@ -36,7 +36,7 @@ export default function NewDeliveryOrderModal({ salesOrder, setSalesOrder, isMod
         // Validation
         for (let item of items) {
             if (item.top_up > item.total_balance) {
-                message.error('Refund cannot exceed received quantity.')
+                message.error('Return cannot exceed received quantity.')
                 return;
             }
         }
@@ -59,7 +59,7 @@ export default function NewDeliveryOrderModal({ salesOrder, setSalesOrder, isMod
                 setLoading(false);
                 setIsModalVisible(0);
                 
-                message.success("Refunds successfully registered!");
+                message.success("Returns successfully registered!");
                 
                 setSalesOrder(new SalesOrder(newSalesOrder));
 
@@ -69,7 +69,7 @@ export default function NewDeliveryOrderModal({ salesOrder, setSalesOrder, isMod
     }
 
     return (
-        <Modal title="Refund Items" visible={isModalVisible !== 0}  width={800}
+        <Modal title="Return Items" visible={isModalVisible !== 0}  width={800}
             onOk={handleFormSubmit} 
             onCancel={() => setIsModalVisible(0)}
             okButtonProps={{ disabled: (items.filter(x => x.top_up > 0).length === 0 || loading) }}
@@ -110,7 +110,7 @@ const tableColumns = [
         align: 'center' 
     },
     { 
-        title: 'Refund', 
+        title: 'Return', 
         dataIndex: 'top_up', 
         key: 'top_up', align: 'center', 
     }

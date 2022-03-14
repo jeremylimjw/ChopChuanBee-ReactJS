@@ -22,7 +22,7 @@ export default function SO5DeliveriesTable({ salesOrder, setSalesOrder, loading,
                 <MyToolbar title="Sent Items">
                     {hasWriteAccessTo(View.CRM.id) &&
                     <>
-                        <Button icon={<UndoOutlined />} disabled={loading} onClick={() => setIsModalVisible(2)}>Refund</Button>
+                        <Button icon={<UndoOutlined />} disabled={loading} onClick={() => setIsModalVisible(2)}>Return</Button>
                         {/* <Button type="primary" icon={<PlusOutlined />} disabled={loading} onClick={() => setIsModalVisible(1)}>Receive New Delivery</Button> */}
                     </>
                     }
@@ -72,7 +72,7 @@ function renderItem(movement) {
             <List.Item>
                 <List.Item.Meta
                 avatar={<Avatar icon={<MinusOutlined />} style={{ background: "#FA8072" }} />}
-                title={`Refunded ${movement.quantity} unit`}
+                title={`Returned ${movement.quantity} unit`}
                 description={parseDate(movement.created_at)}
                 />
             </List.Item>)

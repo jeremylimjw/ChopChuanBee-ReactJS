@@ -169,7 +169,7 @@ export default function SO2Form({ form, salesOrder, setSalesOrder, loading, save
                 {showDelivery &&
                     <>
                         <Form.Item label="Address" name="delivery_address" rules={salesOrder.isStatus(POStatus.PENDING) ? [REQUIRED] : []}>
-                            {salesOrder.isStatus(POStatus.PENDING) ? 
+                            {salesOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED) ? 
                                 <Input />
                             :
                                 <Typography.Text>{salesOrder.delivery_address}</Typography.Text>
@@ -177,7 +177,7 @@ export default function SO2Form({ form, salesOrder, setSalesOrder, loading, save
                         </Form.Item>
 
                         <Form.Item label="Postal Code" name="delivery_postal_code" rules={salesOrder.isStatus(POStatus.PENDING) ? [REQUIRED] : []}>
-                            {salesOrder.isStatus(POStatus.PENDING) ? 
+                            {salesOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED) ? 
                                 <Input />
                             :
                                 <Typography.Text>{salesOrder.delivery_postal_code}</Typography.Text>
@@ -185,7 +185,7 @@ export default function SO2Form({ form, salesOrder, setSalesOrder, loading, save
                         </Form.Item>
 
                         <Form.Item label="Remarks" name="delivery_remarks">
-                            {salesOrder.isStatus(POStatus.PENDING) ? 
+                            {salesOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED) ? 
                                 <TextArea />
                             :
                                 <Typography.Text>{salesOrder.delivery_remarks || '-'}</Typography.Text>
@@ -194,9 +194,9 @@ export default function SO2Form({ form, salesOrder, setSalesOrder, loading, save
                     </>
                 }
 
-                {hasWriteAccessTo(View.CRM.id) &&
+                { (hasWriteAccessTo(View.CRM.id) && salesOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED)) &&
                 <Form.Item wrapperCol={{ offset: 6 }}>
-                    <Button icon={<SaveOutlined />} disabled={loading || !salesOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED)} onClick={saveForLater}>Save for later</Button>
+                    <Button icon={<SaveOutlined />} disabled={loading} onClick={saveForLater}>Save for later</Button>
                 </Form.Item>
                 }
 
