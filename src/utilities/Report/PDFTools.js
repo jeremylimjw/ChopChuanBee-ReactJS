@@ -36,12 +36,12 @@ export class PDFTools {
   }
 
   /**
-   * 
+   * Generic table component with no merged cells
    * @param {[]} tableHeaders Array of the names of the table's header 
    * @param {[[],...]} data  Array that contains each row of data for the table, 
    *                         the length of each row/sub array must be the same as tableHeader length
    * @param {[]} widths Array of the widths for the table, '*' wildcard is used for automatic sizing if undefined
-   * @returns 
+   * @returns PDFMake table component
    */
   static tableBuilder(tableHeaders, data, widths) {
     let tableWidth = widths || []
@@ -65,13 +65,12 @@ export class PDFTools {
       return this.formatText(val)
     })
     tableComponent.table.body.push(tableHeaders)
-    data.map((row) => {
+    data.forEach((row) => {
       row.map((val) => {
-        return this.formatText(val, { fontSize: '10' })
+        return this.formatText(val)
       })
       tableComponent.table.body.push(row)
     })
-
     return tableComponent
   }
 

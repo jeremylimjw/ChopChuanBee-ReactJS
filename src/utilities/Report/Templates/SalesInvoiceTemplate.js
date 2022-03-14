@@ -3,11 +3,11 @@ import { PDFTools } from "../PDFTools"
 
 const formatSOData = (data) => {
   return {
-    po_num: {
+    so_num: {
       text: 'SALES ORDER NO: ',
       value: data.id || '_____________________________________________'
     },
-    po_date: {
+    so_date: {
       text: 'SALES ORDER DATE: ',
       value: moment(data.created_at).format('ll') || '_____________________________________________'
     }
@@ -54,19 +54,35 @@ const formatVendorData = (data) => {
   }
 }
 
+const constructSalesOrderTable = (data) => {
+  let SOTableHeaders = ['No.', 'Item Name', 'Qty', 'Unit', 'Unit Price', 'Amount']
+    .map((val) => PDFTools.formatText(val, 'tableHeader'))
+  let SOTableItems = data.sales_order_items.map((item, index) => {
+    let arr = []
+    arr.push(PDFTools.formatText(index + 1, 'tableContent'))
+    arr.push(PDFTools.formatText(item.product.name, 'tableContent'))
+    arr.push(PDFTools.formatText(item.quantity, 'tableContent'))
+    arr.push(PDFTools.formatText(item.product.unit, 'tableContent'))
+    arr.push(PDFTools.formatText(item.unit_price, 'tableContent'))
+    let sum = parseInt(item.unit_price) * parseInt(item.quantity)
+    arr.push(PDFTools.formatText(`${sum}`, 'tableContent'))
+    return arr
+  })
+  SOTableItems.push(
+    [{ ...PDFTools.formatText('Subtotal', 'tableHeader'), colSpan: 5 }, {}, {}, {}, {}, PDFTools.formatText('50000', 'tableContent')],
+    [{ ...PDFTools.formatText('GST Rate', 'tableHeader'), colSpan: 5 }, {}, {}, {}, {}, PDFTools.formatText(data.charged_under.gst_rate, 'tableContent')],
+    [{ ...PDFTools.formatText('Total', 'tableHeader'), colSpan: 5 }, {}, {}, {}, {}, PDFTools.formatText('50000', 'tableContent')],
+  )
+  let widths = ['5%', '*', '10%', '10%', '10%', '10%']
+  let SOTable = PDFTools.tableBuilder(SOTableHeaders, SOTableItems, widths)
+  return SOTable
+}
+
 export const salesInvoiceTemplate = (data) => {
   let soData = formatSOData(data)
   let companyData = formatCompanyData(data)
   let vendorData = formatVendorData(data)
-  let SOTableItems = data.sales_order_items.map((item, index) => {
-    let arr = []
-    arr.push(index + 1)
-    arr.push(item.product.name)
-    arr.push(item.quantity)
-    arr.push(item.product.unit)
-    return arr
-  })
-  let SOTableHeaders = ['No.', 'Item Name', 'Quantity', 'Unit']
+  let SOTable = constructSalesOrderTable(data)
   let document = {
     pageSize: 'A4',
     defaultStyle: {
@@ -84,15 +100,16 @@ export const salesInvoiceTemplate = (data) => {
       },
       {
         columns: [
-          PDFTools.generateForm(companyData, { formWidth: '50%', fontSize: '11' }),
-          PDFTools.generateForm(vendorData, { formWidth: '50%', fontSize: '11' }),
+          PDFTools.generateForm(companyData, { formWidth: '50%', fontSize: '10' }),
+          PDFTools.generateForm(vendorData, { formWidth: '50%', fontSize: '10' }),
         ]
       },
       PDFTools.formatText('', 'header'),
-      PDFTools.tableBuilder(SOTableHeaders, SOTableItems, ['5%', '*', '20%', '20%']),
+      SOTable,
+      // PDFTools.tableBuilder(SOTableHeaders, SOTableItems, ['5%', '*', '10%', '10%', '10%', '10%']),
       PDFTools.formatText('SPECIAL INSTRUCTIONS OR REMARKS', 'subHeader'),
       PDFTools.generateEmptyBox(515, 200),
-      PDFTools.formatText('If you have any questions about this purchase order, please contact 61234567', 'footerText')
+      PDFTools.formatText(`If you have any questions about this purchase order, please contact ${companyData.contactNum.value}`, 'footerText')
     ],
     styles: {
       header: {
@@ -113,6 +130,14 @@ export const salesInvoiceTemplate = (data) => {
         fontSize: 8,
         alignment: 'center',
         margin: [0, 10, 0, 0]
+      },
+      tableContent: {
+        fontSize: 9,
+        alignment: 'center'
+      },
+      tableHeader: {
+        fontSize: 10,
+        alignment: 'center'
       }
     }
   }

@@ -27,7 +27,7 @@ const formatCompanyData = (data) => {
     },
     bizRegNum: {
       text: 'BUSINESS REG NO: ',
-      value: companyData.registration_number || '',
+      value: companyData.registration_number || '-',
     },
     shipping_addr: {
       text: 'SHIPPING ADDRESS:',
@@ -74,7 +74,7 @@ export const purchaseOrderTemplate = (data) => {
     },
     content: [
       PDFTools.formatText('PURCHASE ORDER', 'header'),
-      PDFTools.generateForm(poData, { formWidth: '15%', margin: [200] }),
+      PDFTools.generateForm(poData, { formWidth: '30%', margin: [20] }),
       PDFTools.dividerLine('horizontal', 515),
       {
         columns: [
@@ -92,7 +92,7 @@ export const purchaseOrderTemplate = (data) => {
       PDFTools.tableBuilder(POTableHeaders, POTableItems, ['5%', '*', '20%', '20%']),
       PDFTools.formatText('SPECIAL INSTRUCTIONS OR REMARKS', 'subHeader'),
       PDFTools.generateEmptyBox(515, 200),
-      PDFTools.formatText('If you have any questions about this purchase order, please contact 61234567', 'footerText')
+      PDFTools.formatText('Please contact us if you have any questions about this purchase order', 'footerText')
     ],
     styles: {
       header: {

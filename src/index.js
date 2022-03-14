@@ -26,6 +26,7 @@ import ViewAccountPage from './pages/Accounts/ViewAccountPage';
 import ManageLeavesPage from './pages/HumanResource/ManageLeavesPage';
 import MyLeavePage from './pages/User/MyLeavePage';
 import ReportGenerationPage from './pages/Report/ReportGenerationPage';
+import DeliveryStickerPrintPage from './pages/Report/DeliveryStickerPrintPage';
 
 // Add on more routes here
 const routes = [
@@ -186,6 +187,7 @@ ReactDOM.render(
             <Route path="/" element={<RequireAuth><App /></RequireAuth>}>
               {routes.map((route, index) => renderRoute(route, index))}
             </Route>
+            <Route path="/deliveryStickers" element={<DeliveryStickerPrintPage />} />
           </Routes>
         </Layout>
       </AppProvider>
