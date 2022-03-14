@@ -141,7 +141,12 @@ export class AccountingAPIHelper {
 
   static async createIncome(income) {
     return axiosObject
-      .post("/accounting/income_statement", income)
+      .post("/accounting/income_statement", {
+        name: income.name, 
+        start_date: income.start_date,
+        end_date: income.end_date,
+        remarks: income.remarks,
+      })
       .then((res) => res.data);
   }
 

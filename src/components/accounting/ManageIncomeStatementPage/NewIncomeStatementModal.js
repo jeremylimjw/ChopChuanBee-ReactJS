@@ -25,6 +25,7 @@ export default function NewIncomeStatementModal({ incomes, setIncomes, isModalVi
               name: values.name,
               start_date: startDate.format('YYYY-MM-DD HH:mm:ss'),
               end_date: endDate.format('YYYY-MM-DD HH:mm:ss'),
+              remarks: values.remarks,
             }
           setLoading(true);
           AccountingAPIHelper.createIncome(incomeStatement)
