@@ -36,7 +36,6 @@ export default function NewItineraryPage() {
 
     DeliveryApiHelper.createItinerary(newItinerary)
       .then(result => {
-        console.log(result)
         message.success(`Itinerary successfully created!`);
         navigate(`./../${result.id}`);
       })

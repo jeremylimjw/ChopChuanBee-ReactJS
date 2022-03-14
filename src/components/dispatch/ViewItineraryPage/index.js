@@ -39,8 +39,6 @@ export default function ViewItineraryPage() {
   }, [id, handleHttpError, navigate]);
 
   function updateItinerary() {
-    console.log(itinerary);
-
     setLoading(true);
     DeliveryApiHelper.updateItinerary(itinerary)
       .then(() => {
@@ -88,7 +86,13 @@ export default function ViewItineraryPage() {
           </Col>
         </Row>
         
-        <I3DeliveryOrders itinerary={itinerary} setItinerary={setItinerary} updateItinerary={updateItinerary} />
+        <I3DeliveryOrders 
+          itinerary={itinerary} 
+          setItinerary={setItinerary} 
+          updateItinerary={updateItinerary} 
+          loading={loading}
+          setLoading={setLoading}
+        />
       
       </MyLayout>
     }

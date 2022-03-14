@@ -1,5 +1,5 @@
-import { DeleteOutlined } from '@ant-design/icons/lib/icons'
-import { Button, Table } from 'antd'
+import { DeleteOutlined, PlusOutlined, PrinterOutlined, ReloadOutlined, SaveOutlined } from '@ant-design/icons/lib/icons'
+import { Button, Space, Table } from 'antd'
 import React from 'react'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
@@ -10,7 +10,7 @@ import DraggableTableRow from '../../common/DraggableTableRow'
 import MyCard from '../../common/MyCard'
 import MyToolbar from '../../common/MyToolbar'
 
-export default function I3DeliveryOrders({ itinerary, setItinerary, updateItinerary }) {
+export default function I3DeliveryOrders({ itinerary, setItinerary, updateItinerary, loading, setLoading }) {
 
     const { hasWriteAccessTo } = useApp();
 
@@ -29,8 +29,18 @@ export default function I3DeliveryOrders({ itinerary, setItinerary, updateItiner
         setItinerary({ ...itinerary, delivery_orders: newItems })
     };
 
+    function printItinerary() {
+        console.log(JSON.stringify(itinerary, null, 2))
+    }
+
     return (
-        <MyCard title="Delivery Itinerary" style={{ marginTop: 0 }}>
+        <MyCard style={{ marginTop: 0 }}>
+
+            <MyToolbar title="Delivery Itinerary">
+                { hasWriteAccessTo(View.DISPATCH.name) && 
+                <Button icon={<PlusOutlined />} >Add (WIP)</Button>
+                }
+            </MyToolbar>
 
             <DndProvider backend={HTML5Backend}>
                 <Table 
@@ -43,9 +53,21 @@ export default function I3DeliveryOrders({ itinerary, setItinerary, updateItiner
                 />
             </DndProvider>
 
-            <MyToolbar style={{ marginTop: 15 }}>
-                <Button type="primary" onClick={updateItinerary} disabled={!hasWriteAccessTo(View.DISPATCH.id)}>Save</Button>
-            </MyToolbar>
+            <div style={{ display: 'flex', marginTop: 15 }}>
+
+                <Space size="middle">
+                    <Button icon={<PrinterOutlined />} onClick={printItinerary}>Print</Button>
+                </Space>
+                
+                { hasWriteAccessTo(View.DISPATCH.id) && 
+                <div style={{ marginLeft: 'auto' }}>
+                    <Space size="middle">
+                        <Button icon={<ReloadOutlined />} onClick={updateItinerary} disabled={loading}>Optimize</Button>
+                        <Button icon={<SaveOutlined />} type="primary" onClick={updateItinerary} disabled={loading}>Save Sequence</Button>
+                    </Space>
+                </div>
+                }
+            </div>
 
         </MyCard>
     )
