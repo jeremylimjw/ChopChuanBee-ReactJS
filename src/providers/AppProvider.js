@@ -52,7 +52,11 @@ export function AppProvider({ children }) {
         if (error.response) {
             // The request was made and the server responded with a status code
             // that falls out of the range of 2xx
-            if (error.response.status === 333) {
+            if (error.response.status === 401) {
+                removeSession();
+                message.error(error.response.data);
+                throw Error(error);
+            } else if (error.response.status === 333) {
                 removeSession();
                 message.error('Login session timed out. Please login again.');
                 throw Error('Login session timed out. Please login again.');
@@ -66,10 +70,12 @@ export function AppProvider({ children }) {
             // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
             // http.ClientRequest in node.js
             message.error('The request was made but no response was received.')
+            console.error(error)
             throw error.request
         } else {
             // Something happened in setting up the request that triggered an Error
             message.error('Something happened in setting up the request that triggered an Error.')
+            console.error(error)
             throw error.message;
         }
     }
