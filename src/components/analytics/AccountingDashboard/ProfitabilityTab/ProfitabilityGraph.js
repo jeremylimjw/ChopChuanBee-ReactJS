@@ -1,23 +1,67 @@
 import React, { useState, useEffect } from 'react';
+import { Form, DatePicker, Button } from 'antd';
 import { Line } from '@ant-design/plots';
+import { AnalyticsApiHelper } from '../../../../api/AnalyticsApiHelper';
+import debounce from 'lodash.debounce';
+import moment from 'moment';
+import MyCard from '../../../common/MyCard';
+import MyToolbar from '../../../common/MyToolbar';
+import { useApp } from '../../../../providers/AppProvider';
 
-export default function A1Profits() {
+export default function ProfitabilityGraph(props) {
     const [data, setData] = useState([]);
+    const [loading, setLoading] = useState();
+    const [form] = Form.useForm();
+    const { handleHttpError, hasWriteAccessTo } = useApp();
 
     useEffect(() => {
-        // asyncFetch();
         setData([...revenue, ...cogs, ...profitsEarned]);
-    }, []);
+        setLoading(true);
 
-    //   const asyncFetch = () => {
-    //     fetch(
-    //       "https://gw.alipayobjects.com/os/bmw-prod/e00d52f4-2fa6-47ee-a0d7-105dd95bde20.json")
-    //       .then((response) => response.json())
-    //       .then((json) => setData(json))
-    //       .catch((error) => {
-    //         console.log("fetch data failed", error);
-    //       });
-    //   };
+        //Figure out why this has error
+        // AnalyticsApiHelper.getCOGS(oneYearAgo, currDate)
+        //     .then(result => { console.log(result) })
+        //     .catch(handleHttpError)
+        //     .catch(() => setLoading(false));
+
+        //Figure out why this has error
+        // AnalyticsApiHelper.getRevenue(oneYearAgo, currDate)
+        //     .then(result => { console.log(result) })
+        //     .catch(handleHttpError)
+        //     .catch(() => setLoading(false));
+
+        const profits = AnalyticsApiHelper.getProfits(props.oneYearAgo, props.currDate)
+            .then(result => { console.log(result) })
+            //Add "name: profits" to each data retrieved
+            //Extract and edit "month" for each data
+            //Change "profit" to "price" to each data
+            .catch(handleHttpError)
+            .catch(() => setLoading(false));
+
+        // setData([...profits]);
+
+    }, [handleHttpError, setLoading]);
+
+    function onValuesChange(_, form) {
+        let start_date, end_date;
+        if (form.date && form.date[0] && form.date[1]) {
+            start_date = moment(form.date[0]).set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toDate();
+            end_date = moment(form.date[1]).set({ hour: 23, minute: 59, second: 59, millisecond: 999 }).toDate();
+        }
+
+        // LogApiHelper.get(form.name, start_date, end_date, form.view_id)
+        //     .then((results) => {
+        //         setLogs(results);
+        //         setLoading(false);
+        //     })
+        //     .catch(handleHttpError)
+        //     .catch(() => setLoading(false));
+    }
+
+    function resetForm() {
+        form.resetFields();
+        onValuesChange(null, form.getFieldsValue());
+    }
 
     const revenue = [
         {
@@ -213,7 +257,25 @@ export default function A1Profits() {
         xField: 'month',
         yField: 'price',
         seriesField: 'name',
+        xAxis: { 
+            title: {
+                text: "Month",
+                style: {
+                    fill: "black",
+                    fillOpacity: 0.5,
+                    stroke: "black",
+                },
+            },
+        },
         yAxis: {
+            title: {
+                text: "Price (SGD)",
+                style: {
+                    fill: "black",
+                    fillOpacity: 0.5,
+                    stroke: "black",
+                },
+            },
             label: {
                 formatter: (v) => `${(v / 1).toFixed(2)} `,
             },
@@ -222,7 +284,6 @@ export default function A1Profits() {
             position: 'top',
         },
         smooth: true,
-        // @TODO 后续会换一种动画方式
         animation: {
             appear: {
                 animation: 'path-in',
@@ -231,6 +292,17 @@ export default function A1Profits() {
         },
     };
 
-    return <Line {...config} />;
-    return <></>;
+    return (
+        <MyCard style={{marginLeft: '3px'}}>
+            <MyToolbar title='Profitability Trend'>
+                <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
+                    <Form.Item name='date'>
+                        <DatePicker.RangePicker />
+                    </Form.Item>
+                    <Button onClick={resetForm}>Reset</Button>
+                </Form>
+            </MyToolbar>
+            <Line {...config} />
+        </MyCard>
+    );
 }

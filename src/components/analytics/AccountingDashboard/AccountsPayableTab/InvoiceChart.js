@@ -1,8 +1,32 @@
 import React, { useState, useEffect } from 'react';
+import { Form, DatePicker, Button } from 'antd';
 import { Column } from '@ant-design/plots';
+import { AnalyticsApiHelper } from '../../../../api/AnalyticsApiHelper';
+import debounce from 'lodash.debounce';
+import moment from 'moment';
+import MyCard from '../../../common/MyCard';
+import MyToolbar from '../../../common/MyToolbar';
+import { useApp } from '../../../../providers/AppProvider';
 
-export default function A5Invoice() {
-    const data = [
+export default function InvoiceChart(props) {
+    const [data, setData] = useState([]);
+    const [loading, setLoading] = useState();
+    const { handleHttpError, hasWriteAccessTo } = useApp();
+
+    useEffect(() => {        
+        setLoading(true);
+
+        const invoices = AnalyticsApiHelper.getPayableInvoices()
+            .then(result => { console.log(result) })
+            .catch(handleHttpError)
+            .catch(() => setLoading(false));
+
+        setData([invoices]);
+
+    }, [handleHttpError, setLoading]);
+
+    //Figure out if able to retrieve the data or not, or just rendering issue
+    const initInvoices = [
         {
             type: '王静 Reed, Valentine and Howard',
             value: 20,
@@ -44,15 +68,15 @@ export default function A5Invoice() {
             value: 5,
         },
     ];
+
     const config = {
         data,
-        xField: 'type',
-        yField: 'value',
+        // xField: 'type',
+        xField: 'id',
+        // yField: 'value',
+        yField: 'sum',
         label: {
-            // 可手动配置 label 数据标签位置
             position: 'middle',
-            // 'top', 'bottom', 'middle',
-            // 配置样式
             style: {
                 fill: '#FFFFFF',
                 opacity: 0.6,
@@ -65,13 +89,20 @@ export default function A5Invoice() {
             },
         },
         meta: {
-            type: {
-                alias: 'type',
+            // type: {
+            //     alias: 'type',
+            // },
+            // sales: {
+            //     alias: 'value',
+            // },
+            id: {
+                alias: 'ID',
             },
-            sales: {
-                alias: 'value',
+            sum: {
+                alias: 'sum',
             },
         },
     };
+
     return <Column {...config} />;
 }

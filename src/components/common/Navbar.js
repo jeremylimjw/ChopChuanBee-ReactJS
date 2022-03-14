@@ -1,4 +1,4 @@
-import { BellOutlined, LineChartOutlined, UserOutlined } from '@ant-design/icons/lib/icons'
+import { BellOutlined, UserOutlined } from '@ant-design/icons/lib/icons'
 import { Menu, Layout, Popover, Button, Space } from 'antd'
 import React, { useState } from 'react'
 import { useApp } from '../../providers/AppProvider'
@@ -28,12 +28,9 @@ const Navbar = () => {
     <Header style={styles.header}>
       <Menu mode='horizontal' theme='dark' style={{ float: 'right' }}>
         <Menu.Item key='1'>
-          <LineChartOutlined style={{ fontSize: '16px' }} />
-        </Menu.Item>
-        <Menu.Item key='2'>
           <BellOutlined style={{ fontSize: '16px' }} />
         </Menu.Item>
-        <Menu.Item key='3'>
+        <Menu.Item key='2'>
           <Popover placement="bottom" content={content}>
             <UserOutlined style={{ fontSize: '16px' }} />
           </Popover>
