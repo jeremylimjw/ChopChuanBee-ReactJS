@@ -2,10 +2,7 @@ import { Form, InputNumber, message, Select } from 'antd'
 import Modal from 'antd/lib/modal/Modal'
 import React, { useEffect, useState } from 'react'
 import { SalesOrderApiHelper } from '../../../api/SalesOrderApiHelper';
-import { AccountingType } from '../../../enums/AccountingType';
-import { MovementType } from '../../../enums/MovementType';
 import { PaymentMethod } from '../../../enums/PaymentMethod';
-import { PaymentTerm } from '../../../enums/PaymentTerm';
 import { SalesOrder } from '../../../models/SalesOrder';
 import { useApp } from '../../../providers/AppProvider';
 
