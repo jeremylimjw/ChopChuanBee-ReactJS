@@ -121,19 +121,17 @@ export class AccountingAPIHelper {
 
   static async getIncome(query, start_date, end_date, status) {
     const params = {};
-
-    if (query?.name) params.name_like = query.name;
+    if (query?.name) params.name = query.name;
     if (start_date && end_date) {
-      params.end_date_from = start_date.toISOString();
-      params.end_date_to = end_date.toISOString();
+      params.start_date = start_date;
+      params.end_date = end_date;
     }
     if (status === true) {
-      params.deleted_date_is_null = 1;
+      params.status = 1;
     } else if (status === false) {
-      params.deleted_date_is_nn = 1;
+      params.status = 2;
     }
     params.order_by = "created_at_desc";
-
     return axiosObject
       .get("/accounting/income_statement", { params })
       .then((res) => res.data);
