@@ -2,6 +2,7 @@ import { SearchOutlined } from '@ant-design/icons/lib/icons';
 import { Button, Form, Input, Table } from 'antd';
 import debounce from 'lodash.debounce';
 import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom';
 import { DeliveryApiHelper } from '../../../api/DeliveryApiHelper';
 import { DeliveryStatus } from '../../../enums/DeliveryStatus';
 import { useApp } from '../../../providers/AppProvider';
@@ -114,6 +115,7 @@ const columns = [
     key: 'sales_order_id',
     width: 120,
     ellipsis: true,
+    render: (sales_order_id) => <Link to={`/customer/sales/${sales_order_id}`}>{sales_order_id}</Link>,
     sorter: (a, b) => sortByNumber(a.sales_order_id, b.sales_order_id),
   },
   {
@@ -122,7 +124,7 @@ const columns = [
     key: 'customer_company_name',
     width: '20%',
     ellipsis: true,
-    render: (customer_company_name) => customer_company_name || '-',
+    render: (customer_company_name, record) => customer_company_name ? <Link to={`/customer/customers/${record.customer_id}`}>{customer_company_name}</Link> : '-',
     sorter: (a, b) => sortByString(a.customer_company_name || '-', b.customer_company_name || '-'),
   },
   {

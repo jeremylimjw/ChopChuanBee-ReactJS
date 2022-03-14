@@ -2,6 +2,7 @@ import { Button, Table, Descriptions, Row } from 'antd';
 import React from 'react'
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { Link } from 'react-router-dom';
 import { getRoleTag } from '../../../enums/Role';
 import { parseDateTimeSeconds } from '../../../utilities/datetime';
 import DraggableTableRow from '../../common/DraggableTableRow';
@@ -87,6 +88,7 @@ const columns = [
         key: 'sales_order_id',
         width: 120,
         ellipsis: true,
+        render: (sales_order_id) => <Link to={`/customer/sales/${sales_order_id}`}>{sales_order_id}</Link>,
     },
     {
         title: 'Company',
@@ -94,7 +96,7 @@ const columns = [
         key: 'customer_company_name',
         width: '20%',
         ellipsis: true,
-        render: (customer_company_name) => customer_company_name || '-',
+        render: (customer_company_name, record) => customer_company_name ? <Link to={`/customer/customers/${record.customer_id}`}>{customer_company_name}</Link> : '-',
     },
     {
         title: 'Customer',

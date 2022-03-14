@@ -11,6 +11,8 @@ import { sortByDate, sortByNumber, sortByString } from "../../../utilities/sorte
 import MyToolbar from "../../common/MyToolbar";
 import { DeliveryApiHelper } from "../../../api/DeliveryApiHelper";
 import { DeliveryStatus, getDeliveryStatusTag } from "../../../enums/DeliveryStatus";
+import ViewDeliveryOrderModal from "../ViewDeliveryOrderModal";
+import { Link } from "react-router-dom";
 
 const breadcrumbs = [
   { url: "/dispatch/deliveryOrders", name: "Dispatch" },
@@ -23,6 +25,9 @@ export default function ManageDeliveriesPage() {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState();
   const [orders, setOrders] = useState([]);
+  const [showDeliveryOrder, setShowDeliveryOrder] = useState();
+
+  columns[8].render = (_, record) => <Button type="link" style={{ paddingLeft: 0 }} onClick={() => setShowDeliveryOrder(record)}>View</Button>;
 
   useEffect(() => {
     setLoading(true);
@@ -80,6 +85,8 @@ export default function ManageDeliveriesPage() {
         />
       </MyCard>
 
+      <ViewDeliveryOrderModal showDeliveryOrder={showDeliveryOrder} setShowDeliveryOrder={setShowDeliveryOrder} />
+
     </MyLayout>
   );
 }
@@ -100,6 +107,7 @@ const columns = [
     key: 'sales_order_id',
     width: 120,
     ellipsis: true,
+    render: (sales_order_id) => <Link to={`/customer/sales/${sales_order_id}`}>{sales_order_id}</Link>,
     sorter: (a, b) => sortByNumber(a.sales_order_id, b.sales_order_id),
   },
   {
@@ -108,7 +116,7 @@ const columns = [
     key: 'customer_company_name',
     width: '20%',
     ellipsis: true,
-    render: (customer_company_name) => customer_company_name || '-',
+    render: (customer_company_name, record) => customer_company_name ? <Link to={`/customer/customers/${record.customer_id}`}>{customer_company_name}</Link> : '-',
     sorter: (a, b) => sortByString(a.customer_company_name || '-', b.customer_company_name || '-'),
   },
   {
@@ -146,15 +154,6 @@ const columns = [
     sorter: (a, b) => sortByString(a.postal_code, b.postal_code),
   },
   {
-    title: 'Remarks',
-    dataIndex: 'remarks',
-    key: 'remarks',
-    width: '20%',
-    ellipsis: true,
-    render: (remarks) => remarks || '-',
-    sorter: (a, b) => sortByString(a.remarks, b.remarks),
-  },
-  {
     title: 'Status',
     dataIndex: 'delivery_status_id',
     key: 'delivery_status_id',
@@ -165,25 +164,9 @@ const columns = [
     sorter: (a, b) => sortByNumber(a.delivery_status_id, b.delivery_status_id),
   },
   {
-    title: 'Completed At',
-    dataIndex: 'deliver_at',
-    key: 'deliver_at',
-    width: 200,
-    ellipsis: true,
-    render: (deliver_at) => deliver_at ? parseDateTimeSeconds(deliver_at) : '-',
-    sorter: (a, b) => sortByDate(a.deliver_at || 0, b.deliver_at || 0),
-  },
-  {
     title: "Action",
-    dataIndex: "sales_order_id",
     key: "link",
-    width: 185,
+    width: 100,
     ellipsis: true,
-    render: (sales_order_id) => (
-        <>
-        <Button type="link" style={{ paddingLeft: 0 }}>Unassign</Button>
-        <Button type="link" style={{ paddingLeft: 0 }}>Complete</Button>
-        </>
-    ),
   },
 ];

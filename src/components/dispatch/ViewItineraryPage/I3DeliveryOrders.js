@@ -1,20 +1,25 @@
 import { DeleteOutlined, PlusOutlined, PrinterOutlined, ReloadOutlined, SaveOutlined } from '@ant-design/icons/lib/icons'
 import { Button, Space, Table } from 'antd'
-import React from 'react'
+import React, { useState } from 'react'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
+import { Link } from 'react-router-dom'
 import { View } from '../../../enums/View'
 import { useApp } from '../../../providers/AppProvider'
 import { parseDateTimeSeconds } from '../../../utilities/datetime'
 import DraggableTableRow from '../../common/DraggableTableRow'
 import MyCard from '../../common/MyCard'
 import MyToolbar from '../../common/MyToolbar'
+import ViewDeliveryOrderModal from '../ViewDeliveryOrderModal'
 
 export default function I3DeliveryOrders({ itinerary, setItinerary, updateItinerary, loading, setLoading }) {
 
     const { hasWriteAccessTo } = useApp();
 
-    columns[10].render = (_, record) => <Button shape="circle" icon={<DeleteOutlined />} onClick={() => handleDeleteRow(record)} disabled={!hasWriteAccessTo(View.DISPATCH.id)} />
+    const [showDeliveryOrder, setShowDeliveryOrder] = useState();
+
+    columns[7].render = (_, record) => <Button type="link" style={{ paddingLeft: 0 }} onClick={() => setShowDeliveryOrder(record)}>View</Button>;
+    columns[8].render = (_, record) => <Button shape="circle" icon={<DeleteOutlined />} onClick={() => handleDeleteRow(record)} disabled={!hasWriteAccessTo(View.DISPATCH.id)} />
 
     function moveRow(dragIndex, hoverIndex) {
         const dragRow = itinerary.delivery_orders[dragIndex];
@@ -34,42 +39,47 @@ export default function I3DeliveryOrders({ itinerary, setItinerary, updateItiner
     }
 
     return (
-        <MyCard style={{ marginTop: 0 }}>
+        <>
+            <MyCard style={{ marginTop: 0 }}>
 
-            <MyToolbar title="Delivery Itinerary">
-                { hasWriteAccessTo(View.DISPATCH.name) && 
-                <Button icon={<PlusOutlined />} >Add (WIP)</Button>
-                }
-            </MyToolbar>
+                <MyToolbar title="Delivery Itinerary">
+                    { hasWriteAccessTo(View.DISPATCH.name) && 
+                    <Button icon={<PlusOutlined />} >Add (WIP)</Button>
+                    }
+                </MyToolbar>
 
-            <DndProvider backend={HTML5Backend}>
-                <Table 
-                    columns={columns} 
-                    dataSource={itinerary.delivery_orders} 
-                    components={{ body: { row: DraggableTableRow } }}
-                    onRow={(record, index) => ({ index, moveRow })}
-                    rowKey="id" 
-                    pagination={false}
-                />
-            </DndProvider>
+                <DndProvider backend={HTML5Backend}>
+                    <Table 
+                        columns={columns} 
+                        dataSource={itinerary.delivery_orders} 
+                        components={{ body: { row: DraggableTableRow } }}
+                        onRow={(record, index) => ({ index, moveRow })}
+                        rowKey="id" 
+                        pagination={false}
+                    />
+                </DndProvider>
 
-            <div style={{ display: 'flex', marginTop: 15 }}>
+                <div style={{ display: 'flex', marginTop: 15 }}>
 
-                <Space size="middle">
-                    <Button icon={<PrinterOutlined />} onClick={printItinerary}>Print</Button>
-                </Space>
-                
-                { hasWriteAccessTo(View.DISPATCH.id) && 
-                <div style={{ marginLeft: 'auto' }}>
                     <Space size="middle">
-                        <Button icon={<ReloadOutlined />} onClick={updateItinerary} disabled={loading}>Optimize</Button>
-                        <Button icon={<SaveOutlined />} type="primary" onClick={updateItinerary} disabled={loading}>Save Sequence</Button>
+                        <Button icon={<PrinterOutlined />} onClick={printItinerary}>Print</Button>
                     </Space>
+                    
+                    { hasWriteAccessTo(View.DISPATCH.id) && 
+                    <div style={{ marginLeft: 'auto' }}>
+                        <Space size="middle">
+                            <Button icon={<ReloadOutlined />} onClick={updateItinerary} disabled={loading}>Optimize</Button>
+                            <Button icon={<SaveOutlined />} type="primary" onClick={updateItinerary} disabled={loading}>Save Sequence</Button>
+                        </Space>
+                    </div>
+                    }
                 </div>
-                }
-            </div>
 
-        </MyCard>
+            </MyCard>
+
+            <ViewDeliveryOrderModal showDeliveryOrder={showDeliveryOrder} setShowDeliveryOrder={setShowDeliveryOrder} />
+
+        </>
     )
 }
   
@@ -89,35 +99,20 @@ const columns = [
         render: (created_at) => parseDateTimeSeconds(created_at),
     },
     {
-        title: 'Order ID',
-        dataIndex: 'sales_order_id',
-        key: 'sales_order_id',
-        width: 120,
-        ellipsis: true,
+      title: 'Order ID',
+      dataIndex: 'sales_order_id',
+      key: 'sales_order_id',
+      width: 120,
+      ellipsis: true,
+      render: (sales_order_id) => <Link to={`/customer/sales/${sales_order_id}`}>{sales_order_id}</Link>,
     },
     {
-        title: 'Company',
-        dataIndex: 'customer_company_name',
-        key: 'customer_company_name',
-        width: '20%',
-        ellipsis: true,
-        render: (customer_company_name) => customer_company_name || '-',
-    },
-    {
-        title: 'Customer',
-        dataIndex: 'customer_p1_name',
-        key: 'customer_p1_name',
-        width: '20%',
-        ellipsis: true,
-        render: (customer_p1_name) => customer_p1_name || '-',
-    },
-    {
-        title: 'Contact Number',
-        dataIndex: 'customer_phone_number',
-        key: 'customer_phone_number',
-        width: '20%',
-        ellipsis: true,
-        render: (customer_phone_number) => customer_phone_number || '-',
+      title: 'Company',
+      dataIndex: 'sales_order',
+      key: 'customer_company_name',
+      width: '20%',
+      ellipsis: true,
+      render: (sales_order) => sales_order?.customer?.company_name ? <Link to={`/customer/customers/${sales_order.customer_id}`}>{sales_order.customer.company_name}</Link> : '-',
     },
     {
         title: 'Address',
@@ -134,14 +129,6 @@ const columns = [
         ellipsis: true,
     },
     {
-        title: 'Remarks',
-        dataIndex: 'remarks',
-        key: 'remarks',
-        width: '20%',
-        ellipsis: true,
-        render: (remarks) => remarks || '-',
-    },
-    {
         title: 'Est. Time',
         dataIndex: 'delivery_status_id',
         key: 'delivery_status_id',
@@ -149,6 +136,12 @@ const columns = [
         align: 'center',
         ellipsis: true,
         render: (delivery_status_id) => '-',
+    },
+    {
+        title: "Action",
+        key: "link",
+        width: 100,
+        ellipsis: true,
     },
     { 
         align: 'center', 

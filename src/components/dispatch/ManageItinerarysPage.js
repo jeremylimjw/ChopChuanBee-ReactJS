@@ -112,7 +112,7 @@ const columns = [
         dataIndex: 'employee',
         key: 'employee',
         ellipsis: true,
-        render: (employee) => employee?.name,
+        render: (employee) => employee?.name ? <Link to={`/humanResource/employees/${employee.id}`}>{employee.name}</Link> : '-',
         sorter: (a, b) => sortByDate(a.employee?.name || '-', b.employee?.name || '-'),
     },
     {
