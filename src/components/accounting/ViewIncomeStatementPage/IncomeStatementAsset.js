@@ -81,6 +81,14 @@ export default function SOFPAsset({ income, setIncome }) {
                         <Form.Item labelCol={{ span: 3 }} wrapperCol={{ span: 24 }} label="End Date" name="end_date">
                             <Typography>{parseDate(income.end_date) || '-'}</Typography>
                         </Form.Item>
+
+                        <Form.Item labelCol={{ span: 3 }} wrapperCol={{ span: 24 }} label="Remarks" name="remarks">
+                            {!editing ? 
+                                <Typography>{income.remarks || '-'}</Typography>
+                            :
+                                <Input.TextArea autoSize={{ minRows: 3, maxRows: 6 }} />
+                            }
+                        </Form.Item>
                     </MyCard>
 
                     <MyCard>

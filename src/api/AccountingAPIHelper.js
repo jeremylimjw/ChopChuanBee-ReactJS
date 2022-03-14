@@ -41,6 +41,7 @@ export class AccountingAPIHelper {
       .post("/accounting/SOFP", {
         name: SOFP.name,
         end_date: SOFP.end_date,
+        remarks: SOFP.remarks,
       })
       .then((res) => res.data);
   }
@@ -186,6 +187,7 @@ export class AccountingAPIHelper {
         loss_on_sale_of_asset: income.loss_on_sale_of_asset,
         start_date: income.start_date,
         end_date: income.end_date,
+        remarks: income.remarks,
       })
       .then((res) => res.data);
   }

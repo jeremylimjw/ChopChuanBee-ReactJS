@@ -58,8 +58,14 @@ export default function NewIncomeStatementModal({ incomes, setIncomes, isModalVi
             <Form.Item label='Date' name='dateRange' rules={[REQUIRED]}>
                 <DatePicker.RangePicker style={{ width: '100%' }} allowClear={false} placeholder={['Start Date', 'End Date']}/>
             </Form.Item>
-            </Form>
 
+            <Form.Item
+                label="Remarks"
+                name="remarks"
+            >
+                <Input.TextArea autoSize={{ minRows: 3, maxRows: 6 }} />
+            </Form.Item>
+            </Form>
         </Modal>
     );
     
