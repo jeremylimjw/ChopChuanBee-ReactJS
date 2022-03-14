@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { Link } from 'react-router-dom'
+import { getDeliveryStatusTag } from '../../../enums/DeliveryStatus'
 import { View } from '../../../enums/View'
 import { useApp } from '../../../providers/AppProvider'
 import { parseDateTimeSeconds } from '../../../utilities/datetime'
@@ -12,14 +13,14 @@ import MyCard from '../../common/MyCard'
 import MyToolbar from '../../common/MyToolbar'
 import ViewDeliveryOrderModal from '../ViewDeliveryOrderModal'
 
-export default function I3DeliveryOrders({ itinerary, setItinerary, updateItinerary, loading, setLoading }) {
+export default function I3DeliveryOrders({ itinerary, setItinerary, updateItinerary, loading, setLoading, myCallback }) {
 
     const { hasWriteAccessTo } = useApp();
 
     const [showDeliveryOrder, setShowDeliveryOrder] = useState();
 
-    columns[7].render = (_, record) => <Button type="link" style={{ paddingLeft: 0 }} onClick={() => setShowDeliveryOrder(record)}>View</Button>;
-    columns[8].render = (_, record) => <Button shape="circle" icon={<DeleteOutlined />} onClick={() => handleDeleteRow(record)} disabled={!hasWriteAccessTo(View.DISPATCH.id)} />
+    columns[8].render = (_, record) => <Button type="link" style={{ paddingLeft: 0 }} onClick={() => setShowDeliveryOrder(record)}>View</Button>;
+    columns[9].render = (_, record) => <Button shape="circle" icon={<DeleteOutlined />} onClick={() => handleDeleteRow(record)} disabled={!hasWriteAccessTo(View.DISPATCH.id)} />
 
     function moveRow(dragIndex, hoverIndex) {
         const dragRow = itinerary.delivery_orders[dragIndex];
@@ -77,7 +78,11 @@ export default function I3DeliveryOrders({ itinerary, setItinerary, updateItiner
 
             </MyCard>
 
-            <ViewDeliveryOrderModal showDeliveryOrder={showDeliveryOrder} setShowDeliveryOrder={setShowDeliveryOrder} />
+            <ViewDeliveryOrderModal 
+                showDeliveryOrder={showDeliveryOrder} 
+                setShowDeliveryOrder={setShowDeliveryOrder} 
+                myCallback={myCallback}
+            />
 
         </>
     )
@@ -136,6 +141,15 @@ const columns = [
         align: 'center',
         ellipsis: true,
         render: (delivery_status_id) => '-',
+    },
+    {
+        title: 'Status',
+        dataIndex: 'delivery_status_id',
+        key: 'delivery_status_id',
+        width: 120,
+        align: 'center',
+        ellipsis: true,
+        render: (delivery_status_id) => getDeliveryStatusTag(delivery_status_id),
     },
     {
         title: "Action",

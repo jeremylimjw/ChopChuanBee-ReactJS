@@ -55,6 +55,13 @@ export default function ManageDeliveriesPage() {
       onValuesChange(null, form.getFieldsValue());
   }
 
+  function myCallback(newDeliveryOrder) {
+    const newOrders = [...orders];
+    const index = newOrders.findIndex(x => x.id === newDeliveryOrder.id);
+    newOrders.splice(index, 1, {...newOrders[index], ...newDeliveryOrder })
+    setOrders(newOrders);
+  }
+
   return (
     <MyLayout breadcrumbs={breadcrumbs} bannerTitle="Manage Delivery Orders">
       <MyCard>
@@ -85,7 +92,11 @@ export default function ManageDeliveriesPage() {
         />
       </MyCard>
 
-      <ViewDeliveryOrderModal showDeliveryOrder={showDeliveryOrder} setShowDeliveryOrder={setShowDeliveryOrder} />
+      <ViewDeliveryOrderModal 
+        showDeliveryOrder={showDeliveryOrder} 
+        setShowDeliveryOrder={setShowDeliveryOrder} 
+        myCallback={myCallback}
+      />
 
     </MyLayout>
   );

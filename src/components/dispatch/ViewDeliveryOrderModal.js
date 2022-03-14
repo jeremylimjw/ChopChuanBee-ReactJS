@@ -1,13 +1,14 @@
-import { Button, Descriptions, Divider, Modal, Table, Typography } from 'antd';
+import { Button, Descriptions, Divider, message, Modal, Table, Typography } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
+import { DeliveryApiHelper } from '../../api/DeliveryApiHelper';
 import { SalesOrderApiHelper } from '../../api/SalesOrderApiHelper';
 import { DeliveryStatus, getDeliveryStatus } from '../../enums/DeliveryStatus';
 import { SalesOrder } from '../../models/SalesOrder';
 import { useApp } from '../../providers/AppProvider';
 import { parseDateTimeSeconds } from '../../utilities/datetime';
 
-export default function ViewDeliveryOrderModal({ showDeliveryOrder, setShowDeliveryOrder }) {
+export default function ViewDeliveryOrderModal({ showDeliveryOrder, setShowDeliveryOrder, myCallback }) {
 
     const { handleHttpError } = useApp();
 
@@ -27,6 +28,36 @@ export default function ViewDeliveryOrderModal({ showDeliveryOrder, setShowDeliv
         }
     }, [showDeliveryOrder, handleHttpError, setSalesOrder]);
 
+    function completeOrder() {
+        const newDeliveryOrder = {...showDeliveryOrder, delivery_status_id: DeliveryStatus.COMPLETED.id };
+
+        setLoading(true);
+        DeliveryApiHelper.updateOrder(newDeliveryOrder)
+            .then(updatedDeliveryOrder => {
+                myCallback(updatedDeliveryOrder);
+                setLoading(false);
+                message.success('Delivery order successfully completed!');
+                setShowDeliveryOrder(null);
+            })
+            .catch(handleHttpError)
+            .catch(() => setLoading(false));
+    }
+
+    function unassignOrder() {
+        const newDeliveryOrder = {...showDeliveryOrder, delivery_status_id: DeliveryStatus.PENDING.id };
+
+        setLoading(true);
+        DeliveryApiHelper.updateOrder(newDeliveryOrder)
+            .then(updatedDeliveryOrder => {
+                myCallback(updatedDeliveryOrder);
+                setLoading(false);
+                message.success('Delivery order successfully unassigned!');
+                setShowDeliveryOrder(null);
+            })
+            .catch(handleHttpError)
+            .catch(() => setLoading(false));
+    }
+
     return (
         <Modal width={800} bodyStyle={{ height: "60vh", overflowY: "scroll" }}
             title={<>Delivery for <Link to={`/customer/sales/${showDeliveryOrder?.sales_order_id}`}>Sales Order ID {showDeliveryOrder?.sales_order_id}</Link></>} 
@@ -38,12 +69,12 @@ export default function ViewDeliveryOrderModal({ showDeliveryOrder, setShowDeliv
                         Cancel
                     </Button>
                     { showDeliveryOrder?.delivery_status_id === DeliveryStatus.ASSIGNED.id && 
-                        <Button key="submit" type="primary" loading={loading} onClick={() => setShowDeliveryOrder(null)}>
+                        <Button key="submit" type="primary" loading={loading} onClick={unassignOrder}>
                             Unassign Delivery
                         </Button>
                     }
                     { showDeliveryOrder?.delivery_status_id !== DeliveryStatus.COMPLETED.id && 
-                        <Button key="submit" type="primary" loading={loading} onClick={() => setShowDeliveryOrder(null)}>
+                        <Button key="submit" type="primary" loading={loading} onClick={completeOrder}>
                             Complete Delivery
                         </Button>
                     }

@@ -6,6 +6,11 @@ export class DeliveryApiHelper {
             .then(res => res.data);
     }
 
+    static async updateOrder(deliveryOrder) {
+        return axiosObject.put(`/deliveryOrder`, { ...deliveryOrder })
+            .then(res => res.data);
+    }
+
     static async getItinerarys(params) {
         return axiosObject.get(`/itinerary`, { params: params })
             .then(res => res.data);

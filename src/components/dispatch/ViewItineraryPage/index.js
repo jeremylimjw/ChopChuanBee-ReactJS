@@ -38,6 +38,19 @@ export default function ViewItineraryPage() {
       .catch(handleHttpError)
   }, [id, handleHttpError, navigate]);
 
+  // Refresh the itinerary
+  function myCallback() {
+    DeliveryApiHelper.getItinerarys({ id: id })
+      .then(result => {
+        if (result.length === 0) {
+          navigate('./../');
+          return;
+        }
+        setItinerary(result[0]);
+      })
+      .catch(handleHttpError)
+  }
+
   function updateItinerary() {
     setLoading(true);
     DeliveryApiHelper.updateItinerary(itinerary)
@@ -92,6 +105,7 @@ export default function ViewItineraryPage() {
           updateItinerary={updateItinerary} 
           loading={loading}
           setLoading={setLoading}
+          myCallback={myCallback}
         />
       
       </MyLayout>
