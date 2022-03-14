@@ -61,7 +61,7 @@ const menu = [
         role: 'ACCOUNTING',
         title: 'Analytics',
         icon: <LineChartOutlined />,
-        items: [{ route: '/analytics/analyticsDashboard', name: 'Analytics Dashboard' },
+        items: [{ route: '/analytics/accountingDashboard', name: 'Accounting Dashboard' },
                 { route: '/analytics/inventoryDashboard', name: 'Inventory Dashboard'}
         ],
     },

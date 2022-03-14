@@ -25,7 +25,7 @@ import ManageSuppliersPage from './components/supplier/ManageSuppliersPage';
 import ViewSupplierPage from './components/supplier/ViewSupplierPage';
 import ManageCustomersPage from './components/customer/ManageCustomersPage';
 import ViewCustomerPage from './components/customer/ViewCustomerPage';
-import AnalyticsDashboard from './components/analytics/AnalyticsPage/AnalyticsDashboard';
+import AccountingDashboard from './components/analytics/AccountingDashboard';
 import InventoryDashboard from './components/analytics/InventoryPage/InventoryDashboard';
 import ProductDashboard from './components/analytics/ProductPage/ProductDashboard';
 
@@ -138,8 +138,8 @@ const routes = [
         component: <Outlet />,
         childRoutes: [
             {
-                path: 'analyticsDashboard',
-                component: <AnalyticsDashboard />,
+                path: 'accountingDashboard',
+                component: <AccountingDashboard />,
                 viewAccess: View.ANALYTICS.name,
             },
             {

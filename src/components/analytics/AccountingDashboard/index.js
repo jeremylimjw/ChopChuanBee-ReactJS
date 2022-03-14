@@ -1,4 +1,4 @@
-import { Form, Input, DatePicker, Select, Button, Tabs } from 'antd';
+import { Form, Input, DatePicker, Select, Button, Tabs, Radio } from 'antd';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash.debounce';
@@ -14,8 +14,9 @@ import A2AP from './A2AP';
 import A3AR from './A3AR';
 import A4PO from './A4PO';
 import A5Invoice from './A5Invoice';
+import ProfitabilityCard from './ProfitabilityCard';
 
-export default function AnalyticsDashboard() {
+export default function AccountingDashboard() {
     const [form] = Form.useForm();
     let navigate = useNavigate();
 
@@ -61,24 +62,46 @@ export default function AnalyticsDashboard() {
     }
 
     return (
-        <MyLayout bannerTitle='Analytics Dashboard'>
-            <MyCard>
-                <MyToolbar title='Profits'>
-                    <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
-                        <Form.Item name='date'>
-                            <DatePicker.RangePicker />
-                        </Form.Item>
+        <MyLayout bannerTitle='Accounting Dashboard'>
+            <Tabs defaultActiveKey="1" type="card" style={{margin:'24px'}}>
+                <TabPane tab="Profitability" key="1">
+                    <ProfitabilityCard />
 
-                        <Button onClick={resetForm}>Reset</Button>
-                    </Form>
-                    {/* <Anchor affix={true} onClick={handleClick}>
-                        <Link href='#components-anchor-demo-basic' title='View all payable' />
-                    </Anchor> */}
-                </MyToolbar>
-                <A1Profits />
-            </MyCard>
+                    <MyCard>
+                        <MyToolbar title='Profits'>
+                            <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
+                                <Form.Item name='date'>
+                                    <DatePicker.RangePicker />
+                                </Form.Item>
 
-            <MyCard>
+                                <Button onClick={resetForm}>Reset</Button>
+                            </Form>
+                        </MyToolbar>
+                        <A1Profits />
+                    </MyCard>
+                </TabPane>
+
+                <TabPane tab="Payables" key="2">
+                    Content of card tab 2
+                </TabPane>
+
+                <TabPane tab="Receivables" key="3">
+                    Content of card tab 3
+                </TabPane>
+                
+                <TabPane tab="Customer Analytics" key="4">
+                    Content of card tab 3
+                </TabPane>
+            </Tabs>
+
+            {/* <Anchor affix={true} onClick={handleClick}>
+                <Link href='#components-anchor-demo-basic' title='View all payable' />
+            </Anchor> */}
+
+                {/* 
+                 */}
+
+            {/* <MyCard>
                 <MyToolbar title='Top 10 Payable'>
                     <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
                         <Form.Item name='date'>
@@ -99,9 +122,9 @@ export default function AnalyticsDashboard() {
                         <A2AP />
                     </TabPane>
                 </Tabs>
-            </MyCard>
+            </MyCard> */}
 
-            <MyCard>
+            {/* <MyCard>
                 <MyToolbar title='Top 10 Receivable'>
                     <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
                         <Form.Item name='date'>
@@ -123,7 +146,7 @@ export default function AnalyticsDashboard() {
                         <A3AR />
                     </TabPane>
                 </Tabs>
-            </MyCard>
+            </MyCard> */}
         </MyLayout>
     );
 }
