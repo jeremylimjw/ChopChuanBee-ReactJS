@@ -1,9 +1,10 @@
 import { DeleteOutlined, PlusOutlined, PrinterOutlined, ReloadOutlined, SaveOutlined } from '@ant-design/icons/lib/icons'
-import { Button, Space, Table } from 'antd'
+import { Button, message, Popconfirm, Space, Table } from 'antd'
 import React, { useState } from 'react'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { Link } from 'react-router-dom'
+import { DeliveryApiHelper } from '../../../api/DeliveryApiHelper'
 import { getDeliveryStatusTag } from '../../../enums/DeliveryStatus'
 import { View } from '../../../enums/View'
 import { useApp } from '../../../providers/AppProvider'
@@ -12,15 +13,21 @@ import DraggableTableRow from '../../common/DraggableTableRow'
 import MyCard from '../../common/MyCard'
 import MyToolbar from '../../common/MyToolbar'
 import ViewDeliveryOrderModal from '../ViewDeliveryOrderModal'
+import AddDeliveryModal from './AddDeliveryModal'
 
 export default function I3DeliveryOrders({ itinerary, setItinerary, updateItinerary, loading, setLoading, myCallback }) {
 
-    const { hasWriteAccessTo } = useApp();
+    const { handleHttpError, hasWriteAccessTo } = useApp();
 
     const [showDeliveryOrder, setShowDeliveryOrder] = useState();
+    const [showAddOrder, setShowAddOrder] = useState(false);
 
     columns[8].render = (_, record) => <Button type="link" style={{ paddingLeft: 0 }} onClick={() => setShowDeliveryOrder(record)}>View</Button>;
-    columns[9].render = (_, record) => <Button shape="circle" icon={<DeleteOutlined />} onClick={() => handleDeleteRow(record)} disabled={!hasWriteAccessTo(View.DISPATCH.id)} />
+    columns[9].render = (_, record) => (
+        <Popconfirm title="Confirm delete?" placement='leftTop' onConfirm={() => handleDeleteRow(record)} disabled={loading || !hasWriteAccessTo(View.DISPATCH.id)}>
+            <Button shape="circle" loading={loading} icon={<DeleteOutlined />} disabled={!hasWriteAccessTo(View.DISPATCH.id)} />
+        </Popconfirm>
+    )
 
     function moveRow(dragIndex, hoverIndex) {
         const dragRow = itinerary.delivery_orders[dragIndex];
@@ -32,7 +39,33 @@ export default function I3DeliveryOrders({ itinerary, setItinerary, updateItiner
 
     function handleDeleteRow(record) {
         const newItems = itinerary.delivery_orders.filter((item) => item.id !== record.id);
-        setItinerary({ ...itinerary, delivery_orders: newItems })
+        const newItinerary = { ...itinerary, delivery_orders: newItems };
+
+        setLoading(true);
+        DeliveryApiHelper.updateItinerary(newItinerary)
+          .then(() => {
+                message.success('Itinerary successfully updated!');
+                setLoading(false);
+                setItinerary(newItinerary);
+            })
+            .catch(handleHttpError)
+            .catch(() => setLoading(false));
+    };
+
+    function handleAddNewRows(deliveryOrders) {
+        const newItems = [...itinerary.delivery_orders,  ...deliveryOrders];
+        const newItinerary = { ...itinerary, delivery_orders: newItems };
+
+        setLoading(true);
+        DeliveryApiHelper.updateItinerary(newItinerary)
+            .then(() => {
+                message.success('Itinerary successfully updated!');
+                setLoading(false);
+                myCallback(); // call this to refresh entire iterary object because delivery order statuses are changed in the backend
+                setShowAddOrder(false);
+            })
+            .catch(handleHttpError)
+            .catch(() => setLoading(false));
     };
 
     function printItinerary() {
@@ -45,7 +78,7 @@ export default function I3DeliveryOrders({ itinerary, setItinerary, updateItiner
 
                 <MyToolbar title="Delivery Itinerary">
                     { hasWriteAccessTo(View.DISPATCH.name) && 
-                    <Button icon={<PlusOutlined />} >Add (WIP)</Button>
+                    <Button type='primary' icon={<PlusOutlined />} onClick={() => setShowAddOrder(true)}>Add</Button>
                     }
                 </MyToolbar>
 
@@ -82,6 +115,13 @@ export default function I3DeliveryOrders({ itinerary, setItinerary, updateItiner
                 showDeliveryOrder={showDeliveryOrder} 
                 setShowDeliveryOrder={setShowDeliveryOrder} 
                 myCallback={myCallback}
+            />
+
+            <AddDeliveryModal 
+                isModalVisible={showAddOrder} 
+                setIsModalVisible={setShowAddOrder} 
+                myCallback={handleAddNewRows}
+                loading={loading}
             />
 
         </>

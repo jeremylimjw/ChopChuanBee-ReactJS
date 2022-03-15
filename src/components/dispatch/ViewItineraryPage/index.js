@@ -63,15 +63,15 @@ export default function ViewItineraryPage() {
   }
 
   function handleDelete() {
-      setLoading(true);
-      DeliveryApiHelper.deleteItinerary(itinerary.id)
-        .then(() => {
-          setLoading(false);
-          message.success(`Itinerary successfully deleted!`);
-          navigate('./../');
-        })
-        .catch(handleHttpError)
-        .catch(() => setLoading(false));
+    setLoading(true);
+    DeliveryApiHelper.deleteItinerary(itinerary.id)
+      .then(() => {
+        setLoading(false);
+        message.success(`Itinerary successfully deleted!`);
+        navigate('./../');
+      })
+      .catch(handleHttpError)
+      .catch(() => setLoading(false));
   }
 
   function renderDeleteButton() {
