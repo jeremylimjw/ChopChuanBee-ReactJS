@@ -19,22 +19,28 @@ export default function ProfitabilityGraph(props) {
         setLoading(true);
 
         //Figure out why this has error
-        // AnalyticsApiHelper.getCOGS(oneYearAgo, currDate)
+        //Add "name: cogs" to each data retrieved
+        //Change "cogs" to "price" to each data
+        //Change "period" to "date" to each data
+        // AnalyticsApiHelper.getCOGS(props.oneYearAgo, props.currDate)
         //     .then(result => { console.log(result) })
         //     .catch(handleHttpError)
         //     .catch(() => setLoading(false));
 
         //Figure out why this has error
+        //Add "name: revenue" to each data retrieved
+        //Change "revenue" to "price" to each data
+        //Change "period" to "date" to each data
         // AnalyticsApiHelper.getRevenue(oneYearAgo, currDate)
         //     .then(result => { console.log(result) })
         //     .catch(handleHttpError)
         //     .catch(() => setLoading(false));
 
         const profits = AnalyticsApiHelper.getProfits(props.oneYearAgo, props.currDate)
-            .then(result => { console.log(result) })
+            .then(result => { console.log("init profits: " + result) })
             //Add "name: profits" to each data retrieved
-            //Extract and edit "month" for each data
             //Change "profit" to "price" to each data
+            //Extract and edit "month" for each data
             .catch(handleHttpError)
             .catch(() => setLoading(false));
 
@@ -49,13 +55,10 @@ export default function ProfitabilityGraph(props) {
             end_date = moment(form.date[1]).set({ hour: 23, minute: 59, second: 59, millisecond: 999 }).toDate();
         }
 
-        // LogApiHelper.get(form.name, start_date, end_date, form.view_id)
-        //     .then((results) => {
-        //         setLogs(results);
-        //         setLoading(false);
-        //     })
-        //     .catch(handleHttpError)
-        //     .catch(() => setLoading(false));
+        const profits = AnalyticsApiHelper.getProfits(start_date, end_date)
+            .then(result => { console.log("input profits: " + result) })
+            .catch(handleHttpError)
+            .catch(() => setLoading(false));
     }
 
     function resetForm() {
@@ -257,6 +260,9 @@ export default function ProfitabilityGraph(props) {
         xField: 'month',
         yField: 'price',
         seriesField: 'name',
+        // xField: 'date',
+        // yField: 'profit',
+        // seriesField: 'date',
         xAxis: { 
             title: {
                 text: "Month",
@@ -269,7 +275,7 @@ export default function ProfitabilityGraph(props) {
         },
         yAxis: {
             title: {
-                text: "Price (SGD)",
+                text: "Amount (SGD)",
                 style: {
                     fill: "black",
                     fillOpacity: 0.5,
@@ -293,7 +299,7 @@ export default function ProfitabilityGraph(props) {
     };
 
     return (
-        <MyCard style={{marginLeft: '3px'}}>
+        <MyCard style={{marginLeft: '3px', marginRight: '3px'}}>
             <MyToolbar title='Profitability Trend'>
                 <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
                     <Form.Item name='date'>

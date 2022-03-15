@@ -41,6 +41,34 @@ export class AnalyticsApiHelper {
   }
 
   static async getPayableInvoices() {
-    return axiosObject.get("/analytics/Unsettled_AP/").then((res) => res.data);
+    const params = {};
+    params.order_by = "sum_desc";
+    return axiosObject
+      .get("/analytics/Unsettled_AP/", { params })
+      .then((res) => res.data);
+  }
+
+  static async getPayableSuppliers() {
+    const params = {};
+    params.order_by = "sum_desc";
+    return axiosObject
+      .get("/analytics/Supplier_AP/", { params })
+      .then((res) => res.data);
+  }
+
+  static async getReceivableInvoices() {
+    const params = {};
+    params.order_by = "sum_desc";
+    return axiosObject
+      .get("/analytics/Unsettled_AR/", { params })
+      .then((res) => res.data);
+  }
+
+  static async getReceivableCustomers() {
+    const params = {};
+    params.order_by = "sum_desc";
+    return axiosObject
+      .get("/analytics/Customer_AR/", { params })
+      .then((res) => res.data);
   }
 }

@@ -1,41 +1,19 @@
-import { Form, Input, DatePicker, Select, Button, Tabs, Radio } from 'antd';
+import { Tabs } from 'antd';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import debounce from 'lodash.debounce';
 import moment from 'moment';
-import { SearchOutlined } from '@ant-design/icons';
-import { View } from '../../../enums/View';
 import MyLayout from '../../common/MyLayout';
-import MyCard from '../../common/MyCard';
-import MyToolbar from '../../common/MyToolbar';
-import { AnalyticsApiHelper } from '../../../api/AnalyticsApiHelper';
 import ProfitabilityCard from './ProfitabilityTab/ProfitabilityCard';
 import ProfitabilityGraph from './ProfitabilityTab/ProfitabilityGraph';
 import PayableCard from './AccountsPayableTab/PayableCard';
 import PayableGraph from './AccountsPayableTab/PayableGraph';
+import ReceivableCard from './AccountsReceivableTab/ReceivableCard';
+import ReceivableGraph from './AccountsReceivableTab/ReceivableGraph';
 
 export default function AccountingDashboard() {
-    let navigate = useNavigate();
     const { TabPane } = Tabs;
     const oneYearAgo = moment().subtract(1, "year").set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toDate();
     const currDate = moment().set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toDate();
     const currTime = moment().toDate();
-
-    function callback(key) {
-        console.log(key);
-    }
-
-    function handlePayableNavigation(e, link) {
-        e.preventDefault();
-        console.log(link);
-        // navigate('/Accounting/Payable');
-    }
-
-    function handleReceivableNavigation(e, link) {
-        e.preventDefault();
-        console.log(link);
-        // navigate('/Accounting/Receivable');
-    }
 
     return (
         <MyLayout bannerTitle='Accounting Dashboard'>
@@ -51,17 +29,14 @@ export default function AccountingDashboard() {
                 </TabPane>
 
                 <TabPane tab="Accounts Receivable" key="3">
-                    
+                    <ReceivableCard currTime={currTime}/>
+                    <ReceivableGraph />
                 </TabPane>
                 
                 <TabPane tab="Customer Analytics" key="4">
                     
                 </TabPane>
             </Tabs>
-
-            {/* <Anchor affix={true} onClick={handleClick}>
-                <Link href='#components-anchor-demo-basic' title='View all payable' />
-            </Anchor> */}
 
             {/* <MyCard>
                 <MyToolbar title='Top 10 Receivable'>
