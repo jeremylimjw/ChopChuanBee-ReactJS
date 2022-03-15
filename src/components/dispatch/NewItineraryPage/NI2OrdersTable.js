@@ -50,23 +50,6 @@ export default function NI2OrdersTable({ itinerary, setItinerary, selectedOrders
     setSelectedOrders(selectedRows);
   }
 
-  async function nextStep() {
-    try {
-      // call api to convert postal code here
-      const { longitude, latitude } = await DeliveryApiHelper.getGeocode(itinerary.origin_postal_code);
-      setItinerary({
-          ...itinerary, 
-          longitude: longitude, 
-          latitude: latitude,
-      })
-
-      setStep(step+1);
-
-    } catch (err) { 
-      handleHttpError(err);
-    }
-  }
-
   return (
     <>
       <MyCard>
@@ -92,7 +75,7 @@ export default function NI2OrdersTable({ itinerary, setItinerary, selectedOrders
 
         <MyToolbar style={{ marginTop: 15 }}>
           <Button onClick={() => setStep(step-1)}>Back</Button>
-          <Button type="primary" onClick={nextStep} disabled={selectedOrders.length === 0}>Optimize</Button>
+          <Button type="primary" onClick={() => setStep(step+1)} disabled={selectedOrders.length === 0}>Optimize</Button>
         </MyToolbar>
       </MyCard>
     </>
@@ -115,7 +98,7 @@ const columns = [
     key: 'sales_order_id',
     width: 120,
     ellipsis: true,
-    render: (sales_order_id) => <Link to={`/customer/sales/${sales_order_id}`}>{sales_order_id}</Link>,
+    render: (sales_order_id) => sales_order_id ? <Link to={`/customer/sales/${sales_order_id}`}>{sales_order_id}</Link> : '-',
     sorter: (a, b) => sortByNumber(a.sales_order_id, b.sales_order_id),
   },
   {

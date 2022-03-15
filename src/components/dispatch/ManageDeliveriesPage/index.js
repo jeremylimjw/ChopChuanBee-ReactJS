@@ -1,6 +1,6 @@
 import { Button, Table, Input, Select, Form } from "antd";
 import React, { useEffect, useState } from "react";
-import { SearchOutlined } from "@ant-design/icons/lib/icons";
+import { PlusOutlined, SearchOutlined } from "@ant-design/icons/lib/icons";
 import debounce from "lodash.debounce";
 import { useApp } from "../../../providers/AppProvider";
 import MyLayout from "../../common/MyLayout";
@@ -13,6 +13,8 @@ import { DeliveryApiHelper } from "../../../api/DeliveryApiHelper";
 import { DeliveryStatus, getDeliveryStatusTag } from "../../../enums/DeliveryStatus";
 import ViewDeliveryOrderModal from "../ViewDeliveryOrderModal";
 import { Link } from "react-router-dom";
+import NewDeliveryModal from "./NewDeliveryModal";
+import { View } from "../../../enums/View";
 
 const breadcrumbs = [
   { url: "/dispatch/deliveryOrders", name: "Dispatch" },
@@ -20,10 +22,11 @@ const breadcrumbs = [
 ];
 
 export default function ManageDeliveriesPage() {
-  const { handleHttpError } = useApp();
+  const { handleHttpError, hasWriteAccessTo } = useApp();
 
   const [form] = Form.useForm();
   const [loading, setLoading] = useState();
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [orders, setOrders] = useState([]);
   const [showDeliveryOrder, setShowDeliveryOrder] = useState();
 
@@ -81,6 +84,9 @@ export default function ManageDeliveriesPage() {
             </Form.Item>
             <Button onClick={resetForm}>Reset</Button>
           </Form>
+          { hasWriteAccessTo(View.DISPATCH.name) && 
+            <Button type='primary' onClick={() => setIsModalVisible(true)} icon={<PlusOutlined />}>New</Button>
+          }
         </MyToolbar>
 
         <Table 
@@ -96,6 +102,13 @@ export default function ManageDeliveriesPage() {
         showDeliveryOrder={showDeliveryOrder} 
         setShowDeliveryOrder={setShowDeliveryOrder} 
         myCallback={myCallback}
+      />
+
+      <NewDeliveryModal 
+        orders={orders} 
+        setOrders={setOrders} 
+        isModalVisible={isModalVisible} 
+        setIsModalVisible={setIsModalVisible} 
       />
 
     </MyLayout>
@@ -118,7 +131,7 @@ const columns = [
     key: 'sales_order_id',
     width: 120,
     ellipsis: true,
-    render: (sales_order_id) => <Link to={`/customer/sales/${sales_order_id}`}>{sales_order_id}</Link>,
+    render: (sales_order_id) => sales_order_id ? <Link to={`/customer/sales/${sales_order_id}`}>{sales_order_id}</Link> : '-',
     sorter: (a, b) => sortByNumber(a.sales_order_id, b.sales_order_id),
   },
   {

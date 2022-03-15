@@ -3,6 +3,7 @@ import { Button, DatePicker, Form, Input, Select, Table } from 'antd';
 import debounce from 'lodash.debounce';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
+import { DeliveryApiHelper } from '../../../api/DeliveryApiHelper';
 import { EmployeeApiHelper } from '../../../api/EmployeeApiHelper';
 import { getRoleTag, Role } from '../../../enums/Role';
 import { useApp } from '../../../providers/AppProvider';
@@ -57,14 +58,17 @@ export default function NI1Form({ itinerary, setItinerary, selectedEmployee, set
             await form.validateFields();
 
             // call api to convert postal code here
+            const { longitude, latitude } = await DeliveryApiHelper.getGeocode(itinerary.origin_postal_code);
             setItinerary({
                 ...itinerary, 
-                longitude: 0, 
-                latitude: 0 
+                longitude: longitude, 
+                latitude: latitude,
             })
 
             setStep(step+1);
-        } catch (err) { }
+        } catch (err) { 
+            handleHttpError(err);
+        }
     }
 
     function onFormValuesChange(_, values) {
