@@ -5,7 +5,7 @@ import { useApp } from '../../../../providers/AppProvider';
 
 export default function ARCustomerChart(props) {
     const [data, setData] = useState([]);
-    const [loading, setLoading] = useState();
+    const [loading, setLoading] = useState(false);
     const { handleHttpError, hasWriteAccessTo } = useApp();
 
     useEffect(() => {        

@@ -8,6 +8,8 @@ import PayableCard from './AccountsPayableTab/PayableCard';
 import PayableGraph from './AccountsPayableTab/PayableGraph';
 import ReceivableCard from './AccountsReceivableTab/ReceivableCard';
 import ReceivableGraph from './AccountsReceivableTab/ReceivableGraph';
+import CustomerAnalyticsCard from './CustomerAnalyticsTab/CustomerAnalyticsCard';
+import CustomerAnalyticsTable from './CustomerAnalyticsTab/CustomerAnalyticsTable';
 
 export default function AccountingDashboard() {
     const { TabPane } = Tabs;
@@ -19,22 +21,23 @@ export default function AccountingDashboard() {
         <MyLayout bannerTitle='Accounting Dashboard'>
             <Tabs defaultActiveKey="1" type="card" style={{margin:'24px'}}>
                 <TabPane tab="Profitability" key="1">
-                    <ProfitabilityCard currTime={currTime}/>
-                    <ProfitabilityGraph currDate={currDate} oneYearAgo={oneYearAgo}/>
+                    <ProfitabilityCard currTime={currTime} />
+                    <ProfitabilityGraph currDate={currDate} oneYearAgo={oneYearAgo} />
                 </TabPane>
 
                 <TabPane tab="Accounts Payable" key="2">
-                    <PayableCard currTime={currTime}/>
+                    <PayableCard currTime={currTime} />
                     <PayableGraph />
                 </TabPane>
 
                 <TabPane tab="Accounts Receivable" key="3">
-                    <ReceivableCard currTime={currTime}/>
+                    <ReceivableCard currTime={currTime} />
                     <ReceivableGraph />
                 </TabPane>
                 
                 <TabPane tab="Customer Analytics" key="4">
-                    
+                    <CustomerAnalyticsCard currTime={currTime} />
+                    <CustomerAnalyticsTable />
                 </TabPane>
             </Tabs>
 

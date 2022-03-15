@@ -6,7 +6,7 @@ import { useApp } from '../../../../providers/AppProvider';
 import { formatCurrency } from '../../../../utilities/currency';
 
 export default function PayableCard(props) {
-    const [loading, setLoading] = useState();
+    const [loading, setLoading] = useState(false);
     const { handleHttpError, hasWriteAccessTo } = useApp();
     const [highestInvoiceAPAmt, setHighestInvoiceAPAmt] = useState();
     const [highestInvoiceAPID, setHighestInvoiceAPID] = useState();
@@ -42,7 +42,7 @@ export default function PayableCard(props) {
             </MyCard>
 
             <MyCard style={{minWidth:'250px'}}>
-                <Typography>HIGHEST ACCOUNTS RECEIVABLE</Typography>
+                <Typography>HIGHEST ACCOUNTS PAYABLE</Typography>
                 <Typography.Title level={2} style={{margin:0}}>{highestSupplierAPName}</Typography.Title>
                 <Divider style={{margin:'0.5rem 0'}}/>
                 <Row>

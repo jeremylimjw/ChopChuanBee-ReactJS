@@ -7,7 +7,7 @@ import { AnalyticsApiHelper } from '../../../../api/AnalyticsApiHelper';
 import moment from 'moment';
 
 export default function ProfitabilityCard(props) {
-    const [loading, setLoading] = useState();
+    const [loading, setLoading] = useState(false);
     const { handleHttpError, hasWriteAccessTo } = useApp();
     const [thisMonthProfit, setThisMonthProfit] = useState();
     const [lastMonthProfit, setLastMonthProfit] = useState();

@@ -6,7 +6,7 @@ import { useApp } from '../../../../providers/AppProvider';
 import { formatCurrency } from '../../../../utilities/currency';
 
 export default function ReceivableCard(props) {
-    const [loading, setLoading] = useState();
+    const [loading, setLoading] = useState(false);
     const { handleHttpError, hasWriteAccessTo } = useApp();
     const [highestInvoiceARAmt, setHighestInvoiceARAmt] = useState();
     const [highestInvoiceARID, setHighestInvoiceARID] = useState();

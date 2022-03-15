@@ -71,4 +71,19 @@ export class AnalyticsApiHelper {
       .get("/analytics/Customer_AR/", { params })
       .then((res) => res.data);
   }
+
+  static async getCustomerProfits(start_date, end_date) {
+    const params = {};
+
+    if (start_date && end_date) {
+      params.start_date = start_date.toISOString();
+      params.end_date = end_date.toISOString();
+    }
+
+    //Add Customer ID
+
+    return axiosObject
+      .get("/analytics/Customer_Profits/", { params })
+      .then((res) => res.data);
+  }
 }

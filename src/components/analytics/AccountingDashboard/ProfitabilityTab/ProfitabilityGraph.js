@@ -10,7 +10,7 @@ import { useApp } from '../../../../providers/AppProvider';
 
 export default function ProfitabilityGraph(props) {
     const [data, setData] = useState([]);
-    const [loading, setLoading] = useState();
+    const [loading, setLoading] = useState(false);
     const [form] = Form.useForm();
     const { handleHttpError, hasWriteAccessTo } = useApp();
 
@@ -54,6 +54,10 @@ export default function ProfitabilityGraph(props) {
             start_date = moment(form.date[0]).set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toDate();
             end_date = moment(form.date[1]).set({ hour: 23, minute: 59, second: 59, millisecond: 999 }).toDate();
         }
+
+        //Update COGS
+
+        //Update Revenue
 
         const profits = AnalyticsApiHelper.getProfits(start_date, end_date)
             .then(result => { console.log("input profits: " + result) })
