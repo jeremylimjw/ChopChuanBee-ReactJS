@@ -37,19 +37,19 @@ export default function CustomerAnalyticsTable(props) {
         onValuesChange(null, form.getFieldsValue());
     }
 
-    const handleFinish = (values) => {
-        let customer_name = values.name;
-        let start_date, end_date;
-        if (form.date && form.date[0] && form.date[1]) {
-            start_date = moment(form.date[0]).set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toDate();
-            end_date = moment(form.date[1]).set({ hour: 23, minute: 59, second: 59, millisecond: 999 }).toDate();
-        }
+    // const handleFinish = (values) => {
+    //     let customer_name = values.name;
+    //     let start_date, end_date;
+    //     if (values.date && values.date[0] && values.date[1]) {
+    //         start_date = moment(values.date[0]).set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toDate();
+    //         end_date = moment(values.date[1]).set({ hour: 23, minute: 59, second: 59, millisecond: 999 }).toDate();
+    //     }
 
-        AnalyticsApiHelper.getCustomerProfits(start_date, end_date)
-            .then((results) => { setData(results) })
-            .catch(handleHttpError)
-            .catch(() => setLoading(false));
-    }
+    //     AnalyticsApiHelper.getCustomerProfits(start_date, end_date)
+    //         .then((results) => { setData(results) })
+    //         .catch(handleHttpError)
+    //         .catch(() => setLoading(false));
+    // }
 
     const columns = [
         {
@@ -87,42 +87,22 @@ export default function CustomerAnalyticsTable(props) {
 
     return (
         <>
-            <MyCard style={{margin: '3px'}}>
-                <Form form={searchInputForm} layout='inline' onFinish={handleFinish}>
-                    <Form.Item name="name">
-                        <Input placeholder='Search Customer Name' suffix={<SearchOutlined className='grey' />} />
+            <MyToolbar>
+                <Form form={form} layout='inline' autoComplete='off'>
+                    <Form.Item name="sales_order_id">
+                        <Input placeholder='Search Sales Order ID' suffix={<SearchOutlined className='grey' />} />
                     </Form.Item>
-                    <Form.Item name="date">
-                        <DatePicker.RangePicker />
-                    </Form.Item>
-                    
-                    <Space direction='horizontal' wrap style={{marginLeft: 'auto'}}>
-                        <Button onClick={searchInputForm.resetFields()}>Reset</Button>
-                        <Form.Item name="date">
-                        <Button type="primary" htmlType="submit"> Analyse </Button>
-                        </Form.Item>
-                    </Space>
+                    <Button onClick={resetForm()}>Reset</Button>
                 </Form>
-            </MyCard>
+            </MyToolbar>
 
-            <MyCard style={{marginLeft: '3px', marginRight: '3px'}}>
-                <MyToolbar>
-                    <Form form={form} layout='inline' autoComplete='off'>
-                        <Form.Item name="sales_order_id">
-                            <Input placeholder='Search Sales Order ID' suffix={<SearchOutlined className='grey' />} />
-                        </Form.Item>
-                        <Button onClick={resetForm()}>Reset</Button>
-                    </Form>
-                </MyToolbar>
-
-                <Table 
-                        dataSource={data} 
-                        columns={columns} 
-                        loading={loading} 
-                        rowKey="sales_order_id"
-                        pagination={{ showTotal }} 
-                    />
-            </MyCard>
+            <Table 
+                    dataSource={data} 
+                    columns={columns} 
+                    loading={loading} 
+                    rowKey="sales_order_id"
+                    pagination={{ showTotal }} 
+                />
         </>
     )
 }

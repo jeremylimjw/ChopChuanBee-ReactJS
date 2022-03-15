@@ -41,7 +41,7 @@ export default function PayableCard(props) {
                 </Row>
             </MyCard>
 
-            <MyCard style={{minWidth:'250px'}}>
+            <MyCard style={{minWidth:'250px', marginLeft: '3px'}}>
                 <Typography>HIGHEST ACCOUNTS PAYABLE</Typography>
                 <Typography.Title level={2} style={{margin:0}}>{highestSupplierAPName}</Typography.Title>
                 <Divider style={{margin:'0.5rem 0'}}/>

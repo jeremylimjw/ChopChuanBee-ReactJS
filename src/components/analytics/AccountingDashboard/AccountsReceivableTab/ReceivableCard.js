@@ -41,7 +41,7 @@ export default function ReceivableCard(props) {
                 </Row>
             </MyCard>
 
-            <MyCard style={{minWidth:'250px'}}>
+            <MyCard style={{minWidth:'250px', marginLeft: '3px'}}>
                 <Typography>HIGHEST ACCOUNTS RECEIVABLE</Typography>
                 <Typography.Title level={2} style={{margin:0}}>{highestCustomerARName}</Typography.Title>
                 <Divider style={{margin:'0.5rem 0'}}/>

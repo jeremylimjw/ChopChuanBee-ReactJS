@@ -29,7 +29,7 @@ export default function CustomerAnalyticsCard(props) {
                 </Row>
             </MyCard>
 
-            <MyCard style={{minWidth:'250px'}}>
+            <MyCard style={{minWidth:'250px', marginLeft: '3px'}}>
                 <Typography>HIGHEST SALES AMOUNT</Typography>
                 <Typography.Title level={2} style={{margin:0}}>$3,000.00</Typography.Title>
                 <Divider style={{margin:'0.5rem 0'}}/>
