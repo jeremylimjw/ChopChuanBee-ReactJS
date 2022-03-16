@@ -194,4 +194,25 @@ export class AccountingAPIHelper {
       })
       .then((res) => res.data);
   }
+
+  static async getInputTax(form, start_date, end_date) {
+    const params = {};
+    params.start_date = start_date;
+    params.end_date = end_date;
+    params.charged_under_name = form.company;
+    return axiosObject
+      .get("/accounting/input_tax", { params })
+      .then((res) => res.data);
+  }
+
+  static async getOutputTax(form, start_date, end_date) {
+    const params = {};
+    params.start_date = start_date;
+    params.end_date = end_date;
+    params.charged_under_name = form.company;
+    return axiosObject
+      .get("/accounting/output_tax", { params })
+      .then((res) => res.data);
+  }
+  
 }
