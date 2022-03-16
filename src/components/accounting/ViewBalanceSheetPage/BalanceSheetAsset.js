@@ -1,4 +1,4 @@
-import { EditOutlined, SaveOutlined, ExportOutlined } from '@ant-design/icons/lib/icons';
+import { EditOutlined, SaveOutlined, PrinterOutlined, FileExcelOutlined } from '@ant-design/icons/lib/icons';
 import { Row, Col, Button, Form, Input, Divider, message, Typography, Popconfirm, Tag } from 'antd'
 import React, { useState } from 'react'
 import { AccountingAPIHelper } from '../../../api/AccountingAPIHelper';
@@ -15,7 +15,8 @@ export default function BalanceSheetAsset({ BalanceSheet, setBalanceSheet }) {
     
     const [editing, setEditing] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [showPopConfirm, setShowPopConfirm] = useState(false);
+    const [showPopConfirmPDF, setShowPopConfirmPDF] = useState(false);
+    const [showPopConfirmExcel, setShowPopConfirmExcel] = useState(false);
     const [form] = Form.useForm();
 
     const totalCurrentAssets = parseFloat(BalanceSheet.cash_sales_of_goods) + parseFloat(BalanceSheet.cash_others) + parseFloat(BalanceSheet.account_receivable) + parseFloat(BalanceSheet.inventory) + parseFloat(BalanceSheet.supplies) + parseFloat(BalanceSheet.prepaid_insurance) + parseFloat(BalanceSheet.prepaid_rent) + parseFloat(BalanceSheet.other_current_asset_1) + parseFloat(BalanceSheet.other_current_asset_2);
@@ -36,25 +37,37 @@ export default function BalanceSheetAsset({ BalanceSheet, setBalanceSheet }) {
 
     const totalLiabilitiesAndEquities = parseFloat(totalLiabilities) + parseFloat(totalEquities);
 
-    const checkPopConfirmVisibility = () => {
+    const checkPopConfirmPDFVisibility = () => {
         if (totalAssets != totalLiabilitiesAndEquities) {
-            setShowPopConfirm(true);
+            setShowPopConfirmPDF(true);
         } else {
-            setShowPopConfirm(false);
+            setShowPopConfirmPDF(false);
         }
     }    
 
-    const handleExport = () => {
-        setShowPopConfirm(false);
-        BalanceSheet.totalCurrentAssets = totalCurrentAssets.toString();
-        BalanceSheet.totalNonCurrentAssets = totalNonCurrentAssets.toString();
-        BalanceSheet.totalIntangibleAssets = totalIntangibleAssets.toString();
-        BalanceSheet.totalCurrentLiabilities = totalCurrentLiabilities.toString();
-        BalanceSheet.totalNonCurrentLiabilities = totalNonCurrentLiabilities.toString();
-        BalanceSheet.totalLiabilities = totalLiabilities.toString();
-        BalanceSheet.totalEquities = totalEquities.toString();
-        BalanceSheet.totalLiabilitiesAndEquities = totalLiabilitiesAndEquities.toString();
-        console.log(BalanceSheet);
+    const checkPopConfirmExcelVisibility = () => {
+        if (totalAssets != totalLiabilitiesAndEquities) {
+            setShowPopConfirmExcel(true);
+        } else {
+            setShowPopConfirmExcel(false);
+        }
+    }  
+
+    BalanceSheet.totalCurrentAssets = totalCurrentAssets.toString();
+    BalanceSheet.totalNonCurrentAssets = totalNonCurrentAssets.toString();
+    BalanceSheet.totalIntangibleAssets = totalIntangibleAssets.toString();
+    BalanceSheet.totalCurrentLiabilities = totalCurrentLiabilities.toString();
+    BalanceSheet.totalNonCurrentLiabilities = totalNonCurrentLiabilities.toString();
+    BalanceSheet.totalLiabilities = totalLiabilities.toString();
+    BalanceSheet.totalEquities = totalEquities.toString();
+    BalanceSheet.totalLiabilitiesAndEquities = totalLiabilitiesAndEquities.toString();
+
+    const handleExportPDF = () => {
+        setShowPopConfirmPDF(false);
+    }
+
+    const handleExportExcel = () => {
+        setShowPopConfirmExcel(false);
     }
 
     async function onFinish() {
@@ -87,9 +100,14 @@ export default function BalanceSheetAsset({ BalanceSheet, setBalanceSheet }) {
                                         <Button type="primary" onClick={onFinish} icon={<SaveOutlined />} loading={loading} style={{ width: 85 }}>Save</Button>
                                         :
                                         <>
-                                            <Popconfirm title="The balance sheet is not balanced. Continue exporting?" placement='leftTop' visible={showPopConfirm} onConfirm={handleExport} disabled={loading}>
-                                                <Button onClick={checkPopConfirmVisibility} icon={<ExportOutlined />} loading={loading} style={{ marginRight: '1rem' }}>Export as PDF</Button>
+                                            <Popconfirm title="The balance sheet is not balanced. Continue exporting?" placement='leftTop' visible={showPopConfirmPDF} onConfirm={handleExportPDF} disabled={loading}>
+                                                <Button onClick={checkPopConfirmPDFVisibility} icon={<PrinterOutlined />} loading={loading} style={{ marginRight: '1rem' }}>Export as PDF</Button>
                                             </Popconfirm>
+
+                                            <Popconfirm title="The balance sheet is not balanced. Continue exporting?" placement='leftTop' visible={showPopConfirmExcel} onConfirm={handleExportExcel} disabled={loading}>
+                                                <Button onClick={checkPopConfirmExcelVisibility} icon={<FileExcelOutlined />} loading={loading} style={{ marginRight: '1rem' }}>Export as Excel</Button>
+                                            </Popconfirm>
+
                                             <Button onClick={() => setEditing(true)} icon={<EditOutlined />} style={{ width: 85 }}>Edit</Button>
                                         </>
                                     }
@@ -132,49 +150,49 @@ export default function BalanceSheetAsset({ BalanceSheet, setBalanceSheet }) {
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.cash_sales_of_goods) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="$"/>
                                     }
                                 </Form.Item>
                                 <Form.Item label="Cash (Others)" name="cash_others" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.cash_others) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="$"/>
                                     }
                                 </Form.Item>
                                 <Form.Item label="Account Receivable" name="account_receivable" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.account_receivable) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="$"/>
                                     }
                                 </Form.Item>
                                 <Form.Item label="Inventory" name="inventory" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.inventory) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="$"/>
                                     }
                                 </Form.Item>
                                 <Form.Item label="Supplies" name="supplies" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.supplies) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="$"/>
                                     }
                                 </Form.Item>
                                 <Form.Item label="Prepaid Insurance" name="prepaid_insurance" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.prepaid_insurance) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="$"/>
                                     }
                                 </Form.Item>
                                 <Form.Item label="Prepaid Rent" name="prepaid_rent" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.prepaid_rent) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="$"/>
                                     }
                                 </Form.Item>
 
@@ -182,14 +200,14 @@ export default function BalanceSheetAsset({ BalanceSheet, setBalanceSheet }) {
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.other_current_asset_1) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="$"/>
                                     }
                                 </Form.Item>
                                 <Form.Item label="Other current assets (2)" name="other_current_asset_2" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}> 
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.other_current_asset_2) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="$"/>
                                     }
                                 </Form.Item>
 
@@ -200,56 +218,56 @@ export default function BalanceSheetAsset({ BalanceSheet, setBalanceSheet }) {
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.land) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="$"/>
                                     }
                                 </Form.Item>
                                 <Form.Item labelCol={{ span: 12 , offset: 2 }} label="Less: Accumulated Depreciation" name="less_accumulated_depreciation_land" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
                                         <Typography>{"-" + formatCurrency(BalanceSheet.less_accumulated_depreciation_land) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="-$"/>
                                     }
                                 </Form.Item>
                                 <Form.Item label="Building" name="building" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.building) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="$"/>
                                     }
                                 </Form.Item>
                                 <Form.Item labelCol={{ span: 12 , offset: 2 }} label="Less: Accumulated Depreciation" name="less_accumulated_depreciation_building" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
                                         <Typography>{"-" + formatCurrency(BalanceSheet.less_accumulated_depreciation_building) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="-$"/>
                                     }
                                 </Form.Item>
                                 <Form.Item label="Equipments" name="equipments" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.equipments) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="$"/>
                                     }
                                 </Form.Item>
                                 <Form.Item labelCol={{ span: 12 , offset: 2 }} label="Less: Accumulated Depreciation" name="less_accumulated_depreciation_equipments" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
                                         <Typography>{"-" +  formatCurrency(BalanceSheet.less_accumulated_depreciation_equipments) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="-$"/>
                                     }
                                 </Form.Item>
                                 <Form.Item label="Other Non-Current Asset (1)" name="other_non_current_asset_1" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.other_non_current_asset_1) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="$"/>
                                     }
                                 </Form.Item>
                                 <Form.Item label="Other Non-Current Asset (2)" name="other_non_current_asset_2" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.other_non_current_asset_2) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="$"/>
                                     }
                                 </Form.Item>
                                 
@@ -260,28 +278,28 @@ export default function BalanceSheetAsset({ BalanceSheet, setBalanceSheet }) {
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.goodwill) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="$"/>
                                     }
                                 </Form.Item>
                                 <Form.Item label="Trade names" name="trade_names" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.trade_names) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="$"/>
                                     }
                                 </Form.Item>
                                 <Form.Item label="Other Intangible Asset (1)" name="other_intangible_asset_1" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.other_intangible_asset_1) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="$"/>
                                     }
                                 </Form.Item>
                                 <Form.Item label="Other Intangible Asset (2)" name="other_intangible_asset_2" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.other_intangible_asset_2) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="$"/>
                                     }
                                 </Form.Item>
                                 
@@ -296,56 +314,56 @@ export default function BalanceSheetAsset({ BalanceSheet, setBalanceSheet }) {
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.account_payable) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="$"/>
                                     }
                                 </Form.Item>
                                 <Form.Item label="Salary Payable" name="salary_payable" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.salary_payable) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="$"/>
                                     }
                                 </Form.Item>
                                 <Form.Item label="Interest Payable" name="interest_payable" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.interest_payable) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="$"/>
                                     }
                                 </Form.Item>
                                 <Form.Item label="Tax Payable" name="taxes_payable" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.taxes_payable) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="$"/>
                                     }
                                 </Form.Item>
                                 <Form.Item label="Warranty Payable" name="warranty_payable" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.warranty_payable) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="$"/>
                                     }
                                 </Form.Item>
                                 <Form.Item label="Rental Payable" name="rental_payable" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.rental_payable) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="$"/>
                                     }
                                 </Form.Item>
                                 <Form.Item label="Other Current Liability (1)" name="other_current_liability_1" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.other_current_liability_1) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="$"/>
                                     }
                                 </Form.Item>
                                 <Form.Item label="Other Current Liability (2)" name="other_current_liability_2" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.other_current_liability_2) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="$"/>
                                     }
                                 </Form.Item>
                                 
@@ -356,28 +374,28 @@ export default function BalanceSheetAsset({ BalanceSheet, setBalanceSheet }) {
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.notes_payable) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="$"/>
                                     }
                                 </Form.Item>
                                 <Form.Item label="Bonds Payable" name="bonds_payable" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.bonds_payable) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="$"/>
                                     }
                                 </Form.Item>
                                 <Form.Item label="Other Non-Current Liability (1)" name="other_non_current_liability_1" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.other_non_current_liability_1) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="$"/>
                                     }
                                 </Form.Item>
                                 <Form.Item label="Other Non-Current Liability (2)" name="other_non_current_liability_2" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.other_non_current_liability_2) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="$"/>
                                     }
                                 </Form.Item>
                                 
@@ -394,35 +412,35 @@ export default function BalanceSheetAsset({ BalanceSheet, setBalanceSheet }) {
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.share_capital) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="$"/>
                                     }
                                 </Form.Item>
                                 <Form.Item labelCol={{ span: 12 , offset: 2 }} label="Less: Withdrawal" name="less_withdrawal" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
                                         <Typography>{"-" + formatCurrency(BalanceSheet.less_withdrawal) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="-$"/>
                                     }
                                 </Form.Item>
                                 <Form.Item label="Retained Earning" name="retained_earning" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.retained_earning) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="$"/>
                                     }
                                 </Form.Item>
                                 <Form.Item label="Other Equity (1)" name="other_equity_1" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.other_equity_1) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="$"/>
                                     }
                                 </Form.Item>
                                 <Form.Item label="Other Equity (2)" name="other_equity_2" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.other_equity_2) || '-'}</Typography>
                                     :
-                                        <Input />
+                                        <Input prefix="$"/>
                                     }
                                 </Form.Item>
                                 
