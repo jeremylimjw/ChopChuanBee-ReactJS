@@ -54,15 +54,12 @@ export default function ManageDeliveriesPage() {
   }
 
   function resetForm() {
-      form.resetFields();
-      onValuesChange(null, form.getFieldsValue());
+    form.resetFields();
+    onValuesChange(null, form.getFieldsValue());
   }
 
-  function myCallback(newDeliveryOrder) {
-    const newOrders = [...orders];
-    const index = newOrders.findIndex(x => x.id === newDeliveryOrder.id);
-    newOrders.splice(index, 1, {...newOrders[index], ...newDeliveryOrder })
-    setOrders(newOrders);
+  function refreshDeliveryOrders() {
+    onValuesChange(null, form.getFieldsValue());
   }
 
   return (
@@ -101,7 +98,7 @@ export default function ManageDeliveriesPage() {
       <ViewDeliveryOrderModal 
         showDeliveryOrder={showDeliveryOrder} 
         setShowDeliveryOrder={setShowDeliveryOrder} 
-        myCallback={myCallback}
+        myCallback={refreshDeliveryOrders}
       />
 
       <NewDeliveryModal 

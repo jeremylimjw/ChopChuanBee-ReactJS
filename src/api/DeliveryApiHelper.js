@@ -11,6 +11,11 @@ export class DeliveryApiHelper {
             .then(res => res.data);
     }
 
+    static async deleteOrder(id) {
+        return axiosObject.delete(`/deliveryOrder`, { params: { id: id }})
+            .then(res => res.data);
+    }
+
     static async getItinerarys(params) {
         return axiosObject.get(`/itinerary`, { params: params })
             .then(res => res.data);
@@ -38,6 +43,11 @@ export class DeliveryApiHelper {
 
     static async getGeocode(postal_code) {
         return axiosObject.get(`/external/geocode`, { params: { postal_code: postal_code } })
+            .then(res => res.data);
+    }
+
+    static async optimizeRoutes(origin, waypoints) {
+        return axiosObject.post(`/external/optimizeRoutes`, { origin: origin, waypoints: waypoints })
             .then(res => res.data);
     }
 

@@ -156,7 +156,7 @@ export default function SO2Form({ form, salesOrder, setSalesOrder, loading, save
                 <Divider/>
 
                 <Form.Item label="Delivery Required" name="has_delivery" rules={salesOrder.isStatus(POStatus.PENDING) ? [REQUIRED] : []}>
-                    {salesOrder.isStatus(POStatus.PENDING) ? 
+                    {salesOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED) ? 
                         <Radio.Group>
                             <Radio value={false}>No</Radio>
                             <Radio value={true}>Yes</Radio>
