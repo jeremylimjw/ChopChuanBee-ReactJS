@@ -10,8 +10,7 @@ import { parseDate } from '../../../utilities/datetime';
 import { showTotal } from '../../../utilities/table';
 import { RenderCell } from '../../common/TableCell/RenderCell';
 import MyToolbar from "../../common/MyToolbar";
-
-
+import { formatCurrency } from '../../../utilities/currency';
 
 const breadcrumbs = [
     { url: "/accounting/Taxes", name: "Accounting" },    
@@ -32,11 +31,14 @@ export default function ManageTaxPage() {
 
     const onFinish = (form) => {
         setLoading(true);
-        let start_date, end_date;
-        if (form.start_date && form.end_date) {
-            start_date = moment(form.start_date).set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toDate();
-            end_date = moment(form.end_date).set({ hour: 23, minute: 59, second: 59, millisecond: 999 }).toDate();
+        let start_date = form.dateRange[0];
+        let end_date = form.dateRange[1];
+
+        if (start_date && end_date) {
+            start_date = moment(start_date).set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toDate();
+            end_date = moment(end_date).set({ hour: 23, minute: 59, second: 59, millisecond: 999 }).toDate();
         }
+        
         if (form.type == 'input'){
         AccountingAPIHelper.getInputTax(form, start_date, end_date)
         .then(results => {
@@ -79,7 +81,7 @@ export default function ManageTaxPage() {
                             <Radio value={"output"}>Output Tax</Radio>
                         </Radio.Group>
                     </Form.Item>
-                    <Form.Item
+                    {/* <Form.Item
                         rules={[REQUIRED]}
                         label="Start Date"
                         name="start_date"
@@ -92,6 +94,9 @@ export default function ManageTaxPage() {
                         name="end_date"
                     >
                         <DatePicker />
+                    </Form.Item> */}
+                    <Form.Item label='Date' name='dateRange' rules={[REQUIRED]}>
+                        <DatePicker.RangePicker allowClear={false} placeholder={['Start Date', 'End Date']}/>
                     </Form.Item>
                     <Form.Item
                         rules={[REQUIRED]} 
@@ -121,14 +126,14 @@ export default function ManageTaxPage() {
                 <div>
                     <Typography.Title level={5} style={{ display: 'inline-block'}}>Total Amount: </Typography.Title>&nbsp;
 
-                    {totalAmt ? (<Typography.Title level={5} style={{ display: 'inline-block'}}>${parseFloat(totalAmt.total_amount).toFixed(2)}</Typography.Title>) 
+                    {totalAmt ? (<Typography.Title level={5} style={{ display: 'inline-block'}}>{formatCurrency(totalAmt.total_amount)}</Typography.Title>) 
                     : (<Typography.Title level={5} style={{ display: 'inline-block'}}>$0.00</Typography.Title>) }
 
                     <br />
 
                     <Typography.Title level={5} style={{ display: 'inline-block'}}>Total GST: </Typography.Title>&nbsp;
 
-                    {totalTax ? (<Typography.Title level={5} style={{ display: 'inline-block'}}>${parseFloat(totalTax.total_tax).toFixed(2)}</Typography.Title>) 
+                    {totalTax ? (<Typography.Title level={5} style={{ display: 'inline-block'}}>{formatCurrency(totalTax.total_tax)}</Typography.Title>) 
                     : (<Typography.Title level={5} style={{ display: 'inline-block'}}>$0.00</Typography.Title>) }
                 </div>
             </MyCard>
@@ -141,13 +146,14 @@ const columns = [
         title: 'Order Id',
         dataIndex: 'order_id',
         key: 'order_id',
+        width: "11%"
         //   sorter: (a, b) => sortByString(a.sales_order_id, b.sales_order_id),
     },
     {
         title: 'Customer Company Name',
         dataIndex: 'company_name',
         key: 'company_name',
-        width: 280,
+        width: "34%"
         //   sorter: (a, b) => sortByString(a.company_name, b.company_name),
     },
     {
@@ -155,7 +161,7 @@ const columns = [
         dataIndex: 'charged_under_name',
         key: 'charged_under_name',
         align: 'center',
-        width: 120,
+        width: "11%"
         //   sorter: (a, b) => sortByString(a.charged_under_name, b.charged_under_name),
     },
     {
@@ -163,7 +169,7 @@ const columns = [
         dataIndex: 'transaction_date',
         key: 'transaction_date',
         align: 'center',
-        width: 120,
+        width: "11%",
         render: (transaction_date) => parseDate(transaction_date),
     },
     {
@@ -171,8 +177,8 @@ const columns = [
         dataIndex: 'total_transaction_amount',
         key: 'total_transaction_amount',
         align: 'center',
-        width: 120,
-        render: (total_transaction_amount) => parseFloat(total_transaction_amount).toFixed(2),
+        width: "11%",
+        render: (total_transaction_amount) => formatCurrency(total_transaction_amount),
         // sorter: (a, b) => sortByString(a.total_transaction_amount, b.total_transaction_amount),
     },
     {
@@ -180,19 +186,15 @@ const columns = [
         dataIndex: 'gst_rate',
         key: 'gst_rate',
         align: 'center',
-        width: 120,
+        width: "11%",
     },
     {
         title: 'GST Amount',
         dataIndex: 'gst_amount',
         key: 'gst_amount',
         align: 'center',
-        width: 120,
-        render: (gst_amount) => parseFloat(gst_amount).toFixed(2),
+        width: "11%",
+        render: (gst_amount) => formatCurrency(gst_amount),
         // sorter: (a, b) => sortByString(a.gst_amount, b.gst_amount),
-    },
-    { 
-        align: 'center', 
-        width: 50,
     },
 ];

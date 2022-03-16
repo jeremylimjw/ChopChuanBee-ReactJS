@@ -23,12 +23,16 @@ export default function IncomeStatementAsset({ income, setIncome }) {
 
     const profit = parseFloat(totalRevenue) - parseFloat(totalExpenses);
 
-    const handleExportPDF = () => {
+    income.totalRevenue = totalRevenue.toString();
+    income.totalExpenses = totalExpenses.toString();
+    income.profit = profit.toString();
 
+    const handleExportPDF = () => {
+        console.log(income);
     }
 
     const handleExportExcel = () => {
-
+        console.log(income);
     }
 
     async function onFinish() {

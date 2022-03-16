@@ -64,10 +64,12 @@ export default function BalanceSheetAsset({ BalanceSheet, setBalanceSheet }) {
 
     const handleExportPDF = () => {
         setShowPopConfirmPDF(false);
+        console.log(BalanceSheet);
     }
 
     const handleExportExcel = () => {
         setShowPopConfirmExcel(false);
+        console.log(BalanceSheet);
     }
 
     async function onFinish() {
