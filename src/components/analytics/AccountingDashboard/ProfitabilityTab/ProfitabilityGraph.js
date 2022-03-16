@@ -14,6 +14,8 @@ export default function ProfitabilityGraph(props) {
     const [form] = Form.useForm();
     const { handleHttpError, hasWriteAccessTo } = useApp();
 
+    
+
     useEffect(() => {
         setData([...revenue, ...cogs, ...profitsEarned]);
         setLoading(true);
@@ -23,7 +25,7 @@ export default function ProfitabilityGraph(props) {
         //Change "cogs" to "price" to each data
         //Change "period" to "date" to each data
         // AnalyticsApiHelper.getCOGS(props.oneYearAgo, props.currDate)
-        //     .then(result => { console.log(result) })
+        //     .then(result => { console.log("init cogs: " + result) })
         //     .catch(handleHttpError)
         //     .catch(() => setLoading(false));
 

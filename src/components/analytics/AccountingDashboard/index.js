@@ -40,30 +40,6 @@ export default function AccountingDashboard() {
                     <CustomerAnalyticsData />
                 </TabPane>
             </Tabs>
-
-            {/* <MyCard>
-                <MyToolbar title='Top 10 Receivable'>
-                    <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
-                        <Form.Item name='date'>
-                            <DatePicker.RangePicker />
-                        </Form.Item>
-
-                        <Button onClick={resetForm}>Reset</Button>
-                    </Form>
-                    <Button type='link' onClick={handleReceivableNavigation}>
-                        View all receivable
-                    </Button>
-                </MyToolbar>
-
-                <Tabs defaultActiveKey='1' onChange={callback} tabPosition='left'>
-                    <TabPane tab='PO Level' key='1'>
-                        <A4PO />
-                    </TabPane>
-                    <TabPane tab='Customer Level' key='2'>
-                        <A3AR />
-                    </TabPane>
-                </Tabs>
-            </MyCard> */}
         </MyLayout>
     );
 }

@@ -26,7 +26,7 @@ import ViewSupplierPage from './components/supplier/ViewSupplierPage';
 import ManageCustomersPage from './components/customer/ManageCustomersPage';
 import ViewCustomerPage from './components/customer/ViewCustomerPage';
 import AccountingDashboard from './components/analytics/AccountingDashboard';
-import InventoryDashboard from './components/analytics/InventoryPage/InventoryDashboard';
+import InventoryDashboard from './components/analytics/InventoryDashboard';
 import ProductDashboard from './components/analytics/ProductPage/ProductDashboard';
 
 // Add on more routes here
