@@ -9,7 +9,7 @@ import { parseDate } from '../../../utilities/datetime';
 import MyCard from '../../common/MyCard';
 import MyToolbar from '../../common/MyToolbar';
 
-export default function SOFPAsset({ income, setIncome }) {
+export default function IncomeStatementAsset({ income, setIncome }) {
     const { handleHttpError, hasWriteAccessTo } = useApp();
     
     const [editing, setEditing] = useState(false);
