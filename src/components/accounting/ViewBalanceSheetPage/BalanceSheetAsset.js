@@ -198,14 +198,14 @@ export default function BalanceSheetAsset({ BalanceSheet, setBalanceSheet }) {
                                     }
                                 </Form.Item>
 
-                                <Form.Item label="Other current assets (1)" name="other_current_asset_1" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
+                                <Form.Item label="Other Current Asset (1)" name="other_current_asset_1" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.other_current_asset_1) || '-'}</Typography>
                                     :
                                         <Input prefix="$"/>
                                     }
                                 </Form.Item>
-                                <Form.Item label="Other current assets (2)" name="other_current_asset_2" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}> 
+                                <Form.Item label="Other Current Asset (2)" name="other_current_asset_2" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}> 
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.other_current_asset_2) || '-'}</Typography>
                                     :
@@ -244,7 +244,7 @@ export default function BalanceSheetAsset({ BalanceSheet, setBalanceSheet }) {
                                         <Input prefix="-$"/>
                                     }
                                 </Form.Item>
-                                <Form.Item label="Equipments" name="equipments" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
+                                <Form.Item label="Equipment" name="equipments" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.equipments) || '-'}</Typography>
                                     :
@@ -283,7 +283,7 @@ export default function BalanceSheetAsset({ BalanceSheet, setBalanceSheet }) {
                                         <Input prefix="$"/>
                                     }
                                 </Form.Item>
-                                <Form.Item label="Trade names" name="trade_names" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
+                                <Form.Item label="Trade Names" name="trade_names" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
                                         <Typography>{formatCurrency(BalanceSheet.trade_names) || '-'}</Typography>
                                     :

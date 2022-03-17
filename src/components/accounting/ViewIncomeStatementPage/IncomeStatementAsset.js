@@ -136,7 +136,7 @@ export default function IncomeStatementAsset({ income, setIncome }) {
                                     }
                                 </Form.Item>
 
-                                <Form.Item labelCol={{ span: 19 }} wrapperCol={{ span: 5 }} label="Gain on Sale of asset" name="gain_on_sale_of_asset" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
+                                <Form.Item labelCol={{ span: 19 }} wrapperCol={{ span: 5 }} label="Gain on Sale of Asset" name="gain_on_sale_of_asset" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
                                         <Typography>{formatCurrency(income.gain_on_sale_of_asset) || '-'}</Typography>
                                     :
@@ -166,7 +166,7 @@ export default function IncomeStatementAsset({ income, setIncome }) {
                                 <Typography.Title level={5} style={{marginTop: '2rem'}}>Expenses</Typography.Title>
                                 <Divider style={{margin:0}}/>
 
-                                <Form.Item labelCol={{ span: 19 }} wrapperCol={{ span: 5 }} label="Damage Inventory" name="damaged_inventory" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
+                                <Form.Item labelCol={{ span: 19 }} wrapperCol={{ span: 5 }} label="Damaged Inventory" name="damaged_inventory" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
                                         <Typography>{formatCurrency(income.damaged_inventory) || '-'}</Typography>
                                     :
@@ -222,7 +222,7 @@ export default function IncomeStatementAsset({ income, setIncome }) {
                                         <Input prefix="$"/>
                                     }
                                 </Form.Item>
-                                <Form.Item labelCol={{ span: 19 }} wrapperCol={{ span: 5 }} label="Loss on sale of asset" name="loss_on_sale_of_asset" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
+                                <Form.Item labelCol={{ span: 19 }} wrapperCol={{ span: 5 }} label="Loss on Sale of Asset" name="loss_on_sale_of_asset" rules={editing ? [REQUIRED] : []} style={{margin:0, textAlign: 'right'}}>
                                     {!editing ? 
                                         <Typography>{formatCurrency(income.loss_on_sale_of_asset) || '-'}</Typography>
                                     :
