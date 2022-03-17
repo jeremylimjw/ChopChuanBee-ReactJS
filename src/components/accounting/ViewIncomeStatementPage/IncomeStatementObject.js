@@ -10,7 +10,7 @@ import MyCard from '../../common/MyCard';
 import MyToolbar from '../../common/MyToolbar';
 import { formatCurrency } from '../../../utilities/currency';
 
-export default function IncomeStatement({ income, setIncome }) {
+export default function IncomeStatementObject({ income, setIncome }) {
     const { handleHttpError, hasWriteAccessTo } = useApp();
     
     const [editing, setEditing] = useState(false);
