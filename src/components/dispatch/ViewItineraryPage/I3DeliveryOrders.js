@@ -1,5 +1,5 @@
-import { DeleteOutlined, PlusOutlined, PrinterOutlined, ReloadOutlined, SaveOutlined } from '@ant-design/icons/lib/icons'
-import { Button, message, Popconfirm, Space, Table } from 'antd'
+import { PlusOutlined, PrinterOutlined, ReloadOutlined, SaveOutlined } from '@ant-design/icons/lib/icons'
+import { Button, message, Space, Table } from 'antd'
 import React, { useState } from 'react'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
@@ -15,21 +15,33 @@ import MyToolbar from '../../common/MyToolbar'
 import ViewDeliveryOrderModal from '../ViewDeliveryOrderModal'
 import AddDeliveryModal from './AddDeliveryModal'
 
-export default function I3DeliveryOrders({ itinerary, setItinerary, updateItinerary, loading, setLoading, myCallback }) {
+export default function I3DeliveryOrders({ itinerary, setItinerary, loading, setLoading, myCallback }) {
 
     const { handleHttpError, hasWriteAccessTo } = useApp();
 
     const [showDeliveryOrder, setShowDeliveryOrder] = useState();
     const [showAddOrder, setShowAddOrder] = useState(false);
 
-    columns[8].render = (_, record) => <Button type="link" style={{ paddingLeft: 0 }} onClick={() => setShowDeliveryOrder(record)}>View</Button>;
+    columns[7].render = (_, record) => <Button type="link" style={{ paddingLeft: 0 }} onClick={() => setShowDeliveryOrder(record)}>View</Button>;
 
     function moveRow(dragIndex, hoverIndex) {
         const dragRow = itinerary.delivery_orders[dragIndex];
         const newSelectedOrders = [...itinerary.delivery_orders];
         newSelectedOrders.splice(dragIndex, 1);
         newSelectedOrders.splice(hoverIndex, 0, dragRow);
-        setItinerary({ ...itinerary, delivery_orders: newSelectedOrders })
+
+        const newItinerary = { ...itinerary, delivery_orders: newSelectedOrders };
+        setItinerary(newItinerary)
+
+        // Automatically update itinerary in db
+        setLoading(true);
+        DeliveryApiHelper.updateItinerary(newItinerary)
+            .then(() => {
+                message.success('Route sequence successfully saved!');
+                setLoading(false);
+            })
+            .catch(handleHttpError)
+            .catch(() => setLoading(false));
     }
 
     function handleAddNewRows(deliveryOrders) {
@@ -48,27 +60,34 @@ export default function I3DeliveryOrders({ itinerary, setItinerary, updateItiner
             .catch(() => setLoading(false));
     };
 
-    function optimizeRoutes() {
+    async function optimizeRoutes() {
         const origin = {
             latitude: itinerary.latitude,
             longitude: itinerary.longitude,
         }
 
-        setLoading(true);
-        DeliveryApiHelper.optimizeRoutes(origin, itinerary.delivery_orders)
-            .then(route => {
-                setLoading(false);
+        try {
+            setLoading(true);
+            const waypoint_order = await DeliveryApiHelper.optimizeRoutes(origin, itinerary.delivery_orders);
 
-                console.log(route)
+            const newOrders = [];
+            for (let index of waypoint_order) {
+                newOrders.push(itinerary.delivery_orders[index]);
+            }
 
-                const newOrders = [];
-                for (let index of route.waypoint_order) {
-                    newOrders.push(itinerary.delivery_orders[index]);
-                }
-                setItinerary({...itinerary, delivery_orders: newOrders });
-            })
-            .catch(handleHttpError)
-            .catch(() => setLoading(false));
+            const newItinerary = {...itinerary, delivery_orders: newOrders };
+
+            // Update the itinerary
+            await DeliveryApiHelper.updateItinerary(newItinerary);
+            setItinerary(newItinerary);
+            
+            message.success('Delivery orders successfully optimized!');
+            setLoading(false);
+
+        } catch (err) {
+            handleHttpError(err);
+            setLoading(false);
+        }
     }
 
     function printItinerary() {
@@ -81,7 +100,7 @@ export default function I3DeliveryOrders({ itinerary, setItinerary, updateItiner
 
                 <MyToolbar title="Delivery Itinerary">
                     { hasWriteAccessTo(View.DISPATCH.name) && 
-                    <Button type='primary' icon={<PlusOutlined />} onClick={() => setShowAddOrder(true)}>Add</Button>
+                    <Button type='primary' icon={<PlusOutlined />} onClick={() => setShowAddOrder(true)} loading={loading}>Add</Button>
                     }
                 </MyToolbar>
 
@@ -105,8 +124,7 @@ export default function I3DeliveryOrders({ itinerary, setItinerary, updateItiner
                     { hasWriteAccessTo(View.DISPATCH.id) && 
                     <div style={{ marginLeft: 'auto' }}>
                         <Space size="middle">
-                            <Button icon={<ReloadOutlined />} onClick={optimizeRoutes} disabled={loading}>Optimize</Button>
-                            <Button icon={<SaveOutlined />} type="primary" onClick={updateItinerary} disabled={loading}>Save Sequence</Button>
+                            <Button icon={<ReloadOutlined />} onClick={optimizeRoutes} loading={loading}>Optimize</Button>
                         </Space>
                     </div>
                     }
@@ -175,15 +193,6 @@ const columns = [
         key: 'postal_code',
         width: '20%',
         ellipsis: true,
-    },
-    {
-        title: 'Est. Time',
-        dataIndex: 'delivery_status_id',
-        key: 'delivery_status_id',
-        width: 120,
-        align: 'center',
-        ellipsis: true,
-        render: (delivery_status_id) => '-',
     },
     {
         title: 'Status',

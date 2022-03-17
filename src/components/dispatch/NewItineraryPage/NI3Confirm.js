@@ -35,7 +35,7 @@ export default function NI3Confirm({ itinerary, selectedEmployee, selectedOrders
                 <MyCard title="Driver Details" style={{ width: 400 }}>
                     
                     <Descriptions bordered size="small" layout='horizontal' column={1}>
-                        <Descriptions.Item label="Name">{selectedEmployee.name}</Descriptions.Item>
+                        <Descriptions.Item label="Name"><Link to={`/humanResource/employees/${selectedEmployee.id}`}>{selectedEmployee.name}</Link></Descriptions.Item>
                         <Descriptions.Item label="Role">{getRoleTag(selectedEmployee.role_id)}</Descriptions.Item>
                         <Descriptions.Item label="Contact">{selectedEmployee.contact_number}</Descriptions.Item>
                         <Descriptions.Item label="Email">{selectedEmployee.email || '-'}</Descriptions.Item>
@@ -135,14 +135,5 @@ const columns = [
         width: '20%',
         ellipsis: true,
         render: (remarks) => remarks || '-',
-    },
-    {
-        title: 'Est. Time',
-        dataIndex: 'delivery_status_id',
-        key: 'delivery_status_id',
-        width: 120,
-        align: 'center',
-        ellipsis: true,
-        render: (delivery_status_id) => '-',
     },
 ];

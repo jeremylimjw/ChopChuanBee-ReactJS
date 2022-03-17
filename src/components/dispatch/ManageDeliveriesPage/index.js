@@ -146,7 +146,7 @@ const columns = [
     key: 'customer_p1_name',
     width: '20%',
     ellipsis: true,
-    render: (customer_p1_name) => customer_p1_name || '-',
+    render: (customer_p1_name, record) => customer_p1_name ? <Link to={`/customer/customers/${record.customer_id}`}>{customer_p1_name}</Link> : '-',
     sorter: (a, b) => sortByString(a.customer_p1_name || '-', b.customer_p1_name || '-'),
   },
   {

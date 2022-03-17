@@ -51,17 +51,6 @@ export default function ViewItineraryPage() {
       .catch(handleHttpError)
   }
 
-  function updateItinerary() {
-    setLoading(true);
-    DeliveryApiHelper.updateItinerary(itinerary)
-      .then(() => {
-        message.success('Itinerary successfully updated!');
-        setLoading(false);
-      })
-      .catch(handleHttpError)
-      .catch(() => setLoading(false));
-  }
-
   function handleDelete() {
     setLoading(true);
     DeliveryApiHelper.deleteItinerary(itinerary.id)
@@ -102,7 +91,6 @@ export default function ViewItineraryPage() {
         <I3DeliveryOrders 
           itinerary={itinerary} 
           setItinerary={setItinerary} 
-          updateItinerary={updateItinerary} 
           loading={loading}
           setLoading={setLoading}
           myCallback={myCallback}

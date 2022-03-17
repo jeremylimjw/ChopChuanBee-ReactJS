@@ -3,6 +3,7 @@ import { Button, DatePicker, Form, Input, Select, Table } from 'antd';
 import debounce from 'lodash.debounce';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom';
 import { DeliveryApiHelper } from '../../../api/DeliveryApiHelper';
 import { EmployeeApiHelper } from '../../../api/EmployeeApiHelper';
 import { getRoleTag, Role } from '../../../enums/Role';
@@ -58,7 +59,10 @@ export default function NI1Form({ itinerary, setItinerary, selectedEmployee, set
             await form.validateFields();
 
             // call api to convert postal code here
+            setLoading(true);
             const { longitude, latitude } = await DeliveryApiHelper.getGeocode(itinerary.origin_postal_code);
+            setLoading(false);
+
             setItinerary({
                 ...itinerary, 
                 longitude: longitude, 
@@ -68,6 +72,7 @@ export default function NI1Form({ itinerary, setItinerary, selectedEmployee, set
             setStep(step+1);
         } catch (err) { 
             handleHttpError(err);
+            setLoading(false);
         }
     }
 
@@ -122,7 +127,7 @@ export default function NI1Form({ itinerary, setItinerary, selectedEmployee, set
                     />
 
                     <MyToolbar style={{ marginTop: 15 }}>
-                        <Button type="primary" onClick={nextStep} disabled={selectedEmployee.id == null}>Next</Button>
+                        <Button type="primary" onClick={nextStep} disabled={selectedEmployee.id == null} loading={loading}>Next</Button>
                     </MyToolbar>
 
                 </MyCard>
@@ -137,6 +142,7 @@ const columns = [
         dataIndex: 'name',
         width: '30%',
         ellipsis: true,
+        render: (_, record) => <Link to={`/humanResource/employees/${record.id}`}>{record.name}</Link>,
         sorter: (a, b) => sortByString(a.name, b.name),
     },
     {

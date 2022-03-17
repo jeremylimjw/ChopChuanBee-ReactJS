@@ -95,7 +95,7 @@ export default function SO2Form({ form, salesOrder, setSalesOrder, loading, save
                             <Radio value={2}>Yes</Radio>
                         </Radio.Group>
                     :
-                        <Typography.Text>{salesOrder.has_gst ? 'Yes' : 'No'}</Typography.Text>
+                        <Typography.Text>{salesOrder.has_gst === 1 ? 'No' : 'Yes'}</Typography.Text>
                     }
                 </Form.Item>
 
