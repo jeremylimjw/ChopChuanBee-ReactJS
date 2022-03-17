@@ -6,21 +6,21 @@ import { AccountingAPIHelper } from '../../../api/AccountingAPIHelper';
 import { View } from '../../../enums/View';
 import { useApp } from '../../../providers/AppProvider';
 import MyLayout from '../../common/MyLayout';
-import BalanceSheetAsset from './BalanceSheetAsset';
+import BalanceSheet from './BalanceSheet';
 
-export default function ViewBalanceSheetPage() {
+export default function ViewbalanceSheetObjectPage() {
     const { id } = useParams();
     const navigate = useNavigate();
   
     const { handleHttpError, hasWriteAccessTo } = useApp();
   
-    const [BalanceSheet, setBalanceSheet] = useState(null)
+    const [balanceSheetObject, setBalanceSheetObject] = useState(null)
     const [loading, setLoading] = useState(false);
   
     const breadcrumbs = [
-      { url: '/accounting/BalanceSheets', name: 'Accounting' },
-      { url: '/accounting/BalanceSheets', name: 'Balance Sheets' },
-      { url: `/accounting/BalanceSheets/${BalanceSheet?.name}`, name: BalanceSheet?.name },
+      { url: '/accounting/balanceSheetObjects', name: 'Accounting' },
+      { url: '/accounting/balanceSheetObjects', name: 'Balance Sheets' },
+      { url: `/accounting/balanceSheetObjects/${balanceSheetObject?.name}`, name: balanceSheetObject?.name },
     ]
   
     useEffect(() => {
@@ -30,18 +30,18 @@ export default function ViewBalanceSheetPage() {
               navigate('../');
               return;
             }
-            setBalanceSheet(result[0]);
+            setBalanceSheetObject(result[0]);
           })
           .catch(handleHttpError)
     }, [id, handleHttpError, navigate]);
     
     function handleDeactivate() {
         setLoading(true);
-        const promise = BalanceSheet.deleted_date == null ? AccountingAPIHelper.deactivateBalanceSheet(BalanceSheet.id) : AccountingAPIHelper.activateBalanceSheet(BalanceSheet.id);
+        const promise = balanceSheetObject.deleted_date == null ? AccountingAPIHelper.deactivatebalanceSheetObject(balanceSheetObject.id) : AccountingAPIHelper.activatebalanceSheetObject(balanceSheetObject.id);
         promise.then(newFields => {
           setLoading(false);
-          setBalanceSheet({...BalanceSheet, ...newFields });
-          message.success(`Balance Sheet successfully ${BalanceSheet.deleted_date == null ? 'unlisted' : 'relisted' }!`);
+          setBalanceSheetObject({...balanceSheetObject, ...newFields });
+          message.success(`Balance Sheet successfully ${balanceSheetObject.deleted_date == null ? 'unlisted' : 'relisted' }!`);
         })
         .catch(handleHttpError)
         .catch(() => setLoading(false));
@@ -52,7 +52,7 @@ export default function ViewBalanceSheetPage() {
     
         return (
           <>
-            { BalanceSheet.deleted_date == null ? 
+            { balanceSheetObject.deleted_date == null ? 
               <Popconfirm title="Confirm unlist?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading}>
                 <Button type="danger" loading={loading} icon={<MinusCircleOutlined />} style={{ width: 120 }}>Unlist</Button>
               </Popconfirm>
@@ -67,9 +67,9 @@ export default function ViewBalanceSheetPage() {
         
     return (
         <>
-        {BalanceSheet != null && 
-          <MyLayout breadcrumbs={breadcrumbs} bannerTitle={`${BalanceSheet.name} ${ BalanceSheet.deleted_date == null ? '' : '(Unlisted)' }`} bannerRight={renderDeactivateButton()}>
-            <BalanceSheetAsset BalanceSheet={BalanceSheet} setBalanceSheet={setBalanceSheet} />     
+        {balanceSheetObject != null && 
+          <MyLayout breadcrumbs={breadcrumbs} bannerTitle={`${balanceSheetObject.name} ${ balanceSheetObject.deleted_date == null ? '' : '(Unlisted)' }`} bannerRight={renderDeactivateButton()}>
+            <BalanceSheet balanceSheetObject={balanceSheetObject} setBalanceSheetObject={setBalanceSheetObject} />     
           </MyLayout>
         }
         </>
