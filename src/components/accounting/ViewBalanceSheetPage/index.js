@@ -6,7 +6,7 @@ import { AccountingAPIHelper } from '../../../api/AccountingAPIHelper';
 import { View } from '../../../enums/View';
 import { useApp } from '../../../providers/AppProvider';
 import MyLayout from '../../common/MyLayout';
-import BalanceSheetAsset from './BalanceSheetAsset';
+import BalanceSheetObject from './BalanceSheetObject';
 
 export default function ViewBalanceSheetPage() {
     const { id } = useParams();
@@ -69,7 +69,7 @@ export default function ViewBalanceSheetPage() {
         <>
         {BalanceSheet != null && 
           <MyLayout breadcrumbs={breadcrumbs} bannerTitle={`${BalanceSheet.name} ${ BalanceSheet.deleted_date == null ? '' : '(Unlisted)' }`} bannerRight={renderDeactivateButton()}>
-            <BalanceSheetAsset BalanceSheet={BalanceSheet} setBalanceSheet={setBalanceSheet} />     
+            <BalanceSheetObject BalanceSheet={BalanceSheet} setBalanceSheet={setBalanceSheet} />     
           </MyLayout>
         }
         </>
