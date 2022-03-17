@@ -1,4 +1,4 @@
-import { PlusOutlined, PrinterOutlined, ReloadOutlined, SaveOutlined } from '@ant-design/icons/lib/icons'
+import { PlusOutlined, PrinterOutlined, ReloadOutlined } from '@ant-design/icons/lib/icons'
 import { Button, message, Space, Table } from 'antd'
 import React, { useState } from 'react'
 import { DndProvider } from 'react-dnd'
