@@ -29,7 +29,7 @@ import ManageBalanceSheetPage from './components/accounting/ManageBalanceSheetPa
 import ViewBalanceSheetPage from './components/accounting/ViewBalanceSheetPage';
 import ViewIncomeStatementPage from './components/accounting/ViewIncomeStatementPage';
 import ManageIncomeStatementPage from './components/accounting/ManageIncomeStatementPage';
-import ManageTaxPage from './components/accounting/ManageTaxPage';
+import ManageTaxStatementPage from './components/accounting/ManageTaxStatementPage';
 
 // Add on more routes here
 const routes = [
@@ -160,8 +160,8 @@ const routes = [
         viewAccess: View.ACCOUNTING.name,
       },
       {
-        path: "taxes",
-        component: <ManageTaxPage />,
+        path: "taxStatements",
+        component: <ManageTaxStatementPage />,
         viewAccess: View.ACCOUNTING.name,
       },
     ],

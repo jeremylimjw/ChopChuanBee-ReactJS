@@ -59,7 +59,7 @@ const menu = [
     items: [
       { route: '/accounting/balanceSheets', name: 'Balance Sheets' },
       { route: '/accounting/incomeStatements', name: 'Income Statements' },
-      { route: '/accounting/taxes', name: 'Taxes' },
+      { route: '/accounting/taxStatements', name: 'Tax Statements' },
     ]
   },
 ]

@@ -13,11 +13,11 @@ import MyToolbar from "../../common/MyToolbar";
 import { formatCurrency } from '../../../utilities/currency';
 
 const breadcrumbs = [
-    { url: "/accounting/Taxes", name: "Accounting" },    
-    { url: "/accounting/Taxes", name: "Taxes" },
+    { url: "/accounting/taxStatements", name: "Accounting" },    
+    { url: "/accounting/taxStatements", name: "Tax Statements" },
 ];
 
-export default function ManageTaxPage() {
+export default function ManageTaxStatementPage() {
     const { handleHttpError, hasWriteAccessTo } = useApp();
     const [form] = Form.useForm();
     const [items, setItems] = useState([]);
@@ -68,7 +68,7 @@ export default function ManageTaxPage() {
     }
 
     return (
-        <MyLayout breadcrumbs={breadcrumbs} bannerTitle="Manage Taxes">
+        <MyLayout breadcrumbs={breadcrumbs} bannerTitle="Manage Tax Statements">
             <MyCard title="Create A Tax Statement">
                 <Form {...layout} form={form} onFinish={onFinish} autoComplete="off" labelAlign="left">
                     <Form.Item
