@@ -56,6 +56,10 @@ export default function ARCustomerChart(props) {
                 formatter: (v) => `${(v / 1).toFixed(2)} `,
             },
         },
+        tooltip: {
+            fields: ['company_name', 'total_ar_amount', 'p1_name'],
+            showTitle: false,
+        },
         meta: {
             company_name: {
                 alias: 'Customer Company Name',
@@ -63,6 +67,9 @@ export default function ARCustomerChart(props) {
             total_ar_amount: {
                 alias: 'Accounts Receivable',
             },
+            p1_name: {
+                alias: 'Contact Person Name',
+            }
         },
     };
 

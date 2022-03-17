@@ -31,7 +31,7 @@ export default function APInvoiceChart(props) {
         },
         xAxis: {
             title: {
-                text: "Supplier Invoice ID",
+                text: "Procurement ID",
                 style: {
                     fill: "black",
                     fillOpacity: 0.5,
@@ -56,13 +56,20 @@ export default function APInvoiceChart(props) {
                 formatter: (v) => `${(v / 1).toFixed(2)} `,
             },
         },
+        tooltip: {
+            fields: ['id', 'supplier_invoice_id', 'sum'],
+            showTitle: false,
+        },
         meta: {
             id: {
-                alias: 'ID',
+                alias: 'Procurement ID',
             },
             sum: {
-                alias: 'sum',
+                alias: 'Accounts Payable',
             },
+            supplier_invoice_id: {
+                alias: 'Supplier Invoice ID'
+            }
         },
     };
 

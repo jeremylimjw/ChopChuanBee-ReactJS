@@ -62,7 +62,8 @@ const menu = [
         title: 'Analytics',
         icon: <LineChartOutlined />,
         items: [{ route: '/analytics/accountingDashboard', name: 'Accounting Dashboard' },
-                { route: '/analytics/inventoryDashboard', name: 'Inventory Dashboard'}
+                { route: '/analytics/inventoryDashboard', name: 'Inventory Dashboard'},
+                { route: '/analytics/productDashboard', name: 'Product Dashboard'},
         ],
     },
 ];

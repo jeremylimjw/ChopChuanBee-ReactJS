@@ -56,12 +56,16 @@ export default function ARCustomerChart(props) {
                 formatter: (v) => `${(v / 1).toFixed(2)} `,
             },
         },
+        tooltip: {
+            fields: ['id', 'sum'],
+            showTitle: false,
+        },
         meta: {
             id: {
-                alias: 'ID',
+                alias: 'Sales Order ID',
             },
             sum: {
-                alias: 'sum',
+                alias: 'Accounts Receivable',
             },
         },
     };

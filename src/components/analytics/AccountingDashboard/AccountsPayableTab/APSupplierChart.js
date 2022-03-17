@@ -12,7 +12,14 @@ export default function APSupplierChart(props) {
         setLoading(true);
 
         AnalyticsApiHelper.getPayableSuppliers()
-            .then(result => { setData(result) })
+            .then(result => { 
+                var ReverseArray = [];
+                var length = result.length;
+                for(var i = length - 1; i >= 0; i--){
+                    ReverseArray.push(result[i]);
+                }
+                setData(ReverseArray);
+            })
             .catch(handleHttpError)
             .catch(() => setLoading(false));
 
@@ -56,13 +63,21 @@ export default function APSupplierChart(props) {
                 formatter: (v) => `${(v / 1).toFixed(2)} `,
             },
         },
+        tooltip: {
+            fields: ['company_name', 'total_ap_amount', 's1_name'],
+            showTitle: false,
+        },
         meta: {
             company_name: {
                 alias: 'Supplier Company Name',
             },
             total_ap_amount: {
                 alias: 'Accounts Payable',
+                formatter: (v) => `${(v / 1).toFixed(2)} `,
             },
+            s1_name: {
+                alias: 'Contact Person Name',
+            }
         },
     };
 

@@ -13,11 +13,12 @@ export default function ProfitabilityGraph(props) {
     const [loading, setLoading] = useState(false);
     const [form] = Form.useForm();
     const { handleHttpError, hasWriteAccessTo } = useApp();
-
-    
+    const [profits, setProfits] = useState();
+    const [cogs, setCogs] = useState();
+    const [revenue, setRevenue] = useState();
 
     useEffect(() => {
-        setData([...revenue, ...cogs, ...profitsEarned]);
+        setData([...revenueInit, ...cogsInit, ...profitsInit]);
         setLoading(true);
 
         //Figure out why this has error
@@ -38,8 +39,8 @@ export default function ProfitabilityGraph(props) {
         //     .catch(handleHttpError)
         //     .catch(() => setLoading(false));
 
-        const profits = AnalyticsApiHelper.getProfits(props.oneYearAgo, props.currDate)
-            .then(result => { console.log("init profits: " + result) })
+        AnalyticsApiHelper.getProfits(props.oneYearAgo, props.currDate)
+            .then(result => { result.map(x => x.name = 'profits'); setProfits(result) })
             //Add "name: profits" to each data retrieved
             //Change "profit" to "price" to each data
             //Extract and edit "month" for each data
@@ -49,6 +50,8 @@ export default function ProfitabilityGraph(props) {
         // setData([...profits]);
 
     }, [handleHttpError, setLoading]);
+
+    console.log("init profits: " + profits)
 
     function onValuesChange(_, form) {
         let start_date, end_date;
@@ -72,7 +75,7 @@ export default function ProfitabilityGraph(props) {
         onValuesChange(null, form.getFieldsValue());
     }
 
-    const revenue = [
+    const revenueInit = [
         {
             name: 'Revenue',
             month: 'January 2021',
@@ -135,7 +138,7 @@ export default function ProfitabilityGraph(props) {
         },
     ];
 
-    const cogs = [
+    const cogsInit = [
         {
             name: 'Cost of Goods Sold',
             month: 'January 2021',
@@ -198,7 +201,7 @@ export default function ProfitabilityGraph(props) {
         },
     ];
 
-    const profitsEarned = [
+    const profitsInit = [
         {
             name: 'Profits',
             month: 'January 2021',
