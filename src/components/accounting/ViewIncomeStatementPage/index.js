@@ -6,7 +6,7 @@ import { AccountingAPIHelper } from '../../../api/AccountingAPIHelper';
 import { View } from '../../../enums/View';
 import { useApp } from '../../../providers/AppProvider';
 import MyLayout from '../../common/MyLayout';
-import IncomeStatementAsset from './IncomeStatementAsset';
+import IncomeStatement from './IncomeStatement';
 
 export default function ViewIncomeStatementPage() {
     const { id } = useParams();
@@ -69,7 +69,7 @@ export default function ViewIncomeStatementPage() {
         <>
         {income != null && 
           <MyLayout breadcrumbs={breadcrumbs} bannerTitle={`${income.name} ${ income.deleted_date == null ? '' : '(Unlisted)' }`} bannerRight={renderDeactivateButton()}>
-            <IncomeStatementAsset income={income} setIncome={setIncome} />     
+            <IncomeStatement income={income} setIncome={setIncome} />     
           </MyLayout>
         }
         </>
