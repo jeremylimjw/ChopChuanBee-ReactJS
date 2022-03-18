@@ -8,6 +8,7 @@ import { DeliveryApiHelper } from '../../../api/DeliveryApiHelper';
 import { EmployeeApiHelper } from '../../../api/EmployeeApiHelper';
 import { getRoleTag, Role } from '../../../enums/Role';
 import { useApp } from '../../../providers/AppProvider';
+import EmailLink from '../../../utilities/EmailLink';
 import { exactLength, NUMBER, REQUIRED } from '../../../utilities/form';
 import { sortByNumber, sortByString } from '../../../utilities/sorters';
 import { showTotal } from '../../../utilities/table';
@@ -167,7 +168,7 @@ const columns = [
         title: 'Email',
         dataIndex: 'email',
         ellipsis: true,
-        render: (email) => email || '-',
+        render: (email) => <EmailLink email={email} />,
         sorter: (a, b) => sortByString(a.email, b.email),
     },
 ];

@@ -1,5 +1,7 @@
 import { Button, Table, Descriptions } from 'antd';
 import React from 'react'
+import { Link } from 'react-router-dom';
+import EmailLink from '../../../utilities/EmailLink';
 import MyCard from '../../common/MyCard';
 import MyToolbar from '../../common/MyToolbar';
 
@@ -11,12 +13,12 @@ export default function NP3Confirm({ selectedSupplier, selectedProducts, step, s
       <MyCard title="Supplier Details" style={{ width: 400, margin: '0 12px 24px 24px' }}>
         
         <Descriptions bordered size="small" layout='horizontal' column={1}>
-          <Descriptions.Item label="Company">{selectedSupplier.company_name}</Descriptions.Item>
-          <Descriptions.Item label="Name">{selectedSupplier.s1_name}</Descriptions.Item>
-          <Descriptions.Item label="Contact">{selectedSupplier.s1_phone_number}</Descriptions.Item>
+          <Descriptions.Item label="Company"><Link to={`/supplier/suppliers/${selectedSupplier.id}`}>{selectedSupplier.company_name}</Link></Descriptions.Item>
+          <Descriptions.Item label="Contact Name">{selectedSupplier.s1_name}</Descriptions.Item>
+          <Descriptions.Item label="Contact No">{selectedSupplier.s1_phone_number}</Descriptions.Item>
           <Descriptions.Item label="Address">{selectedSupplier.address}</Descriptions.Item>
           <Descriptions.Item label="Postal Code">{selectedSupplier.postal_code}</Descriptions.Item>
-          <Descriptions.Item label="Email">{selectedSupplier.email || '-'}</Descriptions.Item>
+          <Descriptions.Item label="Email"><EmailLink email={selectedSupplier.company_email} /></Descriptions.Item>
         </Descriptions>
         
       </MyCard>
@@ -40,7 +42,7 @@ const columns = [
   {
     title: 'Name',
     dataIndex: 'product',
-    render: (product) => product?.name,
+    render: (product) => product ? <Link to={`/inventory/products/${product.id}`}>{product.name}</Link> : '-',
   },
   {
     title: 'Description',

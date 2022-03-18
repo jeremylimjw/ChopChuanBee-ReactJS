@@ -5,6 +5,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { Link } from 'react-router-dom';
 import { getRoleTag } from '../../../enums/Role';
 import { parseDateTimeSeconds } from '../../../utilities/datetime';
+import EmailLink from '../../../utilities/EmailLink';
 import DraggableTableRow from '../../common/DraggableTableRow';
 import MyCard from '../../common/MyCard';
 import MyToolbar from '../../common/MyToolbar';
@@ -38,7 +39,7 @@ export default function NI3Confirm({ itinerary, selectedEmployee, selectedOrders
                         <Descriptions.Item label="Name"><Link to={`/humanResource/employees/${selectedEmployee.id}`}>{selectedEmployee.name}</Link></Descriptions.Item>
                         <Descriptions.Item label="Role">{getRoleTag(selectedEmployee.role_id)}</Descriptions.Item>
                         <Descriptions.Item label="Contact">{selectedEmployee.contact_number}</Descriptions.Item>
-                        <Descriptions.Item label="Email">{selectedEmployee.email || '-'}</Descriptions.Item>
+                        <Descriptions.Item label="Email"><EmailLink email={selectedEmployee.email} /></Descriptions.Item>
                     </Descriptions>
                     
                 </MyCard>
