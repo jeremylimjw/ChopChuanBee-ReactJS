@@ -96,18 +96,41 @@ export class PDFTools {
     }
   }
 
-  static generateForm(data, style) {
-    let FORM_ITEM_WIDTH = style.formWidth || '40%'
+  /**
+   * 
+   * @param {*} data 
+   * Sample form data: 
+   * key: {
+   *  text: 'Display text',
+   *  value: value 
+   *  }
+   * @param {*} textStyle Styling for the text
+   * @param {*} width  Width between the form field name and displayed value
+   * @param {*} colMargin 
+   * @returns 
+   */
+  static generateForm(data, textStyle, width, colMargin) {
+    let FORM_ITEM_WIDTH = width || '40%'
     let objArray = Object.entries(data) // [['id', {text: 'ADDRESS', val:'Blk 123'}], ...]
     let formData = []
     objArray.map((row) => {
       let [key, data] = [...row]
-      formData.push({
-        columns: [
-          { width: FORM_ITEM_WIDTH, text: this.formatText(data.text, style) },
-          { width: '*', text: this.formatText(data.value, style) }
-        ]
-      })
+      if (colMargin) {
+        formData.push({
+          columns: [
+            colMargin,
+            { width: FORM_ITEM_WIDTH, text: this.formatText(data.text, textStyle) },
+            { width: '*', text: this.formatText(data.value, textStyle) }
+          ]
+        })
+      } else {
+        formData.push({
+          columns: [
+            { width: FORM_ITEM_WIDTH, text: this.formatText(data.text, textStyle) },
+            { width: '*', text: this.formatText(data.value, textStyle) }
+          ]
+        })
+      }
     })
     return formData
   }

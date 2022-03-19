@@ -21,26 +21,51 @@ const formatDelInstData = (data) => {
       value: data.startPoint || ''
     },
     estimatedStartTime: {
-      text: 'Estimated Start Time',
-      value: data.estimatedStartTime || ''
+      text: 'Estimated Start Time:',
+      value: data.start_time || ''
     },
     assignedDriver: {
-      text: 'Assigned Driver',
-      value: data.assignedDriver || ''
+      text: 'Assigned Driver:',
+      value: data.employee.name || ''
     },
     session: {
-      text: 'Session',
+      text: 'Session:',
       value: data.session || ''
     }
   }
 }
 
+const constructRoutesTable = (data) => {
+  const widths = ['3%', '*', '*', '*', '*', '20%', '8%', '15%']
+  const routesTableHeaders = ['No', 'Company Name', 'Contact Name', 'Contact No.',
+    'Sales Order No.', 'Address', 'Postal Code', 'Remarks']
+    .map((val) => PDFTools.formatText(val, 'tableHeader'))
+  let itinerary = []
+  if (data.delivery_orders.length > 0) {
+    data.delivery_orders.sort((a, b) => a.sequence - b.sequence)
+    data.delivery_orders.map((order) => {
+      let arr = []
+      arr.push(PDFTools.formatText(order.sequence, 'tableContent'))
+      arr.push(PDFTools.formatText(order?.sales_order.customer.company_name, 'tableContent'))
+      arr.push(PDFTools.formatText(order?.sales_order.customer.p1_name, 'tableContent'))
+      arr.push(PDFTools.formatText(order?.sales_order.customer.p1_phone_number, 'tableContent'))
+      arr.push(PDFTools.formatText(order?.sales_order.id, 'tableContent'))
+      arr.push(PDFTools.formatText(order.address, 'tableContent'))
+      arr.push(PDFTools.formatText(order.postal_code, 'tableContent'))
+      arr.push(PDFTools.formatText(order.remarks, 'tableContent'))
+      itinerary.push(arr)
+    })
+  } else {
+    for (let i = 0; i < 8; i++) {
+      itinerary.push('-')
+    }
+  }
+  return PDFTools.tableBuilder(routesTableHeaders, itinerary, widths)
+}
+
 export const deliveryInstructionsTemplate = (data) => {
-  const routesTableHeaders = ['No', 'Company Name', 'Contact Person Name', 'Contact Person No.',
-    'Customer Invoice No', 'Address', 'Postal Code', 'Boxes Qty', 'Remarks']
-    .map((val) => PDFTools.formatText(val, { fontSize: '8' }))
-  const routesTableWidths = ['2%', '*', '*', '*', '*', '*', '*', '*', '*']
-  let delInstructions = formatDelInstData(data)
+  let itineraryData = formatDelInstData(data)
+  let routeTable = constructRoutesTable(data)
   let delHeader = formatDelInstHeader(data)
   let document = {
     pageSize: 'A4',
@@ -51,12 +76,20 @@ export const deliveryInstructionsTemplate = (data) => {
     },
     content: [
       PDFTools.formatText('DELIVERY INSTRUCTION SHEET', 'header'),
-      PDFTools.generateForm(delHeader, { formWidth: '30%', margin: [200] }),
-      PDFTools.dividerLine('horizontal', 550),
-      PDFTools.formatText('List of Delivery Routes', 'subheader'),
-      PDFTools.tableBuilder(routesTableHeaders, [['1', '123 Fruit Stall', 'Daniel Koh', '91234567', '', '', '', '', '']], routesTableWidths),
+      PDFTools.dividerLine('horizontal', 802),
+      PDFTools.formatText('Details', 'subHeader'),
+      {
+        columns: [
+          PDFTools.generateForm(itineraryData, 'formText', '30%'),
+          PDFTools.generateForm(delHeader, 'formText', '30%'),
+        ],
+        margin: [0, 3]
+      },
+      routeTable,
+      PDFTools.formatText('', { margin: [0, 5] }),
       PDFTools.formatText('SPECIAL INSTRUCTIONS OR REMARKS', 'subHeader'),
-      PDFTools.generateEmptyBox(550, 200)
+      PDFTools.formatText('', { margin: [0, 5] }),
+      PDFTools.generateEmptyBox(802, 100),
     ],
     styles: {
       header: {
@@ -66,12 +99,18 @@ export const deliveryInstructionsTemplate = (data) => {
         margin: [0, 0, 0, 10]
       },
       subHeader: {
-        fontSize: 14,
+        fontSize: 12,
         bold: true,
-        margin: [0, 5]
       },
       formText: {
-        fontSize: 10
+        fontSize: 9
+      },
+      tableHeader: {
+        fontSize: 10,
+        alignment: 'center'
+      },
+      tableContent: {
+        fontSize: 9,
       },
       footerText: {
         fontSize: 8,

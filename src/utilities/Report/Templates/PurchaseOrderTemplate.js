@@ -15,23 +15,24 @@ const formatPOData = (data) => {
 }
 
 const formatCompanyData = (data) => {
-  let companyData = data.charged_under
+  let { address, contact_number, shipping_address, registration_number } = data.charged_under ? data.charged_under : {}
+
   return {
     addr: {
       text: 'ADDRESS: ',
-      value: companyData.address || '',
+      value: address || '',
     },
     contactNum: {
       text: 'CONTACT NO: ',
-      value: companyData.contact_number || '',
+      value: contact_number || '',
     },
     bizRegNum: {
       text: 'BUSINESS REG NO: ',
-      value: companyData.registration_number || '-',
+      value: registration_number || '',
     },
     shipping_addr: {
       text: 'SHIPPING ADDRESS:',
-      value: companyData.shipping_address
+      value: shipping_address
     }
   }
 }
@@ -54,21 +55,37 @@ const formatVendorData = (data) => {
   }
 }
 
+const constructPurchaseOrderTable = (data) => {
+  let POTableHeaders = ['No.', 'Item Name', 'Qty', 'Unit']
+    .map((val) => PDFTools.formatText(val, 'tableHeader'))
+  let POTableItems
+  if (data.purchase_order_items.length > 0) {
+    POTableItems = data.purchase_order_items.map((item, index) => {
+      let arr = []
+      arr.push(PDFTools.formatText(index + 1, 'tableContent'))
+      arr.push(PDFTools.formatText(item.product.name, 'tableContent'))
+      arr.push(PDFTools.formatText(item.quantity, 'tableContent'))
+      arr.push(PDFTools.formatText(item.product.unit, 'tableContent'))
+      return arr
+    })
+  } else {
+    POTableItems = [['-', '-', '-', '-']]
+  }
+  let widths = ['5%', '*', '15%', '15%']
+  let POTable = PDFTools.tableBuilder(POTableHeaders, POTableItems, widths)
+  return POTable
+}
+
 export const purchaseOrderTemplate = (data) => {
   let poData = formatPOData(data)
   let companyData = formatCompanyData(data)
   let vendorData = formatVendorData(data)
-  let POTableItems = data.purchase_order_items.map((item, index) => {
-    let arr = []
-    arr.push(index + 1)
-    arr.push(item.product.name)
-    arr.push(item.quantity)
-    arr.push(item.product.unit)
-    return arr
-  })
-  let POTableHeaders = ['No.', 'Item Name', 'Quantity', 'Unit']
+  let POTable = constructPurchaseOrderTable(data)
   let document = {
     pageSize: 'A4',
+    info: {
+      title: `ID ${data.id} Purchase Order for ${data.supplier.company_name}`
+    },
     defaultStyle: {
       font: 'NotoCh'
     },
@@ -84,15 +101,15 @@ export const purchaseOrderTemplate = (data) => {
       },
       {
         columns: [
-          PDFTools.generateForm(companyData, { formWidth: '50%', fontSize: '11' }),
-          PDFTools.generateForm(vendorData, { formWidth: '50%', fontSize: '11' }),
+          PDFTools.generateForm(companyData, 'formText', '50%'),
+          PDFTools.generateForm(vendorData, 'formText', '50%'),
         ]
       },
       PDFTools.formatText('', 'header'),
-      PDFTools.tableBuilder(POTableHeaders, POTableItems, ['5%', '*', '20%', '20%']),
+      POTable,
       PDFTools.formatText('SPECIAL INSTRUCTIONS OR REMARKS', 'subHeader'),
-      PDFTools.generateEmptyBox(515, 200),
-      PDFTools.formatText('Please contact us if you have any questions about this purchase order', 'footerText')
+      PDFTools.generateEmptyBox(515, 100),
+      PDFTools.formatText(`If you have any questions about this purchase order, please contact ${companyData.contactNum.value}`, 'footerText')
     ],
     styles: {
       header: {
@@ -107,12 +124,20 @@ export const purchaseOrderTemplate = (data) => {
         margin: [0, 5]
       },
       formText: {
-        fontSize: 10
+        fontSize: 9
       },
       footerText: {
         fontSize: 8,
         alignment: 'center',
         margin: [0, 10, 0, 0]
+      },
+      tableContent: {
+        fontSize: 9,
+        alignment: 'center'
+      },
+      tableHeader: {
+        fontSize: 10,
+        alignment: 'center'
       }
     }
   }

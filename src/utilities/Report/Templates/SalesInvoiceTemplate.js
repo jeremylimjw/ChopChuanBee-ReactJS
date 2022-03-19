@@ -5,75 +5,86 @@ const formatSOData = (data) => {
   return {
     so_num: {
       text: 'SALES ORDER NO: ',
-      value: data.id || '_____________________________________________'
+      value: data.id || '-'
     },
     so_date: {
       text: 'SALES ORDER DATE: ',
-      value: moment(data.created_at).format('ll') || '_____________________________________________'
+      value: moment(data.created_at).format('ll') || '-'
     }
   }
 }
 
 const formatCompanyData = (data) => {
-  let companyData = data.charged_under
-  return {
+  let { name, address, contact_number, shipping_address, registration_number } = data.charged_under ? data.charged_under : {}
+  let formattedData = {
     addr: {
       text: 'ADDRESS: ',
-      value: companyData.address || '',
+      value: address || '',
     },
     contactNum: {
       text: 'CONTACT NO: ',
-      value: companyData.contact_number || '',
-    },
-    bizRegNum: {
-      text: 'BUSINESS REG NO: ',
-      value: companyData.registration_number || '',
+      value: contact_number || '',
     },
     shipping_addr: {
       text: 'SHIPPING ADDRESS:',
-      value: companyData.shipping_address
+      value: shipping_address || ''
+    }
+  }
+  if (name === 'Chuan Bee Food Stuff') {
+    return formattedData
+  } else {
+    return {
+      ...formattedData,
+      bizRegNum: {
+        text: 'BUSINESS REG NO: ',
+        value: registration_number || '',
+      },
     }
   }
 }
 
 const formatVendorData = (data) => {
-  let vendorData = data.customer
   return {
     vendorName: {
       text: 'VENDOR NAME: ',
-      value: vendorData.company_name || '',
+      value: data.customer.company_name || '',
     },
     contactPerson: {
       text: 'CONTACT PERSON: ',
-      value: vendorData.p1_name || '',
+      value: data.customer.p1_name || '',
     },
     contactNum: {
       text: 'CONTACT NO: ',
-      value: vendorData.p1_phone_number || '',
+      value: data.customer.p1_phone_number || '',
     },
   }
 }
 
 const constructSalesOrderTable = (data) => {
-  let SOTableHeaders = ['No.', 'Item Name', 'Qty', 'Unit', 'Unit Price', 'Amount']
+  let SOTableHeaders = ['No.', 'Item Name', 'Qty', 'Unit', 'Unit Price (S$)', 'Amount (S$)']
     .map((val) => PDFTools.formatText(val, 'tableHeader'))
-  let SOTableItems = data.sales_order_items.map((item, index) => {
-    let arr = []
-    arr.push(PDFTools.formatText(index + 1, 'tableContent'))
-    arr.push(PDFTools.formatText(item.product.name, 'tableContent'))
-    arr.push(PDFTools.formatText(item.quantity, 'tableContent'))
-    arr.push(PDFTools.formatText(item.product.unit, 'tableContent'))
-    arr.push(PDFTools.formatText(item.unit_price, 'tableContent'))
-    let sum = parseInt(item.unit_price) * parseInt(item.quantity)
-    arr.push(PDFTools.formatText(`${sum}`, 'tableContent'))
-    return arr
-  })
+  let SOTableItems
+  if (data.sales_order_items.length > 0) {
+    SOTableItems = data.sales_order_items.map((item, index) => {
+      let arr = []
+      arr.push(PDFTools.formatText(index + 1, 'tableContent'))
+      arr.push(PDFTools.formatText(item.product.name, 'tableContent'))
+      arr.push(PDFTools.formatText(item.quantity, 'tableContent'))
+      arr.push(PDFTools.formatText(item.product.unit, 'tableContent'))
+      arr.push(PDFTools.formatText(item.unit_price, 'tableContent'))
+      let sum = item.unit_price && item.quantity ? parseInt(item.unit_price) * parseInt(item.quantity) : '-'
+      arr.push(PDFTools.formatText(`${sum}`, 'tableContent'))
+      return arr
+    })
+  } else {
+    SOTableItems = [['-', '-', '-', '-', '-', '-']]
+  }
   SOTableItems.push(
-    [{ ...PDFTools.formatText('Subtotal', 'tableHeader'), colSpan: 5 }, {}, {}, {}, {}, PDFTools.formatText('50000', 'tableContent')],
-    [{ ...PDFTools.formatText('GST Rate', 'tableHeader'), colSpan: 5 }, {}, {}, {}, {}, PDFTools.formatText(data.charged_under.gst_rate, 'tableContent')],
-    [{ ...PDFTools.formatText('Total', 'tableHeader'), colSpan: 5 }, {}, {}, {}, {}, PDFTools.formatText('50000', 'tableContent')],
+    [{ ...PDFTools.formatText('Subtotal', { fontSize: '10', alignment: 'left' }), colSpan: 5 }, {}, {}, {}, {}, PDFTools.formatText(data.preGstPrice, 'tableContent')],
+    [{ ...PDFTools.formatText('GST Rate', { fontSize: '10', alignment: 'left' }), colSpan: 5 }, {}, {}, {}, {}, PDFTools.formatText(`${data.gst_rate}%`, 'tableContent')],
+    [{ ...PDFTools.formatText('Total', { fontSize: '10', alignment: 'left' }), colSpan: 5 }, {}, {}, {}, {}, PDFTools.formatText(data.totalPrice, 'tableContent')],
   )
-  let widths = ['5%', '*', '10%', '10%', '10%', '10%']
+  let widths = ['5%', '*', '8%', '8%', '15%', '15%']
   let SOTable = PDFTools.tableBuilder(SOTableHeaders, SOTableItems, widths)
   return SOTable
 }
@@ -85,6 +96,9 @@ export const salesInvoiceTemplate = (data) => {
   let SOTable = constructSalesOrderTable(data)
   let document = {
     pageSize: 'A4',
+    info: {
+      title: `ID ${data.id} Sales Order for ${data.customer.company_name}`
+    },
     defaultStyle: {
       font: 'NotoCh'
     },
@@ -100,15 +114,14 @@ export const salesInvoiceTemplate = (data) => {
       },
       {
         columns: [
-          PDFTools.generateForm(companyData, { formWidth: '50%', fontSize: '10' }),
-          PDFTools.generateForm(vendorData, { formWidth: '50%', fontSize: '10' }),
+          PDFTools.generateForm(companyData, 'formText', '50%'),
+          PDFTools.generateForm(vendorData, 'formText', '50%'),
         ]
       },
       PDFTools.formatText('', 'header'),
       SOTable,
-      // PDFTools.tableBuilder(SOTableHeaders, SOTableItems, ['5%', '*', '10%', '10%', '10%', '10%']),
       PDFTools.formatText('SPECIAL INSTRUCTIONS OR REMARKS', 'subHeader'),
-      PDFTools.generateEmptyBox(515, 200),
+      PDFTools.generateEmptyBox(515, 100),
       PDFTools.formatText(`If you have any questions about this purchase order, please contact ${companyData.contactNum.value}`, 'footerText')
     ],
     styles: {
@@ -124,7 +137,7 @@ export const salesInvoiceTemplate = (data) => {
         margin: [0, 5]
       },
       formText: {
-        fontSize: 10
+        fontSize: 8
       },
       footerText: {
         fontSize: 8,
