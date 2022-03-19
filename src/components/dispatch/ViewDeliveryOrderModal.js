@@ -91,15 +91,15 @@ export default function ViewDeliveryOrderModal({ showDeliveryOrder, setShowDeliv
             onCancel={onModalClose}
             footer={
                 <>
-                    <Button key="submit" loading={loading} onClick={deleteOrder} disabled={showDeliveryOrder?.sales_order_id != null}>
+                    <Button loading={loading} onClick={deleteOrder} disabled={showDeliveryOrder?.sales_order_id != null}>
                         Delete Delivery
                     </Button>
 
-                    <Button key="submit" loading={loading} onClick={unassignOrder} disabled={showDeliveryOrder?.delivery_status_id !== DeliveryStatus.ASSIGNED.id}>
+                    <Button loading={loading} onClick={unassignOrder} disabled={showDeliveryOrder?.delivery_status_id !== DeliveryStatus.ASSIGNED.id}>
                         Unassign Delivery
                     </Button>
 
-                    <Button key="submit" type="primary" loading={loading} onClick={completeOrder} disabled={showDeliveryOrder?.delivery_status_id === DeliveryStatus.COMPLETED.id}>
+                    <Button type="primary" loading={loading} onClick={completeOrder} disabled={showDeliveryOrder?.delivery_status_id === DeliveryStatus.COMPLETED.id}>
                         Complete Delivery
                     </Button>
                 </>
