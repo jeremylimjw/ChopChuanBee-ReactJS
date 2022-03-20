@@ -70,13 +70,6 @@ export default function ManageItinerarysPage() {
                         <Form.Item name="date">
                             <DatePicker.RangePicker />
                         </Form.Item>
-                        <Form.Item name="session">
-                            <Select style={{ width: 160 }} placeholder="Filter by Session">
-                                <Select.Option value={null}>All</Select.Option>
-                                <Select.Option key="AM" value="AM">AM</Select.Option>
-                                <Select.Option key="PM" value="PM">PM</Select.Option>
-                            </Select>
-                        </Form.Item>
                         <Button onClick={resetForm}>Reset</Button>
                     </Form>
                     { hasWriteAccessTo(View.DISPATCH.name) && 
@@ -108,14 +101,6 @@ const columns = [
         sorter: (a, b) => sortByDate(a.created_at, b.created_at),
     },
     {
-        title: 'Assigned Driver',
-        dataIndex: 'employee',
-        key: 'employee',
-        ellipsis: true,
-        render: (employee) => employee?.name ? <Link to={`/humanResource/employees/${employee.id}`}>{employee.name}</Link> : '-',
-        sorter: (a, b) => sortByDate(a.employee?.name || '-', b.employee?.name || '-'),
-    },
-    {
         title: 'Start Date',
         dataIndex: 'start_time',
         key: 'start_time',
@@ -125,12 +110,21 @@ const columns = [
         sorter: (a, b) => sortByDate(a.start_time, b.start_time),
     },
     {
-        title: 'Session',
-        dataIndex: 'session',
-        key: 'session',
-        width: '15%',
+        title: 'Assigned Driver',
+        dataIndex: 'employee',
+        key: 'employee',
         ellipsis: true,
-        sorter: (a, b) => sortByString(a.session, b.session),
+        render: (employee) => employee?.name ? <Link to={`/humanResource/employees/${employee.id}`}>{employee.name}</Link> : '-',
+        sorter: (a, b) => sortByDate(a.employee?.name || '-', b.employee?.name || '-'),
+    },
+    {
+        title: 'Driver Contact Number',
+        dataIndex: 'employee',
+        key: 'employee',
+        width: '20%',
+        ellipsis: true,
+        render: (employee) => employee?.contact_number || '-',
+        sorter: (a, b) => sortByDate(a.employee?.contact_number || '-', b.employee?.contact_number || '-'),
     },
     {
         title: 'No of Orders',

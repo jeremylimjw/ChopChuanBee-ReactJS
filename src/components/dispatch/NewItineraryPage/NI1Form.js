@@ -95,13 +95,6 @@ export default function NI1Form({ itinerary, setItinerary, selectedEmployee, set
                             />
                         </Form.Item>
 
-                        <Form.Item name="session" label="Session" rules={[REQUIRED]}>
-                            <Select placeholder="Select Session">
-                                <Select.Option value="AM">AM</Select.Option>
-                                <Select.Option value="PM">PM</Select.Option>
-                            </Select>
-                        </Form.Item>
-
                         <Form.Item label="Origin Postal Code" name="origin_postal_code" rules={[REQUIRED, NUMBER, exactLength(6)]}>
                             <Input />
                         </Form.Item>
