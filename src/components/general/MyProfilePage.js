@@ -3,9 +3,8 @@ import { Button, Form, Input, message, Typography } from 'antd';
 import React, { useState } from 'react'
 import { EmployeeApiHelper } from '../../api/EmployeeApiHelper';
 import { getRoleTag } from '../../enums/Role';
-import { View } from '../../enums/View';
 import { useApp } from '../../providers/AppProvider';
-import { EMAIL, REQUIRED } from '../../utilities/form';
+import { EMAIL, exactLength, minLength, NUMBER, REQUIRED } from '../../utilities/form';
 import MyCard from '../common/MyCard';
 import MyLayout from '../common/MyLayout';
 import MyToolbar from '../common/MyToolbar';
@@ -14,7 +13,7 @@ const breadcrumbs = [{ url: '/myProfile', name: 'Profile' }];
 
 export default function MyProfilePage() {
 
-    const { user, setUser, handleHttpError, hasWriteAccessTo } = useApp();
+    const { user, setUser, handleHttpError } = useApp();
 
     const [editing, setEditing] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -46,7 +45,7 @@ export default function MyProfilePage() {
                             { editing ? 
                                 <Button type="primary" onClick={() => onFinish(form.getFieldsValue())} icon={<SaveOutlined />} loading={loading} style={{ width: 85 }}>Save</Button>
                                 :
-                                <Button onClick={() => setEditing(true)} icon={<EditOutlined />} style={{ width: 85 }} disabled={!hasWriteAccessTo(View.HR.name)}>Edit</Button>
+                                <Button onClick={() => setEditing(true)} icon={<EditOutlined />} style={{ width: 85 }}>Edit</Button>
                             }
                         </Form.Item>
                     </MyToolbar>
@@ -73,7 +72,7 @@ export default function MyProfilePage() {
                             }
                         </Form.Item>
                         
-                        <Form.Item label="Contact Number" name="contact_number">
+                        <Form.Item label="Contact Number" name="contact_number" rules={editing ? [minLength(8)] : []}>
                             {!editing ? 
                                 <Typography>{user.contact_number || '-'}</Typography>
                             :
@@ -89,7 +88,7 @@ export default function MyProfilePage() {
                             }
                         </Form.Item>
                         
-                        <Form.Item label="Postal Code" name="postal_code">
+                        <Form.Item label="Postal Code" name="postal_code" rules={editing ? [exactLength(6), NUMBER] : []}>
                             {!editing ? 
                                 <Typography>{user.postal_code || '-'}</Typography>
                             :
@@ -105,7 +104,7 @@ export default function MyProfilePage() {
                             }
                         </Form.Item>
                         
-                        <Form.Item label="NOK Contact" name="nok_number">
+                        <Form.Item label="NOK Contact" name="nok_number" rules={editing ? [minLength(8)] : []}>
                             {!editing ? 
                                 <Typography>{user.nok_number || '-'}</Typography>
                             :

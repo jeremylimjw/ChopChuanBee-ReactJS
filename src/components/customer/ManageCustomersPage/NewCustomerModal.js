@@ -1,7 +1,8 @@
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons/lib/icons';
-import { Divider, Form, Input, message, Radio, Typography } from 'antd'
+import { Divider, Form, Input, message, Radio, Select, Typography } from 'antd'
 import Modal from 'antd/lib/modal/Modal'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { ChargedUnderApiHelper } from '../../../api/ChargedUnderApiHelper';
 import { CustomerApiHelper } from '../../../api/CustomerApiHelper';
 import { useApp } from '../../../providers/AppProvider';
 import { EMAIL, exactLength, minLength, NUMBER, REQUIRED } from '../../../utilities/form';
@@ -11,8 +12,18 @@ export default function NewCustomerModal({ isModalVisible, setIsModalVisible, cu
     const { handleHttpError } = useApp();
 
     const [loading, setLoading] = useState(false);
+    const [chargedUnders, setChargedUnders] = useState([]);
     const [form] = Form.useForm();
     const [expand, setExpand] = useState(false);
+
+    useEffect(() => {
+        ChargedUnderApiHelper.getAvailable()
+            .then(results => {
+                setChargedUnders(results)
+            })
+            .catch(handleHttpError);
+    }, [handleHttpError])
+    
 
     async function handleOk() {
         try {
@@ -45,27 +56,6 @@ export default function NewCustomerModal({ isModalVisible, setIsModalVisible, cu
                     <Input />
                 </Form.Item>
 
-                <Form.Item name="gst" label="GST" rules={[REQUIRED]}>
-                    <Radio.Group>
-                        <Radio value={true}>Yes</Radio>
-                        <Radio value={false}>No</Radio>
-                    </Radio.Group>
-                </Form.Item>
-
-                <Form.Item name="gst_show" label="Show GST" rules={[REQUIRED]}>
-                    <Radio.Group>
-                        <Radio value={true}>Yes</Radio>
-                        <Radio value={false}>No</Radio>
-                    </Radio.Group>
-                </Form.Item>
-
-                <Form.Item name="charged_under_id" label="Charged Under" rules={[REQUIRED]}>
-                    <Radio.Group>
-                        <Radio value={1}>CCB</Radio>
-                        <Radio value={2}>CBFS</Radio>
-                    </Radio.Group>
-                </Form.Item>
-
                 <Form.Item label="Address" name="address" rules={[REQUIRED]}>
                     <Input />
                 </Form.Item>
@@ -76,6 +66,21 @@ export default function NewCustomerModal({ isModalVisible, setIsModalVisible, cu
 
                 <Form.Item label="Email" name="company_email" rules={[EMAIL]}>
                     <Input />
+                </Form.Item>
+
+                <Form.Item name="gst_show" label="Show GST">
+                    <Radio.Group defaultValue={null}>
+                        <Radio value={null}>None</Radio>
+                        <Radio value={false}>No</Radio>
+                        <Radio value={true}>Yes</Radio>
+                    </Radio.Group>
+                </Form.Item>
+
+                <Form.Item name="charged_under_id" label="Charged Under" initialValue={null}>
+                    <Select style={{ width: 180 }}>
+                        <Select.Option value={null}>None</Select.Option>
+                        { chargedUnders.map((x, idx) => <Select.Option key={idx} value={x.id}>{x.name}</Select.Option>)}
+                    </Select>
                 </Form.Item>
 
                 <Form.Item label="Description" name="description">

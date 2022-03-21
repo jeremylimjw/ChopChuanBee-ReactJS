@@ -29,7 +29,17 @@ import ManageBalanceSheetPage from './components/accounting/ManageBalanceSheetPa
 import ViewBalanceSheetPage from './components/accounting/ViewBalanceSheetPage';
 import ViewIncomeStatementPage from './components/accounting/ViewIncomeStatementPage';
 import ManageIncomeStatementPage from './components/accounting/ManageIncomeStatementPage';
-import ManageTaxPage from './components/accounting/ManageTaxPage';
+import ManageTaxStatementPage  from './components/accounting/ManageTaxPage';
+import ManageProcurementsPage from './components/supplier/ManageProcurementsPage';
+import NewProcurementPage from './components/supplier/NewProcurementPage';
+import ViewProcurementPage from './components/supplier/ViewProcurementPage';
+import ManageChargedUndersPage from './components/admin/ManageChargedUndersPage';
+import ViewChargedUnderPage from './components/admin/ViewChargedUnderPage';
+import ManageSalesOrdersPage from './components/customer/ManageSalesOrdersPage';
+import NewSalesOrderPage from './components/customer/NewSalesOrderPage';
+import ViewSalesOrderPage from './components/customer/ViewSalesOrderPage';
+import ViewInventoryMovementsPage from './components/inventory/ViewInventoryMovementsPage';
+import ActivatePage from './components/ActivatePage';
 
 // Add on more routes here
 const routes = [
@@ -49,6 +59,16 @@ const routes = [
       { 
         path: 'accounts/:id', 
         component: <ViewAccountPage />,
+        viewAccess: View.ADMIN.name,
+      },
+      { 
+        path: 'companyDetails', 
+        component: <ManageChargedUndersPage />,
+        viewAccess: View.ADMIN.name,
+      },
+      { 
+        path: 'companyDetails/:id', 
+        component: <ViewChargedUnderPage />,
         viewAccess: View.ADMIN.name,
       },
       { 
@@ -101,6 +121,11 @@ const routes = [
         component: <ViewProductPage />,
         viewAccess: View.INVENTORY.name,
       },
+      { 
+        path: 'movements', 
+        component: <ViewInventoryMovementsPage />,
+        viewAccess: View.INVENTORY.name,
+      },
     ]
   },
   {
@@ -115,6 +140,21 @@ const routes = [
       {
         path: "suppliers/:id",
         component: <ViewSupplierPage />,
+        viewAccess: View.SCM.name,
+      },
+      { 
+        path: 'procurements', 
+        component: <ManageProcurementsPage />,
+        viewAccess: View.SCM.name,
+      },
+      { 
+        path: 'procurements/new', 
+        component: <NewProcurementPage />,
+        viewAccess: View.SCM.name,
+      },
+      { 
+        path: 'procurements/:id', 
+        component: <ViewProcurementPage />,
         viewAccess: View.SCM.name,
       },
     ],
@@ -132,6 +172,21 @@ const routes = [
         path: 'customers/:id', 
         component: <ViewCustomerPage />,
         viewAccess: View.CRM.name,
+      },
+      { 
+        path: 'sales', 
+        component: <ManageSalesOrdersPage />,
+        viewAccess: View.SCM.name,
+      },
+      { 
+        path: 'sales/new', 
+        component: <NewSalesOrderPage />,
+        viewAccess: View.SCM.name,
+      },
+      { 
+        path: 'sales/:id', 
+        component: <ViewSalesOrderPage />,
+        viewAccess: View.SCM.name,
       },
     ]
   },
@@ -160,11 +215,13 @@ const routes = [
         viewAccess: View.ACCOUNTING.name,
       },
       {
-        path: "taxes",
-        component: <ManageTaxPage />,
+        path: "taxStatements",
+        component: <ManageTaxStatementPage  />,
         viewAccess: View.ACCOUNTING.name,
       },
     ],
+    
+     
   },
 ];
 
@@ -209,6 +266,7 @@ ReactDOM.render(
         <Layout style={{ minHeight: '100vh' }}>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/activate" element={<ActivatePage />} />
             <Route path="/" element={<RequireAuth><App /></RequireAuth>}>
               {routes.map((route, index) => renderRoute(route, index))}
             </Route>

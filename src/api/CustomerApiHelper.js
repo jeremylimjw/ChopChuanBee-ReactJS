@@ -2,22 +2,22 @@ import { axiosObject } from "./axiosWrapper";
 
 export class CustomerApiHelper {
     static async get(company_name, p1_name, status) {
-        let query = '';
+        
+        const params = {};
+        
         if (company_name)
-            query += `&company_name_like=${company_name}`;
+            params.company_name = company_name;
         if (p1_name)
-            query += `&p1_name_like=${p1_name}`;
-        if (status === true) {
-            query += `&deactivated_date_is_null=1`;
-        } else if (status === false) {
-            query += `&deactivated_date_is_nn=1`;
-        }
-        return axiosObject.get(`/customer?order_by=created_at_desc${query}`)
+            params.p1_name = p1_name;
+        if (status != null)
+            params.status = status;
+        
+        return axiosObject.get(`/customer`, { params: params })
             .then(res => res.data);
     }
 
     static async getById(id) {
-        return axiosObject.get(`/customer?id=${id}`)
+        return axiosObject.get(`/customer?include=charged_under&id=${id}`)
             .then(res => res.data);
     }
 
@@ -61,9 +61,7 @@ export class CustomerApiHelper {
     }
 
     static async updateMenu(customer_id, menuItems) {
-        const newMenu = menuItems
-            .filter(x => (x.product_alias) && (x.product != null))
-            .map(x => ({ 
+        const newMenu = menuItems.map(x => ({ 
                 ...x, 
                 customer_id: customer_id,
                 product_id: x.product.id,
@@ -72,6 +70,16 @@ export class CustomerApiHelper {
             customer_id: customer_id,
             customer_menus: newMenu,
         })
+        .then(res => res.data);
+    }
+
+    static async getMyLatestPrices(id) {
+      return axiosObject.get(`/customer/latestPrice`, { params: { customer_id: id } })
+        .then(res => res.data);
+    }
+  
+    static async getMyAccountPayable(id) {
+      return axiosObject.get(`/customer/ar`, { params: { customer_id: id } })
         .then(res => res.data);
     }
 

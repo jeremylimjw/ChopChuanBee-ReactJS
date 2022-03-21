@@ -5,10 +5,10 @@ import { ProductApiHelper } from '../../../api/ProductApiHelper';
 import { SupplierAPIHelper } from '../../../api/SupplierAPIHelper';
 import { View } from '../../../enums/View';
 import { useApp } from '../../../providers/AppProvider';
-import { sortByString } from '../../../utilities/sorters';
+import { sortByNumber, sortByString } from '../../../utilities/sorters';
 import { showTotal } from '../../../utilities/table';
+import { CustomCell } from '../../common/CustomCell';
 import MyToolbar from '../../common/MyToolbar';
-import { RenderCell } from '../../common/TableCell/RenderCell';
 
 export default function S2Menu({ supplier }) {
 
@@ -16,21 +16,42 @@ export default function S2Menu({ supplier }) {
 
     const [loading, setLoading] = useState(false);
     const [items, setItems] = useState([]);
-    const [disabledProducts, setDisabledProducts] = useState({});
+    const [myPrices, setMyPrices] = useState({});
+    const [disabledProductsMap, setDisabledProductsMap] = useState({});
     const [products, setProducts] = useState([]);
 
-    columns[1].onCell = (record) => ({ type: 'product_select', field: 'product',  items, setItems, record, products: products.filter(x => !disabledProducts[`${x.id}`]) });
+    columns[2].render = (product) => product?.id ? (myPrices[product.id] ? `$${(+myPrices[product.id]).toFixed(2)}` : '-') : '-';
+    columns[2].sorter = (a, b) => sortByNumber(+myPrices[a.product?.id] || 0, +myPrices[b.product?.id] || 0);
+
+    columns[1].onCell = (record) => ({ 
+        type: 'product_select', 
+        toggleable: 'true', 
+        field: 'product', 
+        record, 
+        handleSave, 
+        products: products,
+        disabledProductsMap,
+    });
     columns[3].render = (_, record) => <Button shape="circle" icon={<DeleteOutlined />} onClick={() => handleDeleteRow(record)} loading={loading} />;
 
     useEffect(() => {
         setLoading(true);
         if (supplier) {
-        SupplierAPIHelper.getMenu(supplier.id).then(results => {
-            setItems(results.map(x => ({...x, key: Math.random() })));
-            setLoading(false);
-        })
-        .catch(handleHttpError)
-        .catch(() => setLoading(false))
+            // Get supplier's menu
+            SupplierAPIHelper.getMenu(supplier.id)
+                .then(results => {
+                    setItems(results.map(x => ({...x, key: Math.random() })));
+                    setLoading(false);
+                })
+                .catch(handleHttpError)
+                .catch(() => setLoading(false))
+            
+            // Get supplier's latest prices for all products
+            SupplierAPIHelper.getMyLatestPrices(supplier.id)
+                .then(results => {
+                    setMyPrices(results.reduce((prev, current) => ({...prev, [current.product_id]: current.unit_cost }), {}));
+                })
+                .catch(handleHttpError)
         }
     }, [supplier, setLoading, handleHttpError])
 
@@ -49,7 +70,7 @@ export default function S2Menu({ supplier }) {
             }
             return prev;
         }, {})
-        setDisabledProducts(disabledProducts);
+        setDisabledProductsMap(disabledProducts);
     }, [items])
     
 
@@ -63,10 +84,29 @@ export default function S2Menu({ supplier }) {
         setItems(newItems);
     };
 
+    function handleSave(newRecord) {
+      const newItems = [...items];
+      // Allow match record by 'id' or 'key'
+      const index = newItems.findIndex(x => {
+          if (newRecord.id) {
+              return (x.id === newRecord.id)
+          } else if (newRecord.key) {
+              return (x.key === newRecord.key)
+          } else {
+              return false;
+          }
+      });
+      const item = newItems[index];
+      newItems.splice(index, 1, { ...item, ...newRecord });
+      setItems(newItems);
+    }
+
     function handleMenuUpdate() {
+        const newItems = items.filter(x => x.product != null)
         setLoading(true);
-        SupplierAPIHelper.updateMenu(supplier.id, items)
+        SupplierAPIHelper.updateMenu(supplier.id, newItems)
         .then(() => {
+            setItems(newItems);
             setLoading(false);
             message.success(`Supplier Menu successfully updated!`)
         })
@@ -89,7 +129,7 @@ export default function S2Menu({ supplier }) {
                 columns={columns} 
                 loading={loading} 
                 rowKey={() => Math.random()} 
-                components={{ body: { cell: RenderCell } }} 
+                components={{ body: { cell: CustomCell } }} 
                 pagination={{ pageSize: 6, showTotal: showTotal }}
             />
         </>  
@@ -100,6 +140,7 @@ const columns = [
   {
       title: 'No',
       width: 50,
+      ellipsis: true,
       render: (_, record, index) => index+1,
   },
   {
@@ -107,17 +148,17 @@ const columns = [
     dataIndex: 'product',
     key: 'product',
     width: 280,
+    ellipsis: true,
     render: (product) => product?.name,
     sorter: (a, b) => sortByString(a.product?.name, b.product?.name),
   },
   {
     title: 'Latest Price',
-    dataIndex: 'id',
-    key: 'id',
+    dataIndex: 'product',
+    key: 'latest_unit_cost',
     align: 'center',
     width: 120,
-    render: (id) => '-',
-    sorter: (a, b) => sortByString(a.product?.name, b.product?.name),
+    ellipsis: true,
   },
   { 
     align: 'center', 

@@ -3,74 +3,79 @@ import { Layout, Menu } from 'antd'
 import { Link } from 'react-router-dom'
 import { HomeOutlined, InboxOutlined, ShoppingOutlined, SolutionOutlined, TeamOutlined, UserOutlined, AccountBookOutlined } from '@ant-design/icons/lib/icons'
 import { useApp } from '../../providers/AppProvider'
+import { useLocation } from "react-router-dom";
+import { View } from '../../enums/View'
 
 
 // Add on more menu items here
 const menu = [
   {
-    role: 'Admin',
+    role: View.ADMIN.name,
     title: 'Admin',
     icon: <UserOutlined />,
     items: [
-      { route: '/admin/accounts', name: 'Accounts' },
+      { route: '/admin/accounts', name: 'Manage Accounts' },
+      { route: '/admin/companyDetails', name: 'Company Details' },
       { route: '/admin/logs', name: 'Logs' },
     ]
   },
   {
-    role: 'HR',
+    role: View.HR.name,
     title: 'Human Resource',
     icon: <TeamOutlined />,
     items: [
-      { route: '/humanResource/employees', name: 'Employees' },
+      { route: '/humanResource/employees', name: 'Manage Employees' },
       { route: '/humanResource/leaveApplications', name: 'Leave Applications' },
     ]
   },
   {
-    role: 'Inventory',
+    role: View.INVENTORY.name,
     title: 'Inventory',
     icon: <InboxOutlined />,
     items: [
-      { route: '/inventory/products', name: 'Products' },
-      // { route: '/inventory', name: 'Manage Inventory' },
-      // { route: '/inventory/supplier-invoices', name: 'Supplier Invoices' },
+      { route: '/inventory/products', name: 'Manage Products' },
+      { route: '/inventory/movements', name: 'Inv. Movements' },
     ]
   },
   {
-    role: 'SCM',
+    role: View.SCM.name,
     title: 'Supplier',
     icon: <ShoppingOutlined />,
     items: [
-      { route: '/supplier/suppliers', name: 'Suppliers' },
-      // { route: '/suppliers/accounts', name: 'Accounts Payable' },
+      { route: '/supplier/suppliers', name: 'Manage Suppliers' },
+      { route: '/supplier/procurements', name: 'Procurements' },
     ]
   },
   {
-    role: 'CRM',
+    role: View.CRM.name,
     title: 'Customer',
     icon: <SolutionOutlined />,
     items: [
-      { route: '/customer/customers', name: 'Customers' },
+      { route: '/customer/customers', name: 'Manage Customers' },
+      { route: '/customer/sales', name: 'Sales' },
     ]
   },
-  {
-    role: 'Accounting',
-    title: 'Accounting',
-    icon: <AccountBookOutlined />,
-    items: [
-      { route: '/accounting/balanceSheets', name: 'Balance Sheets' },
-      { route: '/accounting/incomeStatements', name: 'Income Statements' },
-      { route: '/accounting/taxes', name: 'Taxes' },
-    ]
+  { 
+    role: 'Accounting', 
+    title: 'Accounting', 
+    icon: <AccountBookOutlined />, 
+    items: [ 
+      { route: '/accounting/balanceSheets', name: 'Balance Sheets' }, 
+      { route: '/accounting/incomeStatements', name: 'Income Statements' }, 
+      { route: '/accounting/taxStatements', name: 'Tax Statements' }, 
+    ] 
   },
 ]
 
-const Sidebar = () => {
+export default function Sidebar() {
+
     const { hasViewAccessTo } = useApp();
+    const location = useLocation();
 
     return (
       <Layout.Sider theme='light' width={210} style={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}>
-        <Menu mode='inline'>
-          <Menu.Item key='home' icon={<HomeOutlined />}>
+        <Menu mode='inline' selectedKeys={[location.pathname]}>
+          <Menu.Item key='/' icon={<HomeOutlined />}>
             <Link to='/'>Home</Link>
           </Menu.Item>
 
@@ -79,7 +84,7 @@ const Sidebar = () => {
               return (
                 <Menu.SubMenu key={index} title={menuItem.title} icon={menuItem.icon}>
                   {menuItem.items.map((subMenu, index2) => (
-                    <Menu.Item key={`${index}_${index2}`}>
+                    <Menu.Item key={subMenu.route}>
                       <Link to={subMenu.route}>{subMenu.name}</Link>
                     </Menu.Item>
                   ))}
@@ -92,5 +97,3 @@ const Sidebar = () => {
       </Layout.Sider>
     );
 };
-
-export default Sidebar;

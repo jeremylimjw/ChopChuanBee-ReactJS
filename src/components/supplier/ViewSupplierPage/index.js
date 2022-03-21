@@ -22,13 +22,13 @@ export default function ViewSupplierPage() {
   const [supplier, setSupplier] = useState();
 
   const breadcrumbs = [
-    { url: "/supplier/supplier", name: "Supplier" },
+    { url: "/supplier/suppliers", name: "Supplier" },
     { url: "/supplier/suppliers", name: "Suppliers" },
     { url: `/supplier/suppliers/${supplier?.id}`, name: `${supplier?.company_name}` },
   ];
 
   useEffect(() => {
-    SupplierAPIHelper.getById(id)
+    SupplierAPIHelper.get({ id: id })
       .then((result) => {
         if (result.length === 0) {
           navigate('../');
@@ -88,7 +88,7 @@ export default function ViewSupplierPage() {
 
               <MyCard title="Quick View">
                 {supplier.company_name} has outstanding account payables of&nbsp;
-                <Typography.Title level={5} style={{ display: 'inline-block'}}>$0.00</Typography.Title>.
+                <Typography.Title level={5} style={{ display: 'inline-block'}}>{`$${(+supplier.ap).toFixed(2)}`}</Typography.Title>.
               </MyCard>
 
               <MyCard style={{ flexGrow: 1 }}>
@@ -100,7 +100,7 @@ export default function ViewSupplierPage() {
           </Row>
 
           <MyCard style={{ marginTop: 0 }}>
-            <S3History />
+            <S3History supplier={supplier} />
           </MyCard>
 
         </MyLayout>

@@ -16,7 +16,21 @@ export default function NewLeaveFormModal({ selectedEmployee, isModalVisible, se
   const [employee, setEmployee] = useState();
   const [allEmployees, setAllEmployees] = useState([]);
   const [leaveAccounts, setLeaveAccounts] = useState([]);
-  const [selectedAccount, setSelectedAccount] = useState();
+
+  const [selectedDays, setSelectedDays] = useState();
+  
+  const [publicHolidaysMap, setPublicHolidaysMap] = useState();
+
+  useEffect(() => {
+    HRApiHelper.getPublicHolidays()
+      .then(results => {
+        const map = results.records.reduce((prev, current) => ({ ...prev, [current.date]: 1 }), {})
+        setPublicHolidaysMap(map)
+      })
+      .catch(handleHttpError)
+      .catch(() => false)
+  }, [handleHttpError, setPublicHolidaysMap])
+  
 
   const onSearch = useCallback((name) => {
     EmployeeApiHelper.get({ name: name, limit: 10 })
@@ -43,45 +57,57 @@ export default function NewLeaveFormModal({ selectedEmployee, isModalVisible, se
   useEffect(() => {
     if (employee) {
       setLeaveAccounts([]);
-      setSelectedAccount(null);
       form.setFieldsValue({ leave_account_id: null })
       HRApiHelper.getLeaveAccountsById(employee.id)
         .then((results) => {
-          setLeaveAccounts(results)
+          const options = results.map(x => ({ 
+            label: `${getLeaveType(x.leave_type_id).name} (${x.balance} balance)`, 
+            value: x.id, 
+            leave_account: x 
+          }))
+          setLeaveAccounts(options)
         })
         .catch(handleHttpError);
     }
   }, [employee, handleHttpError, setLeaveAccounts, form]);
 
-  const calculateLeaveDays = (date, totalDays) => {
-    let startDate = date
-    let numDays = 1
-    while (totalDays !== 0) {
-      startDate.add(1, 'days')
-      if (startDate.isoWeekday() !== 6 && startDate.isoWeekday() !== 7) {
-        numDays++
-      }
-      totalDays--
+  function calculateDaysBetween(start, end) {
+    const startDate = moment(start).set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+    const endDate = moment(end).set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+
+    const diff = {
+      numDays: 0,
+      weekends: 0,
+      publicHolidays: 0,
     }
-    return numDays
+
+    while (startDate <= endDate) {
+      if (startDate.day() === 6 || startDate.day() === 0) {
+        diff.weekends++;
+      } else if (publicHolidaysMap[startDate.format('YYYY-MM-DD')]) {
+        diff.publicHolidays++;
+      } else {
+        diff.numDays++;
+      }
+      startDate.add(1, 'days');
+    }
+    return diff;
   }
 
-  // const countRequestedDays = (values) => {
-  //   let [start, end] = [...values]
-  //   if (start && end) {
-  //     let days = end.diff(start, 'days')
-  //     days = calculateLeaveDays(start, days)
-  //   } else {
-  //     return
-  //   }
-  // }
+  function onCalendarChange(dates) {
+    if (dates[0] && dates[1]) {
+      const diff = calculateDaysBetween(dates[0], dates[1]);
+      setSelectedDays(diff)
+      form.setFieldsValue({ num_days: diff.numDays });
+    }
+  }
 
   function onCancel() {
     setIsModalVisible(false);
     form.resetFields();
     setEmployee(null);
     setLeaveAccounts([]);
-    setSelectedAccount(null);
+    setSelectedDays(null);
   }
 
   async function onFinish() {
@@ -92,13 +118,11 @@ export default function NewLeaveFormModal({ selectedEmployee, isModalVisible, se
       const newApplication = {
         leave_account_id: values.leave_account_id,
         paid: true,
-        start_date: startDate.format('YYYY-MM-DD HH:mm:ss'),
-        end_date: endDate.format('YYYY-MM-DD HH:mm:ss'),
+        start_date: startDate.toDate(),
+        end_date: endDate.toDate(),
         remarks: values.remarks,
+        num_days: values.num_days,
       }
-
-      let numDays = endDate.diff(startDate, 'days')
-      newApplication.num_days = calculateLeaveDays(startDate, numDays)
 
       setLoading(true);
       HRApiHelper.createNewLeaveApplication(newApplication)
@@ -144,25 +168,38 @@ export default function NewLeaveFormModal({ selectedEmployee, isModalVisible, se
         }
 
         <Form.Item rules={[REQUIRED]} label='Select Leave Type' name='leave_account_id'>
-          <Select options={leaveAccounts.map(x => ({ label: getLeaveType(x.leave_type_id).name, value: x.id, leave_account: x }))}
+          <Select options={leaveAccounts}
               placeholder="Select Type" 
-              onSelect={(_, option) => setSelectedAccount(option.leave_account)}
           />
         </Form.Item>
 
-        { selectedAccount &&
-          <Form.Item wrapperCol={{ offset: 10 }} >
-            <Typography.Text>Current Leave Balance: {selectedAccount.balance}</Typography.Text>
-          </Form.Item>
-        }
-
-        <Form.Item label='Date' name='dateRange' rules={[REQUIRED]}>
-          <DatePicker.RangePicker style={{ width: '100%' }} allowClear={false}
+        <Form.Item label='Select Dates (Inclusive)' name='dateRange' rules={[REQUIRED]}>
+          <DatePicker.RangePicker style={{ width: '100%' }} allowClear={false} loading={true}
             placeholder={['Start Date', 'End Date']}
             disabledDate={(prev) => (prev < moment().startOf('day'))}
-          // onCalendarChange={(values) => countRequestedDays(values)}
+            onCalendarChange={onCalendarChange}
           />
         </Form.Item>
+
+        { selectedDays &&
+          <Form.Item name="num_days" label="Selected Days" rules={[({ getFieldValue }) => 
+            ({ validator(_, value) {
+                if (value > 0) {
+                  return Promise.resolve();
+                }
+
+                return Promise.reject(new Error('Selected days must be more than 0.'));
+              },
+            })]}>
+            <Typography.Text>
+              {selectedDays.numDays} days
+            </Typography.Text>
+            <Typography.Text type='secondary'>
+              {selectedDays.weekends > 0 && ` (Weekends: -${selectedDays.weekends})`}
+              {selectedDays.publicHolidays > 0 && ` (Public holidays: -${selectedDays.publicHolidays} )`}
+            </Typography.Text>
+          </Form.Item>
+        }
 
         <Form.Item label='Remarks' name='remarks'>
           <Input.TextArea autoSize={{ minRows: 3, maxRows: 6 }} />

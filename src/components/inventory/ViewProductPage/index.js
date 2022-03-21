@@ -1,4 +1,4 @@
-import { UserAddOutlined, UserDeleteOutlined } from '@ant-design/icons/lib/icons';
+import { MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons/lib/icons';
 import { Row, Col, Popconfirm, Button, message, Typography } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router';
@@ -58,11 +58,11 @@ export default function ViewProductPage() {
       <>
         { product.deactivated_date == null ? 
           <Popconfirm title="Confirm unlist?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading}>
-            <Button type="danger" loading={loading} icon={<UserDeleteOutlined />} style={{ width: 100 }}>Unlist</Button>
+            <Button type="danger" loading={loading} icon={<MinusCircleOutlined />} style={{ width: 100 }}>Unlist</Button>
           </Popconfirm>
           :
           <Popconfirm title="Confirm relist?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading}>
-            <Button type="primary" loading={loading} icon={<UserAddOutlined />} style={{ width: 100 }}>Relist</Button>
+            <Button type="primary" loading={loading} icon={<PlusCircleOutlined />} style={{ width: 100 }}>Relist</Button>
           </Popconfirm>
         }
       </>
@@ -77,7 +77,7 @@ export default function ViewProductPage() {
         <Row>
           <Col xl={10} xs={24}>
             <MyCard title="Quick View">
-              <Typography.Title level={4} style={{ display: 'inline-block'}}>0</Typography.Title> units in stock
+              <Typography.Title level={4} style={{ display: 'inline-block'}}>{product?.total_quantity}</Typography.Title> units in stock
             </MyCard>
 
             <MyCard>
@@ -88,13 +88,13 @@ export default function ViewProductPage() {
           <Col xl={14} xs={24}>
 
             <MyCard>
-              <P2PriceTable />
+              <P2PriceTable product={product} />
             </MyCard>
           </Col>
         </Row>
 
         <MyCard style={{ marginTop: 0 }}>
-          <P3InventoryTable />
+          <P3InventoryTable product={product} />
         </MyCard>
       
       </MyLayout>
