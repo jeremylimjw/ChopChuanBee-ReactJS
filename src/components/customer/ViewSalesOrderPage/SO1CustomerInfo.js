@@ -1,6 +1,7 @@
 import { Descriptions } from 'antd'
 import React from 'react'
 import { Link } from 'react-router-dom'
+import EmailLink from '../../../utilities/EmailLink'
 
 export default function SO1CustomerInfo({ salesOrder }) {
   return (
@@ -13,7 +14,7 @@ export default function SO1CustomerInfo({ salesOrder }) {
           <Descriptions.Item label="Contact">{salesOrder.customer.p1_phone_number}</Descriptions.Item>
           <Descriptions.Item label="Address">{salesOrder.customer.address}</Descriptions.Item>
           <Descriptions.Item label="Postal Code">{salesOrder.customer.postal_code}</Descriptions.Item>
-          <Descriptions.Item label="Email">{salesOrder.customer.email || '-'}</Descriptions.Item>
+          <Descriptions.Item label="Email"><EmailLink email={salesOrder.customer.company_email} /></Descriptions.Item>
         </Descriptions>
       </>
       }

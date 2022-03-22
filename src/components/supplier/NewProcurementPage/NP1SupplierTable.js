@@ -2,13 +2,14 @@ import { SearchOutlined } from '@ant-design/icons/lib/icons';
 import { Button, Form, Input, Table } from 'antd';
 import debounce from 'lodash.debounce';
 import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom';
 import { SupplierAPIHelper } from '../../../api/SupplierAPIHelper';
 import { useApp } from '../../../providers/AppProvider';
 import { sortByString } from '../../../utilities/sorters';
 import { showTotal } from '../../../utilities/table';
 import MyToolbar from '../../common/MyToolbar';
 
-export default function NP1SupplierTable({ selectedSupplier,  setSelectedSupplier, setSelectedProducts }) {
+export default function NP1SupplierTable({ selectedSupplier, setSelectedSupplier, setSelectedProducts }) {
 
     const { handleHttpError } = useApp();
   
@@ -83,10 +84,11 @@ const columns = [
     dataIndex: 'company_name',
     width: '20%', 
     ellipsis: true,
+    render: (_, record) => <Link to={`/supplier/suppliers/${record.id}`}>{record.company_name}</Link>,
     sorter: (a, b) => sortByString(a.company_name, b.company_name),
   },
   {
-    title: 'Name',
+    title: 'Contact Name',
     dataIndex: 's1_name',
     width: '16%', 
     ellipsis: true,

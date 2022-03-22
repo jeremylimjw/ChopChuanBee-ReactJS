@@ -1,7 +1,7 @@
 import React from 'react'
 import { Layout, Menu } from 'antd'
 import { Link } from 'react-router-dom'
-import { HomeOutlined, InboxOutlined, ShoppingOutlined, SolutionOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons/lib/icons'
+import { HomeOutlined, InboxOutlined, ShoppingOutlined, SolutionOutlined, TeamOutlined, UserOutlined, CarOutlined } from '@ant-design/icons/lib/icons'
 import { useApp } from '../../providers/AppProvider'
 import { useLocation } from "react-router-dom";
 import { View } from '../../enums/View'
@@ -53,6 +53,15 @@ const menu = [
     items: [
       { route: '/customer/customers', name: 'Manage Customers' },
       { route: '/customer/sales', name: 'Sales' },
+    ]
+  },
+  {
+    role: View.DISPATCH.name,
+    title: 'Dispatch',
+    icon: <CarOutlined />,
+    items: [
+      { route: '/dispatch/itinerarys', name: 'Manage Itineraries' },
+      { route: '/dispatch/deliveryOrders', name: 'Manage Deliveries' },
     ]
   },
 ]

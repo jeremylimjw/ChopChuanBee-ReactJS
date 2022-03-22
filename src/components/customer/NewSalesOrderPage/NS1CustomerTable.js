@@ -2,6 +2,7 @@ import { SearchOutlined } from '@ant-design/icons/lib/icons';
 import { Button, Form, Input, Table } from 'antd';
 import debounce from 'lodash.debounce';
 import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom';
 import { CustomerApiHelper } from '../../../api/CustomerApiHelper';
 import { useApp } from '../../../providers/AppProvider';
 import { sortByString } from '../../../utilities/sorters';
@@ -17,24 +18,24 @@ export default function NS1CustomerTable({ selectedCustomer, setSelectedCustomer
     const [customers, setCustomers] = useState([]);
 
     useEffect(() => {
-        setLoading(true);
-        CustomerApiHelper.get(null, null, true)
-            .then(results => {
-                setCustomers(results);
-                setLoading(false);
-            })
-            .catch(handleHttpError)
-            .catch(() => setLoading(false))
+      setLoading(true);
+      CustomerApiHelper.get(null, null, true)
+        .then(results => {
+          setCustomers(results);
+          setLoading(false);
+        })
+        .catch(handleHttpError)
+        .catch(() => setLoading(false))
     }, [handleHttpError, setLoading])
   
     function onValuesChange(_, form) {
-        CustomerApiHelper.get({ ...form, status: true })
-            .then(results => {
-                setCustomers(results);
-                setLoading(false);
-            })
-            .catch(handleHttpError)
-            .catch(() => setLoading(false))
+      CustomerApiHelper.get(form.company_name, form.p1_name, true)
+        .then(results => {
+          setCustomers(results);
+          setLoading(false);
+        })
+        .catch(handleHttpError)
+        .catch(() => setLoading(false))
     }
   
     function resetForm() {
@@ -81,13 +82,13 @@ export default function NS1CustomerTable({ selectedCustomer, setSelectedCustomer
 const columns = [
   {
     title: 'Company Name',
-    dataIndex: 'company_name',
     width: '20%', 
     ellipsis: true,
+    render: (_, record) => <Link to={`/customer/customers/${record.id}`}>{record.company_name}</Link>,
     sorter: (a, b) => sortByString(a.company_name, b.company_name),
   },
   {
-    title: 'Name',
+    title: 'Contact Name',
     dataIndex: 'p1_name',
     width: '16%', 
     ellipsis: true,

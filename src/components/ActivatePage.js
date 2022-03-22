@@ -14,12 +14,16 @@ export default function ActivatePage() {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 
+    const [token, setToken] = useState(null);
     const [employee, setEmployee] = useState()
     const [loading, setLoading] = useState(false);
     const [form] = Form.useForm();
+
+    useEffect(() => {
+        setToken(searchParams.get('token'));
+    }, [searchParams, setToken]);
     
     useEffect(() => {
-        const token = searchParams.get('token');
         if (token != null) {
             GeneralApiHelper.getEmployeeByActivationToken(token)
                 .then(result => {
@@ -29,12 +33,11 @@ export default function ActivatePage() {
                 })
                 .catch(handleHttpError)
         }
-    }, [searchParams, handleHttpError]);
+    }, [token, handleHttpError]);
 
-    async function onSubmit(values) {
+    async function onSubmit() {
         try {
             const values = await form.validateFields();
-            const token = searchParams.get('token');
             setLoading(true);
             GeneralApiHelper.activateAccount(token, values.newPassword)
                 .then(() => {

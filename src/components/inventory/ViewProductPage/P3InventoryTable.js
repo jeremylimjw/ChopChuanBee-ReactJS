@@ -128,9 +128,9 @@ const columns = [
 
 function getCompanyName(record) {
   if (record.purchase_order_item) {
-    return record.purchase_order_item.purchase_order.supplier.company_name;
+    return <Link to={`/supplier/suppliers/${record.purchase_order_item.purchase_order.supplier_id}`}>{record.purchase_order_item.purchase_order.supplier.company_name}</Link>;
   } else if (record.sales_order_item) {
-    return record.sales_order_item.sales_order.customer.company_name;
+    return <Link to={`/customer/customers/${record.sales_order_item.sales_order.customer_id}`}>{record.sales_order_item.sales_order.customer.company_name}</Link>;
   } else {
     return '-';
   }
