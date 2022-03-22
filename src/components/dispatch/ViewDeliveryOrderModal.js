@@ -113,7 +113,7 @@ function CustomOrderDetails({ deliveryOrder }) {
                 <Descriptions.Item label="Delivery Status">{getDeliveryStatus(deliveryOrder.delivery_status_id).name}</Descriptions.Item>
                 <Descriptions.Item label="Completed At">{deliveryOrder.deliver_at ? parseDateTimeSeconds(deliveryOrder.deliver_at) : '-'}</Descriptions.Item>
                 { deliveryOrder?.signature && 
-                    <Descriptions.Item label="Signature"><img height="100" src={deliveryOrder.signature} /></Descriptions.Item>
+                    <Descriptions.Item label="Signature"><img alt='signature' height="100" src={deliveryOrder.signature} /></Descriptions.Item>
                 }
             </Descriptions>
         </>
@@ -138,7 +138,7 @@ function SalesOrderDetails({ deliveryOrder }) {
                 <Descriptions.Item label="Delivery Status">{getDeliveryStatus(deliveryOrder.delivery_status_id).name}</Descriptions.Item>
                 <Descriptions.Item label="Completed At">{deliveryOrder.deliver_at ? parseDateTimeSeconds(deliveryOrder.deliver_at) : '-'}</Descriptions.Item>
                 { deliveryOrder?.signature && 
-                    <Descriptions.Item label="Signature"><img height="100" src={deliveryOrder.signature} /></Descriptions.Item>
+                    <Descriptions.Item label="Signature"><img alt='signature' height="100" src={deliveryOrder.signature} /></Descriptions.Item>
                 }
             </Descriptions>
             
