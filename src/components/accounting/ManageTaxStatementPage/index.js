@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Form, Typography, Input, DatePicker, Divider, Modal, message, Radio, Button, Table, Select } from "antd";
+import { PrinterOutlined, FileExcelOutlined } from '@ant-design/icons/lib/icons';
 import { useApp } from "../../../providers/AppProvider";
 import MyLayout from "../../common/MyLayout";
 import MyCard from "../../common/MyCard";
@@ -96,20 +97,6 @@ export default function ManageTaxStatementPage() {
                             <Radio value={"output"}>Output Tax</Radio>
                         </Radio.Group>
                     </Form.Item>
-                    {/* <Form.Item
-                        rules={[REQUIRED]}
-                        label="Start Date"
-                        name="start_date"
-                    >
-                        <DatePicker />
-                    </Form.Item>
-                    <Form.Item
-                        rules={[REQUIRED]}
-                        label="End Date"
-                        name="end_date"
-                    >
-                        <DatePicker />
-                    </Form.Item> */}
                     <Form.Item label='Date' name='dateRange' rules={[REQUIRED]}>
                         <DatePicker.RangePicker allowClear={false} placeholder={['Start Date', 'End Date']}/>
                     </Form.Item>
@@ -130,6 +117,10 @@ export default function ManageTaxStatementPage() {
                 </Form>
             </MyCard>
             <MyCard>
+                <MyToolbar title="Tax Statement Details">
+                    <Button icon={<PrinterOutlined />} loading={loading} style={{textAlign:'right'}}>Export as PDF</Button>
+                    <Button icon={<FileExcelOutlined />} loading={loading} style={{textAlign:'right'}}>Export as Excel</Button>
+                </MyToolbar>
                 <Table dataSource={items} 
                     columns={columns} 
                     loading={loading} 
@@ -149,6 +140,7 @@ export default function ManageTaxStatementPage() {
 
                     {totalTax ? (<Typography.Title level={5} style={{ display: 'inline-block'}}>{formatCurrency(totalTax.total_tax)}</Typography.Title>) 
                     : (<Typography.Title level={5} style={{ display: 'inline-block'}}>$0.00</Typography.Title>) }
+
                 </div>
             </MyCard>
         </MyLayout>
