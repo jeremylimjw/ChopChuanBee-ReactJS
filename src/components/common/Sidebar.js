@@ -55,15 +55,15 @@ const menu = [
       { route: '/customer/sales', name: 'Sales' },
     ]
   },
-  { 
-    role: 'Accounting', 
-    title: 'Accounting', 
-    icon: <AccountBookOutlined />, 
-    items: [ 
-      { route: '/accounting/balanceSheets', name: 'Balance Sheets' }, 
-      { route: '/accounting/incomeStatements', name: 'Income Statements' }, 
-      { route: '/accounting/taxStatements', name: 'Tax Statements' }, 
-    ] 
+  {
+    role: 'Accounting',
+    title: 'Accounting',
+    icon: <AccountBookOutlined />,
+    items: [
+      { route: '/accounting/balanceSheets', name: 'Balance Sheets' },
+      { route: '/accounting/incomeStatements', name: 'Income Statements' },
+      { route: '/accounting/taxStatements', name: 'Tax Statements' },
+    ]
   },
 ]
 

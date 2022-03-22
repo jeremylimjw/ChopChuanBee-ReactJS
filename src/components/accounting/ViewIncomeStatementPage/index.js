@@ -1,4 +1,4 @@
-import { UserAddOutlined, UserDeleteOutlined } from '@ant-design/icons/lib/icons';
+import { MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons/lib/icons';
 import { Row, Col, Popconfirm, Button, message, Typography } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router';
@@ -6,7 +6,7 @@ import { AccountingAPIHelper } from '../../../api/AccountingAPIHelper';
 import { View } from '../../../enums/View';
 import { useApp } from '../../../providers/AppProvider';
 import MyLayout from '../../common/MyLayout';
-import IncomeStatementAsset from './IncomeStatementAsset';
+import IncomeStatementObject from './IncomeStatementObject';
 
 export default function ViewIncomeStatementPage() {
     const { id } = useParams();
@@ -54,11 +54,11 @@ export default function ViewIncomeStatementPage() {
           <>
             { income.deleted_date == null ? 
               <Popconfirm title="Confirm unlist?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading}>
-                <Button type="danger" loading={loading} icon={<UserDeleteOutlined />} style={{ width: 120 }}>Unlist</Button>
+                <Button type="danger" loading={loading} icon={<MinusCircleOutlined />} style={{ width: 120 }}>Unlist</Button>
               </Popconfirm>
               :
               <Popconfirm title="Confirm relist?" placement='leftTop' onConfirm={handleDeactivate} disabled={loading}>
-                <Button type="primary" loading={loading} icon={<UserAddOutlined />} style={{ width: 120 }}>Relist</Button>
+                <Button type="primary" loading={loading} icon={<PlusCircleOutlined />} style={{ width: 120 }}>Relist</Button>
               </Popconfirm>
             }
           </>
@@ -69,7 +69,7 @@ export default function ViewIncomeStatementPage() {
         <>
         {income != null && 
           <MyLayout breadcrumbs={breadcrumbs} bannerTitle={`${income.name} ${ income.deleted_date == null ? '' : '(Unlisted)' }`} bannerRight={renderDeactivateButton()}>
-            <IncomeStatementAsset income={income} setIncome={setIncome} />     
+            <IncomeStatementObject income={income} setIncome={setIncome} />     
           </MyLayout>
         }
         </>

@@ -199,7 +199,7 @@ export class AccountingAPIHelper {
     const params = {};
     params.start_date = start_date;
     params.end_date = end_date;
-    params.charged_under_name = form.company;
+    params.charged_under_id = form.charged_under_id;
     return axiosObject
       .get("/accounting/input_tax", { params })
       .then((res) => res.data);
@@ -209,7 +209,7 @@ export class AccountingAPIHelper {
     const params = {};
     params.start_date = start_date;
     params.end_date = end_date;
-    params.charged_under_name = form.company;
+    params.charged_under_id = form.charged_under_id;
     return axiosObject
       .get("/accounting/output_tax", { params })
       .then((res) => res.data);

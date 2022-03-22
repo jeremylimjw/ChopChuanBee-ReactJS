@@ -29,7 +29,7 @@ import ManageBalanceSheetPage from './components/accounting/ManageBalanceSheetPa
 import ViewBalanceSheetPage from './components/accounting/ViewBalanceSheetPage';
 import ViewIncomeStatementPage from './components/accounting/ViewIncomeStatementPage';
 import ManageIncomeStatementPage from './components/accounting/ManageIncomeStatementPage';
-import ManageTaxStatementPage  from './components/accounting/ManageTaxPage';
+import ManageTaxStatementPage from './components/accounting/ManageTaxStatementPage';
 import ManageProcurementsPage from './components/supplier/ManageProcurementsPage';
 import NewProcurementPage from './components/supplier/NewProcurementPage';
 import ViewProcurementPage from './components/supplier/ViewProcurementPage';
@@ -216,7 +216,7 @@ const routes = [
       },
       {
         path: "taxStatements",
-        component: <ManageTaxStatementPage  />,
+        component: <ManageTaxStatementPage />,
         viewAccess: View.ACCOUNTING.name,
       },
     ],

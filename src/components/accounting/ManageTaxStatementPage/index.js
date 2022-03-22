@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Form, Typography, Input, DatePicker, Divider, Modal, message, Radio, Button, Table } from "antd";
+import { Form, Typography, Input, DatePicker, Divider, Modal, message, Radio, Button, Table, Select } from "antd";
 import { useApp } from "../../../providers/AppProvider";
 import MyLayout from "../../common/MyLayout";
 import MyCard from "../../common/MyCard";
 import { AccountingAPIHelper } from "../../../api/AccountingAPIHelper";
+import {ChargedUnderApiHelper} from "../../../api/ChargedUnderApiHelper";
 import { REQUIRED } from "../../../utilities/form";
 import moment from 'moment';
 import { parseDate } from '../../../utilities/datetime';
@@ -13,17 +14,27 @@ import MyToolbar from "../../common/MyToolbar";
 import { formatCurrency } from '../../../utilities/currency';
 
 const breadcrumbs = [
-    { url: "/accounting/Taxes", name: "Accounting" },    
-    { url: "/accounting/Taxes", name: "Taxes" },
+    { url: "/accounting/taxStatements", name: "Accounting" },    
+    { url: "/accounting/taxStatements", name: "Tax Statements" },
 ];
 
-export default function ManageTaxPage() {
+export default function ManageTaxStatementPage() {
     const { handleHttpError, hasWriteAccessTo } = useApp();
     const [form] = Form.useForm();
     const [items, setItems] = useState([]);
     const [totalAmt, setTotalAmt] = useState();
     const [totalTax, setTotalTax] = useState();
     const [loading, setLoading] = useState(false);
+    const [chargedUnders, setChargedUnders] = useState([]);
+
+    useEffect(() => {
+        ChargedUnderApiHelper.getAvailable()
+            .then(results => {
+                setChargedUnders(results)
+            })
+            .catch(handleHttpError);
+    }, [handleHttpError])
+
     const layout = {
         labelCol: { span: 8 },
         wrapperCol: { span: 16 },
@@ -66,9 +77,13 @@ export default function ManageTaxPage() {
         .catch(() => setLoading(false))
         }
     }
+    function handleChargedUnderChange(id) {
+        const index = chargedUnders.findIndex(x => x.id === id);
+        form.setFieldsValue({ charged_under: (id == null ? null : {...chargedUnders[index] }) });
+    }
 
     return (
-        <MyLayout breadcrumbs={breadcrumbs} bannerTitle="Manage Taxes">
+        <MyLayout breadcrumbs={breadcrumbs} bannerTitle="Manage Tax Statements">
             <MyCard title="Create A Tax Statement">
                 <Form {...layout} form={form} onFinish={onFinish} autoComplete="off" labelAlign="left">
                     <Form.Item
@@ -98,16 +113,15 @@ export default function ManageTaxPage() {
                     <Form.Item label='Date' name='dateRange' rules={[REQUIRED]}>
                         <DatePicker.RangePicker allowClear={false} placeholder={['Start Date', 'End Date']}/>
                     </Form.Item>
-                    <Form.Item
-                        rules={[REQUIRED]} 
-                        label="Company"
-                        name="company"
-                    >
-                        <Radio.Group>
-                            <Radio value={"CCB"}>CCB</Radio>
-                            <Radio value={"CBFS"}>CBFS</Radio>
-                        </Radio.Group>
-                    </Form.Item>
+               
+                    <Form.Item name="charged_under_id" label="Charged Under" >
+                      
+                            <Select style={{ width: 180 }} onSelect={handleChargedUnderChange} placeholder = "Select a Company">
+
+                                { chargedUnders.map((x, idx) => <Select.Option key={idx} value={x.id}>{x.name}</Select.Option>)}
+                            </Select>
+                        
+                </Form.Item>
 
                     <Form.Item labelCol={{ span: 8 }} wrapperCol={{ span: 24 }} style={{textAlign:'right'}}>
                         

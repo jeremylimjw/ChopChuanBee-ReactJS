@@ -13,7 +13,7 @@ import { View } from "../../../enums/View";
 import NewIncomeStatementModal from "./NewIncomeStatementModal";
 import { parseDate } from "../../../utilities/datetime";
 import { sortByDate, sortByNumber, sortByString } from "../../../utilities/sorters";
-import { getActiveTag } from "../../../enums/ActivationStatus";
+import { getListTag } from "../../../enums/ActivationStatus";
 import { showTotal } from "../../../utilities/table";
 
 const breadcrumbs = [
@@ -66,16 +66,16 @@ export default function ManageIncomeStatementPage() {
                 <MyToolbar title="Income Statements">
                     <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
                         <Form.Item name="name">
-                            <Input placeholder='Search Title' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
+                            <Input placeholder='Search Name' style={{ width: 140 }} suffix={<SearchOutlined className='grey' />} />
                         </Form.Item>
-                        <Form.Item name="date">
+                        <Form.Item name="date" >
                             <DatePicker.RangePicker />
                         </Form.Item>
                         <Form.Item name="status">
                             <Select style={{ width: 140 }} placeholder="Filter by Status">
                             <Select.Option value={null}>All</Select.Option>
-                            <Select.Option value={true}>Active</Select.Option>
-                            <Select.Option value={false}>Inactive</Select.Option>
+                            <Select.Option value={true}>Listed</Select.Option>
+                            <Select.Option value={false}>Unlisted</Select.Option>
                             </Select>
                         </Form.Item>
                         <Button onClick={resetForm}>Reset</Button>
@@ -111,10 +111,10 @@ const columns = [
         sorter: (a, b) => sortByDate(a.created_at, b.created_at),
     },
     {
-        title: 'Title',
+        title: 'Name',
         dataIndex: 'name',
         key: 'name',
-        width: '40%',
+        width: '30%',
         ellipsis: true,
         sorter: (a, b) => sortByString(a.name, b.name),
     },
@@ -143,7 +143,7 @@ const columns = [
         width: '10%',
         align: 'center',
         ellipsis: true,
-        render: (deleted_date) => getActiveTag(deleted_date),
+        render: (deleted_date) => getListTag(deleted_date),
         sorter: (a, b) => sortByNumber(a.deleted_date ? 1 : 0, b.deleted_date ? 1 : 0),
     },
     {
