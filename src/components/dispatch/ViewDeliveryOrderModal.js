@@ -1,8 +1,7 @@
 import { Button, Descriptions, Divider, message, Modal, Table, Typography } from 'antd';
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import { DeliveryApiHelper } from '../../api/DeliveryApiHelper';
-import { SalesOrderApiHelper } from '../../api/SalesOrderApiHelper';
 import { DeliveryStatus, getDeliveryStatus } from '../../enums/DeliveryStatus';
 import { SalesOrder } from '../../models/SalesOrder';
 import { useApp } from '../../providers/AppProvider';
@@ -12,25 +11,10 @@ export default function ViewDeliveryOrderModal({ showDeliveryOrder, setShowDeliv
 
     const { handleHttpError } = useApp();
 
-    const [salesOrder, setSalesOrder] = useState();
     const [loading, setLoading] = useState(false);
-
-    useEffect(() => {
-        if (showDeliveryOrder?.sales_order_id) {
-            SalesOrderApiHelper.get({ id: showDeliveryOrder.sales_order_id })
-                .then(result => {
-                    if (result.length === 0) {
-                        return;
-                    }
-                    setSalesOrder(new SalesOrder(result[0]));
-                })
-                .catch(handleHttpError)
-        }
-    }, [showDeliveryOrder, handleHttpError, setSalesOrder]);
 
     function onModalClose() {
         setShowDeliveryOrder(null);
-        setSalesOrder(null);
     }
 
     function completeOrder() {
@@ -106,8 +90,8 @@ export default function ViewDeliveryOrderModal({ showDeliveryOrder, setShowDeliv
             }
         >
 
-            { (showDeliveryOrder && salesOrder) && 
-                <SalesOrderDetails deliveryOrder={showDeliveryOrder} salesOrder={salesOrder} />
+            { (showDeliveryOrder && showDeliveryOrder.sales_order_id != null) && 
+                <SalesOrderDetails deliveryOrder={showDeliveryOrder} />
             }
 
             { (showDeliveryOrder && showDeliveryOrder.sales_order_id == null) && 
@@ -137,14 +121,17 @@ function CustomOrderDetails({ deliveryOrder }) {
 
 }
 
-function SalesOrderDetails({ deliveryOrder, salesOrder }) {
+function SalesOrderDetails({ deliveryOrder }) {
+    function getSalesOrder(salesOrder) {
+        return new SalesOrder(salesOrder);
+    }
     return (
         <>
             <Descriptions bordered size="small" layout='horizontal' column={1}>
-                <Descriptions.Item label="Company"><Link to={`/customer/customers/${salesOrder.customer.id}`}>{salesOrder.customer.company_name}</Link></Descriptions.Item>
-                <Descriptions.Item label="Contact Name">{salesOrder.customer.p1_name}</Descriptions.Item>
-                <Descriptions.Item label="Contact Number">{salesOrder.customer.p1_phone_number}</Descriptions.Item>
-                <Descriptions.Item label="Email">{salesOrder.customer.email || '-'}</Descriptions.Item>
+                <Descriptions.Item label="Company"><Link to={`/customer/customers/${deliveryOrder.sales_order.customer.id}`}>{deliveryOrder.sales_order.customer.company_name}</Link></Descriptions.Item>
+                <Descriptions.Item label="Contact Name">{deliveryOrder.sales_order.customer.p1_name}</Descriptions.Item>
+                <Descriptions.Item label="Contact Number">{deliveryOrder.sales_order.customer.p1_phone_number}</Descriptions.Item>
+                <Descriptions.Item label="Email">{deliveryOrder.sales_order.customer.email || '-'}</Descriptions.Item>
                 <Descriptions.Item label="Delivery Address">{deliveryOrder.address}</Descriptions.Item>
                 <Descriptions.Item label="Delivery Postal Code">{deliveryOrder.postal_code}</Descriptions.Item>
                 <Descriptions.Item label="Delivery Remarks">{deliveryOrder.remarks || '-'}</Descriptions.Item>
@@ -161,35 +148,35 @@ function SalesOrderDetails({ deliveryOrder, salesOrder }) {
             <Table
                 pagination={false}
                 columns={columns}
-                dataSource={salesOrder.sales_order_items}
+                dataSource={deliveryOrder.sales_order.sales_order_items}
                 rowKey={() => Math.random()}
                 summary={pageData => {
-                    if (salesOrder == null) return <></>
+                    if (deliveryOrder.sales_order == null) return <></>
 
                     return (
                         <>
-                        {(salesOrder.has_gst === 2) && 
+                        {(deliveryOrder.sales_order.has_gst === 2) && 
                             <Table.Summary.Row>
                                 <Table.Summary.Cell colSpan={5}>
                                     <Typography.Text strong>
-                                    {salesOrder.has_gst === 2 && `GST ${salesOrder.gst_rate}% (Exclusive)`}
+                                    {deliveryOrder.sales_order.has_gst === 2 && `GST ${deliveryOrder.sales_order.gst_rate}% (Exclusive)`}
                                     </Typography.Text>
                                 </Table.Summary.Cell>
                                 <Table.Summary.Cell align='center'>
                                     <Typography.Text strong>
-                                    ${salesOrder.getGstAmount().toFixed(2)}
+                                    ${getSalesOrder(deliveryOrder.sales_order).getGstAmount().toFixed(2)}
                                     </Typography.Text>
                                 </Table.Summary.Cell>
                             </Table.Summary.Row>
                         }
 
-                        {salesOrder.offset > 0 && 
+                        {deliveryOrder.sales_order.offset > 0 && 
                             <Table.Summary.Row>
                                 <Table.Summary.Cell colSpan={5}>
                                     <Typography.Text strong>Offset</Typography.Text>
                                 </Table.Summary.Cell>
                                 <Table.Summary.Cell align='center'>
-                                    <Typography.Text strong>${(+salesOrder.offset).toFixed(2) || 0}</Typography.Text>
+                                    <Typography.Text strong>${(+deliveryOrder.sales_order.offset).toFixed(2) || 0}</Typography.Text>
                                 </Table.Summary.Cell>
                             </Table.Summary.Row>
                         }
@@ -200,7 +187,7 @@ function SalesOrderDetails({ deliveryOrder, salesOrder }) {
                             </Table.Summary.Cell>
                             <Table.Summary.Cell align='center'>
                             <Typography.Text strong>
-                                {`$${salesOrder.getOrderTotal().toFixed(2)}`}
+                                {`$${getSalesOrder(deliveryOrder.sales_order).getOrderTotal().toFixed(2)}`}
                             </Typography.Text>
                             </Table.Summary.Cell>
                         </Table.Summary.Row>
