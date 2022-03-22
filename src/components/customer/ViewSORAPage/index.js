@@ -1,4 +1,5 @@
-import { Table } from 'antd';
+import { Button, Table } from 'antd';
+import { PrinterOutlined } from '@ant-design/icons/lib/icons';
 import { useNavigate, useParams } from 'react-router';
 import React, { useEffect, useState } from 'react';
 import { useApp } from '../../../providers/AppProvider';
@@ -8,7 +9,7 @@ import MyCard from '../../common/MyCard';
 import MyToolbar from '../../common/MyToolbar';
 import { showTotal } from '../../../utilities/table';
 import { parseDate } from '../../../utilities/datetime';
-import { sortByDate, sortByNumber, sortByString } from '../../../utilities/sorters';
+import { sortByDate, sortByNumber } from '../../../utilities/sorters';
 
 
 
@@ -20,7 +21,6 @@ export default function ViewSORAPage() {
 
     const [customer, setCustomer] = useState(null);
     const [sora, setSora] = useState(null);
-    const [loading, setLoading] = useState(false);
 
     const breadcrumbs = [
         { url: '/customer/customers', name: 'Customer' },
@@ -30,38 +30,36 @@ export default function ViewSORAPage() {
       ]
 
     useEffect(() => {
-    CustomerApiHelper.getById(id)
-        .then(result => {
-        if (result.length === 0) {
-            navigate('../');
-            return;
-        }
-        setCustomer(result[0]);
-        }).catch(handleHttpError)
-    CustomerApiHelper.getSORA(id)
-        .then(result => {
-        setSora(result);
-        })
-        .catch(handleHttpError)
+        CustomerApiHelper.getById(id)
+            .then(result => {
+            if (result.length === 0) {
+                navigate('../');
+                return;
+            }
+            setCustomer(result[0]);
+            }).catch(handleHttpError)
+        CustomerApiHelper.getSORA(id)
+            .then(result => {
+            setSora(result);
+            })
+            .catch(handleHttpError)
     }, [id, handleHttpError, navigate]);
   
     return (
         <>
-        {/* {sora != null &&  */}
-            <MyLayout breadcrumbs={breadcrumbs} bannerTitle={`${customer?.company_name}`}>
-                <MyCard>
-                    <MyToolbar title="Statement of Receivable Account"></MyToolbar>
-                    <Table 
-                        dataSource={sora} 
-                        columns={columns} 
-                        loading={loading} 
-                        rowKey="id" 
-                        pagination={{ showTotal: showTotal }}
-                    />
-                </MyCard>
-            </MyLayout>
-
-        {/* } */}
+        <MyLayout breadcrumbs={breadcrumbs} bannerTitle={`${customer?.company_name}`}>
+            <MyCard>
+                <MyToolbar title="Statement of Receivable Account">
+                    <Button icon={<PrinterOutlined />} > Print </Button>
+                </MyToolbar>
+                <Table 
+                    dataSource={sora} 
+                    columns={columns}
+                    rowKey="id" 
+                    pagination={{ showTotal: showTotal }}
+                />
+            </MyCard>
+        </MyLayout>
         </>
     ) 
 }
@@ -73,6 +71,7 @@ const columns = [
       key: 'so_id',
       width: 150,
       ellipsis: true,
+      sorter: (a, b) => sortByNumber(a.so_id, b.so_id),
     },
     {
       title: 'Created At',
@@ -89,7 +88,7 @@ const columns = [
       key: 'charges',
       width: '14%',
       ellipsis: true,
-      //sorter: (a, b) => sortByString(a.company_name, b.company_name),
+      sorter: (a, b) => sortByNumber(a.charged, b.charges),
     },
     {
       title: 'Amount Paid',
@@ -97,7 +96,7 @@ const columns = [
       key: 'amount_paid',
       width: '12%',
       ellipsis: true,
-      //sorter: (a, b) => sortByString(a.p1_name, b.p1_name),
+      sorter: (a, b) => sortByNumber(a.amount_paid, b.amount_paid),
     },
     {
       title: 'Balance',
@@ -105,7 +104,7 @@ const columns = [
       key: 'balance',
       width: '14%',
       ellipsis: true,
-      //sorter: (a, b) => sortByString(a.p1_phone_number, b.p1_phone_number),
+      sorter: (a, b) => sortByNumber(a.balance, b.balance),
     },
 ]
   
