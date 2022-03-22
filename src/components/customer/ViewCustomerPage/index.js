@@ -2,6 +2,7 @@ import { UserAddOutlined, UserDeleteOutlined } from '@ant-design/icons/lib/icons
 import { Row, Col, Popconfirm, Button, message, Typography } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router';
+import { Link } from 'react-router-dom';
 import { CustomerApiHelper } from '../../../api/CustomerApiHelper';
 import { View } from '../../../enums/View';
 import { useApp } from '../../../providers/AppProvider';
@@ -84,6 +85,9 @@ export default function ViewCustomerPage() {
               <MyCard title="Quick View">
                 {customer.company_name} has outstanding account receivables of&nbsp;
                 <Typography.Title level={5} style={{ display: 'inline-block'}}>{`$${(+customer.ar).toFixed(2)}`}</Typography.Title>.
+                <Link to={`../customers/SORA/${id}`}>
+                  <Button> Generate Statement </Button>
+                </Link> 
               </MyCard>
 
               <MyCard>

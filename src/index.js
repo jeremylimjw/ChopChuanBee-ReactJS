@@ -35,6 +35,7 @@ import NewSalesOrderPage from './components/customer/NewSalesOrderPage';
 import ViewSalesOrderPage from './components/customer/ViewSalesOrderPage';
 import ViewInventoryMovementsPage from './components/inventory/ViewInventoryMovementsPage';
 import ActivatePage from './components/ActivatePage';
+import ViewSORAPage from './components/customer/ViewSORAPage';
 
 // Add on more routes here
 const routes = [
@@ -181,6 +182,11 @@ const routes = [
       { 
         path: 'sales/:id', 
         component: <ViewSalesOrderPage />,
+        viewAccess: View.SCM.name,
+      },
+      { 
+        path: 'customers/SORA/:id', 
+        component: <ViewSORAPage />,
         viewAccess: View.SCM.name,
       },
     ]
