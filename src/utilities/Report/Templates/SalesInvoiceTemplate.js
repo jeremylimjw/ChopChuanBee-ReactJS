@@ -4,11 +4,11 @@ import { PDFTools } from "../PDFTools"
 const formatSOData = (data) => {
   return {
     so_num: {
-      text: 'SALES ORDER NO: ',
+      text: 'Customer Invoice No.: ',
       value: data.id || '-'
     },
     so_date: {
-      text: 'SALES ORDER DATE: ',
+      text: 'Customer Invoice Date: ',
       value: moment(data.created_at).format('ll') || '-'
     }
   }
@@ -18,15 +18,15 @@ const formatCompanyData = (data) => {
   let { name, address, contact_number, shipping_address, registration_number } = data.charged_under ? data.charged_under : {}
   let formattedData = {
     addr: {
-      text: 'ADDRESS: ',
+      text: 'Address: ',
       value: address || '',
     },
     contactNum: {
-      text: 'CONTACT NO: ',
+      text: 'Contact No: ',
       value: contact_number || '',
     },
     shipping_addr: {
-      text: 'SHIPPING ADDRESS:',
+      text: 'Shipping Address:',
       value: shipping_address || ''
     }
   }
@@ -36,7 +36,7 @@ const formatCompanyData = (data) => {
     return {
       ...formattedData,
       bizRegNum: {
-        text: 'BUSINESS REG NO: ',
+        text: 'Business Reg No.: ',
         value: registration_number || '',
       },
     }
@@ -46,15 +46,15 @@ const formatCompanyData = (data) => {
 const formatVendorData = (data) => {
   return {
     vendorName: {
-      text: 'VENDOR NAME: ',
+      text: 'Vendor Name: ',
       value: data.customer.company_name || '',
     },
     contactPerson: {
-      text: 'CONTACT PERSON: ',
+      text: 'Contact Person: ',
       value: data.customer.p1_name || '',
     },
     contactNum: {
-      text: 'CONTACT NO: ',
+      text: 'Contact No.: ',
       value: data.customer.p1_phone_number || '',
     },
   }
@@ -97,14 +97,14 @@ export const salesInvoiceTemplate = (data) => {
   let document = {
     pageSize: 'A4',
     info: {
-      title: `ID ${data.id} Sales Order for ${data.customer.company_name}`
+      title: `ID ${data.id} Customer Invoice for ${data.customer.company_name}`
     },
     defaultStyle: {
       font: 'NotoCh'
     },
     content: [
-      PDFTools.formatText('SALES ORDER', 'header'),
-      PDFTools.generateForm(soData, { formWidth: '30%', margin: [200] }),
+      PDFTools.formatText('CUSTOMER INVOICE', 'header'),
+      PDFTools.generateForm(soData, { formWidth: '30%', margin: [20] }),
       PDFTools.dividerLine('horizontal', 515),
       {
         columns: [
@@ -132,7 +132,7 @@ export const salesInvoiceTemplate = (data) => {
         margin: [0, 0, 0, 10]
       },
       subHeader: {
-        fontSize: 14,
+        fontSize: 12,
         bold: true,
         margin: [0, 5]
       },

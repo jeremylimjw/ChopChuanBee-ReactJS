@@ -4,11 +4,11 @@ import { PDFTools } from "../PDFTools"
 const formatDelInstHeader = (data) => {
   return {
     instruction_sheet_no: {
-      text: 'INSTRUCTION SHEET NO:',
+      text: 'Instruction Sheet No.:',
       value: data.id || ''
     },
     instruction_sheet_date: {
-      text: 'DATE:',
+      text: 'Date:',
       value: moment(data.created_at).format('ll') || ''
     }
   }
@@ -67,6 +67,7 @@ export const deliveryInstructionsTemplate = (data) => {
   let itineraryData = formatDelInstData(data)
   let routeTable = constructRoutesTable(data)
   let delHeader = formatDelInstHeader(data)
+  const signatureLineLength = 150
   let document = {
     pageSize: 'A4',
     pageOrientation: 'landscape',
@@ -86,10 +87,43 @@ export const deliveryInstructionsTemplate = (data) => {
         margin: [0, 3]
       },
       routeTable,
-      PDFTools.formatText('', { margin: [0, 5] }),
+      { text: '', margin: [0, 5] },
       PDFTools.formatText('SPECIAL INSTRUCTIONS OR REMARKS', 'subHeader'),
-      PDFTools.formatText('', { margin: [0, 5] }),
+      { text: '', margin: [0, 0, 0, 2] },
       PDFTools.generateEmptyBox(802, 100),
+      { text: '', margin: [0, 5] },
+      {
+        columns: [
+          PDFTools.formatText('Completed Delivery Orders:', 'subHeader'),
+          PDFTools.formatText('Completed Delivery Status Update on System:', 'subHeader')
+        ]
+      },
+      { text: '', margin: [0, 15] },
+      {
+        columns: [
+          PDFTools.dividerLine('horizontal', signatureLineLength),
+          PDFTools.dividerLine('horizontal', signatureLineLength),
+        ]
+      },
+      {
+        columns: [
+          PDFTools.formatText(`Driver's name and signature`, 'formText'),
+          PDFTools.formatText(`Staff's name and signature`, 'formText')
+        ]
+      },
+      { text: '', margin: [0, 15] },
+      {
+        columns: [
+          PDFTools.dividerLine('horizontal', signatureLineLength),
+          PDFTools.dividerLine('horizontal', signatureLineLength),
+        ]
+      },
+      {
+        columns: [
+          PDFTools.formatText(`Date:`, 'formText'),
+          PDFTools.formatText(`Date:`, 'formText')
+        ]
+      },
     ],
     styles: {
       header: {

@@ -222,6 +222,10 @@ export const balanceSheetTemplate = (data) => {
   let assetsData = formatAssets(data)
   let liabilitiesData = formatLiabilities(data)
   let equityData = formatEquities(data)
+  let total_equity_and_liabilities = {
+    text: 'Total Equity and Liabilities',
+    value: data.totalLiabilitiesAndEquities
+  }
   let document = {
     pageSize: 'A4',
     defaultStyle: {
@@ -276,6 +280,7 @@ export const balanceSheetTemplate = (data) => {
       },
       PDFTools.generateForm(equityData.equities, 'formText', '60%', { width: '10%', text: '' }),
       PDFTools.generateForm([equityData.total.totalEquities], 'boldFormText', '70%'),
+      PDFTools.generateForm([total_equity_and_liabilities], 'boldFormText', '70%'),
       { text: '', pageBreak: 'after' },
       PDFTools.formatText('Additional Comments or Remarks', 'subHeader'),
       PDFTools.generateEmptyBox(515, 200),

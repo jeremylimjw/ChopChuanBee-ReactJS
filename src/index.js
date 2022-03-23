@@ -35,6 +35,9 @@ import NewSalesOrderPage from './components/customer/NewSalesOrderPage';
 import ViewSalesOrderPage from './components/customer/ViewSalesOrderPage';
 import ViewInventoryMovementsPage from './components/inventory/ViewInventoryMovementsPage';
 import ActivatePage from './components/ActivatePage';
+import ReportGenerationPage from './pages/Report/ReportGenerationPage'
+import DeliveryStickerPrintPage from './pages/Report/DeliveryStickerPrintPage';
+
 
 // Add on more routes here
 const routes = [
@@ -231,8 +234,9 @@ ReactDOM.render(
             <Route path="/activate" element={<ActivatePage />} />
             <Route path="/" element={<RequireAuth><App /></RequireAuth>}>
               {routes.map((route, index) => renderRoute(route, index))}
+              <Route path="/reports" element={<ReportGenerationPage />} />
+              <Route path="/deliverystickers" element={<DeliveryStickerPrintPage />} />
             </Route>
-            <Route path="/deliveryStickers" element={<DeliveryStickerPrintPage />} />
           </Routes>
         </Layout>
       </AppProvider>
