@@ -1,7 +1,7 @@
 import React from 'react'
 import { Layout, Menu } from 'antd'
 import { Link } from 'react-router-dom'
-import { HomeOutlined, InboxOutlined, ShoppingOutlined, SolutionOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons/lib/icons'
+import { HomeOutlined, InboxOutlined, ShoppingOutlined, SolutionOutlined, TeamOutlined, UserOutlined, CarOutlined } from '@ant-design/icons/lib/icons'
 import { useApp } from '../../providers/AppProvider'
 import { useLocation } from "react-router-dom";
 import { View } from '../../enums/View'
@@ -55,35 +55,44 @@ const menu = [
       { route: '/customer/sales', name: 'Sales' },
     ]
   },
+  {
+    role: View.DISPATCH.name,
+    title: 'Dispatch',
+    icon: <CarOutlined />,
+    items: [
+      { route: '/dispatch/itinerarys', name: 'Manage Itineraries' },
+      { route: '/dispatch/deliveryOrders', name: 'Manage Deliveries' },
+    ]
+  },
 ]
 
 export default function Sidebar() {
 
-    const { hasViewAccessTo } = useApp();
-    const location = useLocation();
+  const { hasViewAccessTo } = useApp();
+  const location = useLocation();
 
-    return (
-      <Layout.Sider theme='light' width={210} style={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}>
-        <Menu mode='inline' selectedKeys={[location.pathname]}>
-          <Menu.Item key='/' icon={<HomeOutlined />}>
-            <Link to='/'>Home</Link>
-          </Menu.Item>
+  return (
+    <Layout.Sider theme='light' width={210} style={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}>
+      <Menu mode='inline' selectedKeys={[location.pathname]}>
+        <Menu.Item key='/' icon={<HomeOutlined />}>
+          <Link to='/'>Home</Link>
+        </Menu.Item>
 
-          {menu.map((menuItem, index) => {
-            if (hasViewAccessTo(menuItem.role)) {
-              return (
-                <Menu.SubMenu key={index} title={menuItem.title} icon={menuItem.icon}>
-                  {menuItem.items.map((subMenu, index2) => (
-                    <Menu.Item key={subMenu.route}>
-                      <Link to={subMenu.route}>{subMenu.name}</Link>
-                    </Menu.Item>
-                  ))}
-                </Menu.SubMenu>
-              );
-            }
-            return null;
-          })}
-        </Menu>
-      </Layout.Sider>
-    );
+        {menu.map((menuItem, index) => {
+          if (hasViewAccessTo(menuItem.role)) {
+            return (
+              <Menu.SubMenu key={index} title={menuItem.title} icon={menuItem.icon}>
+                {menuItem.items.map((subMenu, index2) => (
+                  <Menu.Item key={subMenu.route}>
+                    <Link to={subMenu.route}>{subMenu.name}</Link>
+                  </Menu.Item>
+                ))}
+              </Menu.SubMenu>
+            );
+          }
+          return null;
+        })}
+      </Menu>
+    </Layout.Sider>
+  );
 };

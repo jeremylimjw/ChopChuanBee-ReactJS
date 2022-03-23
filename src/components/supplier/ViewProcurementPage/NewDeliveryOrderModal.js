@@ -14,7 +14,7 @@ export default function NewDeliveryOrderModal({ purchaseOrder, setPurchaseOrder,
 
     const [items, setItems] = useState([]);
 
-    tableColumns[4].title = isModalVisible === 1 ? 'Top Up' : 'Refund';
+    tableColumns[4].title = isModalVisible === 1 ? 'Top Up' : 'Return';
     tableColumns[4].onCell = (record) => ({ type: 'input_number', field: 'top_up', record, handleSave });
 
     useEffect(() => {
@@ -23,13 +23,13 @@ export default function NewDeliveryOrderModal({ purchaseOrder, setPurchaseOrder,
             const remaining_quantity = +item.quantity - outstanding_quantity;
             if (isModalVisible === 1) {
                 return {
-                    ...item, 
+                    ...item,
                     total_received: outstanding_quantity,
                     top_up: remaining_quantity > 0 ? remaining_quantity : 0
                 }
             } else {
                 return {
-                    ...item, 
+                    ...item,
                     total_received: outstanding_quantity,
                     top_up: 0
                 }
@@ -37,7 +37,7 @@ export default function NewDeliveryOrderModal({ purchaseOrder, setPurchaseOrder,
         })
         setItems(newItems);
     }, [purchaseOrder, isModalVisible])
-  
+
     function handleSave(newRecord) {
         const newItems = [...items];
         const index = newItems.findIndex(x => x.id === newRecord.id);
@@ -47,9 +47,9 @@ export default function NewDeliveryOrderModal({ purchaseOrder, setPurchaseOrder,
     };
 
     function renderTitle() {
-        switch(isModalVisible) {
+        switch (isModalVisible) {
             case 1: return 'Receive New Delivery';
-            case 2 : return 'Refund Delivery';
+            case 2: return 'Return Delivery';
             default: return '';
         }
     }
@@ -66,7 +66,7 @@ export default function NewDeliveryOrderModal({ purchaseOrder, setPurchaseOrder,
         } else { // Make refund
             for (let item of items) {
                 if (item.top_up > item.total_received) {
-                    message.error('Refund cannot exceed received quantity.')
+                    message.error('Return cannot exceed received quantity.')
                     return;
                 }
             }
@@ -77,12 +77,12 @@ export default function NewDeliveryOrderModal({ purchaseOrder, setPurchaseOrder,
                 product_id: x.product_id,
                 purchase_order_item_id: x.id,
                 quantity: x.top_up,
-                unit_cost: x.unit_cost*(1+purchaseOrder.gst_rate/100),
+                unit_cost: x.unit_cost * (1 + purchaseOrder.gst_rate / 100),
             }
             if (isModalVisible === 1) { // Make movement
-                return {...movement, movement_type_id: MovementType.PURCHASE.id }
+                return { ...movement, movement_type_id: MovementType.PURCHASE.id }
             } else if (isModalVisible === 2) { // Make refund
-                return {...movement, movement_type_id: MovementType.REFUND.id, quantity: -x.top_up}
+                return { ...movement, movement_type_id: MovementType.REFUND.id, quantity: -x.top_up }
             } else {
                 return {};
             }
@@ -106,13 +106,13 @@ export default function NewDeliveryOrderModal({ purchaseOrder, setPurchaseOrder,
                 }
                 setLoading(false);
                 setIsModalVisible(0);
-                
+
                 if (isModalVisible === 1) { // Make payment
                     message.success("Deliveries successfully registered!");
                 } else if (isModalVisible === 2) { // Make refund
-                    message.success("Refunds successfully registered!");
+                    message.success("Returns successfully registered!");
                 }
-                
+
                 setPurchaseOrder(new PurchaseOrder(newPurchaseOrder));
 
             })
@@ -121,49 +121,49 @@ export default function NewDeliveryOrderModal({ purchaseOrder, setPurchaseOrder,
     }
 
     return (
-        <Modal title={renderTitle()} visible={isModalVisible !== 0}  width={800}
-            onOk={handleFormSubmit} 
+        <Modal title={renderTitle()} visible={isModalVisible !== 0} width={800}
+            onOk={handleFormSubmit}
             onCancel={() => setIsModalVisible(0)}
             okButtonProps={{ disabled: (items.filter(x => x.top_up > 0).length === 0 || loading) }}
         >
 
-            <Table dataSource={items} columns={tableColumns} 
+            <Table dataSource={items} columns={tableColumns}
                 components={{ body: { cell: CustomCell } }}
-                pagination={false} 
+                pagination={false}
                 rowKey="id"
             />
 
         </Modal>
     )
 }
-    
+
 const tableColumns = [
-    { 
-        title: 'No', 
-        dataIndex: 'no', 
-        render: (_, record, index) => index+1 
+    {
+        title: 'No',
+        dataIndex: 'no',
+        render: (_, record, index) => index + 1
     },
-    { 
-        title: 'Product', 
-        dataIndex: 'product', 
-        key: 'product', 
+    {
+        title: 'Product',
+        dataIndex: 'product',
+        key: 'product',
         render: (item) => item?.name, align: 'left'
     },
-    { 
-        title: 'Ordered Quantity', 
-        dataIndex: 'quantity', 
-        key: 'quantity', 
-        align: 'center' 
+    {
+        title: 'Ordered Quantity',
+        dataIndex: 'quantity',
+        key: 'quantity',
+        align: 'center'
     },
-    { 
-        title: 'Received Quantity', 
-        dataIndex: 'total_received', 
-        key: 'total_received', 
-        align: 'center' 
+    {
+        title: 'Received Quantity',
+        dataIndex: 'total_received',
+        key: 'total_received',
+        align: 'center'
     },
-    { 
-        title: 'Top Up', 
-        dataIndex: 'top_up', 
-        key: 'top_up', align: 'center', 
+    {
+        title: 'Top Up',
+        dataIndex: 'top_up',
+        key: 'top_up', align: 'center',
     }
 ]

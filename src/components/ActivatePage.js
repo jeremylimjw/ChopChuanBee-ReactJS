@@ -14,12 +14,16 @@ export default function ActivatePage() {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 
+    const [token, setToken] = useState(null);
     const [employee, setEmployee] = useState()
     const [loading, setLoading] = useState(false);
     const [form] = Form.useForm();
-    
+
     useEffect(() => {
-        const token = searchParams.get('token');
+        setToken(searchParams.get('token'));
+    }, [searchParams, setToken]);
+
+    useEffect(() => {
         if (token != null) {
             GeneralApiHelper.getEmployeeByActivationToken(token)
                 .then(result => {
@@ -29,12 +33,11 @@ export default function ActivatePage() {
                 })
                 .catch(handleHttpError)
         }
-    }, [searchParams, handleHttpError]);
+    }, [token, handleHttpError]);
 
-    async function onSubmit(values) {
+    async function onSubmit() {
         try {
             const values = await form.validateFields();
-            const token = searchParams.get('token');
             setLoading(true);
             GeneralApiHelper.activateAccount(token, values.newPassword)
                 .then(() => {
@@ -59,46 +62,46 @@ export default function ActivatePage() {
 
     return (
         <>
-        { employee && 
-            <Row justify="center" align="middle" style={{ height: '100vh' }}>
-                <Col span={5} >
-                    <MyCard title="Set password for my account" style={{ width: 400 }}>
-        
-                        <Form form={form} onFinish={onSubmit} labelCol={{ span: 10 }} wrapperCol={{ span: 14 }} autoComplete="off" labelAlign="left">
-                            
-                            <Form.Item label="Employee name">
-                                <Typography.Text>{employee.name}</Typography.Text>
-                            </Form.Item>
+            {employee &&
+                <Row justify="center" align="middle" style={{ height: '100vh' }}>
+                    <Col span={5} >
+                        <MyCard title="Set password for my account" style={{ width: 400 }}>
 
-                            <Form.Item label="Username">
-                                <Typography.Text>{employee.username}</Typography.Text>
-                            </Form.Item>
+                            <Form form={form} onFinish={onSubmit} labelCol={{ span: 10 }} wrapperCol={{ span: 14 }} autoComplete="off" labelAlign="left">
 
-                            <Form.Item label="New password" name="newPassword" rules={[REQUIRED, minLength(6)]}>
-                                <Input.Password autoComplete='off' />
-                            </Form.Item>
-                            
-                            <Form.Item name="confirm" label="Confirm Password" dependencies={['password']} hasFeedback
-                                rules={[REQUIRED, ({ getFieldValue }) => ({
-                                    validator(_, value) {
-                                        if (!value || getFieldValue('newPassword') === value) {
-                                            return Promise.resolve();
-                                        }
-        
-                                    return Promise.reject(new Error('The two passwords that you entered do not match!'));
-                                    },
-                                })]}
-                            >
-                                <Input.Password autoComplete='off' />
-                            </Form.Item>
-        
-                                <Button type="primary" htmlType="submit" disabled={loading} style={{ width: '100%'}}>Confirm and Sign In</Button>
-                        </Form>
-        
-                    </MyCard>
-                </Col>
-            </Row>
-        }
+                                <Form.Item label="Employee name">
+                                    <Typography.Text>{employee.name}</Typography.Text>
+                                </Form.Item>
+
+                                <Form.Item label="Username">
+                                    <Typography.Text>{employee.username}</Typography.Text>
+                                </Form.Item>
+
+                                <Form.Item label="New password" name="newPassword" rules={[REQUIRED, minLength(6)]}>
+                                    <Input.Password autoComplete='off' />
+                                </Form.Item>
+
+                                <Form.Item name="confirm" label="Confirm Password" dependencies={['password']} hasFeedback
+                                    rules={[REQUIRED, ({ getFieldValue }) => ({
+                                        validator(_, value) {
+                                            if (!value || getFieldValue('newPassword') === value) {
+                                                return Promise.resolve();
+                                            }
+
+                                            return Promise.reject(new Error('The two passwords that you entered do not match!'));
+                                        },
+                                    })]}
+                                >
+                                    <Input.Password autoComplete='off' />
+                                </Form.Item>
+
+                                <Button type="primary" htmlType="submit" disabled={loading} style={{ width: '100%' }}>Confirm and Sign In</Button>
+                            </Form>
+
+                        </MyCard>
+                    </Col>
+                </Row>
+            }
         </>
     )
 }

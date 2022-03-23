@@ -12,6 +12,7 @@ import { getViewTag, View } from '../../enums/View';
 import { parseDateTimeSeconds } from '../../utilities/datetime';
 import { sortByDate, sortByNumber, sortByString } from '../../utilities/sorters';
 import { showTotal } from '../../utilities/table';
+import { Link } from 'react-router-dom';
 
 const breadcrumbs = [
     { url: '/admin/logs', name: 'Admin' },
@@ -74,57 +75,57 @@ export default function ViewLogsPage() {
                         <Form.Item name="view_id">
                             <Select style={{ width: 150 }} placeholder="Filter by View" >
                                 <Select.Option value={null}>All</Select.Option>
-                                { Object.keys(View).map((key, index) => <Select.Option key={index} value={View[key].id}>{View[key].name}</Select.Option>) }
+                                {Object.keys(View).map((key, index) => <Select.Option key={index} value={View[key].id}>{View[key].name}</Select.Option>)}
                             </Select>
                         </Form.Item>
                         <Button onClick={resetForm}>Reset</Button>
                     </Form>
                 </MyToolbar>
 
-                <Table 
-                    dataSource={logs} 
-                    columns={columns} 
-                    loading={loading} 
+                <Table
+                    dataSource={logs}
+                    columns={columns}
+                    loading={loading}
                     rowKey="id"
-                    pagination={{ showTotal }} 
+                    pagination={{ showTotal }}
                 />
-                
+
             </MyCard>
-        
+
         </MyLayout>
     )
 }
 
 const columns = [
-  {
-    title: 'Created At',
-    dataIndex: 'created_at',
-    key: 'created_at',
-    width: 200,
-    render: (created_at) => parseDateTimeSeconds(created_at),
-    sorter: (a, b) => sortByDate(a.created_at, b.created_at),
-  },
-  {
-    title: 'Name',
-    dataIndex: 'employee',
-    key: 'employee',
-    width: '15%',
-    render: (employee) => employee?.name,
-    sorter: (a, b) => sortByString(a.employee.name, b.employee.name),
-  },
-  {
-    title: 'Event',
-    dataIndex: 'text',
-    key: 'text',
-    sorter: (a, b) => sortByString(a.text, b.text),
-  },
-  {
-    title: 'View',
-    dataIndex: 'view_id',
-    key: 'view_id',
-    align: 'center',
-    width: 120,
-    render: (view_id) => getViewTag(view_id),
-    sorter: (a, b) => sortByNumber(a.view_id, b.view_id),
-  },
+    {
+        title: 'Created At',
+        dataIndex: 'created_at',
+        key: 'created_at',
+        width: 200,
+        render: (created_at) => parseDateTimeSeconds(created_at),
+        sorter: (a, b) => sortByDate(a.created_at, b.created_at),
+    },
+    {
+        title: 'Name',
+        dataIndex: 'employee',
+        key: 'employee',
+        width: '15%',
+        render: (employee) => employee ? <Link to={`/humanResource/employees/${employee.id}`}>{employee?.name}</Link> : '-',
+        sorter: (a, b) => sortByString(a.employee.name, b.employee.name),
+    },
+    {
+        title: 'Event',
+        dataIndex: 'text',
+        key: 'text',
+        sorter: (a, b) => sortByString(a.text, b.text),
+    },
+    {
+        title: 'View',
+        dataIndex: 'view_id',
+        key: 'view_id',
+        align: 'center',
+        width: 120,
+        render: (view_id) => getViewTag(view_id),
+        sorter: (a, b) => sortByNumber(a.view_id, b.view_id),
+    },
 ]

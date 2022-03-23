@@ -2,7 +2,7 @@ import { axiosObject } from "./axiosWrapper";
 
 export class ProductApiHelper {
     static async getById(id) {
-        return axiosObject.get(`/product`, { params: { id: id }})
+        return axiosObject.get(`/product`, { params: { id: id } })
             .then(res => res.data);
     }
 
@@ -23,13 +23,13 @@ export class ProductApiHelper {
 
     static async update(product) {
         return axiosObject.put(`/product`, {
-            id: product.id, 
-            name: product.name, 
-            min_inventory_level: product.min_inventory_level, 
-            description: product.description, 
-            unit: product.unit, 
+            id: product.id,
+            name: product.name,
+            min_inventory_level: product.min_inventory_level,
+            description: product.description,
+            unit: product.unit,
         })
-        .then(res => res.data);
+            .then(res => res.data);
     }
 
     static async activate(id) {
@@ -54,6 +54,11 @@ export class ProductApiHelper {
         }
 
         return axiosObject.get(`/product/inventoryMovement`, { params: params })
+            .then(res => res.data);
+    }
+
+    static async createDamagedInventory(product_id, quantity) {
+        return axiosObject.post(`/product/inventoryMovement`, { product_id: product_id, quantity: quantity })
             .then(res => res.data);
     }
 }

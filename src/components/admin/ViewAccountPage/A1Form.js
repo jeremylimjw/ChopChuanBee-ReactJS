@@ -5,6 +5,7 @@ import { EmployeeApiHelper } from '../../../api/EmployeeApiHelper';
 import { getRoleTag, Role } from '../../../enums/Role';
 import { View } from '../../../enums/View';
 import { useApp } from '../../../providers/AppProvider';
+import EmailLink from '../../../utilities/EmailLink';
 import { EMAIL, REQUIRED, NUMBER, exactLength } from '../../../utilities/form';
 import MyToolbar from '../../common/MyToolbar';
 
@@ -22,22 +23,22 @@ export default function A1Form({ employee, setEmployee }) {
             setLoading(true);
             EmployeeApiHelper.update(employee.id, values)
                 .then(() => {
-                    setEmployee({...employee, ...values});
+                    setEmployee({ ...employee, ...values });
                     message.success(`Employee successfully updated!`);
                     setLoading(false);
                     setEditing(false);
                 })
                 .catch(handleHttpError)
                 .catch(() => setLoading(false))
-        } catch(err) { }
+        } catch (err) { }
     }
 
     return (
         <>
             <MyToolbar title="Personal Details">
-                { hasWriteAccessTo(View.ADMIN.name) && 
+                {hasWriteAccessTo(View.ADMIN.name) &&
                     <Form.Item>
-                        { editing ? 
+                        {editing ?
                             <Button type="primary" onClick={onFinish} icon={<SaveOutlined />} loading={loading} style={{ width: 85 }}>Save</Button>
                             :
                             <Button onClick={() => setEditing(true)} icon={<EditOutlined />} style={{ width: 85 }}>Edit</Button>
@@ -46,73 +47,73 @@ export default function A1Form({ employee, setEmployee }) {
                 }
             </MyToolbar>
 
-            <Form form={form} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }} autoComplete="off" labelAlign="left" initialValues={{...employee}}>
-                
+            <Form form={form} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }} autoComplete="off" labelAlign="left" initialValues={{ ...employee }}>
+
                 <Form.Item label="Name" name="name" rules={editing ? [REQUIRED] : []}>
-                    {!editing ? 
+                    {!editing ?
                         <Typography>{employee.name || '-'}</Typography>
-                    :
+                        :
                         <Input />
                     }
                 </Form.Item>
 
                 <Form.Item label="Role" name="role_id" rules={editing ? [REQUIRED] : []}>
-                    {!editing ? 
+                    {!editing ?
                         getRoleTag(employee.role_id)
-                    :
+                        :
                         <Radio.Group disabled={!editing}>
-                            { Object.keys(Role)
+                            {Object.keys(Role)
                                 .filter(x => x !== 'ADMIN')
                                 .map((key, idx) => <Radio key={idx} value={Role[key].id}>{Role[key].name}</Radio>)
                             }
                         </Radio.Group>
                     }
                 </Form.Item>
-                
+
                 <Form.Item label="Email" name="email" rules={editing ? [REQUIRED, EMAIL] : []}>
-                    {!editing ? 
-                        <Typography>{employee.email || '-'}</Typography>
-                    :
+                    {!editing ?
+                        <EmailLink email={employee.email} />
+                        :
                         <Input />
                     }
                 </Form.Item>
-                
+
                 <Form.Item label="Contact Number" name="contact_number">
-                    {!editing ? 
+                    {!editing ?
                         <Typography>{employee.contact_number || '-'}</Typography>
-                    :
+                        :
                         <Input />
                     }
                 </Form.Item>
-                
+
                 <Form.Item label="Address" name="address">
-                    {!editing ? 
+                    {!editing ?
                         <Typography>{employee.address || '-'}</Typography>
-                    :
+                        :
                         <Input />
                     }
                 </Form.Item>
-                
+
                 <Form.Item label="Postal Code" name="postal_code" rules={editing ? [exactLength(6), NUMBER] : []}>
-                    {!editing ? 
+                    {!editing ?
                         <Typography>{employee.postal_code || '-'}</Typography>
-                    :
+                        :
                         <Input />
                     }
                 </Form.Item>
-                
+
                 <Form.Item label="NOK Name" name="nok_name">
-                    {!editing ? 
+                    {!editing ?
                         <Typography>{employee.nok_name || '-'}</Typography>
-                    :
+                        :
                         <Input />
                     }
                 </Form.Item>
-                
+
                 <Form.Item label="NOK Contact" name="nok_number">
-                    {!editing ? 
+                    {!editing ?
                         <Typography>{employee.nok_number || '-'}</Typography>
-                    :
+                        :
                         <Input />
                     }
                 </Form.Item>

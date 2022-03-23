@@ -190,15 +190,13 @@ export default function ViewProcurementPage() {
     generatePdf(purchaseOrder, 'PO')
   }
 
-
-
   return (
     <>
       {purchaseOrder != null &&
         <MyLayout breadcrumbs={breadcrumbs} bannerTitle={`Purchase Order ID ${purchaseOrder.idToString()}`}>
           <div style={{ display: 'flex', marginTop: 24 }}>
 
-            <MyCard title="Supplier Details" style={{ width: 350, margin: '0 12px 12px 24px' }}>
+            <MyCard title="Supplier Details" style={{ width: 400, margin: '0 12px 12px 24px' }}>
               <PO1SupplierInfo purchaseOrder={purchaseOrder} />
             </MyCard>
 
@@ -230,7 +228,9 @@ export default function ViewProcurementPage() {
               <div style={{ display: 'flex', marginTop: 30 }}>
 
                 <Space size="middle">
-                  <Button icon={<SendOutlined />} disabled={loading || !purchaseOrder.isStatus(POStatus.PENDING)} onClick={sendOrder}>Send Order</Button>
+                  {purchaseOrder.isStatus(POStatus.PENDING) &&
+                    <Button icon={<SendOutlined />} disabled={loading} onClick={sendOrder}>Send Order</Button>
+                  }
                   <CopyAsTextButton loading={loading} purchaseOrder={purchaseOrder} />
                 </Space>
 
@@ -239,11 +239,15 @@ export default function ViewProcurementPage() {
 
                     <Button icon={<RedoOutlined />} onClick={navigateToCreateForm}>Reorder</Button>
 
-                    <Popconfirm title="Are you sure? This action cannot be undone." onConfirm={cancelOrder} disabled={loading || !purchaseOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED)}>
-                      <Button icon={<StopOutlined />} disabled={loading || !purchaseOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED)}>Cancel Order</Button>
-                    </Popconfirm>
+                    {purchaseOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED) &&
+                      <Popconfirm title="Are you sure? This action cannot be undone." onConfirm={cancelOrder} disabled={loading}>
+                        <Button icon={<StopOutlined />} disabled={loading}>Cancel Order</Button>
+                      </Popconfirm>
+                    }
 
-                    <Button icon={<SaveOutlined />} disabled={loading || !purchaseOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED)} onClick={saveForLater}>Save for later</Button>
+                    {purchaseOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED) &&
+                      <Button icon={<SaveOutlined />} disabled={loading} onClick={saveForLater}>Save for later</Button>
+                    }
 
                     {purchaseOrder.isStatus(POStatus.PENDING) &&
                       <Popconfirm title="Are you sure?" onConfirm={convertToInvoice} disabled={loading}>

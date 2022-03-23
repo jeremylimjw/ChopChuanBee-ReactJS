@@ -29,22 +29,22 @@ export default function C2Menu({ customer }) {
         setItems(results);
         setLoading(false);
       })
-      .catch(handleHttpError)
-      .catch(() => setLoading(false))
+        .catch(handleHttpError)
+        .catch(() => setLoading(false))
     }
   }, [customer, setLoading, handleHttpError])
 
   useEffect(() => {
     ProductApiHelper.getAllAvailable()
       .then(results => {
-          setProducts(results);
+        setProducts(results);
       })
       .catch(handleHttpError)
   }, [handleHttpError, setProducts])
 
   function handleAddRow() {
-      const newItems = [{ product_alias: '', product: null, key: Math.random() }, ...items];
-      setItems(newItems);
+    const newItems = [{ product_alias: '', product: null, key: Math.random() }, ...items];
+    setItems(newItems);
   }
 
   function handleDeleteRow(record) {
@@ -56,13 +56,13 @@ export default function C2Menu({ customer }) {
     const newItems = [...items];
     // Allow match record by 'id' or 'key'
     const index = newItems.findIndex(x => {
-        if (newRecord.id) {
-            return (x.id === newRecord.id)
-        } else if (newRecord.key) {
-            return (x.key === newRecord.key)
-        } else {
-            return false;
-        }
+      if (newRecord.id) {
+        return (x.id === newRecord.id)
+      } else if (newRecord.key) {
+        return (x.key === newRecord.key)
+      } else {
+        return false;
+      }
     });
     const item = newItems[index];
     newItems.splice(index, 1, { ...item, ...newRecord });
@@ -85,32 +85,32 @@ export default function C2Menu({ customer }) {
   return (
     <>
       <MyToolbar title={`Menu`}>
-        { hasWriteAccessTo(View.CRM.name) && 
-        <>
-          <Button onClick={handleAddRow} icon={<PlusOutlined />} disabled={!hasWriteAccessTo(View.CRM.name)}>New</Button>
-          <Button type='primary' onClick={handleMenuUpdate} icon={<SaveOutlined />} loading={loading}>Save</Button>
-        </>
+        {hasWriteAccessTo(View.CRM.name) &&
+          <>
+            <Button onClick={handleAddRow} icon={<PlusOutlined />}>New</Button>
+            <Button type='primary' onClick={handleMenuUpdate} icon={<SaveOutlined />} loading={loading}>Save</Button>
+          </>
         }
       </MyToolbar>
-      
-      <Table dataSource={items} 
-        columns={columns} 
-        loading={loading} 
-        rowKey={() => Math.random()} 
-        components={{ body: { cell: CustomCell } }} 
+
+      <Table dataSource={items}
+        columns={columns}
+        loading={loading}
+        rowKey={() => Math.random()}
+        components={{ body: { cell: CustomCell } }}
         pagination={{ pageSize: 6, showTotal: showTotal }}
       />
-      
-    </>  
+
+    </>
   )
 }
 
 const columns = [
   {
-      title: 'No',
-      width: 50,
-      ellipsis: true,
-      render: (_, record, index) => index+1,
+    title: 'No',
+    width: 50,
+    ellipsis: true,
+    render: (_, record, index) => index + 1,
   },
   {
     title: 'Alias',
@@ -139,8 +139,8 @@ const columns = [
     render: (latest_price) => latest_price || '-',
     sorter: (a, b) => sortByString(a.product?.name, b.product?.name),
   },
-  { 
-    align: 'center', 
+  {
+    align: 'center',
     width: 50,
   },
 ]

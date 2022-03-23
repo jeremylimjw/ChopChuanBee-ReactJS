@@ -34,10 +34,14 @@ import ManageSalesOrdersPage from './components/customer/ManageSalesOrdersPage';
 import NewSalesOrderPage from './components/customer/NewSalesOrderPage';
 import ViewSalesOrderPage from './components/customer/ViewSalesOrderPage';
 import ViewInventoryMovementsPage from './components/inventory/ViewInventoryMovementsPage';
+import ManageDeliveriesPage from './components/dispatch/ManageDeliveriesPage';
 import ActivatePage from './components/ActivatePage';
-import ReportGenerationPage from './pages/Report/ReportGenerationPage'
-import DeliveryStickerPrintPage from './pages/Report/DeliveryStickerPrintPage';
-
+import ManageItinerarysPage from './components/dispatch/ManageItinerarysPage';
+import NewItineraryPage from './components/dispatch/NewItineraryPage';
+import ViewItineraryPage from './components/dispatch/ViewItineraryPage';
+import CompleteDeliveryPage from './components/CompleteDeliveryPage';
+import ReportGenerationPage from './pages/Report/ReportGenerationPage';
+import DeliveryStickerPrintPage from './pages/Report/DeliveryStickerPrintPage'
 
 // Add on more routes here
 const routes = [
@@ -188,6 +192,32 @@ const routes = [
       },
     ]
   },
+  {
+    path: '/dispatch',
+    component: <Outlet />,
+    childRoutes: [
+      {
+        path: 'itinerarys',
+        component: <ManageItinerarysPage />,
+        viewAccess: View.DISPATCH.name,
+      },
+      {
+        path: 'itinerarys/new',
+        component: <NewItineraryPage />,
+        viewAccess: View.DISPATCH.name,
+      },
+      {
+        path: 'itinerarys/:id',
+        component: <ViewItineraryPage />,
+        viewAccess: View.DISPATCH.name,
+      },
+      {
+        path: 'deliveryOrders',
+        component: <ManageDeliveriesPage />,
+        viewAccess: View.DISPATCH.name,
+      },
+    ]
+  },
 ];
 
 function renderRoute(route, index) {
@@ -232,10 +262,11 @@ ReactDOM.render(
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/activate" element={<ActivatePage />} />
+            <Route path="/completeDelivery" element={<CompleteDeliveryPage />} />
+            <Route path="/reports" element={<ReportGenerationPage />} />
+            <Route path="/deliverystickers" element={<DeliveryStickerPrintPage />} />
             <Route path="/" element={<RequireAuth><App /></RequireAuth>}>
               {routes.map((route, index) => renderRoute(route, index))}
-              <Route path="/reports" element={<ReportGenerationPage />} />
-              <Route path="/deliverystickers" element={<DeliveryStickerPrintPage />} />
             </Route>
           </Routes>
         </Layout>

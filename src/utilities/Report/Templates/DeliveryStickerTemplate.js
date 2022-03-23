@@ -1,7 +1,6 @@
 import { Card, Divider, Modal, Space, Typography } from 'antd'
 import QRCode from 'qrcode.react'
 import React, { useEffect, useState } from 'react'
-import JsBarcode from 'jsbarcode'
 import MyCard from '../../../components/common/MyCard'
 let itineraryObj = require('../DeliveryItineraryObj.json')
 

@@ -48,7 +48,7 @@ export default function ManageSalesOrdersPage() {
             startDate = moment(form.date[0]).set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toDate();
             endDate = moment(form.date[1]).set({ hour: 23, minute: 59, second: 59, millisecond: 999 }).toDate();
         }
-        SalesOrderApiHelper.get({...form, startDate, endDate })
+        SalesOrderApiHelper.get({ ...form, startDate, endDate })
             .then(results => {
                 setSalesOrders(results.map(x => new SalesOrder(x)));
                 setLoading(false);
@@ -80,7 +80,7 @@ export default function ManageSalesOrdersPage() {
                         <Form.Item name="payment_term_id">
                             <Select style={{ width: 160 }} placeholder="Filter by Payment Term">
                                 <Select.Option value={null}>All</Select.Option>
-                                {Object.keys(PaymentTerm).map((key, idx) => 
+                                {Object.keys(PaymentTerm).map((key, idx) =>
                                     <Select.Option key={idx} value={PaymentTerm[key].id}>{PaymentTerm[key].name}</Select.Option>)
                                 }
                             </Select>
@@ -88,89 +88,89 @@ export default function ManageSalesOrdersPage() {
                         <Form.Item name="sales_order_status_id">
                             <Select style={{ width: 160 }} placeholder="Filter by Status">
                                 <Select.Option value={null}>All</Select.Option>
-                                {Object.keys(POStatus).map((key, idx) => 
+                                {Object.keys(POStatus).map((key, idx) =>
                                     <Select.Option key={idx} value={POStatus[key].id}>{POStatus[key].name}</Select.Option>)
                                 }
                             </Select>
                         </Form.Item>
                         <Button onClick={resetForm}>Reset</Button>
                     </Form>
-                    { hasWriteAccessTo(View.CRM.name) && 
+                    {hasWriteAccessTo(View.CRM.name) &&
                         <Button type="primary" icon={<PlusOutlined />} onClick={() => navigate('./new')}>New</Button>
                     }
                 </MyToolbar>
                 <Table dataSource={salesOrders} columns={tableColumns} rowKey="id" loading={loading} />
             </MyCard>
-            
+
         </MyLayout>
     )
 }
 
 const tableColumns = [
     {
-      title: 'Created At',
-      dataIndex: 'created_at',
-      key: 'created_at',
-      width: 180,
-      ellipsis: true,
-      render: (created_at) => parseDateTime(created_at),
-      sorter: (a, b) => sortByDate(a.created_at, b.created_at),
+        title: 'Created At',
+        dataIndex: 'created_at',
+        key: 'created_at',
+        width: 180,
+        ellipsis: true,
+        render: (created_at) => parseDateTime(created_at),
+        sorter: (a, b) => sortByDate(a.created_at, b.created_at),
     },
-    { 
-        title: 'Order ID', 
-        dataIndex: 'id', 
-        key: 'id', 
-        width: '11%', 
+    {
+        title: 'Order ID',
+        dataIndex: 'id',
+        key: 'id',
+        width: '11%',
         ellipsis: true,
         sorter: (a, b) => sortByNumber(a.id, b.id),
     },
-    { 
-        title: 'Customer', 
-        dataIndex: 'customer', 
-        key: 'customer', 
+    {
+        title: 'Customer',
+        dataIndex: 'customer',
+        key: 'customer',
         ellipsis: true,
-        render: (customer) => customer.company_name,
+        render: (customer) => customer ? <Link to={`/customer/customers/${customer.id}`}>{customer.company_name}</Link> : '-',
         sorter: (a, b) => sortByString(a.customer.company_name, b.customer.company_name),
     },
-    { 
-        title: 'Payment Term', 
-        key: 'payment_term', 
-        align: 'center', 
-        width: '11%', 
+    {
+        title: 'Payment Term',
+        key: 'payment_term',
+        align: 'center',
+        width: '11%',
         ellipsis: true,
         render: (_, record) => record.getPaymentTermTag(),
-        sorter: (a, b) => sortByNumber(a.payment_term_id, b.payment_term_id), 
+        sorter: (a, b) => sortByNumber(a.payment_term_id, b.payment_term_id),
     },
-    { 
-        title: 'Total', 
-        key: 'total', 
-        align: 'center', 
-        width: 100, 
+    {
+        title: 'Total',
+        key: 'total',
+        align: 'center',
+        width: 100,
         ellipsis: true,
         render: (_, record) => `$${record.getOrderTotal().toFixed(2)}`,
-        sorter: (a, b) => sortByNumber(a.getOrderTotal(), b.getOrderTotal()), 
+        sorter: (a, b) => sortByNumber(a.getOrderTotal(), b.getOrderTotal()),
     },
-    { 
-        title: 'Paid', 
-        key: 'payments_total', 
-        align: 'center', 
-        width: 100, 
+    {
+        title: 'Paid',
+        key: 'payments_total',
+        align: 'center',
+        width: 100,
         render: (_, record) => <Progress type="circle" percent={record.getPaymentProgress()} width={40} />,
-        sorter: (a, b) => sortByNumber(a.getPaymentProgress(), b.getPaymentProgress()), 
+        sorter: (a, b) => sortByNumber(a.getPaymentProgress(), b.getPaymentProgress()),
     },
-    { 
-        title: 'Status', 
-        key: 'purchase_order_status_id', 
-        align: 'center', 
-        width: 120, 
+    {
+        title: 'Status',
+        key: 'purchase_order_status_id',
+        align: 'center',
+        width: 120,
         render: (_, record) => record.getStatusTag(),
-        sorter: (a, b) => sortByNumber(a.purchase_order_status_id, b.purchase_order_status_id), 
+        sorter: (a, b) => sortByNumber(a.purchase_order_status_id, b.purchase_order_status_id),
     },
-    { 
-        dataIndex: "id", 
-        title: "", 
-        key: "link", 
-        width: 100, 
-        render: (id) => <Link to={`./${id}`}>View</Link> 
+    {
+        dataIndex: "id",
+        title: "",
+        key: "link",
+        width: 100,
+        render: (id) => <Link to={`./${id}`}>View</Link>
     }
 ]

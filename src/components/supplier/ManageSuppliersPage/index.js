@@ -14,6 +14,7 @@ import { sortByDate, sortByNumber, sortByString } from "../../../utilities/sorte
 import { getActiveTag } from "../../../enums/ActivationStatus";
 import MyToolbar from "../../common/MyToolbar";
 import { View } from "../../../enums/View";
+import EmailLink from "../../../utilities/EmailLink";
 
 const breadcrumbs = [
   { url: "/supplier/suppliers", name: "Supplier" },
@@ -41,17 +42,17 @@ export default function ManageSuppliersPage() {
 
   function onValuesChange(_, form) {
     SupplierAPIHelper.get(form)
-        .then(results => {
-          setSuppliers(results);
-            setLoading(false);
-        })
-        .catch(handleHttpError)
-        .catch(() => setLoading(false))
+      .then(results => {
+        setSuppliers(results);
+        setLoading(false);
+      })
+      .catch(handleHttpError)
+      .catch(() => setLoading(false))
   }
 
   function resetForm() {
-      form.resetFields();
-      onValuesChange(null, form.getFieldsValue());
+    form.resetFields();
+    onValuesChange(null, form.getFieldsValue());
   }
 
   return (
@@ -60,10 +61,10 @@ export default function ManageSuppliersPage() {
         <MyToolbar title="Suppliers">
           <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
             <Form.Item name="company_name">
-                <Input placeholder='Search Company' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
+              <Input placeholder='Search Company' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
             </Form.Item>
             <Form.Item name="s1_name">
-                <Input placeholder='Search Person Name' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
+              <Input placeholder='Search Person Name' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
             </Form.Item>
             <Form.Item name="status">
               <Select style={{ width: 140 }} placeholder="Filter by Status">
@@ -74,16 +75,16 @@ export default function ManageSuppliersPage() {
             </Form.Item>
             <Button onClick={resetForm}>Reset</Button>
           </Form>
-          { hasWriteAccessTo(View.SCM.name) && 
+          {hasWriteAccessTo(View.SCM.name) &&
             <Button type="primary" icon={<PlusOutlined />} onClick={() => setIsModalVisible(true)}>New</Button>
           }
         </MyToolbar>
 
-        <Table 
-          dataSource={suppliers} 
-          columns={columns} 
-          loading={loading} 
-          rowKey="id" 
+        <Table
+          dataSource={suppliers}
+          columns={columns}
+          loading={loading}
+          rowKey="id"
           pagination={{ showTotal: showTotal }}
         />
       </MyCard>
@@ -133,7 +134,7 @@ const columns = [
     dataIndex: 'company_email',
     key: 'company_email',
     ellipsis: true,
-    render: (company_email) => company_email || '-',
+    render: (company_email) => <EmailLink email={company_email} />,
     sorter: (a, b) => sortByString(a.company_email, b.company_email),
   },
   {

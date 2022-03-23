@@ -151,13 +151,23 @@ export default function ViewSalesOrderPage() {
     console.log(salesOrder)
   }
 
-  async function viewAsPDF() {
-    let data = {
-      ...salesOrder,
-      preGstPrice: salesOrder.sumItemSubtotals(),
-      totalPrice: salesOrder.getOrderTotal()
+  function viewAsPDF(action) {
+    switch (action) {
+      case 'SO':
+        let data = {
+          ...salesOrder,
+          preGstPrice: salesOrder.sumItemSubtotals(),
+          totalPrice: salesOrder.getOrderTotal()
+        }
+        generatePdf(data, action)
+        break
+      case 'STICKER':
+      case 'PACKING_LIST':
+        generatePdf(data, action)
+        break
+      default:
+        break
     }
-    generatePdf(data, 'SO')
   }
 
   return (
@@ -166,7 +176,7 @@ export default function ViewSalesOrderPage() {
         <MyLayout breadcrumbs={breadcrumbs} bannerTitle={`Sales Order ID ${salesOrder.idToString()}`}>
           <div style={{ display: 'flex', marginTop: 24 }}>
 
-            <MyCard title="Customer Details" style={{ width: 350, margin: '0 12px 12px 24px' }}>
+            <MyCard title="Customer Details" style={{ width: 400, margin: '0 12px 12px 24px' }}>
               <SO1CustomerInfo salesOrder={salesOrder} />
             </MyCard>
 
@@ -193,8 +203,14 @@ export default function ViewSalesOrderPage() {
               <div style={{ display: 'flex', marginTop: 30 }}>
 
                 <Space size="middle">
-                  <Button icon={<SendOutlined />} disabled={loading || !salesOrder.isStatus(SOStatus.PENDING)} onClick={sendOrder}>Send Order</Button>
-                  <Button icon={<PrinterOutlined />} disabled={loading || !salesOrder.isStatus(SOStatus.PENDING)} onClick={viewAsPDF}>View as PDF</Button>
+                  {(!salesOrder.isStatus(SOStatus.PENDING) && !salesOrder.isStatus(SOStatus.CANCELLED)) &&
+                    <>
+                      <Button icon={<SendOutlined />} onClick={sendOrder}>Send Email</Button>
+                      <Button icon={<PrinterOutlined />} onClick={() => viewAsPDF('SO')}>Invoice</Button>
+                      <Button icon={<PrinterOutlined />} onClick={sendOrder}>Packing List</Button>
+                      <Button icon={<PrinterOutlined />} onClick={sendOrder}>Delivery Sticker</Button>
+                    </>
+                  }
                 </Space>
 
                 <div style={{ marginLeft: 'auto' }}>
@@ -202,11 +218,15 @@ export default function ViewSalesOrderPage() {
 
                     <Button icon={<RedoOutlined />} onClick={navigateToCreateForm}>Reorder</Button>
 
-                    <Popconfirm title="Are you sure? This action cannot be undone." onConfirm={cancelOrder} disabled={loading || !salesOrder.isStatus(SOStatus.PENDING, SOStatus.COMPLETED)}>
-                      <Button icon={<StopOutlined />} disabled={loading || !salesOrder.isStatus(SOStatus.PENDING, SOStatus.COMPLETED)}>Cancel Order</Button>
-                    </Popconfirm>
+                    {salesOrder.isStatus(SOStatus.PENDING, SOStatus.COMPLETED) &&
+                      <Popconfirm title="Are you sure? This action cannot be undone." onConfirm={cancelOrder} disabled={loading}>
+                        <Button icon={<StopOutlined />} disabled={loading}>Cancel Order</Button>
+                      </Popconfirm>
+                    }
 
-                    <Button icon={<SaveOutlined />} disabled={loading || !salesOrder.isStatus(SOStatus.PENDING, SOStatus.COMPLETED)} onClick={saveForLater}>Save for later</Button>
+                    {salesOrder.isStatus(SOStatus.PENDING, SOStatus.COMPLETED) &&
+                      <Button icon={<SaveOutlined />} disabled={loading} onClick={saveForLater}>Save for later</Button>
+                    }
 
                     {salesOrder.isStatus(SOStatus.PENDING) &&
                       <Popconfirm title="Are you sure?" onConfirm={confirmOrder} disabled={loading}>

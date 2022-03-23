@@ -24,28 +24,29 @@ const defaultDoc = {
 }
 
 
-const generatePdf = async (doc, templateName) => {
+const generatePdf = async (data, templateName) => {
+  console.log(data)
   try {
     switch (templateName) {
       case 'PO':
-        doc = purchaseOrderTemplate(doc)
+        data = purchaseOrderTemplate(data)
         break
       case 'SO':
-        doc = salesInvoiceTemplate(doc)
-        break
-      case 'DELIVERY_ROUTES':
-        doc = deliveryInstructionsTemplate(doc)
+        data = salesInvoiceTemplate(data)
         break
       case 'SOA':
-        doc = statementOfAccountTemplate(doc)
+        data = statementOfAccountTemplate(data)
         break
       case 'BALANCE_SHEET':
-        doc = balanceSheetTemplate(doc)
+        data = balanceSheetTemplate(data)
+        break
+      case 'ITINERARY':
+        data = deliveryInstructionsTemplate(data)
         break
       default:
         break
     }
-    let pdf = pdfMake.createPdf(doc)
+    let pdf = pdfMake.createPdf(data)
     pdf.open()
   } catch (err) {
     console.log(err)

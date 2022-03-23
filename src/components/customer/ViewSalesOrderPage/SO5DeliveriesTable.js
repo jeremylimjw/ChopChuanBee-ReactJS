@@ -15,31 +15,31 @@ export default function SO5DeliveriesTable({ salesOrder, setSalesOrder, loading,
 
     return (
         <>
-        { salesOrder != null && 
-            <MyCard title={ !salesOrder.isStatus(SOStatus.COMPLETED) ? "Items Sent" : "" }>
-        
-            { salesOrder.isStatus(SOStatus.COMPLETED) && 
-                <MyToolbar title="Sent Items">
-                    {hasWriteAccessTo(View.CRM.id) &&
-                    <>
-                        <Button icon={<UndoOutlined />} disabled={loading} onClick={() => setIsModalVisible(2)}>Refund</Button>
-                        {/* <Button type="primary" icon={<PlusOutlined />} disabled={loading} onClick={() => setIsModalVisible(1)}>Receive New Delivery</Button> */}
-                    </>
-                    }
-                </MyToolbar>
-            }
+            {salesOrder != null &&
+                <MyCard title={!salesOrder.isStatus(SOStatus.COMPLETED) ? "Items Sent" : ""}>
 
-            <Collapse>
-            { salesOrder.sales_order_items.map((item, index) => 
-                (<Collapse.Panel key={index} header={renderPanelHeader(item)}>
-                    <List itemLayout="horizontal" dataSource={item.inventory_movements} renderItem={renderItem} />
-                </Collapse.Panel>)
-            )}
-            </Collapse>
-        
-            </MyCard>
-        }
-        <NewDeliveryOrderModal salesOrder={salesOrder} setSalesOrder={setSalesOrder} isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} />
+                    {salesOrder.isStatus(SOStatus.COMPLETED) &&
+                        <MyToolbar title="Sent Items">
+                            {hasWriteAccessTo(View.CRM.id) &&
+                                <>
+                                    <Button icon={<UndoOutlined />} disabled={loading} onClick={() => setIsModalVisible(2)}>Return</Button>
+                                    {/* <Button type="primary" icon={<PlusOutlined />} disabled={loading} onClick={() => setIsModalVisible(1)}>Receive New Delivery</Button> */}
+                                </>
+                            }
+                        </MyToolbar>
+                    }
+
+                    <Collapse>
+                        {salesOrder.sales_order_items.map((item, index) =>
+                        (<Collapse.Panel key={index} header={renderPanelHeader(item)}>
+                            <List itemLayout="horizontal" dataSource={item.inventory_movements} renderItem={renderItem} />
+                        </Collapse.Panel>)
+                        )}
+                    </Collapse>
+
+                </MyCard>
+            }
+            <NewDeliveryOrderModal salesOrder={salesOrder} setSalesOrder={setSalesOrder} isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} />
         </>
     )
 }
@@ -49,7 +49,7 @@ function renderPanelHeader(item) {
 
     return (
         <div style={{ display: 'flex', width: '100%' }}>
-            {item.product.name} 
+            {item.product.name}
             <div style={{ marginLeft: 'auto' }}>
                 <Tag color="green">{totalQuantity} sent</Tag>
             </div>
@@ -62,18 +62,18 @@ function renderItem(movement) {
         return (
             <List.Item>
                 <List.Item.Meta
-                avatar={<Avatar icon={<PlusOutlined />} style={{ background: "#3CB371" }} />}
-                title={`Sent ${-movement.quantity} unit`}
-                description={parseDate(movement.created_at)}
+                    avatar={<Avatar icon={<PlusOutlined />} style={{ background: "#3CB371" }} />}
+                    title={`Sent ${-movement.quantity} unit`}
+                    description={parseDate(movement.created_at)}
                 />
             </List.Item>)
     } else {
         return (
             <List.Item>
                 <List.Item.Meta
-                avatar={<Avatar icon={<MinusOutlined />} style={{ background: "#FA8072" }} />}
-                title={`Refunded ${movement.quantity} unit`}
-                description={parseDate(movement.created_at)}
+                    avatar={<Avatar icon={<MinusOutlined />} style={{ background: "#FA8072" }} />}
+                    title={`Returned ${movement.quantity} unit`}
+                    description={parseDate(movement.created_at)}
                 />
             </List.Item>)
     }
