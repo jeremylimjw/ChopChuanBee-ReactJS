@@ -101,7 +101,7 @@ export default function ManageTaxStatementPage() {
                         <DatePicker.RangePicker allowClear={false} placeholder={['Start Date', 'End Date']}/>
                     </Form.Item>
                
-                    <Form.Item name="charged_under_id" label="Charged Under" >
+                    <Form.Item name="charged_under_id" label="Charged Under" rules={[REQUIRED]}>
                       
                             <Select style={{ width: 180 }} onSelect={handleChargedUnderChange} placeholder = "Select a Company">
 
@@ -112,7 +112,7 @@ export default function ManageTaxStatementPage() {
 
                     <Form.Item labelCol={{ span: 8 }} wrapperCol={{ span: 24 }} style={{textAlign:'right'}}>
                         
-                        <Button type="primary" htmlType="submit" loading={loading} style={{ width: 85 }}>Create</Button>
+                        <Button type="primary" htmlType="submit" loading={loading} style={{ width: 85 }}>Generate</Button>
                     </Form.Item>
                 </Form>
             </MyCard>
