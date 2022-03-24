@@ -1,0 +1,31 @@
+.channels-container .ant-collapse-content > .ant-collapse-content-box {
+    padding: 0 16px;
+    height: 60vh;
+    overflow: auto;
+}
+
+.new-direct-modal .ant-list-item, .channels-container .ant-list-item {
+    cursor: pointer;
+}
+
+.chat-container .ant-collapse-content > .ant-collapse-content-box {
+    padding: 8px 16px;
+    height: 40vh;
+    overflow: auto;
+}
+
+#chat .ant-comment-inner {
+    padding: 0;
+    padding-top: 8px;
+}
+
+#chat .ant-comment-actions {
+    margin-top: 0;
+    text-align: right;
+}
+
+#chat .ant-collapse-header {
+    height: 48.5px;
+    display: flex;
+    align-items: center;
+}
