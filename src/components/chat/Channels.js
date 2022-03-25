@@ -6,6 +6,7 @@ export default function Channels({ chat, setChat, setIsDirectModalVisible, setIs
 
     function handleChannelClick(clickedChat) {
         if (chat?.id === clickedChat.id) return;
+        setChat(null);
         setChat(clickedChat);
     }
 

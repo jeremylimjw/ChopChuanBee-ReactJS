@@ -15,7 +15,11 @@ export default function Chat() {
         <>
             <div id="chat" style={styles.container}>
                 { chat &&
-                    <ChatBox chat={chat} setChat={setChat} />
+                    <ChatBox 
+                        key={chat.id} // To force component re-render
+                        chat={chat} 
+                        setChat={setChat} 
+                    />
                 }
                 <Channels 
                     chat={chat} 

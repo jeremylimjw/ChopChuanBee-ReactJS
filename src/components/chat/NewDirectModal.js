@@ -1,11 +1,13 @@
 import { SearchOutlined, UserOutlined } from '@ant-design/icons'
-import { Avatar, Divider, Form, Input, List, Modal, Skeleton, Spin } from 'antd'
+import { Avatar, Divider, Form, Input, List, Modal, Spin } from 'antd'
 import debounce from 'lodash.debounce'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { EmployeeApiHelper } from '../../api/EmployeeApiHelper'
 import { getRole } from '../../enums/Role'
 import { useApp } from '../../providers/AppProvider'
+
+const LIMIT = 10;
 
 export default function NewDirectModal({ isModalVisible, setIsModalVisible }) {
 
@@ -24,8 +26,6 @@ export default function NewDirectModal({ isModalVisible, setIsModalVisible }) {
 
 function MyModalContent() {
 
-    const LIMIT = 10;
-
     const { handleHttpError } = useApp();
 
     const [form] = Form.useForm();
@@ -35,12 +35,7 @@ function MyModalContent() {
     const [page, setPage] = useState(1)
     const [employees, setEmployees] = useState([])
 
-    useEffect(() => {
-        getEmployees({});
-    }, [handleHttpError, setEmployees, setLoading])
-
-    function getEmployees(query) {
-        if (loading) return;
+    const getEmployees = useCallback((query) => {
         setLoading(true);
         EmployeeApiHelper.get({ ...query, status: true, order_by: 'name', limit: LIMIT })
             .then(results => {
@@ -52,7 +47,13 @@ function MyModalContent() {
             })
             .catch(handleHttpError)
             .catch(() => setLoading(false))
-    };
+      },
+      [setHasMore, setLoading, handleHttpError],
+    )
+
+    useEffect(() => {
+        getEmployees({});
+    }, [getEmployees])
 
     function handleNext() {
         let newPageNo = page + 1;
@@ -82,7 +83,11 @@ function MyModalContent() {
     }
 
     function handleItemClick(employee) {
+        if (loading === true) return;
+
+        setLoading(true);
         console.log(employee);
+        setLoading(false);
     }
 
     return (
@@ -92,12 +97,13 @@ function MyModalContent() {
                     <Input placeholder='Search Name' suffix={<SearchOutlined className='grey' />} />
                 </Form.Item>
             </Form>
+            {JSON.stringify(loading)}
 
             <div id="scrollableDiv"
                 style={{
                   height: '80%',
                   overflow: 'auto',
-                  padding: '0 16px',
+                  padding: '0',
                   border: '1px solid rgba(140, 140, 140, 0.35)',
                 }}
             >
