@@ -13,15 +13,15 @@ import CustomerAnalyticsData from './CustomerAnalyticsTab/CustomerAnalyticsData'
 
 export default function AccountingDashboard() {
     const { TabPane } = Tabs;
-    const oneYearAgo = moment().subtract(1, "year").set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toDate();
-    const currDate = moment().set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toDate();
-    const currTime = moment().toDate();
+    const oneYearAgo = moment().subtract(1, "year").set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+    const currDate = moment().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+    const currTime = moment();
 
     return (
         <MyLayout bannerTitle='Accounting Dashboard'>
             <Tabs defaultActiveKey="1" type="card" style={{margin:'24px'}}>
                 <TabPane tab="Profitability" key="1">
-                    <ProfitabilityCard currTime={currTime} />
+                    <ProfitabilityCard currTime={currTime} currDate={currDate} />
                     <ProfitabilityGraph currDate={currDate} oneYearAgo={oneYearAgo} />
                 </TabPane>
 

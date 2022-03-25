@@ -7,45 +7,47 @@ import { AnalyticsApiHelper } from '../../../../api/AnalyticsApiHelper';
 import moment from 'moment';
 
 export default function ProfitabilityCard(props) {
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const { handleHttpError, hasWriteAccessTo } = useApp();
-    const [thisMonthProfit, setThisMonthProfit] = useState();
-    const [lastMonthProfit, setLastMonthProfit] = useState();
-    const [todayProfit, setTodayProfit] = useState();
-
-    //This Month
-    // const currMonthStartDay = moment().startOf('month').toDate();
-    // const currMonthEndDay = moment().endOf('month').toDate();
-
-    //Today
-    // const currDateStartTime = moment().set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toDate();
-    // const currTime = moment().toDate();
-
-    //For Testing: This Month is March 2021
-    const march2021start = moment("03-01-2021").toDate();
-    const march2021end = moment("03-31-2021").toDate();
-
-    //For Testing: Today is March 14 2021
-    const testTodayStartTime = moment("03-14-2021").toDate();
-    const testTodayCurrTime = moment("03-14-2021").set({ hour: 15, minute: 48, second: 35, millisecond: 0 }).toDate();
+    const [cogsMonth, setCogsMonth] = useState();
+    const [cogsDay, setCogsDay] = useState();
+    const [revMonth, setRevMonth] = useState();
+    const [revDay, setRevDay] = useState();
+    const [profMonth, setProfMonth] = useState();
+    const [profDay, setProfDay] = useState();
 
     useEffect(() => { 
-        setLoading(true);
-        AnalyticsApiHelper.getProfits(march2021start, march2021end)
-            .then(result => { console.log("this month profits: " + result); setThisMonthProfit(result) })
-            .catch(handleHttpError)
-            .catch(() => setLoading(false));
+        getData();
+    },[handleHttpError, loading]);
+    
+    const getData = async () => {
+        const startOfMonth = props.currDate.startOf('month').toDate();
+        const endOfMonth = props.currDate.endOf('month').toDate();
 
-        AnalyticsApiHelper.getProfits(testTodayStartTime, testTodayCurrTime)
-            .then(result => { console.log("today profits: " + result); setTodayProfit(result) })
-            .catch(handleHttpError)
-            .catch(() => setLoading(false));
+        // const startOfLastMonth = props.currDate.startOf('month').subtract(1, "month").toDate();
+        // const endOfLastMonth = props.currDate.endOf('month').toDate();
 
-    },[handleHttpError, setLoading])
+        // const currDayTime = props.currTime.toDate();
+        // const startOfDay = props.currDate.toDate();
+
+        let cogsThisMonth = await AnalyticsApiHelper.getCOGS(startOfMonth, endOfMonth);
+        cogsThisMonth.map(x => { x.name = 'Cost of Goods Sold'; x.value = parseFloat(x.value) * -1; });
+        setCogsMonth(cogsThisMonth[0]);
+
+        let revThisMonth = await AnalyticsApiHelper.getRevenue(startOfMonth, endOfMonth);
+        revThisMonth.map(x => { x.name = 'Revenue'; x.value = parseFloat(x.value); });
+        setRevMonth(revThisMonth[0]);
+
+        let profThisMonth = await AnalyticsApiHelper.getProfits(startOfMonth, endOfMonth);
+        profThisMonth.map(x => { x.name = 'Profits'; x.value = parseFloat(x.value); });
+        setProfMonth(profThisMonth[0]);
+
+        setLoading(false);
+    }
 
     return (
     <>
-        <Typography style={{fontSize:'0.8rem', marginBottom: 0, fontStyle:'italic'}}>{"Last Updated: " + props.currTime}</Typography>
+        <Typography style={{fontSize:'0.8rem', marginBottom: 0, fontStyle:'italic'}}>{"Last Updated: " + props.currTime.toDate()}</Typography>
 
         <Space direction='horizontal' wrap>
             <MyCard style={{minWidth:'220px', marginLeft: '3px'}}>
