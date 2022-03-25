@@ -12,7 +12,15 @@ export default function ARCustomerChart(props) {
         setLoading(true);
 
         AnalyticsApiHelper.getReceivableInvoices()
-            .then(result => { setData(result) })
+            .then(result => { 
+                result.map(x => { x.sum = parseFloat(x.sum) * -1; } ); 
+                var ReverseArray = [];
+                var length = result.length;
+                for(var i = length - 1; i >= 0; i--){
+                    ReverseArray.push(result[i]);
+                }
+                setData(ReverseArray);
+            })
             .catch(handleHttpError)
             .catch(() => setLoading(false));
 
@@ -66,6 +74,7 @@ export default function ARCustomerChart(props) {
             },
             sum: {
                 alias: 'Accounts Receivable',
+                formatter: (v) => `${(v / 1).toFixed(2)} `,
             },
         },
     };

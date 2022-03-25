@@ -16,7 +16,7 @@ export default function ReceivableCard(props) {
     useEffect(() => {
         setLoading(true);
         AnalyticsApiHelper.getReceivableInvoices()
-            .then(result => { setHighestInvoiceARAmt(result[0]["sum"]); setHighestInvoiceARID(result[0]["customer_invoice_id"]); })
+            .then(result => { setHighestInvoiceARAmt(result[9]["sum"] * -1); setHighestInvoiceARID(result[9]["customer_invoice_id"]); })
             .catch(handleHttpError)
             .catch(() => setLoading(false));
     

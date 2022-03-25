@@ -12,7 +12,10 @@ export default function ARCustomerChart(props) {
         setLoading(true);
 
         AnalyticsApiHelper.getReceivableCustomers()
-            .then(result => { setData(result) })
+            .then(result => { 
+                result.map(x => { x.total_ar_amount = parseFloat(x.total_ar_amount) * -1 } ); 
+                setData(result);
+            })
             .catch(handleHttpError)
             .catch(() => setLoading(false));
 
@@ -66,6 +69,7 @@ export default function ARCustomerChart(props) {
             },
             total_ar_amount: {
                 alias: 'Accounts Receivable',
+                formatter: (v) => `${(v / 1).toFixed(2)} `,
             },
             p1_name: {
                 alias: 'Contact Person Name',
