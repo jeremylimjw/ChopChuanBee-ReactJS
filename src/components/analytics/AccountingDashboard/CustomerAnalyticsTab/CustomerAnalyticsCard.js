@@ -4,6 +4,7 @@ import MyCard from '../../../common/MyCard';
 import { AnalyticsApiHelper } from '../../../../api/AnalyticsApiHelper';
 import { useApp } from '../../../../providers/AppProvider';
 import { formatCurrency } from '../../../../utilities/currency';
+import { parseDateTime } from '../../../../utilities/datetime';
 
 export default function CustomerAnalyticsCard(props) {
     const [loading, setLoading] = useState(false);
@@ -16,7 +17,7 @@ export default function CustomerAnalyticsCard(props) {
 
     return (
     <>
-        <Typography style={{fontSize:'0.8rem', marginBottom: 0, fontStyle:'italic'}}>{"Last Updated: " + props.currTime}</Typography>
+        <Typography style={{fontSize:'0.8rem', marginBottom: 0, fontStyle:'italic'}}>{"Last Updated: " + parseDateTime(props.currTime)}</Typography>
 
         <Space direction='horizontal' wrap>
             <MyCard style={{minWidth:'250px', marginLeft: '3px'}}>

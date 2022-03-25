@@ -5,6 +5,7 @@ import { CaretUpFilled, CaretDownFilled } from '@ant-design/icons';
 import { useApp } from '../../../../providers/AppProvider';
 import { AnalyticsApiHelper } from '../../../../api/AnalyticsApiHelper';
 import moment from 'moment';
+import { parseDateTime } from '../../../../utilities/datetime';
 
 export default function ProfitabilityCard(props) {
     const [loading, setLoading] = useState(true);
@@ -47,7 +48,7 @@ export default function ProfitabilityCard(props) {
 
     return (
     <>
-        <Typography style={{fontSize:'0.8rem', marginBottom: 0, fontStyle:'italic'}}>{"Last Updated: " + props.currTime.toDate()}</Typography>
+        <Typography style={{fontSize:'0.8rem', marginBottom: 0, fontStyle:'italic'}}>{"Last Updated: " + parseDateTime(props.currTime)}</Typography>
 
         <Space direction='horizontal' wrap>
             <MyCard style={{minWidth:'220px', marginLeft: '3px'}}>
