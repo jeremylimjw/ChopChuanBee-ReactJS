@@ -13,12 +13,8 @@ export default function APSupplierChart(props) {
 
         AnalyticsApiHelper.getPayableSuppliers()
             .then(result => { 
-                var ReverseArray = [];
-                var length = result.length;
-                for(var i = length - 1; i >= 0; i--){
-                    ReverseArray.push(result[i]);
-                }
-                setData(ReverseArray);
+                result.map(x => { x.total_ap_amount = parseFloat(x.total_ap_amount); } ); 
+                setData(result);
             })
             .catch(handleHttpError)
             .catch(() => setLoading(false));

@@ -14,7 +14,7 @@ import CustomerAnalyticsData from './CustomerAnalyticsTab/CustomerAnalyticsData'
 export default function AccountingDashboard() {
     const { TabPane } = Tabs;
     const oneYearAgo = moment().subtract(1, "year").set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
-    const currDate = moment().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+    const currDate = moment().startOf('day');
     const currTime = moment();
 
     return (

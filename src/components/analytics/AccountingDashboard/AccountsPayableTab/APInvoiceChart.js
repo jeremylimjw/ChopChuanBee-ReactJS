@@ -12,7 +12,10 @@ export default function APInvoiceChart(props) {
         setLoading(true);
 
         AnalyticsApiHelper.getPayableInvoices()
-            .then(result => { setData(result) })
+            .then(result => { 
+                result.map(x => { x.sum = parseFloat(x.sum); } ); 
+                setData(result);
+            })
             .catch(handleHttpError)
             .catch(() => setLoading(false));
 
@@ -66,6 +69,7 @@ export default function APInvoiceChart(props) {
             },
             sum: {
                 alias: 'Accounts Payable',
+                formatter: (v) => `${(v / 1).toFixed(2)} `,
             },
             supplier_invoice_id: {
                 alias: 'Supplier Invoice ID'
