@@ -156,7 +156,7 @@ const columns = [
         //   sorter: (a, b) => sortByString(a.sales_order_id, b.sales_order_id),
     },
     {
-        title: 'Customer Company Name',
+        title: 'Company Name',
         dataIndex: 'company_name',
         key: 'company_name',
         width: "34%"
