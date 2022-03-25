@@ -7,6 +7,8 @@ export class EmployeeApiHelper {
             params.order_by = query.order_by;
         if (query?.limit)
             params.limit = query.limit;
+        if (query?.offset)
+            params.offset = query.offset;
         if (query?.id)
             params.id = query.id;
         if (query?.name)
