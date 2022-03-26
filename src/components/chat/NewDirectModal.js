@@ -1,15 +1,16 @@
 import { SearchOutlined, UserOutlined } from '@ant-design/icons'
-import { Avatar, Divider, Form, Input, List, Modal, Spin } from 'antd'
+import { Avatar, Divider, Form, Input, List, message, Modal, Spin } from 'antd'
 import debounce from 'lodash.debounce'
 import React, { useState, useEffect, useCallback } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import { ChatApiHelper } from '../../api/ChatApiHelper'
 import { EmployeeApiHelper } from '../../api/EmployeeApiHelper'
 import { getRole } from '../../enums/Role'
 import { useApp } from '../../providers/AppProvider'
 
 const LIMIT = 10;
 
-export default function NewDirectModal({ isModalVisible, setIsModalVisible }) {
+export default function NewDirectModal({ isModalVisible, setIsModalVisible, handleNewChannelEvent }) {
 
     return (
         <Modal width={600} bodyStyle={{ paddingTop: 0, paddingBottom: 0, height: '60vh' }}
@@ -19,14 +20,17 @@ export default function NewDirectModal({ isModalVisible, setIsModalVisible }) {
           footer={null}
           destroyOnClose
         >
-            <MyModalContent />
+            <MyModalContent 
+                setIsModalVisible={setIsModalVisible}
+                handleNewChannelEvent={handleNewChannelEvent}
+            />
         </Modal>
     )
 }
 
-function MyModalContent() {
+function MyModalContent({ setIsModalVisible, handleNewChannelEvent }) {
 
-    const { handleHttpError } = useApp();
+    const { user, handleHttpError } = useApp();
 
     const [form] = Form.useForm();
 
@@ -83,11 +87,27 @@ function MyModalContent() {
     }
 
     function handleItemClick(employee) {
+        if (user === null) return;
         if (loading === true) return;
 
+        const channel = {
+            participants: [
+                { employee_id: user.id }, 
+                { employee_id: employee.id }
+            ],
+            owner_id: user.id,
+        }
+
         setLoading(true);
-        console.log(employee);
-        setLoading(false);
+        ChatApiHelper.createChannel(channel)
+            .then(newChannel => {
+                setLoading(false);
+                handleNewChannelEvent(newChannel)
+                setIsModalVisible(false);
+                message.success("New chat successfully created!");
+            })
+            .catch(handleHttpError)
+            .catch(() => setLoading(false));
     }
 
     return (
@@ -97,7 +117,6 @@ function MyModalContent() {
                     <Input placeholder='Search Name' suffix={<SearchOutlined className='grey' />} />
                 </Form.Item>
             </Form>
-            {JSON.stringify(loading)}
 
             <div id="scrollableDiv"
                 style={{

@@ -117,8 +117,8 @@ export default function ChatBox({ chat, setChat }) {
                             endMessage={<Divider plain>End of results</Divider>}
                             scrollableTarget="scrollableDiv"
                         >
-                            { texts.map(x => (
-                                <Comment
+                            { texts.map((x, index) => (
+                                <Comment key={index}
                                     actions={[<span>Seen</span>]}
                                     author={<a>Han Solo</a>}
                                     avatar={<Avatar icon={<UserOutlined />} />}

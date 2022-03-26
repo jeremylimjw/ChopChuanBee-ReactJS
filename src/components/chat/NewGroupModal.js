@@ -1,10 +1,13 @@
-import { Form, Input, Modal, Select } from 'antd'
+import { Form, Input, message, Modal, Select } from 'antd'
 import React, { useState, useEffect } from 'react'
+import { ChatApiHelper } from '../../api/ChatApiHelper'
 import { EmployeeApiHelper } from '../../api/EmployeeApiHelper'
 import { useApp } from '../../providers/AppProvider'
 import { REQUIRED } from '../../utilities/form'
 
-export default function NewGroupModal({ isModalVisible, setIsModalVisible }) {
+export default function NewGroupModal({ isModalVisible, setIsModalVisible, handleNewChannelEvent }) {
+
+    const { user, handleHttpError } = useApp();
 
     const [form] = Form.useForm();
 
@@ -12,11 +15,26 @@ export default function NewGroupModal({ isModalVisible, setIsModalVisible }) {
 
     async function handleSubmitEvent() {
         try {
+            if (user === null) return;
             const values = await form.validateFields();
 
+            const channel = {
+                title: values.title,
+                participants: values.participants.map(id => ({ employee_id: id })),
+                owner_id: user.id,
+            }
+    
             setLoading(true);
-            console.log(values);
-            setLoading(true);
+            ChatApiHelper.createChannel(channel)
+                .then(newChannel => {
+                    setLoading(false);
+                    handleNewChannelEvent(newChannel)
+                    setIsModalVisible(false);
+                    message.success("New chat group successfully created!");
+                })
+                .catch(handleHttpError)
+                .catch(() => setLoading(false));
+                
         } catch (err) { }
     }
 
