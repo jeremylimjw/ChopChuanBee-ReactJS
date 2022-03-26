@@ -17,6 +17,13 @@ export default function NewGroupModal({ isModalVisible, setIsModalVisible, handl
         try {
             if (user === null) return;
             const values = await form.validateFields();
+            
+            for (let id of values.participants) {
+                if (user.id === id) {
+                    message.error('Cannot create chat with self!');
+                    return;
+                }
+            }
 
             const participants = values.participants.map(id => ({ employee_id: id }));
 

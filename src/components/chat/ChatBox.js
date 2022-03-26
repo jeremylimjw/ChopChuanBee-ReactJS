@@ -1,9 +1,10 @@
-import { CloseOutlined, CommentOutlined, MessageFilled, MessageOutlined, UserOutlined } from '@ant-design/icons'
+import { CloseOutlined, MessageFilled, UserOutlined } from '@ant-design/icons'
 import { Avatar, Badge, Button, Collapse, Comment, Divider, Form, Input, Spin, Tooltip } from 'antd'
 import React, { useEffect, useState } from 'react'
 import moment from 'moment';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { REQUIRED } from '../../utilities/form';
+import { useApp } from '../../providers/AppProvider';
 
 const LIMIT = 10;
 
@@ -23,6 +24,8 @@ const tempTexts = [
 ]
 
 export default function ChatBox({ chat, setChat }) {
+
+    const { user, handleHttpError } = useApp();
 
     const [form] = Form.useForm();
 
@@ -56,17 +59,29 @@ export default function ChatBox({ chat, setChat }) {
     }
 
     function renderHeader() {
-        return (
-            <>
-                <Tooltip title={renderTooltip}>
-                    <Badge status="success" offset={[0,20]} dot>
-                        {/* <Avatar size="small" icon={<UserOutlined />} /> */}
+        if (chat.title == null) {
+            const recipients = chat.participants.filter(x => x.employee_id !== user.id);
+
+            return (
+                <>
+                    <Tooltip title={renderTooltip}>
+                        <Badge status="success" offset={[0,20]} dot>
+                            <Avatar size="small" icon={<UserOutlined />} />
+                        </Badge>
+                    </Tooltip>
+                    <span style={{ marginLeft: 15 }}>{recipients[0]?.employee.name || 'Unknown'}</span>
+                </>
+            )
+        } else {
+            return (
+                <>
+                    <Tooltip title={renderTooltip}>
                         <Avatar size="small" icon={<MessageFilled />} />
-                    </Badge>
-                </Tooltip>
-                <span style={{ marginLeft: 15 }}>{chat.title}</span>
-            </>
-        )
+                    </Tooltip>
+                    <span style={{ marginLeft: 15 }}>{chat.title}</span>
+                </>
+            )
+        }
     }
 
     function renderTooltip() {

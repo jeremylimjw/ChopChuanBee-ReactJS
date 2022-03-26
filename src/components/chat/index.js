@@ -14,7 +14,7 @@ export default function Chat() {
     const { socket } = useChatProvider();
 
     const [loading, setLoading] = useState(false);
-    const [channels, setChannels] = useState(tempChannels);
+    const [channels, setChannels] = useState([]);
     const [chat, setChat] = useState(null);
 
     const [isDirectModalVisible, setIsDirectModalVisible] = useState(false);
@@ -57,38 +57,42 @@ export default function Chat() {
 
     return (
         <>
-            <div id="chat" style={styles.container}>
-                { chat &&
-                    <ChatBox 
-                        key={chat.id} // To force component re-render
+        { user != null && 
+            <>
+                <div id="chat" style={styles.container}>
+                    { chat &&
+                        <ChatBox 
+                            key={chat.id} // To force component re-render
+                            chat={chat} 
+                            setChat={setChat} 
+                        />
+                    }
+                    <Channels 
+                        loading={loading}
+                        setLoading={setLoading}
+                        channels={channels}
+                        setChannels={setChannels}
                         chat={chat} 
                         setChat={setChat} 
+                        setIsDirectModalVisible={setIsDirectModalVisible}
+                        setIsNewGroupModalVisible={setIsNewGroupModalVisible}
                     />
-                }
-                <Channels 
-                    loading={loading}
-                    setLoading={setLoading}
-                    channels={channels}
-                    setChannels={setChannels}
-                    chat={chat} 
-                    setChat={setChat} 
-                    setIsDirectModalVisible={setIsDirectModalVisible}
-                    setIsNewGroupModalVisible={setIsNewGroupModalVisible}
+
+                </div>
+                
+                <NewDirectModal
+                    isModalVisible={isDirectModalVisible}
+                    setIsModalVisible={setIsDirectModalVisible}
+                    handleNewChannelEvent={handleNewChannelEvent}
                 />
 
-            </div>
-            
-            <NewDirectModal
-                isModalVisible={isDirectModalVisible}
-                setIsModalVisible={setIsDirectModalVisible}
-                handleNewChannelEvent={handleNewChannelEvent}
-            />
-
-            <NewGroupModal 
-                isModalVisible={isNewGroupModalVisible}
-                setIsModalVisible={setIsNewGroupModalVisible}
-                handleNewChannelEvent={handleNewChannelEvent}
-            />
+                <NewGroupModal 
+                    isModalVisible={isNewGroupModalVisible}
+                    setIsModalVisible={setIsNewGroupModalVisible}
+                    handleNewChannelEvent={handleNewChannelEvent}
+                />
+            </>
+        }
         </>
     )
 }
@@ -102,10 +106,3 @@ const styles = {
         zIndex: 10,
     },
 }
-
-const tempChannels = [
-    {
-        id: '1',
-      title: 'Ant Design Title 1',
-    },
-];

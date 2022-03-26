@@ -1,13 +1,50 @@
-import { UserAddOutlined, UsergroupAddOutlined, UserOutlined } from '@ant-design/icons'
+import { MessageFilled, UserAddOutlined, UsergroupAddOutlined, UserOutlined } from '@ant-design/icons'
 import { Avatar, Badge, Button, Collapse, List, Spin } from 'antd'
 import React from 'react'
+import { useApp } from '../../providers/AppProvider';
+import moment from 'moment';
 
 export default function Channels({ loading, setLoading, channels, setChannels, chat, setChat, setIsDirectModalVisible, setIsNewGroupModalVisible }) {
 
+    const { user } = useApp();
+
     function handleChannelClick(clickedChat) {
-        if (chat?.id === clickedChat.id) return;
-        setChat(null);
+        if (chat?.id === clickedChat.id) return; // If chat already opened, do nothing
         setChat(clickedChat);
+    }
+
+    function renderChannel(channel) {
+        if (channel.title == null) {
+            const recipients = channel.participants.filter(x => x.employee_id !== user.id);
+            
+            return (
+                <List.Item onClick={() => handleChannelClick(channel)}>
+                    <List.Item.Meta
+                        avatar={(
+                            <Badge offset={[0,10]} count={channel.unread_count}>
+                                <Avatar style={{ marginTop: 5 }} size="large" icon={<UserOutlined />} />
+                            </Badge>
+                        )}
+                        title={recipients[0]?.employee.name || 'Unknown'}
+                        description={channel.last_text && `${moment(channel.last_text).format('lll')} - ${channel.last_text.employee.name}: ${channel.last_text.text}`}
+                    />
+                </List.Item>
+            )
+        } else {
+            return (
+                <List.Item onClick={() => handleChannelClick(channel)}>
+                    <List.Item.Meta
+                        avatar={(
+                            <Badge offset={[0,10]} count={channel.unread_count}>
+                                <Avatar style={{ marginTop: 5 }} size="large" icon={<MessageFilled />} />
+                            </Badge>
+                        )}
+                        title={channel.title}
+                        description={channel.last_text && `${moment(channel.last_text).format('lll')} - ${channel.last_text.employee.name}: ${channel.last_text.text}`}
+                    />
+                </List.Item>
+            )
+        }
     }
 
     return (
@@ -25,19 +62,7 @@ export default function Channels({ loading, setLoading, channels, setChannels, c
                     <List
                         itemLayout="horizontal"
                         dataSource={channels}
-                        renderItem={channel => (
-                            <List.Item onClick={() => handleChannelClick(channel)}>
-                                <List.Item.Meta
-                                    avatar={(
-                                        <Badge offset={[0,10]} count={1}>
-                                            <Avatar style={{ marginTop: 5 }} size="large" icon={<UserOutlined />} />
-                                        </Badge>
-                                    )}
-                                    title={channel.title}
-                                    description="Ant Design, "
-                                />
-                            </List.Item>
-                        )}
+                        renderItem={renderChannel}
                     />
                 </Collapse.Panel>
             </Collapse>
