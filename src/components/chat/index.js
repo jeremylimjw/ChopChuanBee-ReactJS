@@ -20,6 +20,7 @@ export default function Chat() {
     const [isDirectModalVisible, setIsDirectModalVisible] = useState(false);
     const [isNewGroupModalVisible, setIsNewGroupModalVisible] = useState(false);
     
+    // Load all channels
     useEffect(() => {
         if (user == null) return;
 

@@ -18,9 +18,14 @@ export default function NewGroupModal({ isModalVisible, setIsModalVisible, handl
             if (user === null) return;
             const values = await form.validateFields();
 
+            const participants = values.participants.map(id => ({ employee_id: id }));
+
             const channel = {
                 title: values.title,
-                participants: values.participants.map(id => ({ employee_id: id })),
+                participants: [
+                    { employee_id: user.id },
+                    ...participants
+                ],
                 owner_id: user.id,
             }
     
@@ -34,7 +39,7 @@ export default function NewGroupModal({ isModalVisible, setIsModalVisible, handl
                 })
                 .catch(handleHttpError)
                 .catch(() => setLoading(false));
-                
+
         } catch (err) { }
     }
 

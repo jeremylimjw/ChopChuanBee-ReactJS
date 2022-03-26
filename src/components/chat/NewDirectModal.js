@@ -90,6 +90,11 @@ function MyModalContent({ setIsModalVisible, handleNewChannelEvent }) {
         if (user === null) return;
         if (loading === true) return;
 
+        if (user.id === employee.id) {
+            message.error('Cannot create chat with self!');
+            return;
+        }
+
         const channel = {
             participants: [
                 { employee_id: user.id }, 
