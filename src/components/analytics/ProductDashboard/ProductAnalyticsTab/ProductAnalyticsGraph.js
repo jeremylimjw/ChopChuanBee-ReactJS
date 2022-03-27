@@ -1,47 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { Form, DatePicker, Button } from 'antd';
 import { Line } from '@ant-design/plots';
 import { AnalyticsApiHelper } from '../../../../api/AnalyticsApiHelper';
-import debounce from 'lodash.debounce';
-import moment from 'moment';
-import MyCard from '../../../common/MyCard';
-import MyToolbar from '../../../common/MyToolbar';
 import { useApp } from '../../../../providers/AppProvider';
+import MyCard from '../../../common/MyCard';
 
-export default function ProfitabilityGraph(props) {
+export default function ProductAnalyticsGraph(props) {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [form] = Form.useForm();
     const { handleHttpError, hasWriteAccessTo } = useApp();
 
     useEffect(() => {
         getData(props.oneYearAgo, props.currDate);     
     }, [handleHttpError, loading]);
 
+    //Dummy data for now, have not implemented the relevant API methods to get product analytics by product name and sort it by month in the backend yet
     const getData = async (start, end) => {
         let cogs = await AnalyticsApiHelper.getCOGS(start, end);
-        cogs.map(x => { x.name = 'Cost of Goods Sold'; x.value = parseFloat(x.value) * -1 });
+        cogs.map(x => { x.name = 'Quantity Sold'; x.value = parseFloat(x.value) * -1 });
         let profits = await AnalyticsApiHelper.getProfits(start, end);
-        profits.map(x => { x.name = 'Profits'; x.value = parseFloat(x.value) });
+        profits.map(x => { x.name = 'Average Cost of Goods Sold'; x.value = parseFloat(x.value) });
         let revenue = await AnalyticsApiHelper.getRevenue(start, end);
-        revenue.map(x => { x.name = 'Revenue'; x.value = parseFloat(x.value) });
-        setData([...cogs, ...revenue, ...profits]);
+        revenue.map(x => { x.name = 'Average Selling Price'; x.value = parseFloat(x.value) });
+        let contribution = await AnalyticsApiHelper.getRevenue(start, end);
+        contribution.map(x => { x.name = 'Total Contribution Value'; x.value = parseFloat(x.value) });
+        setData([...cogs, ...revenue, ...profits, ...contribution]);
         setLoading(false);
-    }
-
-    function onValuesChange(_, form) {
-        let start_date, end_date;
-        if (form.date && form.date[0] && form.date[1]) {
-            start_date = moment(form.date[0]).set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toDate();
-            end_date = moment(form.date[1]).set({ hour: 23, minute: 59, second: 59, millisecond: 999 }).toDate();
-        }
-
-        getData(start_date, end_date);
-    }
-
-    function resetForm() {
-        form.resetFields();
-        onValuesChange(null, form.getFieldsValue());
     }
 
     const config = {
@@ -89,19 +72,11 @@ export default function ProfitabilityGraph(props) {
         }
     };
 
-    const dateFormat = 'YYYY/MM/DD';
-
     return (
-        <MyCard style={{marginLeft: '3px', marginRight: '3px'}}>
-            <MyToolbar title='Profitability Trend'>
-                <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
-                    <Form.Item name='date'>
-                        <DatePicker.RangePicker defaultValue={[moment(props.oneYearAgo, dateFormat), moment(props.currDate, dateFormat)]} />
-                    </Form.Item>
-                    <Button onClick={resetForm}>Reset</Button>
-                </Form>
-            </MyToolbar>
-            {loading ? "" : <Line {...config} /> }
-        </MyCard>
-    );
+    <>
+    <MyCard style={{marginLeft: '3px', marginRight: '3px'}}>
+        <Line {...config} />
+    </MyCard>
+    </> 
+    )
 }

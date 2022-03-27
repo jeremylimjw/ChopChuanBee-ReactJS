@@ -72,22 +72,19 @@ export class AnalyticsApiHelper {
       .then((res) => res.data);
   }
 
-  static async getCustomerProfits(start_date, end_date) {
+  static async getCustomerProfits(customer_id, start_date, end_date) {
     const params = {};
-
+    params.customer_id = customer_id;
     if (start_date && end_date) {
       params.start_date = start_date.toISOString();
       params.end_date = end_date.toISOString();
     }
-
-    //Add Customer ID
-
     return axiosObject
       .get("/analytics/Customer_Profits/", { params })
       .then((res) => res.data);
   }
 
-  static async getInventoryReturns(start_date, end_date) {
+  static async getProductAnalytics(start_date, end_date) {
     const params = {};
 
     if (start_date && end_date) {
@@ -95,10 +92,8 @@ export class AnalyticsApiHelper {
       params.end_date = end_date.toISOString();
     }
 
-    //Add Customer ID
-
     return axiosObject
-      .get("/analytics/Supplier_Returned_Goods/", { params })
+      .get("/analytics/Product_Analytics/", { params })
       .then((res) => res.data);
   }
 }
