@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Form, DatePicker, Button} from 'antd';
+import { Table, Form, DatePicker } from 'antd';
 import MyCard from '../../../common/MyCard';
 import MyToolbar from '../../../common/MyToolbar';
 import { useApp } from '../../../../providers/AppProvider';
@@ -11,7 +11,7 @@ import debounce from 'lodash.debounce';
 import moment from 'moment';
 
 export default function ProductAnalyticsTable(props) {
-    const { handleHttpError, hasWriteAccessTo } = useApp();
+    const { handleHttpError } = useApp();
 
     const [loading, setLoading] = useState(false);
     const [productAnalytics, setProductAnalytics] = useState([]);

@@ -4,18 +4,17 @@ import MyCard from '../../../common/MyCard';
 import { CaretUpFilled, CaretDownFilled } from '@ant-design/icons';
 import { useApp } from '../../../../providers/AppProvider';
 import { AnalyticsApiHelper } from '../../../../api/AnalyticsApiHelper';
-import moment from 'moment';
 import { parseDateTime } from '../../../../utilities/datetime';
 
 export default function ProfitabilityCard(props) {
     const [loading, setLoading] = useState(true);
-    const { handleHttpError, hasWriteAccessTo } = useApp();
+    const { handleHttpError } = useApp();
     const [cogsMonth, setCogsMonth] = useState();
-    const [cogsDay, setCogsDay] = useState();
+    // const [cogsDay, setCogsDay] = useState();
     const [revMonth, setRevMonth] = useState();
-    const [revDay, setRevDay] = useState();
+    // const [revDay, setRevDay] = useState();
     const [profMonth, setProfMonth] = useState();
-    const [profDay, setProfDay] = useState();
+    // const [profDay, setProfDay] = useState();
 
     useEffect(() => { 
         getData();
@@ -32,15 +31,27 @@ export default function ProfitabilityCard(props) {
         // const startOfDay = props.currDate.toDate();
 
         let cogsThisMonth = await AnalyticsApiHelper.getCOGS(startOfMonth, endOfMonth);
-        cogsThisMonth.map(x => { x.name = 'Cost of Goods Sold'; x.value = parseFloat(x.value) * -1; });
+        cogsThisMonth.map(x => { 
+            x.name = 'Cost of Goods Sold'; 
+            x.value = parseFloat(x.value) * -1; 
+            return x;
+        });
         setCogsMonth(cogsThisMonth[0]);
 
         let revThisMonth = await AnalyticsApiHelper.getRevenue(startOfMonth, endOfMonth);
-        revThisMonth.map(x => { x.name = 'Revenue'; x.value = parseFloat(x.value); });
+        revThisMonth.map(x => { 
+            x.name = 'Revenue'; 
+            x.value = parseFloat(x.value); 
+            return x;
+        });
         setRevMonth(revThisMonth[0]);
 
         let profThisMonth = await AnalyticsApiHelper.getProfits(startOfMonth, endOfMonth);
-        profThisMonth.map(x => { x.name = 'Profits'; x.value = parseFloat(x.value); });
+        profThisMonth.map(x => { 
+            x.name = 'Profits'; 
+            x.value = parseFloat(x.value); 
+            return x;
+        });
         setProfMonth(profThisMonth[0]);
 
         setLoading(false);

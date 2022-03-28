@@ -3,17 +3,20 @@ import { Column } from '@ant-design/plots';
 import { AnalyticsApiHelper } from '../../../../api/AnalyticsApiHelper';
 import { useApp } from '../../../../providers/AppProvider';
 
-export default function ARCustomerChart(props) {
+export default function ARCustomerChart() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
-    const { handleHttpError, hasWriteAccessTo } = useApp();
+    const { handleHttpError } = useApp();
 
     useEffect(() => {        
         setLoading(true);
 
         AnalyticsApiHelper.getReceivableInvoices()
             .then(result => { 
-                result.map(x => { x.sum = parseFloat(x.sum) * -1; } ); 
+                result.map(x => { 
+                    x.sum = parseFloat(x.sum) * -1; 
+                    return x;
+                } ); 
                 var ReverseArray = [];
                 var length = result.length;
                 for(var i = length - 1; i >= 0; i--){
@@ -23,8 +26,7 @@ export default function ARCustomerChart(props) {
             })
             .catch(handleHttpError)
             .catch(() => setLoading(false));
-
-    }, [handleHttpError, setLoading]);
+    }, [handleHttpError, loading]);
 
     const config = {
         data,

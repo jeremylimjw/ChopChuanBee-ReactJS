@@ -6,13 +6,14 @@ import { useApp } from "../../../../providers/AppProvider";
 import { AnalyticsApiHelper } from "../../../../api/AnalyticsApiHelper";
 
 export default function AgingReceivableGraph(props) {
-  const { handleHttpError, hasWriteAccessTo } = useApp();
+  const { handleHttpError } = useApp();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [currentData, setCurrentData] = useState([]);
-  const [over60Data, setOver60Data] = useState([]);
-  const [over180Data, setOver180Data] = useState([]);
-  const [over270Data, setOver270Data] = useState([]);
+
+  const lessThan30Days = [];
+  const over30Days = [];
+  const over60Days = [];
+  const over90Days = [];
 
   useEffect(() => {
     fetchData();
@@ -21,235 +22,41 @@ export default function AgingReceivableGraph(props) {
   const fetchData = async () => {
     await AnalyticsApiHelper.getAgedReceivable()
       .then((results) => {
-        console.log(results);
         results.forEach((x) => {
-          const tempCurr = {
+          const tempLessThan30 = {
             customer_id: x.customer_id,
             company_name: x.company_name,
             accounts_receivable: parseFloat(x.over_less_than_60),
-            aged_duration: "Current",
+            aged_duration: "Less Than 30 Days",
           };
-          currentData.push(tempCurr);
-          const tempOver60 = {
+          lessThan30Days.push(tempLessThan30);
+          const tempOver30 = {
             customer_id: x.customer_id,
             company_name: x.company_name,
             accounts_receivable: parseFloat(x.overdue_61_to_180_days),
-            aged_duration: "Over 60 Days",
+            aged_duration: "Over 30 Days",
           };
-          over60Data.push(tempOver60);
-          const tempOver180 = {
+          over30Days.push(tempOver30);
+          const tempOver60 = {
             customer_id: x.customer_id,
             company_name: x.company_name,
             accounts_receivable: parseFloat(x.overdue_181_to_270_days),
-            aged_duration: "Over 180 Days",
+            aged_duration: "Over 60 Days",
           };
-          over180Data.push(tempOver180);
-          const tempOver270 = {
+          over60Days.push(tempOver60);
+          const tempOver90 = {
             customer_id: x.customer_id,
             company_name: x.company_name,
             accounts_receivable: parseFloat(x.overdue_more_than_271_days),
-            aged_duration: "Over 270 Days",
+            aged_duration: "Over 90 Days",
           };
-          over270Data.push(tempOver270);
+          over90Days.push(tempOver90);
         });
       })
       .catch(handleHttpError);
-    setData([...over270Data, ...over180Data, ...over60Data, ...currentData]);
-    // setData([...over270, ...over180, ...over60, ...current]);
+    setData([...over90Days, ...over60Days, ...over30Days, ...lessThan30Days]);
     setLoading(false);
   };
-
-  const current = [
-    {
-      company_name: "Customer A",
-      accounts_receivable: 3,
-      aged_duration: "Current",
-    },
-    {
-      company_name: "Customer B",
-      accounts_receivable: 4,
-      aged_duration: "Current",
-    },
-    {
-      company_name: "Customer C",
-      accounts_receivable: 3.5,
-      aged_duration: "Current",
-    },
-    {
-      company_name: "Customer D",
-      accounts_receivable: 5,
-      aged_duration: "Current",
-    },
-    {
-      company_name: "Customer E",
-      accounts_receivable: 4.9,
-      aged_duration: "Current",
-    },
-    {
-      company_name: "Customer F",
-      accounts_receivable: 6,
-      aged_duration: "Current",
-    },
-    {
-      company_name: "Customer G",
-      accounts_receivable: 7,
-      aged_duration: "Current",
-    },
-    {
-      company_name: "Customer H",
-      accounts_receivable: 9,
-      aged_duration: "Current",
-    },
-    {
-      company_name: "Customer I",
-      accounts_receivable: 13,
-      aged_duration: "Current",
-    },
-  ];
-
-  const over60 = [
-    {
-      company_name: "Customer A",
-      accounts_receivable: 3,
-      aged_duration: "Over 60 Days",
-    },
-    {
-      company_name: "Customer B",
-      accounts_receivable: 4,
-      aged_duration: "Over 60 Days",
-    },
-    {
-      company_name: "Customer C",
-      accounts_receivable: 3.5,
-      aged_duration: "Over 60 Days",
-    },
-    {
-      company_name: "Customer D",
-      accounts_receivable: 5,
-      aged_duration: "Over 60 Days",
-    },
-    {
-      company_name: "Customer E",
-      accounts_receivable: 4.9,
-      aged_duration: "Over 60 Days",
-    },
-    {
-      company_name: "Customer F",
-      accounts_receivable: 6,
-      aged_duration: "Over 60 Days",
-    },
-    {
-      company_name: "Customer G",
-      accounts_receivable: 7,
-      aged_duration: "Over 60 Days",
-    },
-    {
-      company_name: "Customer H",
-      accounts_receivable: 9,
-      aged_duration: "Over 60 Days",
-    },
-    {
-      company_name: "Customer I",
-      accounts_receivable: 13,
-      aged_duration: "Over 60 Days",
-    },
-  ];
-
-  const over180 = [
-    {
-      company_name: "Customer A",
-      accounts_receivable: 3,
-      aged_duration: "Over 180 Days",
-    },
-    {
-      company_name: "Customer B",
-      accounts_receivable: 4,
-      aged_duration: "Over 180 Days",
-    },
-    {
-      company_name: "Customer C",
-      accounts_receivable: 3.5,
-      aged_duration: "Over 180 Days",
-    },
-    {
-      company_name: "Customer D",
-      accounts_receivable: 5,
-      aged_duration: "Over 180 Days",
-    },
-    {
-      company_name: "Customer E",
-      accounts_receivable: 4.9,
-      aged_duration: "Over 180 Days",
-    },
-    {
-      company_name: "Customer F",
-      accounts_receivable: 6,
-      aged_duration: "Over 180 Days",
-    },
-    {
-      company_name: "Customer G",
-      accounts_receivable: 7,
-      aged_duration: "Over 180 Days",
-    },
-    {
-      company_name: "Customer H",
-      accounts_receivable: 9,
-      aged_duration: "Over 180 Days",
-    },
-    {
-      company_name: "Customer I",
-      accounts_receivable: 13,
-      aged_duration: "Over 180 Days",
-    },
-  ];
-
-  const over270 = [
-    {
-      company_name: "Customer A",
-      accounts_receivable: 3,
-      aged_duration: "Over 270 Days",
-    },
-    {
-      company_name: "Customer B",
-      accounts_receivable: 4,
-      aged_duration: "Over 270 Days",
-    },
-    {
-      company_name: "Customer C",
-      accounts_receivable: 3.5,
-      aged_duration: "Over 270 Days",
-    },
-    {
-      company_name: "Customer D",
-      accounts_receivable: 5,
-      aged_duration: "Over 270 Days",
-    },
-    {
-      company_name: "Customer E",
-      accounts_receivable: 4.9,
-      aged_duration: "Over 270 Days",
-    },
-    {
-      company_name: "Customer F",
-      accounts_receivable: 6,
-      aged_duration: "Over 270 Days",
-    },
-    {
-      company_name: "Customer G",
-      accounts_receivable: 7,
-      aged_duration: "Over 270 Days",
-    },
-    {
-      company_name: "Customer H",
-      accounts_receivable: 9,
-      aged_duration: "Over 270 Days",
-    },
-    {
-      company_name: "Customer I",
-      accounts_receivable: 13,
-      aged_duration: "Over 270 Days",
-    },
-  ];
 
   const config = {
     data,

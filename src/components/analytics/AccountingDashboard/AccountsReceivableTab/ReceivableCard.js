@@ -8,11 +8,11 @@ import { parseDateTime } from '../../../../utilities/datetime';
 
 export default function ReceivableCard(props) {
     const [loading, setLoading] = useState(false);
-    const { handleHttpError, hasWriteAccessTo } = useApp();
+    const { handleHttpError } = useApp();
     const [highestInvoiceARAmt, setHighestInvoiceARAmt] = useState();
-    const [highestInvoiceARID, setHighestInvoiceARID] = useState();
+    const [highestInvoiceARID, setHighestInvoiceARID] = useState(); //To be used to link to the sales order page
     const [highestCustomerARAmt, setHighestCustomerARAmt] = useState();
-    const [highestCustomerARName, setHighestCustomerARName] = useState();
+    const [highestCustomerARName, setHighestCustomerARName] = useState(); //To be added: supplier ID to link to the customer page? (TBC since it doesn't help to link to the customer)
 
     useEffect(() => {
         setLoading(true);
@@ -25,7 +25,7 @@ export default function ReceivableCard(props) {
             .then(result => { setHighestCustomerARAmt(result[0]["total_ar_amount"] * -1); setHighestCustomerARName(result[0]["company_name"]); })
             .catch(handleHttpError)
             .catch(() => setLoading(false));
-    }, [handleHttpError, setLoading])
+    }, [handleHttpError, loading])
     
     return (
     <>

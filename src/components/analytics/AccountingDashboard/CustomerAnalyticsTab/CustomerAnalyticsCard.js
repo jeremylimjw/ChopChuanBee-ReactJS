@@ -1,19 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Typography, Space, Divider, Row } from 'antd';
 import MyCard from '../../../common/MyCard';
-import { AnalyticsApiHelper } from '../../../../api/AnalyticsApiHelper';
 import { useApp } from '../../../../providers/AppProvider';
-import { formatCurrency } from '../../../../utilities/currency';
 import { parseDateTime } from '../../../../utilities/datetime';
 
 export default function CustomerAnalyticsCard(props) {
     const [loading, setLoading] = useState(false);
-    const { handleHttpError, hasWriteAccessTo } = useApp();
+    const { handleHttpError } = useApp();
 
     useEffect(() => {
         setLoading(true);
-
-    }, [handleHttpError, setLoading])
+    }, [handleHttpError, loading])
 
     return (
     <>

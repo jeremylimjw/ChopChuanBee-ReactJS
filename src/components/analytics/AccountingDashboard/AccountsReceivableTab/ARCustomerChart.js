@@ -3,23 +3,26 @@ import { Column } from '@ant-design/plots';
 import { AnalyticsApiHelper } from '../../../../api/AnalyticsApiHelper';
 import { useApp } from '../../../../providers/AppProvider';
 
-export default function ARCustomerChart(props) {
+export default function ARCustomerChart() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
-    const { handleHttpError, hasWriteAccessTo } = useApp();
+    const { handleHttpError } = useApp();
 
     useEffect(() => {        
         setLoading(true);
 
         AnalyticsApiHelper.getReceivableCustomers()
             .then(result => { 
-                result.map(x => { x.total_ar_amount = parseFloat(x.total_ar_amount) * -1 } ); 
+                result.map(x => { 
+                    x.total_ar_amount = parseFloat(x.total_ar_amount) * -1;
+                    return x;
+                }); 
                 setData(result);
             })
             .catch(handleHttpError)
             .catch(() => setLoading(false));
 
-    }, [handleHttpError, setLoading]);
+    }, [handleHttpError, loading]);
 
     const config = {
         data,

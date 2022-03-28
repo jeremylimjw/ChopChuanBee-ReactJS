@@ -3,23 +3,26 @@ import { Column } from '@ant-design/plots';
 import { AnalyticsApiHelper } from '../../../../api/AnalyticsApiHelper';
 import { useApp } from '../../../../providers/AppProvider';
 
-export default function APSupplierChart(props) {
+export default function APSupplierChart() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
-    const { handleHttpError, hasWriteAccessTo } = useApp();
+    const { handleHttpError } = useApp();
 
     useEffect(() => {        
         setLoading(true);
 
         AnalyticsApiHelper.getPayableSuppliers()
             .then(result => { 
-                result.map(x => { x.total_ap_amount = parseFloat(x.total_ap_amount); } ); 
+                result.map(x => { 
+                    x.total_ap_amount = parseFloat(x.total_ap_amount); 
+                    return x;
+                }); 
                 setData(result);
             })
             .catch(handleHttpError)
             .catch(() => setLoading(false));
 
-    }, [handleHttpError, setLoading]);
+    }, [handleHttpError, loading]);
 
     const config = {
         data,

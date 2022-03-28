@@ -3,23 +3,26 @@ import { Column } from '@ant-design/plots';
 import { AnalyticsApiHelper } from '../../../../api/AnalyticsApiHelper';
 import { useApp } from '../../../../providers/AppProvider';
 
-export default function APInvoiceChart(props) {
+export default function APInvoiceChart() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
-    const { handleHttpError, hasWriteAccessTo } = useApp();
+    const { handleHttpError } = useApp();
 
     useEffect(() => {        
         setLoading(true);
 
         AnalyticsApiHelper.getPayableInvoices()
             .then(result => { 
-                result.map(x => { x.sum = parseFloat(x.sum); } ); 
+                result.map(x => { 
+                    x.sum = parseFloat(x.sum);
+                    return x;
+                }); 
                 setData(result);
             })
             .catch(handleHttpError)
             .catch(() => setLoading(false));
 
-    }, [handleHttpError, setLoading]);
+    }, [handleHttpError, loading]);
 
     const config = {
         data,

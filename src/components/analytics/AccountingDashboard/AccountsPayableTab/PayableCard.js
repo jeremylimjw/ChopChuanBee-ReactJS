@@ -8,11 +8,11 @@ import { parseDateTime } from '../../../../utilities/datetime';
 
 export default function PayableCard(props) {
     const [loading, setLoading] = useState(false);
-    const { handleHttpError, hasWriteAccessTo } = useApp();
+    const { handleHttpError } = useApp();
     const [highestInvoiceAPAmt, setHighestInvoiceAPAmt] = useState();
-    const [highestInvoiceAPID, setHighestInvoiceAPID] = useState();
+    const [highestInvoiceAPID, setHighestInvoiceAPID] = useState(); //To be used to link to the supplier invoice page
     const [highestSupplierAPAmt, setHighestSupplierAPAmt] = useState();
-    const [highestSupplierAPName, setHighestSupplierAPName] = useState();
+    const [highestSupplierAPName, setHighestSupplierAPName] = useState(); //To be added: supplier ID to link to the supplier page? (TBC since it doesn't help to link to the supplier)
 
     useEffect(() => {
         setLoading(true);
@@ -25,7 +25,7 @@ export default function PayableCard(props) {
             .then(result => { setHighestSupplierAPAmt(result[0]["total_ap_amount"]); setHighestSupplierAPName(result[0]["company_name"]); })
             .catch(handleHttpError)
             .catch(() => setLoading(false));
-    }, [handleHttpError, setLoading])
+    }, [handleHttpError, loading])
 
     return (
     <>
