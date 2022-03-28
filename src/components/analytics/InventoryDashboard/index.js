@@ -4,6 +4,7 @@ import MyLayout from "../../common/MyLayout";
 import moment from "moment";
 import InventoryReturnsData from "./InventoryReturnsTab/InventoryReturnsData";
 import SalesReturnsData from "./SalesReturnsTab/SalesReturnsData";
+import DamagedGoodsData from "./DamagedGoodsTab/DamagedGoodsData";
 
 export default function InventoryDashboard() {
   const { TabPane } = Tabs;
@@ -22,7 +23,7 @@ export default function InventoryDashboard() {
             </TabPane>
 
             <TabPane tab="Damaged Goods" key="3">
-                
+              <DamagedGoodsData currDate={currDate} oneYearAgo={oneYearAgo} />
             </TabPane>
         </Tabs>
     </MyLayout>

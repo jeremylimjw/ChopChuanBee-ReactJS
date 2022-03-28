@@ -4,11 +4,11 @@ import MyCard from '../../../common/MyCard';
 import MyToolbar from '../../../common/MyToolbar';
 import moment from 'moment';
 import { parseDate } from '../../../../utilities/datetime';
-import InventoryReturnsCard from './InventoryReturnsCard';
-import InventoryReturnsTable from './InventoryReturnsTable';
-import InventoryReturnsGraph from './InventoryReturnsGraph';
+import DamagedGoodsCard from './DamagedGoodsCard';
+import DamagedGoodsTable from './DamagedGoodsTable';
+import DamagedGoodsGraph from './DamagedGoodsGraph';
 
-export default function InventoryReturnsData(props) {
+export default function DamagedGoodsData(props) {
     const { TabPane } = Tabs;
     const [searchInputForm] = Form.useForm();
     const [startDate, setStartDate] = useState(props.oneYearAgo);
@@ -44,16 +44,16 @@ export default function InventoryReturnsData(props) {
             </Form>
         </MyCard>
 
-        <InventoryReturnsCard userInput={userInput} startDate={startDate} endDate={endDate} />
+        <DamagedGoodsCard userInput={userInput} startDate={startDate} endDate={endDate} />
 
         <MyCard style={{marginLeft: '3px', marginRight: '3px'}}>
-            <MyToolbar title={'Inventory Returns from ' + parseDate(props.oneYearAgo) + ' to ' + parseDate(props.currDate)}></MyToolbar>
+            <MyToolbar title={'Sales Returns from ' + parseDate(props.oneYearAgo) + ' to ' + parseDate(props.currDate)}></MyToolbar>
             <Tabs defaultActiveKey='1'>
                 <TabPane tab='Graph' key='1'>
-                    <InventoryReturnsGraph userInput={userInput} startDate={startDate} endDate={endDate}/>
+                    <DamagedGoodsGraph userInput={userInput} startDate={startDate} endDate={endDate}/>
                 </TabPane>
                 <TabPane tab='Table' key='2'>
-                    <InventoryReturnsTable userInput={userInput} startDate={startDate} endDate={endDate}/>
+                    <DamagedGoodsTable userInput={userInput} startDate={startDate} endDate={endDate}/>
                 </TabPane>
             </Tabs>
         </MyCard>

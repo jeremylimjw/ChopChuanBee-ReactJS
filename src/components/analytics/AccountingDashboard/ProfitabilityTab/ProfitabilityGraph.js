@@ -20,11 +20,23 @@ export default function ProfitabilityGraph(props) {
 
     const getData = async (start, end) => {
         let cogs = await AnalyticsApiHelper.getCOGS(start, end);
-        cogs.map(x => { x.name = 'Cost of Goods Sold'; x.value = parseFloat(x.value) * -1 });
+        cogs.map(x => { 
+            x.name = 'Cost of Goods Sold'; 
+            x.value = parseFloat(x.value) * -1; 
+            return x;
+        });
         let profits = await AnalyticsApiHelper.getProfits(start, end);
-        profits.map(x => { x.name = 'Profits'; x.value = parseFloat(x.value) });
+        profits.map(x => { 
+            x.name = 'Profits'; 
+            x.value = parseFloat(x.value);
+            return x;
+        });
         let revenue = await AnalyticsApiHelper.getRevenue(start, end);
-        revenue.map(x => { x.name = 'Revenue'; x.value = parseFloat(x.value) });
+        revenue.map(x => { 
+            x.name = 'Revenue'; 
+            x.value = parseFloat(x.value);
+            return x;
+        });
         setData([...cogs, ...revenue, ...profits]);
         setLoading(false);
     }
