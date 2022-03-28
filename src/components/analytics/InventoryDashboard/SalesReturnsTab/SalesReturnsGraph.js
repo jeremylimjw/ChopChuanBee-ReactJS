@@ -3,7 +3,7 @@ import { Column } from "@ant-design/plots";
 import { AnalyticsApiHelper } from '../../../../api/AnalyticsApiHelper';
 import { useApp } from '../../../../providers/AppProvider';
 
-export default function InventoryReturnsGraph(props) {
+export default function SalesReturnsGraph(props) {
   const { handleHttpError } = useApp();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
@@ -16,7 +16,7 @@ export default function InventoryReturnsGraph(props) {
   }, [handleHttpError, loading, props.userInput]);
 
   const fetchData = async () => {
-    await AnalyticsApiHelper.getSupplierReturnedGoods(props.startDate, props.endDate)
+    await AnalyticsApiHelper.getCustomerReturnedGoods(props.startDate, props.endDate)
       .then((result) => {
         result.forEach((x) => { 
           const tempQtyReturned = {
@@ -28,7 +28,7 @@ export default function InventoryReturnsGraph(props) {
           const tempTotalValueLoss = {
             product_name: x.name,
             metric_name: "Total Value Loss",
-            value: parseFloat(x.supplier_returned_goods_total_value),
+            value: parseFloat(x.customer_returned_goods_total_value),
           };
           totalValueLoss.push(tempTotalValueLoss);
         });

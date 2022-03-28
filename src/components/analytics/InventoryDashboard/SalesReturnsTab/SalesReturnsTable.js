@@ -6,13 +6,13 @@ import { showTotal } from "../../../../utilities/table";
 import { sortByNumber, sortByString } from '../../../../utilities/sorters';
 import { formatCurrency } from '../../../../utilities/currency';
 
-export default function InventoryReturnsTable(props) {
+export default function SalesReturnsTable(props) {
   const { handleHttpError } = useApp();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState();
 
   useEffect(() => {
-    AnalyticsApiHelper.getSupplierReturnedGoods(props.startDate, props.endDate)
+    AnalyticsApiHelper.getCustomerReturnedGoods(props.startDate, props.endDate)
       .then((results) => {
         setData(results);
         setLoading(false);
@@ -37,10 +37,10 @@ export default function InventoryReturnsTable(props) {
     },
     {
       title: "Total Value Loss",
-      dataIndex: "supplier_returned_goods_total_value",
-      key: "supplier_returned_goods_total_value",
+      dataIndex: "customer_returned_goods_total_value",
+      key: "customer_returned_goods_total_value",
       width: "30%",
-      sorter: (a, b) => sortByNumber(a.supplier_returned_goods_total_value, b.supplier_returned_goods_total_value),
+      sorter: (a, b) => sortByNumber(a.customer_returned_goods_total_value, b.customer_returned_goods_total_value),
       render: (x) => formatCurrency(x),
     },
   ];
