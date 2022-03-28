@@ -129,7 +129,7 @@ const tableColumns = [
         dataIndex: 'supplier', 
         key: 'supplier', 
         ellipsis: true,
-        render: (supplier) => supplier.company_name,
+        render: (supplier) => supplier? <Link to={`/supplier/suppliers/${supplier.id}`}>{supplier.company_name}</Link> : '-',
         sorter: (a, b) => sortByString(a.supplier.company_name, b.supplier.company_name),
     },
     { 

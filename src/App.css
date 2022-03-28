@@ -44,3 +44,12 @@
 .flex-last-left div:last-child {
     margin-left: auto;
 }
+
+/* This is for draggable table row */
+tr.drop-over-downward td {
+    border-bottom: 2px dashed #1890ff;
+}
+
+tr.drop-over-upward td {
+    border-top: 2px dashed #1890ff;
+}

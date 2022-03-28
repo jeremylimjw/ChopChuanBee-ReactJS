@@ -129,7 +129,7 @@ const tableColumns = [
         dataIndex: 'customer', 
         key: 'customer', 
         ellipsis: true,
-        render: (customer) => customer.company_name,
+        render: (customer) => customer? <Link to={`/customer/customers/${customer.id}`}>{customer.company_name}</Link> : '-',
         sorter: (a, b) => sortByString(a.customer.company_name, b.customer.company_name),
     },
     { 

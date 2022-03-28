@@ -12,6 +12,7 @@ import { getViewTag, View } from '../../enums/View';
 import { parseDateTimeSeconds } from '../../utilities/datetime';
 import { sortByDate, sortByNumber, sortByString } from '../../utilities/sorters';
 import { showTotal } from '../../utilities/table';
+import { Link } from 'react-router-dom';
 
 const breadcrumbs = [
     { url: '/admin/logs', name: 'Admin' },
@@ -109,7 +110,7 @@ const columns = [
     dataIndex: 'employee',
     key: 'employee',
     width: '15%',
-    render: (employee) => employee?.name,
+    render: (employee) => employee ? <Link to={`/humanResource/employees/${employee.id}`}>{employee?.name}</Link> : '-',
     sorter: (a, b) => sortByString(a.employee.name, b.employee.name),
   },
   {
