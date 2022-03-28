@@ -14,6 +14,7 @@ import { sortByDate, sortByNumber, sortByString } from "../../../utilities/sorte
 import { getActiveTag } from "../../../enums/ActivationStatus";
 import MyToolbar from "../../common/MyToolbar";
 import { View } from "../../../enums/View";
+import EmailLink from "../../../utilities/EmailLink";
 
 const breadcrumbs = [
   { url: "/supplier/suppliers", name: "Supplier" },
@@ -133,7 +134,7 @@ const columns = [
     dataIndex: 'company_email',
     key: 'company_email',
     ellipsis: true,
-    render: (company_email) => company_email || '-',
+    render: (company_email) => <EmailLink email={company_email} />,
     sorter: (a, b) => sortByString(a.company_email, b.company_email),
   },
   {

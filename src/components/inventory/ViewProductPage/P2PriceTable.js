@@ -77,6 +77,7 @@ const columns = [
       key: 'id',
       width: 150,
       ellipsis: true,
+      render: (id) => <Link to={`/supplier/procurements/${id}`}>{id}</Link>,
       sorter: (a, b) => sortByString(a.id, b.id),
     },
     {
@@ -84,6 +85,7 @@ const columns = [
       dataIndex: 'company_name',
       key: 'company_name',
       ellipsis: true,
+      render: (company_name, record) => <Link to={`/supplier/suppliers/${record.supplier_id}`}>{company_name}</Link>,
       sorter: (a, b) => sortByString(a.company_name, b.company_name),
     },
     {

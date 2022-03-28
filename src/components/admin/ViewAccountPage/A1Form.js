@@ -5,6 +5,7 @@ import { EmployeeApiHelper } from '../../../api/EmployeeApiHelper';
 import { getRoleTag, Role } from '../../../enums/Role';
 import { View } from '../../../enums/View';
 import { useApp } from '../../../providers/AppProvider';
+import EmailLink from '../../../utilities/EmailLink';
 import { EMAIL, REQUIRED, NUMBER, exactLength } from '../../../utilities/form';
 import MyToolbar from '../../common/MyToolbar';
 
@@ -71,7 +72,7 @@ export default function A1Form({ employee, setEmployee }) {
                 
                 <Form.Item label="Email" name="email" rules={editing ? [REQUIRED, EMAIL] : []}>
                     {!editing ? 
-                        <Typography>{employee.email || '-'}</Typography>
+                        <EmailLink email={employee.email} />
                     :
                         <Input />
                     }

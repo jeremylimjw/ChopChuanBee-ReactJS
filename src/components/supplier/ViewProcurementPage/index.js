@@ -197,7 +197,7 @@ export default function ViewProcurementPage() {
       <MyLayout breadcrumbs={breadcrumbs} bannerTitle={`Purchase Order ID ${purchaseOrder.idToString()}`}>
         <div style={{ display: 'flex', marginTop: 24 }}>
           
-          <MyCard title="Supplier Details" style={{ width: 350, margin: '0 12px 12px 24px' }}>
+          <MyCard title="Supplier Details" style={{ width: 400, margin: '0 12px 12px 24px' }}>
             <PO1SupplierInfo purchaseOrder={purchaseOrder} />
           </MyCard>
 

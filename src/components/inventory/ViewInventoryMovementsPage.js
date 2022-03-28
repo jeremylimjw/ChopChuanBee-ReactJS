@@ -120,7 +120,7 @@ const columns = [
       key: 'product',
       ellipsis: true,
       width: '20%',
-      render: (product) => product?.name,
+      render: (product) => product ? <Link to={`/inventory/products/${product.id}`}>{product.name}</Link> : '-',
       sorter: (a, b) => sortByString(a.product?.name, b.product?.name),
     },
     {
@@ -160,20 +160,26 @@ const columns = [
       key: "link",
       width: 100,
       ellipsis: true,
-      render: (_, record) => 
-        record.purchase_order_item ? 
-          <Link to={`/supplier/procurements/${record.purchase_order_item.purchase_order_id}`}>View</Link> 
-          : 
-          <Link to={`/customer/sales/${record.sales_order_item?.sales_order_id}`}>View</Link>,
+      render: (_, record) => renderLinkButton(record),
     },
 ]
 
 function getCompanyName(record) {
   if (record.purchase_order_item) {
-    return record.purchase_order_item.purchase_order.supplier.company_name;
+    return <Link to={`/supplier/suppliers/${record.purchase_order_item.purchase_order.supplier_id}`}>{record.purchase_order_item.purchase_order.supplier.company_name}</Link>;
   } else if (record.sales_order_item) {
-    return record.sales_order_item.sales_order.customer.company_name;
+    return <Link to={`/customer/customers/${record.sales_order_item.sales_order.customer_id}`}>{record.sales_order_item.sales_order.customer.company_name}</Link>;
   } else {
     return '-';
+  }
+}
+
+function renderLinkButton(record) {
+  if (record.purchase_order_item) {
+    return <Link to={`/supplier/procurements/${record.purchase_order_item.purchase_order_id}`}>View</Link>;
+  } else if (record.sales_order_item) {
+    return <Link to={`/customer/sales/${record.sales_order_item?.sales_order_id}`}>View</Link>;
+  } else {
+    return <Button type="link" style={{ padding: 0 }} disabled>View</Button>;
   }
 }

@@ -5,6 +5,7 @@ import { ChargedUnderApiHelper } from '../../../api/ChargedUnderApiHelper';
 import { CustomerApiHelper } from '../../../api/CustomerApiHelper';
 import { View } from '../../../enums/View';
 import { useApp } from '../../../providers/AppProvider';
+import EmailLink from '../../../utilities/EmailLink';
 import { EMAIL, REQUIRED, NUMBER, exactLength } from '../../../utilities/form';
 import MyToolbar from '../../common/MyToolbar';
 
@@ -85,7 +86,7 @@ export default function C1Form({ customer, setCustomer }) {
 
                     <Form.Item label="Email" name="company_email" rules={[EMAIL]}>
                         {!editing ? 
-                            <Typography>{customer.company_email || '-'}</Typography>
+                            <EmailLink email={customer.company_email} />
                         :
                             <Input />
                         }

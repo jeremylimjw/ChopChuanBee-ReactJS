@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { SupplierAPIHelper } from '../../../api/SupplierAPIHelper';
 import { View } from '../../../enums/View';
 import { useApp } from '../../../providers/AppProvider';
+import EmailLink from '../../../utilities/EmailLink';
 import { EMAIL, REQUIRED, NUMBER, exactLength } from '../../../utilities/form';
 import MyToolbar from '../../common/MyToolbar';
 
@@ -76,7 +77,7 @@ export default function S1Form({ supplier, setSupplier }) {
 
                     <Form.Item label="Email" name="company_email" rules={[EMAIL]}>
                         {!editing ? 
-                            <Typography>{supplier.company_email || '-'}</Typography>
+                            <EmailLink email={supplier.company_email} />
                         :
                             <Input />
                         }
