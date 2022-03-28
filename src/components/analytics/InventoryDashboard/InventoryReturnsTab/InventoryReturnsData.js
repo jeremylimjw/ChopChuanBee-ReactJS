@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Tabs, Form, Button, DatePicker, Space } from 'antd';
+import { Tabs, Form, Button, DatePicker } from 'antd';
 import MyCard from '../../../common/MyCard';
 import MyToolbar from '../../../common/MyToolbar';
 import moment from 'moment';
 import { parseDate } from '../../../../utilities/datetime';
+import { REQUIRED } from "../../../../utilities/form";
 import InventoryReturnsCard from './InventoryReturnsCard';
 import InventoryReturnsTable from './InventoryReturnsTable';
 import InventoryReturnsGraph from './InventoryReturnsGraph';
@@ -32,28 +33,26 @@ export default function InventoryReturnsData(props) {
         <>
         <MyCard style={{margin: '3px'}}>
             <Form form={searchInputForm} layout='inline' onFinish={handleFinish}>
-                <Form.Item name="date">
+                <Form.Item name="date" rules={[REQUIRED]}>
                     <DatePicker.RangePicker defaultValue={[moment(props.oneYearAgo, dateFormat), moment(props.currDate, dateFormat)]} />
                 </Form.Item>
                 
-                <Space direction='horizontal' wrap >
-                    <Form.Item name="button">
-                        <Button type="primary" htmlType="submit"> Analyse </Button>
-                    </Form.Item>
-                </Space>
+                <Form.Item name="button" style={{marginLeft: '20px'}}>
+                    <Button type="primary" htmlType="submit"> Analyse </Button>
+                </Form.Item>
             </Form>
         </MyCard>
 
-        {/* <InventoryReturnsCard userInput={userInput} startDate={startDate} endDate={endDate} /> */}
+        <InventoryReturnsCard userInput={userInput} startDate={startDate} endDate={endDate} />
 
         <MyCard style={{marginLeft: '3px', marginRight: '3px'}}>
-            <MyToolbar title={'Inventory Returns from ' + parseDate(startDate) + ' to ' + parseDate(endDate)}></MyToolbar>
+            <MyToolbar title={'Inventory Returns From ' + parseDate(startDate) + ' to ' + parseDate(endDate)}></MyToolbar>
             <Tabs defaultActiveKey='1'>
                 <TabPane tab='Graph' key='1'>
                     <InventoryReturnsGraph userInput={userInput} setUserInput={setUserInput} startDate={startDate} endDate={endDate}/>
                 </TabPane>
                 <TabPane tab='Table' key='2'>
-                    <InventoryReturnsTable userInput={userInput} startDate={startDate} endDate={endDate}/>
+                    <InventoryReturnsTable userInput={userInput} setUserInput={setUserInput} startDate={startDate} endDate={endDate}/>
                 </TabPane>
             </Tabs>
         </MyCard>

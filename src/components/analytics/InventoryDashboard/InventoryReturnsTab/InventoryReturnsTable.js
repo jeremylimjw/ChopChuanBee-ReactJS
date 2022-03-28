@@ -16,6 +16,7 @@ export default function InventoryReturnsTable(props) {
       .then((results) => {
         setData(results);
         setLoading(false);
+        props.setUserInput(false);
       })
       .catch(handleHttpError);
   }, [handleHttpError, loading, props.userInput]);

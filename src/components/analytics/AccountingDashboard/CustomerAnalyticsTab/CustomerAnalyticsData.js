@@ -39,12 +39,9 @@ export default function CustomerAnalyticsData() {
                     <DatePicker.RangePicker />
                 </Form.Item>
                 
-                <Space direction='horizontal' wrap >
-                    <Button onClick={searchInputForm.resetFields()}>Reset</Button>
-                    <Form.Item name="date">
+                <Form.Item name="button" style={{marginLeft: '20px'}}>
                     <Button type="primary" htmlType="submit"> Analyse </Button>
-                    </Form.Item>
-                </Space>
+                </Form.Item>
             </Form>
         </MyCard>
 

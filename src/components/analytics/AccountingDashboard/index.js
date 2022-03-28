@@ -41,8 +41,8 @@ export default function AccountingDashboard() {
                 </TabPane>
                 
                 <TabPane tab="Customer Analytics" key="5">
-                    <CustomerAnalyticsCard currTime={currTime} />
                     <CustomerAnalyticsData />
+                    <CustomerAnalyticsCard />
                 </TabPane>
             </Tabs>
         </MyLayout>

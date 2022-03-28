@@ -14,8 +14,6 @@ export default function CustomerAnalyticsCard(props) {
 
     return (
     <>
-        <Typography style={{fontSize:'0.8rem', marginBottom: 0, fontStyle:'italic'}}>{"Last Updated: " + parseDateTime(props.currTime)}</Typography>
-
         <Space direction='horizontal' wrap>
             <MyCard style={{minWidth:'250px', marginLeft: '3px'}}>
                 <Typography>MOST PROFITABLE CUSTOMER</Typography>

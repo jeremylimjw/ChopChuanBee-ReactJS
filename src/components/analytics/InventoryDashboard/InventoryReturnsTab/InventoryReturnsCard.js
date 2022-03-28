@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Typography, Space, Divider, Row } from "antd";
+import { Typography, Space, Divider, Row, Spin } from "antd";
 import MyCard from "../../../common/MyCard";
 import { useApp } from "../../../../providers/AppProvider";
 import { AnalyticsApiHelper } from "../../../../api/AnalyticsApiHelper";
@@ -23,13 +23,13 @@ export default function InventoryReturnsCard(props) {
 
   return (
     <>
+    { mostReturnedProduct == null ? "" : 
+    <>
       <Space direction="horizontal" wrap>
-        <MyCard
-          style={{ minWidth: "250px", marginLeft: "3px", marginBottom: 0 }}
-        >
+        <MyCard style={{ minWidth: "250px", marginLeft: "3px", marginBottom: 0 }}>
           <Typography>MOST RETURNED PRODUCT</Typography>
           <Typography.Title level={2} style={{ margin: 0 }}>
-            {mostReturnedProduct.name ? mostReturnedProduct.name : ""}
+            {loading ? <Spin /> : mostReturnedProduct.name}
           </Typography.Title>
           <Divider style={{ margin: "0.5rem 0" }} />
           <Row>
@@ -37,17 +37,15 @@ export default function InventoryReturnsCard(props) {
               TOTAL QUANTITY
             </Typography>
             <Typography style={{ fontSize: "0.8rem", marginLeft: "auto" }}>
-              {mostReturnedProduct.quantity_returned}
+              {loading ? <Spin /> : mostReturnedProduct.quantity_returned}
             </Typography>
           </Row>
         </MyCard>
 
-        <MyCard
-          style={{ minWidth: "250px", marginLeft: "3px", marginBottom: 0 }}
-        >
+        <MyCard style={{ minWidth: "250px", marginLeft: "3px", marginBottom: 0 }}>
           <Typography>HIGHEST VALUE LOSS</Typography>
           <Typography.Title level={2} style={{ margin: 0 }}>
-            {formatCurrency(highestValueLoss.supplier_returned_goods_total_value)}
+            {loading ? <Spin /> : formatCurrency(highestValueLoss.supplier_returned_goods_total_value)}
           </Typography.Title>
           <Divider style={{ margin: "0.5rem 0" }} />
           <Row>
@@ -55,11 +53,13 @@ export default function InventoryReturnsCard(props) {
               FROM
             </Typography>
             <Typography style={{ fontSize: "0.8rem", marginLeft: "auto" }}>
-              {highestValueLoss.name}
+              {loading ? <Spin /> : highestValueLoss.name}
             </Typography>
           </Row>
         </MyCard>
       </Space>
+    </>
+    }
     </>
   );
 }

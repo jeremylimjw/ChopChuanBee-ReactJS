@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Tabs, Form, Button, DatePicker, Space } from 'antd';
+import { Tabs, Form, Button, DatePicker } from 'antd';
 import MyCard from '../../../common/MyCard';
 import MyToolbar from '../../../common/MyToolbar';
 import moment from 'moment';
 import { parseDate } from '../../../../utilities/datetime';
+import { REQUIRED } from "../../../../utilities/form";
 import SalesReturnsCard from './SalesReturnsCard';
 import SalesReturnsTable from './SalesReturnsTable';
 import SalesReturnsGraph from './SalesReturnsGraph';
@@ -32,15 +33,13 @@ export default function SalesReturnsData(props) {
         <>
         <MyCard style={{margin: '3px'}}>
             <Form form={searchInputForm} layout='inline' onFinish={handleFinish}>
-                <Form.Item name="date">
+                <Form.Item name="date" rules={[REQUIRED]}>
                     <DatePicker.RangePicker defaultValue={[moment(props.oneYearAgo, dateFormat), moment(props.currDate, dateFormat)]} />
                 </Form.Item>
                 
-                <Space direction='horizontal' wrap >
-                    <Form.Item name="button">
-                        <Button type="primary" htmlType="submit"> Analyse </Button>
-                    </Form.Item>
-                </Space>
+                <Form.Item name="button" style={{marginLeft: '20px'}}>
+                    <Button type="primary" htmlType="submit"> Analyse </Button>
+                </Form.Item>
             </Form>
         </MyCard>
 
