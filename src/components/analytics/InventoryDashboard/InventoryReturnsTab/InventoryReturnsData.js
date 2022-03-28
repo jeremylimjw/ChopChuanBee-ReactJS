@@ -1,19 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Tabs, Form, Button, Input, DatePicker, Space } from 'antd';
 import MyCard from '../../../common/MyCard';
 import MyToolbar from '../../../common/MyToolbar';
 import InventoryReturnsTable from './InventoryReturnsTable';
 import InventoryReturnsGraph from './InventoryReturnsGraph';
 import moment from 'moment';
-import debounce from 'lodash.debounce';
-import { SearchOutlined } from '@ant-design/icons';
 import { parseDate } from '../../../../utilities/datetime';
 
 export default function InventoryReturnsData(props) {
     const { TabPane } = Tabs;
     const [searchInputForm] = Form.useForm();
-    const [startDate, setStartDate] = useState();
-    const [endDate, setEndDate] = useState();
+    const [startDate, setStartDate] = useState(props.oneYearAgo.toDate());
+    const [endDate, setEndDate] = useState(props.currDate.toDate());
+    const [userInput, setUserInput] = useState(false);
 
     const handleFinish = (values) => {
         let start_date, end_date;
@@ -21,23 +20,24 @@ export default function InventoryReturnsData(props) {
             start_date = moment(values.date[0]).set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toDate();
             end_date = moment(values.date[1]).set({ hour: 23, minute: 59, second: 59, millisecond: 999 }).toDate();
         }
-
         setStartDate(start_date);
         setEndDate(end_date);
-    }
+        setUserInput(true);
+    };
+
+    const dateFormat = 'YYYY/MM/DD';
 
     return (
         <>
         <MyCard style={{margin: '3px'}}>
             <Form form={searchInputForm} layout='inline' onFinish={handleFinish}>
                 <Form.Item name="date">
-                    <DatePicker.RangePicker />
+                    <DatePicker.RangePicker defaultValue={[moment(props.oneYearAgo, dateFormat), moment(props.currDate, dateFormat)]} />
                 </Form.Item>
                 
                 <Space direction='horizontal' wrap >
-                    <Button onClick={searchInputForm.resetFields()}>Reset</Button>
-                    <Form.Item name="date">
-                    <Button type="primary" htmlType="submit"> Analyse </Button>
+                    <Form.Item name="button">
+                        <Button type="primary" htmlType="submit"> Analyse </Button>
                     </Form.Item>
                 </Space>
             </Form>
@@ -47,10 +47,10 @@ export default function InventoryReturnsData(props) {
             <MyToolbar title={'Inventory Returns from ' + parseDate(props.oneYearAgo) + ' to ' + parseDate(props.currDate)}></MyToolbar>
             <Tabs defaultActiveKey='1'>
                 <TabPane tab='Graph' key='1'>
-                    <InventoryReturnsGraph />
+                    <InventoryReturnsGraph userInput={userInput} startDate={startDate} endDate={endDate}/>
                 </TabPane>
                 <TabPane tab='Table' key='2'>
-                    <InventoryReturnsTable startDate={startDate} endDate={endDate}/>
+                    <InventoryReturnsTable userInput={userInput} startDate={startDate} endDate={endDate}/>
                 </TabPane>
             </Tabs>
         </MyCard>

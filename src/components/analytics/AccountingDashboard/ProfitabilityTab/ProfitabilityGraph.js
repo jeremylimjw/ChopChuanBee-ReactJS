@@ -12,7 +12,7 @@ export default function ProfitabilityGraph(props) {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [form] = Form.useForm();
-    const { handleHttpError, hasWriteAccessTo } = useApp();
+    const { handleHttpError } = useApp();
 
     useEffect(() => {
         getData(props.oneYearAgo, props.currDate);

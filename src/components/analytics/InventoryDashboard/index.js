@@ -15,7 +15,7 @@ export default function InventoryDashboard() {
     <MyLayout bannerTitle='Inventory Dashboard'>
         <Tabs defaultActiveKey="1" type="card" style={{margin:'24px'}}>
             <TabPane tab="Inventory Returns" key="1">
-                <InventoryReturnsCard currTime={currTime}/>
+                {/* <InventoryReturnsCard currTime={currTime}/> */}
                 <InventoryReturnsData currDate={currDate} oneYearAgo={oneYearAgo} />
             </TabPane>
 

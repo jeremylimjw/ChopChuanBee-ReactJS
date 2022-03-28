@@ -24,9 +24,8 @@ export default function ProductAnalyticsTable(props) {
                 setProductAnalytics(results);
                 setLoading(false);
             })
-            .catch(handleHttpError)
-            .catch(() => setLoading(false))
-    }, [handleHttpError, setLoading]);
+            .catch(handleHttpError);
+    }, [handleHttpError, loading]);
 
     function onValuesChange(_, form) {
         let start_date, end_date;

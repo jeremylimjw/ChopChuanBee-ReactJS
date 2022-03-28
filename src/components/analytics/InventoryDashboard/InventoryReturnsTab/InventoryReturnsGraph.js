@@ -1,81 +1,72 @@
 import React, { useState, useEffect } from "react";
-import ReactDOM from "react-dom";
 import { Column } from "@ant-design/plots";
+import { AnalyticsApiHelper } from '../../../../api/AnalyticsApiHelper';
+import { useApp } from '../../../../providers/AppProvider';
 
-export default function InventoryReturnsGraph() {
-  
-  
-    const data = [
-    {
-      name: "Quantity Returned",
-      月份: "Product A",
-      月均降雨量: 3,
-    },
-    {
-      name: "Quantity Returned",
-      月份: "Product B",
-      月均降雨量: 2,
-    },
-    {
-      name: "Quantity Returned",
-      月份: "Product C",
-      月均降雨量: 4,
-    },
-    {
-      name: "Quantity Returned",
-      月份: "Product D",
-      月均降雨量: 2,
-    },
-    {
-      name: "Quantity Returned",
-      月份: "Product E",
-      月均降雨量: 10,
-    },
-    {
-      name: "Quantity Returned",
-      月份: "Product F",
-      月均降雨量: 2,
-    },
+export default function InventoryReturnsGraph(props) {
+  const { handleHttpError } = useApp();
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
 
-    {
-      name: "Total Loss",
-      月份: "Product A",
-      月均降雨量: 12.4,
-    },
-    {
-      name: "Total Loss",
-      月份: "Product B",
-      月均降雨量: 23.2,
-    },
-    {
-      name: "Total Loss",
-      月份: "Product C",
-      月均降雨量: 34.5,
-    },
-    {
-      name: "Total Loss",
-      月份: "Product D",
-      月均降雨量: 99.7,
-    },
-    {
-      name: "Total Loss",
-      月份: "Product E",
-      月均降雨量: 52.6,
-    },
-    {
-      name: "Total Loss",
-      月份: "Product F",
-      月均降雨量: 35.5,
-    },    
-  ];
+  const quantityReturned = [];
+  const totalValueLoss = [];
+
+  useEffect(() => {
+    fetchData();
+  }, [handleHttpError, loading, props.userInput]);
+
+  const fetchData = async () => {
+    await AnalyticsApiHelper.getSupplierReturnedGoods(props.startDate, props.endDate)
+      .then((result) => {
+        result.forEach((x) => { 
+          const tempQtyReturned = {
+            product_name: x.name,
+            metric_name: "Quantity Returned",
+            value: parseInt(x.quantity_returned),
+          };
+          quantityReturned.push(tempQtyReturned);
+          const tempTotalValueLoss = {
+            product_name: x.name,
+            metric_name: "Total Value Loss",
+            value: parseFloat(x.supplier_returned_goods_total_value),
+          };
+          totalValueLoss.push(tempTotalValueLoss);
+        });
+      })
+      .catch(handleHttpError);
+    setData([...quantityReturned, ...totalValueLoss]);
+    setLoading(false);
+  }
 
   const config = {
     data,
     isGroup: true,
-    xField: "月份",
-    yField: "月均降雨量",
-    seriesField: "name",
-
+    xField: "product_name",
+    yField: "value",
+    seriesField: "metric_name",
+    xAxis: {
+      title: {
+        text: "Product Name",
+        style: {
+          fill: "black",
+          fillOpacity: 0.5,
+          stroke: "black",
+        },
+      },
+    },
+    yAxis: {
+      title: {
+        text: "Value",
+        style: {
+          fill: "black",
+          fillOpacity: 0.5,
+          stroke: "black",
+        },
+      },
+      label: {
+        formatter: (v) => `${(v / 1).toFixed(2)} `,
+      },
+    },
     label: {
       position: "middle",
       layout: [
@@ -89,6 +80,11 @@ export default function InventoryReturnsGraph() {
           type: "adjust-color",
         },
       ],
+    },
+    meta: {
+      value: {
+        formatter: (v) => `${(v / 1).toFixed(2)} `,
+      },
     },
   };
 

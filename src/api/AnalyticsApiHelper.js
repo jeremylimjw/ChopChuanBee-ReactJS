@@ -3,12 +3,10 @@ import { axiosObject } from "./axiosWrapper";
 export class AnalyticsApiHelper {
   static async getCOGS(start_date, end_date) {
     const params = {};
-
     if (start_date && end_date) {
       params.start_date = start_date.toISOString();
       params.end_date = end_date.toISOString();
     }
-
     return axiosObject
       .get("/analytics/COGS_table/", { params })
       .then((res) => res.data);
@@ -16,12 +14,10 @@ export class AnalyticsApiHelper {
 
   static async getRevenue(start_date, end_date) {
     const params = {};
-
     if (start_date && end_date) {
       params.start_date = start_date.toISOString();
       params.end_date = end_date.toISOString();
     }
-
     return axiosObject
       .get("/analytics/Revenue_table/", { params })
       .then((res) => res.data);
@@ -29,12 +25,10 @@ export class AnalyticsApiHelper {
 
   static async getProfits(start_date, end_date) {
     const params = {};
-
     if (start_date && end_date) {
       params.start_date = start_date.toISOString();
       params.end_date = end_date.toISOString();
     }
-
     return axiosObject
       .get("/analytics/Profits_table/", { params })
       .then((res) => res.data);
@@ -86,12 +80,10 @@ export class AnalyticsApiHelper {
 
   static async getProductAnalytics(start_date, end_date) {
     const params = {};
-
     if (start_date && end_date) {
       params.start_date = start_date.toISOString();
       params.end_date = end_date.toISOString();
     }
-
     return axiosObject
       .get("/analytics/Product_Analytics/", { params })
       .then((res) => res.data);
@@ -100,6 +92,39 @@ export class AnalyticsApiHelper {
   static async getAgedReceivable() {
     return axiosObject
       .get("/analytics/Aging_AR_Table_Demo/")
+      .then((res) => res.data);
+  }
+
+  static async getSupplierReturnedGoods(start_date, end_date) {
+    const params = {};
+    if (start_date && end_date) {
+      params.start_date = start_date.toISOString();
+      params.end_date = end_date.toISOString();
+    }
+    return axiosObject
+      .get("/analytics/Supplier_Returned_Goods/", { params })
+      .then((res) => res.data);
+  }
+
+  static async getCustomerReturnedGoods(start_date, end_date) {
+    const params = {};
+    if (start_date && end_date) {
+      params.start_date = start_date.toISOString();
+      params.end_date = end_date.toISOString();
+    }
+    return axiosObject
+      .get("/analytics/Customer_Returned_Goods/", { params })
+      .then((res) => res.data);
+  }
+
+  static async getDamagedGoods(start_date, end_date) {
+    const params = {};
+    if (start_date && end_date) {
+      params.start_date = start_date.toISOString();
+      params.end_date = end_date.toISOString();
+    }
+    return axiosObject
+      .get("/analytics/Damaged_Goods/", { params })
       .then((res) => res.data);
   }
 }
