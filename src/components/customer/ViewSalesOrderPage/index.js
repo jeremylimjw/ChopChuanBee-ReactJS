@@ -158,7 +158,7 @@ export default function ViewSalesOrderPage() {
       <MyLayout breadcrumbs={breadcrumbs} bannerTitle={`Sales Order ID ${salesOrder.idToString()}`}>
         <div style={{ display: 'flex', marginTop: 24 }}>
           
-          <MyCard title="Customer Details" style={{ width: 350, margin: '0 12px 12px 24px' }}>
+          <MyCard title="Customer Details" style={{ width: 400, margin: '0 12px 12px 24px' }}>
             <SO1CustomerInfo salesOrder={salesOrder} />
           </MyCard>
 

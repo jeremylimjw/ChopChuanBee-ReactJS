@@ -1,6 +1,7 @@
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons/lib/icons';
 import { Button, InputNumber, Table, Typography } from 'antd';
 import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom';
 import { CustomerApiHelper } from '../../../api/CustomerApiHelper';
 import { SOStatus } from '../../../enums/SalesOrderStatus';
 import { View } from '../../../enums/View';
@@ -183,7 +184,7 @@ const columns = [
         dataIndex: 'product', 
         width: '20%',
         ellipsis: true,
-        render: (product) => product?.name 
+        render: (product) => product ? <Link to={`/inventory/products/${product.id}`}>{product.name}</Link> : '-', 
     },
     { 
         title: 'Description', 

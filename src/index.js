@@ -25,6 +25,11 @@ import ManageSuppliersPage from './components/supplier/ManageSuppliersPage';
 import ViewSupplierPage from './components/supplier/ViewSupplierPage';
 import ManageCustomersPage from './components/customer/ManageCustomersPage';
 import ViewCustomerPage from './components/customer/ViewCustomerPage';
+import ManageBalanceSheetPage from './components/accounting/ManageBalanceSheetPage';
+import ViewBalanceSheetPage from './components/accounting/ViewBalanceSheetPage';
+import ViewIncomeStatementPage from './components/accounting/ViewIncomeStatementPage';
+import ManageIncomeStatementPage from './components/accounting/ManageIncomeStatementPage';
+import ManageTaxStatementPage from './components/accounting/ManageTaxStatementPage';
 import ManageProcurementsPage from './components/supplier/ManageProcurementsPage';
 import NewProcurementPage from './components/supplier/NewProcurementPage';
 import ViewProcurementPage from './components/supplier/ViewProcurementPage';
@@ -34,8 +39,13 @@ import ManageSalesOrdersPage from './components/customer/ManageSalesOrdersPage';
 import NewSalesOrderPage from './components/customer/NewSalesOrderPage';
 import ViewSalesOrderPage from './components/customer/ViewSalesOrderPage';
 import ViewInventoryMovementsPage from './components/inventory/ViewInventoryMovementsPage';
+import ManageDeliveriesPage from './components/dispatch/ManageDeliveriesPage';
 import ActivatePage from './components/ActivatePage';
 import ViewSORAPage from './components/customer/ViewSORAPage';
+import ManageItinerarysPage from './components/dispatch/ManageItinerarysPage';
+import NewItineraryPage from './components/dispatch/NewItineraryPage';
+import ViewItineraryPage from './components/dispatch/ViewItineraryPage';
+import CompleteDeliveryPage from './components/CompleteDeliveryPage';
 
 // Add on more routes here
 const routes = [
@@ -191,6 +201,63 @@ const routes = [
       },
     ]
   },
+  {
+    path: "/accounting",
+    component: <Outlet />,
+    childRoutes: [
+      {
+        path: "balanceSheets",
+        component: <ManageBalanceSheetPage />,
+        viewAccess: View.ACCOUNTING.name,
+      },
+      {
+        path: "balanceSheets/:id",
+        component: <ViewBalanceSheetPage />,
+        viewAccess: View.ACCOUNTING.name,
+      },
+      {
+        path: "incomeStatements",
+        component: <ManageIncomeStatementPage />,
+        viewAccess: View.ACCOUNTING.name,
+      },
+      {
+        path: "incomeStatements/:id",
+        component: <ViewIncomeStatementPage />,
+        viewAccess: View.ACCOUNTING.name,
+      },
+      {
+        path: "taxStatements",
+        component: <ManageTaxStatementPage />,
+        viewAccess: View.ACCOUNTING.name,
+      },
+    ],
+  },
+  { 
+    path: '/dispatch',
+    component: <Outlet />,
+    childRoutes: [
+      { 
+        path: 'itinerarys', 
+        component: <ManageItinerarysPage />,
+        viewAccess: View.DISPATCH.name,
+      },
+      { 
+        path: 'itinerarys/new', 
+        component: <NewItineraryPage />,
+        viewAccess: View.DISPATCH.name,
+      },
+      { 
+        path: 'itinerarys/:id', 
+        component: <ViewItineraryPage />,
+        viewAccess: View.DISPATCH.name,
+      },
+      { 
+        path: 'deliveryOrders', 
+        component: <ManageDeliveriesPage />,
+        viewAccess: View.DISPATCH.name,
+      },
+    ]
+  },
 ];
 
 function renderRoute(route, index) {
@@ -235,6 +302,7 @@ ReactDOM.render(
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/activate" element={<ActivatePage />} />
+            <Route path="/completeDelivery" element={<CompleteDeliveryPage />} />
             <Route path="/" element={<RequireAuth><App /></RequireAuth>}>
               {routes.map((route, index) => renderRoute(route, index))}
             </Route>

@@ -8,6 +8,7 @@ import { EmployeeApiHelper } from '../../../api/EmployeeApiHelper';
 import MyToolbar from '../../common/MyToolbar';
 import { sortByNumber, sortByString } from '../../../utilities/sorters';
 import { getRoleTag, Role } from '../../../enums/Role';
+import EmailLink from '../../../utilities/EmailLink';
 
 const EmployeeTable = () => {
 
@@ -112,7 +113,7 @@ const tableColumns = [
     title: 'Email',
     dataIndex: 'email',
     ellipsis: true,
-    render: (email) => email || '-',
+    render: (email) => <EmailLink email={email} />,
     sorter: (a, b) => sortByString(a.email, b.email),
   },
   {
