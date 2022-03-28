@@ -114,7 +114,11 @@ export default function ViewProcurementPage() {
             return PurchaseOrderApiHelper.createPayment(payment);
           })
           .then(newPayment => {
-            setPurchaseOrder(new PurchaseOrder({...newPurchaseOrder, payments: [...purchaseOrder.payments, newPayment] }))
+            return PurchaseOrderApiHelper.get({ id: id });
+          })
+          .then(results => {
+            setPurchaseOrder(new PurchaseOrder(results[0]));
+
             setLoading(false);
             setIsDeliveryModalVisible(1);
           })
@@ -150,7 +154,7 @@ export default function ViewProcurementPage() {
     function cancelOrder() {
       const payment = {
         purchase_order_id: purchaseOrder.id,
-        amount: purchaseOrder.isPaymentTerm(PaymentTerm.CREDIT) ? +purchaseOrder.getPaymentsTotal() : -purchaseOrder.getPaymentsTotal(),
+        amount: purchaseOrder.isPaymentTerm(PaymentTerm.CREDIT) ? -purchaseOrder.getPaymentsTotal() : +purchaseOrder.getPaymentsTotal(),
         movement_type_id: MovementType.REFUND.id,
         accounting_type_id: purchaseOrder.isPaymentTerm(PaymentTerm.CREDIT) ? 1 : null,
         payment_method_id: PaymentMethod.CASH.id,
@@ -169,7 +173,7 @@ export default function ViewProcurementPage() {
       
       setLoading(true);
       PurchaseOrderApiHelper.createPayment(payment)
-        .then(() => PurchaseOrderApiHelper.createInventoryMovement(inventoryMovements))
+        .then(() => PurchaseOrderApiHelper.createInventoryMovement(inventoryMovements.filter(x => x.quantity < 0)))
         .then(() => PurchaseOrderApiHelper.updateStatusOnly({...purchaseOrder, purchase_order_status_id: POStatus.CANCELLED.id}))
         .then(() => PurchaseOrderApiHelper.get({ id: purchaseOrder.id }))
         .then(results => {
