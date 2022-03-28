@@ -13,12 +13,11 @@ import moment from 'moment';
 export default function ProductAnalyticsTable(props) {
     const { handleHttpError } = useApp();
 
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [productAnalytics, setProductAnalytics] = useState([]);
     const [form] = Form.useForm();
 
     useEffect(() => {
-      setLoading(true);
       AnalyticsApiHelper.getProductAnalytics(props.oneYearAgo, props.currDate)
             .then(results => {
                 setProductAnalytics(results);

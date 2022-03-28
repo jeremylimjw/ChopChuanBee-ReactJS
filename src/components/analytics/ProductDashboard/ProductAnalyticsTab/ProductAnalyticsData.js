@@ -31,7 +31,6 @@ export default function ProductAnalyticsData(props) {
                 </Form.Item>
                 
                 <Space direction='horizontal' wrap >
-                    <Button onClick={searchInputForm.resetFields()}>Reset</Button>
                     <Form.Item name="date">
                     <Button type="primary" htmlType="submit"> Analyse </Button>
                     </Form.Item>

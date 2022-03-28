@@ -32,7 +32,7 @@ export default function PayableCard(props) {
         <Typography style={{fontSize:'0.8rem', marginBottom: 0, fontStyle:'italic'}}>{"Last Updated: " + parseDateTime(props.currTime)}</Typography>
 
         <Space direction='horizontal' wrap>
-            <MyCard style={{minWidth:'250px', marginLeft: '3px'}}>
+            <MyCard style={{minWidth:'250px', marginLeft: '3px', marginBottom: 0}}>
                 <Typography>HIGHEST OUTSTANDING AMOUNT</Typography>
                 <Typography.Title level={2} style={{margin:0}}>{formatCurrency(highestInvoiceAPAmt)}</Typography.Title>
                 <Divider style={{margin:'0.5rem 0'}}/>
@@ -42,7 +42,7 @@ export default function PayableCard(props) {
                 </Row>
             </MyCard>
 
-            <MyCard style={{minWidth:'250px', marginLeft: '3px'}}>
+            <MyCard style={{minWidth:'250px', marginLeft: '3px', marginBottom: 0}}>
                 <Typography>HIGHEST ACCOUNTS PAYABLE</Typography>
                 <Typography.Title level={2} style={{margin:0}}>{highestSupplierAPName}</Typography.Title>
                 <Divider style={{margin:'0.5rem 0'}}/>

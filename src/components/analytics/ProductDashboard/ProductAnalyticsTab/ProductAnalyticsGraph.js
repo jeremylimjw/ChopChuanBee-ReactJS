@@ -3,6 +3,7 @@ import { Line } from '@ant-design/plots';
 import { AnalyticsApiHelper } from '../../../../api/AnalyticsApiHelper';
 import { useApp } from '../../../../providers/AppProvider';
 import MyCard from '../../../common/MyCard';
+import MyToolbar from '../../../common/MyToolbar';
 
 export default function ProductAnalyticsGraph(props) {
     const [data, setData] = useState([]);
@@ -75,6 +76,7 @@ export default function ProductAnalyticsGraph(props) {
     return (
     <>
     <MyCard style={{marginLeft: '3px', marginRight: '3px'}}>
+        <MyToolbar title='Monthly Analytics for Product ABC'></MyToolbar>
         <Line {...config} />
     </MyCard>
     </> 

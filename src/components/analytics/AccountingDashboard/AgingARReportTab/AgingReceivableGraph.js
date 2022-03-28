@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { Typography } from 'antd';
 import { Column } from "@ant-design/plots";
 import MyCard from "../../../common/MyCard";
 import MyToolbar from "../../../common/MyToolbar";
 import { useApp } from "../../../../providers/AppProvider";
 import { AnalyticsApiHelper } from "../../../../api/AnalyticsApiHelper";
+import { parseDateTime } from '../../../../utilities/datetime';
 
 export default function AgingReceivableGraph(props) {
   const { handleHttpError } = useApp();
@@ -89,6 +91,7 @@ export default function AgingReceivableGraph(props) {
     },
     label: {
       position: "middle",
+      formatter: (x) => "",
     },
     interactions: [
       {
@@ -110,6 +113,7 @@ export default function AgingReceivableGraph(props) {
 
   return (
     <>
+      <Typography style={{fontSize:'0.8rem', marginBottom: 0, fontStyle:'italic'}}>{"Last Updated: " + parseDateTime(props.currTime)}</Typography>
       <MyCard style={{ marginLeft: "3px", marginRight: "3px" }}>
         <MyToolbar title="Aging Accounts Receivable"></MyToolbar>
         <Column {...config} />

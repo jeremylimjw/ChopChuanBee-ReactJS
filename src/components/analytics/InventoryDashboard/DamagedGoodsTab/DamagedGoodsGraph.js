@@ -21,7 +21,7 @@ export default function DamagedGoodsGraph(props) {
         result.forEach((x) => { 
           const tempQtyReturned = {
             product_name: x.name,
-            metric_name: "Quantity Returned",
+            metric_name: "Quantity Damaged",
             value: parseInt(x.quantity_returned),
           };
           quantityReturned.push(tempQtyReturned);

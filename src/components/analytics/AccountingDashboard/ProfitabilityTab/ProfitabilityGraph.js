@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, DatePicker, Button } from 'antd';
+import { Form, DatePicker } from 'antd';
 import { Line } from '@ant-design/plots';
 import { AnalyticsApiHelper } from '../../../../api/AnalyticsApiHelper';
 import debounce from 'lodash.debounce';
@@ -22,19 +22,19 @@ export default function ProfitabilityGraph(props) {
         let cogs = await AnalyticsApiHelper.getCOGS(start, end);
         cogs.map(x => { 
             x.name = 'Cost of Goods Sold'; 
-            x.value = parseFloat(x.value) * -1; 
+            x.value = x.value >= 0 ? 0 : parseFloat(x.value) * -1; 
             return x;
         });
         let profits = await AnalyticsApiHelper.getProfits(start, end);
         profits.map(x => { 
             x.name = 'Profits'; 
-            x.value = parseFloat(x.value);
+            x.value = x.value <= 0 ? 0 : parseFloat(x.value);
             return x;
         });
         let revenue = await AnalyticsApiHelper.getRevenue(start, end);
         revenue.map(x => { 
             x.name = 'Revenue'; 
-            x.value = parseFloat(x.value);
+            x.value = x.value <= 0 ? 0 : parseFloat(x.value);
             return x;
         });
         setData([...cogs, ...revenue, ...profits]);
@@ -50,7 +50,7 @@ export default function ProfitabilityGraph(props) {
 
         getData(start_date, end_date);
     }
-    
+
     const config = {
         data,
         xField: 'date',

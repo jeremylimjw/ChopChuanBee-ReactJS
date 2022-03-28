@@ -63,7 +63,7 @@ export default function ProfitabilityCard(props) {
         <Typography style={{fontSize:'0.8rem', marginBottom: 0, fontStyle:'italic'}}>{"Last Updated: " + parseDateTime(props.currTime)}</Typography>
 
         <Space direction='horizontal' wrap>
-            <MyCard style={{minWidth:'220px', marginLeft: '3px'}}>
+            <MyCard style={{minWidth:'220px', marginLeft: '3px', marginBottom: 0}}>
                 <Typography>THIS MONTH COGS</Typography>
                 <Typography.Title level={2} style={{margin:0}}>$1,200.00</Typography.Title>
                 <Typography style={{fontSize:'0.8rem', marginTop:'1rem'}}><CaretDownFilled style={{color:'red'}}/>10% from last month</Typography>
@@ -74,7 +74,7 @@ export default function ProfitabilityCard(props) {
                 </Row>
             </MyCard>
 
-            <MyCard style={{minWidth:'220px', marginLeft: '3px'}}>
+            <MyCard style={{minWidth:'220px', marginLeft: '3px', marginBottom: 0}}>
                 <Typography>THIS MONTH REVENUE</Typography>
                 <Typography.Title level={2} style={{margin:0}}>$5,600.00</Typography.Title>
                 <Typography style={{fontSize:'0.8rem', marginTop:'1rem'}}><CaretUpFilled style={{color:'green'}}/>5% from last month</Typography>
@@ -85,7 +85,7 @@ export default function ProfitabilityCard(props) {
                 </Row>
             </MyCard>
 
-            <MyCard style={{minWidth:'220px', marginLeft: '3px'}}>
+            <MyCard style={{minWidth:'220px', marginLeft: '3px', marginBottom: 0}}>
                 <Typography>THIS MONTH PROFITS</Typography>
                 <Typography.Title level={2} style={{margin:0}}>$5,000.00</Typography.Title>
                 <Typography style={{fontSize:'0.8rem', marginTop:'1rem'}}><CaretUpFilled style={{color:'green'}}/>5% from last month</Typography>
