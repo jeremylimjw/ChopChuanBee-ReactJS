@@ -1,4 +1,4 @@
-import { Button, Table, Input, Select, Form, DatePicker } from "antd";
+import { Button, Table, Input, Form, DatePicker } from "antd";
 import React, { useEffect, useState } from "react";
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons/lib/icons";
 import { Link, useNavigate } from "react-router-dom";
@@ -8,7 +8,7 @@ import MyLayout from "../common/MyLayout";
 import MyCard from "../common/MyCard";
 import { showTotal } from "../../utilities/table";
 import { parseDate, parseDateTimeSeconds } from "../../utilities/datetime";
-import { sortByDate, sortByNumber, sortByString } from "../../utilities/sorters";
+import { sortByDate, sortByNumber } from "../../utilities/sorters";
 import MyToolbar from "../common/MyToolbar";
 import { View } from "../../enums/View";
 import { DeliveryApiHelper } from "../../api/DeliveryApiHelper";

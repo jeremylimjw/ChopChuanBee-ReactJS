@@ -16,7 +16,6 @@ export default function IncomeStatementObject({ income, setIncome }) {
     const [editing, setEditing] = useState(false);
     const [loading, setLoading] = useState(false);
     const [form] = Form.useForm();
-    const [incomeStatementPDF, setIncomeStatementPDF] = useState([]);
 
     const totalRevenue = parseFloat(income.revenue) - parseFloat(income.less_cost_of_goods_sold) - parseFloat(income.less_customer_sales_return) + parseFloat(income.gain_on_sale_of_asset) + parseFloat(income.other_income_1) + parseFloat(income.other_income_2);
 
@@ -27,37 +26,6 @@ export default function IncomeStatementObject({ income, setIncome }) {
     income.totalRevenue = totalRevenue.toString();
     income.totalExpenses = totalExpenses.toString();
     income.profit = profit.toString();
-
-    const formatPDF = () => {
-        incomeStatementPDF.start_date = income.start_date;
-        incomeStatementPDF.end_date = income.end_date;
-        incomeStatementPDF.remarks = income.remarks;
-
-        incomeStatementPDF.revenue = formatCurrency(income.revenue);
-        incomeStatementPDF.less_cost_of_goods_sold = formatCurrency(income.less_cost_of_goods_sold);
-        incomeStatementPDF.less_customer_sales_return = formatCurrency(income.less_customer_sales_return);
-        incomeStatementPDF.gain_on_sale_of_asset = formatCurrency(income.gain_on_sale_of_asset);
-        incomeStatementPDF.other_income_1 = formatCurrency(income.other_income_1);
-        incomeStatementPDF.other_income_2 = formatCurrency(income.other_income_2);
-
-        incomeStatementPDF.totalRevenue = formatCurrency(totalRevenue);
-
-        incomeStatementPDF.damaged_inventory = formatCurrency(income.damaged_inventory);
-        incomeStatementPDF.salary_expense = formatCurrency(income.salary_expense);
-        incomeStatementPDF.interest_expense = formatCurrency(income.interest_expense);
-        incomeStatementPDF.tax_expense = formatCurrency(income.tax_expense);
-        incomeStatementPDF.warranty_expense = formatCurrency(income.warranty_expense);
-        incomeStatementPDF.rental_expense = formatCurrency(income.rental_expense);
-        incomeStatementPDF.advertising_expense = formatCurrency(income.advertising_expense);
-        incomeStatementPDF.commissions_expense = formatCurrency(income.commissions_expense);
-        incomeStatementPDF.loss_on_sale_of_asset = formatCurrency(income.loss_on_sale_of_asset);
-        incomeStatementPDF.other_expense_1 = formatCurrency(income.other_expense_1);
-        incomeStatementPDF.other_expense_2 = formatCurrency(income.other_expense_2);
-
-        incomeStatementPDF.totalExpenses = formatCurrency(totalExpenses);
-
-        incomeStatementPDF.profit = formatCurrency(profit);   
-    }
 
     const formatExcel = () => {
         income.revenue = parseFloat(income.revenue);
@@ -87,7 +55,37 @@ export default function IncomeStatementObject({ income, setIncome }) {
     }
 
     const handleExportPDF = () => {
-        formatPDF();
+        const incomeStatementPDF = {};
+
+        incomeStatementPDF.start_date = income.start_date;
+        incomeStatementPDF.end_date = income.end_date;
+        incomeStatementPDF.remarks = income.remarks;
+
+        incomeStatementPDF.revenue = formatCurrency(income.revenue);
+        incomeStatementPDF.less_cost_of_goods_sold = formatCurrency(income.less_cost_of_goods_sold);
+        incomeStatementPDF.less_customer_sales_return = formatCurrency(income.less_customer_sales_return);
+        incomeStatementPDF.gain_on_sale_of_asset = formatCurrency(income.gain_on_sale_of_asset);
+        incomeStatementPDF.other_income_1 = formatCurrency(income.other_income_1);
+        incomeStatementPDF.other_income_2 = formatCurrency(income.other_income_2);
+
+        incomeStatementPDF.totalRevenue = formatCurrency(totalRevenue);
+
+        incomeStatementPDF.damaged_inventory = formatCurrency(income.damaged_inventory);
+        incomeStatementPDF.salary_expense = formatCurrency(income.salary_expense);
+        incomeStatementPDF.interest_expense = formatCurrency(income.interest_expense);
+        incomeStatementPDF.tax_expense = formatCurrency(income.tax_expense);
+        incomeStatementPDF.warranty_expense = formatCurrency(income.warranty_expense);
+        incomeStatementPDF.rental_expense = formatCurrency(income.rental_expense);
+        incomeStatementPDF.advertising_expense = formatCurrency(income.advertising_expense);
+        incomeStatementPDF.commissions_expense = formatCurrency(income.commissions_expense);
+        incomeStatementPDF.loss_on_sale_of_asset = formatCurrency(income.loss_on_sale_of_asset);
+        incomeStatementPDF.other_expense_1 = formatCurrency(income.other_expense_1);
+        incomeStatementPDF.other_expense_2 = formatCurrency(income.other_expense_2);
+
+        incomeStatementPDF.totalExpenses = formatCurrency(totalExpenses);
+
+        incomeStatementPDF.profit = formatCurrency(profit);   
+
         console.log(incomeStatementPDF);
     }
 

@@ -1,5 +1,5 @@
 import { PlusCircleOutlined, MinusCircleOutlined } from '@ant-design/icons/lib/icons';
-import { Row, Col, Popconfirm, Button, message, Typography } from 'antd';
+import { Popconfirm, Button, message } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router';
 import { AccountingAPIHelper } from '../../../api/AccountingAPIHelper';

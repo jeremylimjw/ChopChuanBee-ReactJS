@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Form, Typography, Input, DatePicker, Divider, Modal, message, Radio, Button, Table, Select } from "antd";
+import { Form, Typography, DatePicker, Radio, Button, Table, Select } from "antd";
 import { PrinterOutlined, FileExcelOutlined } from '@ant-design/icons/lib/icons';
 import { useApp } from "../../../providers/AppProvider";
 import MyLayout from "../../common/MyLayout";
@@ -14,6 +14,7 @@ import { RenderCell } from '../../common/TableCell/RenderCell';
 import MyToolbar from "../../common/MyToolbar";
 import { formatCurrency } from '../../../utilities/currency';
 import { sortByDate, sortByNumber, sortByString } from '../../../utilities/sorters';
+import { Link } from "react-router-dom";
 
 const breadcrumbs = [
     { url: "/accounting/taxStatements", name: "Accounting" },    
@@ -21,7 +22,7 @@ const breadcrumbs = [
 ];
 
 export default function ManageTaxStatementPage() {
-    const { handleHttpError, hasWriteAccessTo } = useApp();
+    const { handleHttpError } = useApp();
     const [form] = Form.useForm();
     const [items, setItems] = useState([]);
     const [totalAmt, setTotalAmt] = useState();
@@ -52,7 +53,7 @@ export default function ManageTaxStatementPage() {
             end_date = moment(end_date).set({ hour: 23, minute: 59, second: 59, millisecond: 999 }).toDate();
         }
         
-        if (form.type == 'input'){
+        if (form.type === 'input'){
         AccountingAPIHelper.getInputTax(form, start_date, end_date)
         .then(results => {
             let total_tax = results.pop();
@@ -65,7 +66,7 @@ export default function ManageTaxStatementPage() {
         .catch(handleHttpError)
         .catch(() => setLoading(false))
         }
-        else if (form.type == 'output'){
+        else if (form.type === 'output'){
         AccountingAPIHelper.getOutputTax(form, start_date, end_date)
         .then(results => {
             let total_tax = results.pop();
@@ -158,9 +159,17 @@ const columns = [
     },
     {
         title: 'Company Name',
-        dataIndex: 'company_name',
         key: 'company_name',
         width: "34%",
+        render: (_, record) => {
+            if (record.customer_id) {
+                return <Link to={`/customer/customers/${record.customer_id}`}>{record.company_name}</Link> || '-';
+            } else if (record.supplier_id) {
+                return <Link to={`/supplier/suppliers/${record.supplier_id}`}>{record.company_name}</Link> || '-';
+            } else {
+                return <></>;
+            }
+        },
         sorter: (a, b) => sortByString(a.company_name, b.company_name),
     },
     {

@@ -4,8 +4,8 @@ export function formatCurrency(amount) {
     var parts = decimal.toString().split(".");
 
     if (is_negative) {
-        return '-' + "$" + parts[0].substring(1, parts[0].length).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + (parts[1] ? "." + parts[1] : "");
+        return `-$${parts[0].substring(1, parts[0].length).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}${parts[1] ? "." + parts[1] : ""}`;
     } else {
-        return "$" + parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",") + (parts[1] ? "." + parts[1] : "");
+        return `$${parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",")}${parts[1] ? "." + parts[1] : ""}`;
     }
 }

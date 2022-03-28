@@ -18,7 +18,6 @@ export default function BalanceSheetObject({ BalanceSheet, setBalanceSheet }) {
     const [showPopConfirmPDF, setShowPopConfirmPDF] = useState(false);
     const [showPopConfirmExcel, setShowPopConfirmExcel] = useState(false);
     const [form] = Form.useForm();
-    const [balanceSheetPDF, setBalanceSheetPDF] = useState([]);
 
     const totalCurrentAssets = parseFloat(BalanceSheet.cash_sales_of_goods) + parseFloat(BalanceSheet.cash_others) + parseFloat(BalanceSheet.account_receivable) + parseFloat(BalanceSheet.inventory) + parseFloat(BalanceSheet.supplies) + parseFloat(BalanceSheet.prepaid_insurance) + parseFloat(BalanceSheet.prepaid_rent) + parseFloat(BalanceSheet.other_current_asset_1) + parseFloat(BalanceSheet.other_current_asset_2);
 
@@ -39,7 +38,7 @@ export default function BalanceSheetObject({ BalanceSheet, setBalanceSheet }) {
     const totalLiabilitiesAndEquities = parseFloat(totalLiabilities) + parseFloat(totalEquities);
 
     const checkPopConfirmPDFVisibility = () => {
-        if (totalAssets != totalLiabilitiesAndEquities) {
+        if (totalAssets !== totalLiabilitiesAndEquities) {
             setShowPopConfirmPDF(true);
         } else {
             setShowPopConfirmPDF(false);
@@ -47,73 +46,11 @@ export default function BalanceSheetObject({ BalanceSheet, setBalanceSheet }) {
     }    
 
     const checkPopConfirmExcelVisibility = () => {
-        if (totalAssets != totalLiabilitiesAndEquities) {
+        if (totalAssets !== totalLiabilitiesAndEquities) {
             setShowPopConfirmExcel(true);
         } else {
             setShowPopConfirmExcel(false);
         }
-    }  
-
-    const formatPDF = () => {
-        balanceSheetPDF.end_date = BalanceSheet.end_date;
-        balanceSheetPDF.remarks = BalanceSheet.remarks;
-
-        balanceSheetPDF.cash_sales_of_goods = formatCurrency(BalanceSheet.cash_sales_of_goods);
-        balanceSheetPDF.cash_others = formatCurrency(BalanceSheet.cash_others);
-        balanceSheetPDF.account_receivable = formatCurrency(BalanceSheet.account_receivable);
-        balanceSheetPDF.inventory = formatCurrency(BalanceSheet.inventory);
-        balanceSheetPDF.supplies = formatCurrency(BalanceSheet.supplies);
-        balanceSheetPDF.prepaid_insurance = formatCurrency(BalanceSheet.prepaid_insurance);
-        balanceSheetPDF.prepaid_rent = formatCurrency(BalanceSheet.prepaid_rent);
-        balanceSheetPDF.other_current_asset_1 = formatCurrency(BalanceSheet.other_current_asset_1);
-        balanceSheetPDF.other_current_asset_2 = formatCurrency(BalanceSheet.other_current_asset_1);
-        balanceSheetPDF.other_current_asset_2 = formatCurrency(BalanceSheet.other_current_asset_1);
-        balanceSheetPDF.totalCurrentAssets = formatCurrency(totalCurrentAssets);
-
-        balanceSheetPDF.land = formatCurrency(BalanceSheet.land);
-        balanceSheetPDF.less_accumulated_depreciation_land = formatCurrency(BalanceSheet.less_accumulated_depreciation_land);
-        balanceSheetPDF.building = formatCurrency(BalanceSheet.building);
-        balanceSheetPDF.less_accumulated_depreciation_building = formatCurrency(BalanceSheet.less_accumulated_depreciation_building);
-        balanceSheetPDF.equipments = formatCurrency(BalanceSheet.equipments);
-        balanceSheetPDF.less_accumulated_depreciation_equipments = formatCurrency(BalanceSheet.less_accumulated_depreciation_equipments);
-        balanceSheetPDF.other_non_current_asset_1 = formatCurrency(BalanceSheet.other_non_current_asset_1);
-        balanceSheetPDF.other_non_current_asset_2 = formatCurrency(BalanceSheet.other_non_current_asset_2);
-        balanceSheetPDF.totalNonCurrentAssets = formatCurrency(totalNonCurrentAssets);
-
-        balanceSheetPDF.goodwill = formatCurrency(BalanceSheet.goodwill);
-        balanceSheetPDF.trade_names = formatCurrency(BalanceSheet.trade_names);
-        balanceSheetPDF.other_intangible_asset_1 = formatCurrency(BalanceSheet.other_intangible_asset_1);
-        balanceSheetPDF.other_intangible_asset_2 = formatCurrency(BalanceSheet.other_intangible_asset_2);
-        balanceSheetPDF.totalIntangibleAssets = formatCurrency(totalIntangibleAssets);
-
-        balanceSheetPDF.totalAssets = formatCurrency(totalAssets);
-
-        balanceSheetPDF.account_payable = formatCurrency(BalanceSheet.account_payable);
-        balanceSheetPDF.salary_payable =  formatCurrency(BalanceSheet.salary_payable);
-        balanceSheetPDF.interest_payable =  formatCurrency(BalanceSheet.interest_payable);
-        balanceSheetPDF.taxes_payable =  formatCurrency(BalanceSheet.taxes_payable);
-        balanceSheetPDF.warranty_payable =  formatCurrency(BalanceSheet.warranty_payable);
-        balanceSheetPDF.rental_payable =  formatCurrency(BalanceSheet.rental_payable);
-        balanceSheetPDF.other_current_liability_1 =  formatCurrency(BalanceSheet.other_current_liability_1);
-        balanceSheetPDF.other_current_liability_2 =  formatCurrency(BalanceSheet.other_current_liability_2);
-        balanceSheetPDF.totalCurrentLiabilities = formatCurrency(totalCurrentLiabilities);
-        
-        balanceSheetPDF.notes_payable =  formatCurrency(BalanceSheet.notes_payable);
-        balanceSheetPDF.bonds_payable =  formatCurrency(BalanceSheet.bonds_payable);
-        balanceSheetPDF.other_non_current_liability_1 =  formatCurrency(BalanceSheet.other_non_current_liability_1);
-        balanceSheetPDF.other_non_current_liability_2 =  formatCurrency(BalanceSheet.other_non_current_liability_2);
-        balanceSheetPDF.totalNonCurrentLiabilities = formatCurrency(totalNonCurrentLiabilities);
-
-        balanceSheetPDF.totalLiabilities = formatCurrency(totalLiabilities);
-
-        balanceSheetPDF.share_capital =  formatCurrency(BalanceSheet.share_capital);
-        balanceSheetPDF.less_withdrawal =  formatCurrency(BalanceSheet.less_withdrawal);
-        balanceSheetPDF.retained_earning =  formatCurrency(BalanceSheet.retained_earning);
-        balanceSheetPDF.other_equity_1 =  formatCurrency(BalanceSheet.other_equity_1);
-        balanceSheetPDF.other_equity_2 =  formatCurrency(BalanceSheet.other_equity_2);
-        balanceSheetPDF.totalEquities = formatCurrency(totalEquities);
-
-        balanceSheetPDF.totalLiabilitiesAndEquities = formatCurrency(totalLiabilitiesAndEquities);
     }
 
     const formatExcel = () => {
@@ -177,7 +114,69 @@ export default function BalanceSheetObject({ BalanceSheet, setBalanceSheet }) {
 
     const handleExportPDF = () => {
         setShowPopConfirmPDF(false);
-        formatPDF();
+
+        const balanceSheetPDF = {};
+
+        balanceSheetPDF.end_date = BalanceSheet.end_date;
+        balanceSheetPDF.remarks = BalanceSheet.remarks;
+
+        balanceSheetPDF.cash_sales_of_goods = formatCurrency(BalanceSheet.cash_sales_of_goods);
+        balanceSheetPDF.cash_others = formatCurrency(BalanceSheet.cash_others);
+        balanceSheetPDF.account_receivable = formatCurrency(BalanceSheet.account_receivable);
+        balanceSheetPDF.inventory = formatCurrency(BalanceSheet.inventory);
+        balanceSheetPDF.supplies = formatCurrency(BalanceSheet.supplies);
+        balanceSheetPDF.prepaid_insurance = formatCurrency(BalanceSheet.prepaid_insurance);
+        balanceSheetPDF.prepaid_rent = formatCurrency(BalanceSheet.prepaid_rent);
+        balanceSheetPDF.other_current_asset_1 = formatCurrency(BalanceSheet.other_current_asset_1);
+        balanceSheetPDF.other_current_asset_2 = formatCurrency(BalanceSheet.other_current_asset_1);
+        balanceSheetPDF.other_current_asset_2 = formatCurrency(BalanceSheet.other_current_asset_1);
+        balanceSheetPDF.totalCurrentAssets = formatCurrency(totalCurrentAssets);
+
+        balanceSheetPDF.land = formatCurrency(BalanceSheet.land);
+        balanceSheetPDF.less_accumulated_depreciation_land = formatCurrency(BalanceSheet.less_accumulated_depreciation_land);
+        balanceSheetPDF.building = formatCurrency(BalanceSheet.building);
+        balanceSheetPDF.less_accumulated_depreciation_building = formatCurrency(BalanceSheet.less_accumulated_depreciation_building);
+        balanceSheetPDF.equipments = formatCurrency(BalanceSheet.equipments);
+        balanceSheetPDF.less_accumulated_depreciation_equipments = formatCurrency(BalanceSheet.less_accumulated_depreciation_equipments);
+        balanceSheetPDF.other_non_current_asset_1 = formatCurrency(BalanceSheet.other_non_current_asset_1);
+        balanceSheetPDF.other_non_current_asset_2 = formatCurrency(BalanceSheet.other_non_current_asset_2);
+        balanceSheetPDF.totalNonCurrentAssets = formatCurrency(totalNonCurrentAssets);
+
+        balanceSheetPDF.goodwill = formatCurrency(BalanceSheet.goodwill);
+        balanceSheetPDF.trade_names = formatCurrency(BalanceSheet.trade_names);
+        balanceSheetPDF.other_intangible_asset_1 = formatCurrency(BalanceSheet.other_intangible_asset_1);
+        balanceSheetPDF.other_intangible_asset_2 = formatCurrency(BalanceSheet.other_intangible_asset_2);
+        balanceSheetPDF.totalIntangibleAssets = formatCurrency(totalIntangibleAssets);
+
+        balanceSheetPDF.totalAssets = formatCurrency(totalAssets);
+
+        balanceSheetPDF.account_payable = formatCurrency(BalanceSheet.account_payable);
+        balanceSheetPDF.salary_payable =  formatCurrency(BalanceSheet.salary_payable);
+        balanceSheetPDF.interest_payable =  formatCurrency(BalanceSheet.interest_payable);
+        balanceSheetPDF.taxes_payable =  formatCurrency(BalanceSheet.taxes_payable);
+        balanceSheetPDF.warranty_payable =  formatCurrency(BalanceSheet.warranty_payable);
+        balanceSheetPDF.rental_payable =  formatCurrency(BalanceSheet.rental_payable);
+        balanceSheetPDF.other_current_liability_1 =  formatCurrency(BalanceSheet.other_current_liability_1);
+        balanceSheetPDF.other_current_liability_2 =  formatCurrency(BalanceSheet.other_current_liability_2);
+        balanceSheetPDF.totalCurrentLiabilities = formatCurrency(totalCurrentLiabilities);
+        
+        balanceSheetPDF.notes_payable =  formatCurrency(BalanceSheet.notes_payable);
+        balanceSheetPDF.bonds_payable =  formatCurrency(BalanceSheet.bonds_payable);
+        balanceSheetPDF.other_non_current_liability_1 =  formatCurrency(BalanceSheet.other_non_current_liability_1);
+        balanceSheetPDF.other_non_current_liability_2 =  formatCurrency(BalanceSheet.other_non_current_liability_2);
+        balanceSheetPDF.totalNonCurrentLiabilities = formatCurrency(totalNonCurrentLiabilities);
+
+        balanceSheetPDF.totalLiabilities = formatCurrency(totalLiabilities);
+
+        balanceSheetPDF.share_capital =  formatCurrency(BalanceSheet.share_capital);
+        balanceSheetPDF.less_withdrawal =  formatCurrency(BalanceSheet.less_withdrawal);
+        balanceSheetPDF.retained_earning =  formatCurrency(BalanceSheet.retained_earning);
+        balanceSheetPDF.other_equity_1 =  formatCurrency(BalanceSheet.other_equity_1);
+        balanceSheetPDF.other_equity_2 =  formatCurrency(BalanceSheet.other_equity_2);
+        balanceSheetPDF.totalEquities = formatCurrency(totalEquities);
+
+        balanceSheetPDF.totalLiabilitiesAndEquities = formatCurrency(totalLiabilitiesAndEquities);
+
         console.log(balanceSheetPDF);
     }
 
