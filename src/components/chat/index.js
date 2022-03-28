@@ -15,7 +15,7 @@ export default function Chat() {
 
     const [loading, setLoading] = useState(false);
     const [channels, setChannels] = useState([]);
-    const [selectedChatId, setSelectedChatId] = useState(null);
+    const [chat, setChat] = useState(null)
 
     const [isDirectModalVisible, setIsDirectModalVisible] = useState(false);
     const [isNewGroupModalVisible, setIsNewGroupModalVisible] = useState(false);
@@ -61,18 +61,20 @@ export default function Chat() {
         socket.on("message", data => {
             const { newText } = data;
             console.log('message', data.newText.text)
+
+            const newChannels = [...channels]
+            const index = newChannels.findIndex(x => x.id === newText.channel_id);
             
-            if (selectedChatId !== newText.channel_id) {
-                const newChannels = [...channels]
-                const index = newChannels.findIndex(x => x.id === newText.channel_id);
+            if (chat?.id !== newText.channel_id) {
+                // Update unread count and last text in channel list
                 if (index > -1) {
                     newChannels[index] = {
                         ...newChannels[index], 
                         unread_count: newChannels[index].unread_count+1,
                         last_text: newText, 
                     }
-                    setChannels(newChannels);
                 }
+
                 // Update last received timestamp
                 socket.emit('update_last_received', {
                     employee_id: user.id,
@@ -80,6 +82,9 @@ export default function Chat() {
                     timestamp: new Date(),
                 })
             } else {
+                // Append the new text in chatbox
+                setChat({...chat, texts: [newText, ...chat.texts]})
+
                 // Update last read timestamp
                 socket.emit('update_last_read', {
                     employee_id: user.id,
@@ -87,24 +92,29 @@ export default function Chat() {
                     timestamp: new Date(),
                 })
             }
+
+            // Shift channel to first item of the array list
+            const channel = newChannels.splice(index, 1);
+            setChannels([...channel, ...newChannels])
+            
         })
   
         return () => {
             socket.off("message");
         }
     
-    }, [socket, user, selectedChatId, channels, setChannels])
+    }, [socket, user, chat, setChat, channels, setChannels])
 
     return (
         <>
         { user != null && 
             <>
                 <div id="chat" style={styles.container}>
-                    { selectedChatId &&
+                    { chat &&
                         <ChatBox 
-                            key={selectedChatId} // To force component re-render
-                            selectedChatId={selectedChatId} 
-                            setSelectedChatId={setSelectedChatId} 
+                            key={chat.id} // To force component re-render
+                            chat={chat}
+                            setChat={setChat}
                             channels={channels}
                             setChannels={setChannels}
                         />
@@ -114,8 +124,8 @@ export default function Chat() {
                         setLoading={setLoading}
                         channels={channels}
                         setChannels={setChannels}
-                        selectedChatId={selectedChatId} 
-                        setSelectedChatId={setSelectedChatId} 
+                        chat={chat}
+                        setChat={setChat}
                         setIsDirectModalVisible={setIsDirectModalVisible}
                         setIsNewGroupModalVisible={setIsNewGroupModalVisible}
                     />

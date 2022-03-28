@@ -10,7 +10,7 @@ import { useChatProvider } from '../../providers/ChatProvider';
 
 const LIMIT = 20;
 
-export default function ChatBox({ selectedChatId, setSelectedChatId, channels, setChannels }) {
+export default function ChatBox({ chat, setChat, channels, setChannels }) {
 
     const { socket } = useChatProvider();
     const { user, handleHttpError } = useApp();
@@ -21,7 +21,6 @@ export default function ChatBox({ selectedChatId, setSelectedChatId, channels, s
     const [submitting, setSubmitting] = useState(false);
     const [hasMore, setHasMore] = useState(true)
     const [page, setPage] = useState(1)
-    const [chat, setChat] = useState(null)
 
     // Load the single channel
     useEffect(() => {
@@ -29,33 +28,14 @@ export default function ChatBox({ selectedChatId, setSelectedChatId, channels, s
         setPage(1);
         setHasMore(true);
 
-        setLoading(true);
-        ChatApiHelper.getChannelById({ channel_id: selectedChatId, textLimit: LIMIT })
-            .then(chat => {
-                if (chat != null) {
-                    setChat(chat);
-                    setLoading(false);
+        if (chat.texts.length < LIMIT) {
+            setHasMore(false);
+        }
 
-                    if (chat.texts.length < LIMIT) {
-                        setHasMore(false);
-                    }
-                }
-            })
-            .catch(handleHttpError)
-            .catch(() => setLoading(false));
-    }, [selectedChatId, setChat, setLoading, handleHttpError])
+    }, [chat.texts, setHasMore, setPage])
     
     useEffect(() => {
         if (!socket) return;
-
-        socket.on("message", data => {
-            const { newText } = data;
-            console.log('message', data.newText.text)
-            
-            if (selectedChatId === newText.channel_id) {
-                setChat({...chat, texts: [newText, ...chat.texts]})
-            }
-        })
   
         socket.on("last_received", data => {
             console.log('last_received')
@@ -108,7 +88,7 @@ export default function ChatBox({ selectedChatId, setSelectedChatId, channels, s
         let newPageNo = page + 1;
         setPage(newPageNo)
 
-        ChatApiHelper.getTexts({ channel_id: selectedChatId, limit: LIMIT, offset: newPageNo })
+        ChatApiHelper.getTexts({ channel_id: chat.id, limit: LIMIT, offset: newPageNo })
             .then(texts => {
                 if (chat.texts.length < LIMIT) {
                     setHasMore(false);
@@ -163,7 +143,7 @@ export default function ChatBox({ selectedChatId, setSelectedChatId, channels, s
 
     function handleKeyDown(e) {
         // Submit on enter key, but ignore if shift+enter
-        if (e.keyCode == 13 && !e.shiftKey) {
+        if (e.keyCode === 13 && !e.shiftKey) {
             e.preventDefault();
             onFinish(form.getFieldsValue());
             form.resetFields();
@@ -195,8 +175,11 @@ export default function ChatBox({ selectedChatId, setSelectedChatId, channels, s
                             ...newChannels[index], 
                             last_text: newText, 
                         }
-                        setChannels(newChannels);
                     }
+                    
+                    // Shift channel to first item of the array list
+                    const channel = newChannels.splice(index, 1);
+                    setChannels([...channel, ...newChannels])
 
                     setSubmitting(false);
                 })
@@ -214,7 +197,7 @@ export default function ChatBox({ selectedChatId, setSelectedChatId, channels, s
                     <Collapse.Panel 
                         key="first-panel" 
                         extra={<Button type="text" style={styles.grey} shape="circle" icon={<CloseOutlined />}
-                        onClick={() => setSelectedChatId(null)} />}
+                        onClick={() => setChat(null)} />}
                         header={renderHeader()}
                     >
 
@@ -262,7 +245,7 @@ export default function ChatBox({ selectedChatId, setSelectedChatId, channels, s
                                             }
                                             </>
                                         )]}
-                                        author={<a>{x.employee.name}</a>}
+                                        author={x.employee.name}
                                         avatar={<Avatar icon={<UserOutlined />} />}
                                         content={
                                             <p>{x.text}</p>

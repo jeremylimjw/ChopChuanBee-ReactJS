@@ -3,14 +3,26 @@ import { Avatar, Badge, Button, Collapse, List, Spin } from 'antd'
 import React from 'react'
 import { useApp } from '../../providers/AppProvider';
 import moment from 'moment';
+import { ChatApiHelper } from '../../api/ChatApiHelper';
 
-export default function Channels({ loading, setLoading, channels, setChannels, selectedChatId, setSelectedChatId, setIsDirectModalVisible, setIsNewGroupModalVisible }) {
+const LIMIT = 20;
 
-    const { user } = useApp();
+export default function Channels({ loading, setLoading, channels, setChannels, chat, setChat, setIsDirectModalVisible, setIsNewGroupModalVisible }) {
+
+    const { user, handleHttpError } = useApp();
 
     function handleChannelClick(clickedChat) {
-        if (selectedChatId === clickedChat.id) return; // If chat already opened, do nothing
-        setSelectedChatId(clickedChat.id);
+        if (chat?.id === clickedChat.id) return; // If chat already opened, do nothing
+        
+        // Retrieve the chat
+        ChatApiHelper.getChannelById({ channel_id: clickedChat.id, textLimit: LIMIT })
+            .then(chat => {
+                if (chat != null) {
+                    setChat(chat);
+                }
+            })
+            .catch(handleHttpError)
+            .catch(() => setLoading(false));
 
         // Update unread_count
         const newChannels = [...channels]
