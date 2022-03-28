@@ -8,6 +8,7 @@ import PayableCard from './AccountsPayableTab/PayableCard';
 import PayableGraph from './AccountsPayableTab/PayableGraph';
 import ReceivableCard from './AccountsReceivableTab/ReceivableCard';
 import ReceivableGraph from './AccountsReceivableTab/ReceivableGraph';
+import AgingReceivableGraph from './AgingARReportTab/AgingReceivableGraph';
 import CustomerAnalyticsCard from './CustomerAnalyticsTab/CustomerAnalyticsCard';
 import CustomerAnalyticsData from './CustomerAnalyticsTab/CustomerAnalyticsData';
 
@@ -25,17 +26,21 @@ export default function AccountingDashboard() {
                     <ProfitabilityGraph currDate={currDate} oneYearAgo={oneYearAgo} />
                 </TabPane>
 
-                <TabPane tab="Accounts Payable" key="2">
+                <TabPane tab="Outstanding Accounts Payable" key="2">
                     <PayableCard currTime={currTime} />
                     <PayableGraph />
                 </TabPane>
 
-                <TabPane tab="Accounts Receivable" key="3">
+                <TabPane tab="Outstanding Accounts Receivable" key="3">
                     <ReceivableCard currTime={currTime} />
                     <ReceivableGraph />
                 </TabPane>
+
+                <TabPane tab="Aging Accounts Receivable" key="4">
+                    <AgingReceivableGraph />
+                </TabPane>
                 
-                <TabPane tab="Customer Analytics" key="4">
+                <TabPane tab="Customer Analytics" key="5">
                     <CustomerAnalyticsCard currTime={currTime} />
                     <CustomerAnalyticsData />
                 </TabPane>

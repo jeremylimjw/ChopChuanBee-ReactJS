@@ -15,7 +15,7 @@ export default function ProfitabilityGraph(props) {
     const { handleHttpError, hasWriteAccessTo } = useApp();
 
     useEffect(() => {
-        getData(props.oneYearAgo, props.currDate);     
+        getData(props.oneYearAgo, props.currDate);
     }, [handleHttpError, loading]);
 
     const getData = async (start, end) => {

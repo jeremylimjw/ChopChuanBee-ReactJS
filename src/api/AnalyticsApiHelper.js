@@ -96,4 +96,10 @@ export class AnalyticsApiHelper {
       .get("/analytics/Product_Analytics/", { params })
       .then((res) => res.data);
   }
+
+  static async getAgedReceivable() {
+    return axiosObject
+      .get("/analytics/Aging_AR_Table_Demo/")
+      .then((res) => res.data);
+  }
 }

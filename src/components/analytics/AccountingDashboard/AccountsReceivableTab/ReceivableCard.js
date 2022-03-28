@@ -22,7 +22,7 @@ export default function ReceivableCard(props) {
             .catch(() => setLoading(false));
     
         AnalyticsApiHelper.getReceivableCustomers()
-            .then(result => { setHighestCustomerARAmt(result[0]["total_ar_amount"]); setHighestCustomerARName(result[0]["company_name"]); })
+            .then(result => { setHighestCustomerARAmt(result[0]["total_ar_amount"] * -1); setHighestCustomerARName(result[0]["company_name"]); })
             .catch(handleHttpError)
             .catch(() => setLoading(false));
     }, [handleHttpError, setLoading])
