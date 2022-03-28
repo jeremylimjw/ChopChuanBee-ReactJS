@@ -10,7 +10,6 @@ import { REQUIRED } from "../../../utilities/form";
 import moment from 'moment';
 import { parseDate } from '../../../utilities/datetime';
 import { showTotal } from '../../../utilities/table';
-import { RenderCell } from '../../common/TableCell/RenderCell';
 import MyToolbar from "../../common/MyToolbar";
 import { formatCurrency } from '../../../utilities/currency';
 import { sortByDate, sortByNumber, sortByString } from '../../../utilities/sorters';
@@ -80,6 +79,7 @@ export default function ManageTaxStatementPage() {
         .catch(() => setLoading(false))
         }
     }
+
     function handleChargedUnderChange(id) {
         const index = chargedUnders.findIndex(x => x.id === id);
         form.setFieldsValue({ charged_under: (id == null ? null : {...chargedUnders[index] }) });
@@ -127,7 +127,6 @@ export default function ManageTaxStatementPage() {
                     columns={columns} 
                     loading={loading} 
                     rowKey={() => Math.random()} 
-                    components={{ body: { cell: RenderCell } }} 
                     pagination={{ pageSize: 6, showTotal: showTotal }}
                 />
                 <div>
