@@ -41,6 +41,7 @@ import ViewSalesOrderPage from './components/customer/ViewSalesOrderPage';
 import ViewInventoryMovementsPage from './components/inventory/ViewInventoryMovementsPage';
 import ManageDeliveriesPage from './components/dispatch/ManageDeliveriesPage';
 import ActivatePage from './components/ActivatePage';
+import ViewSORAPage from './components/customer/ViewSORAPage';
 import ManageItinerarysPage from './components/dispatch/ManageItinerarysPage';
 import NewItineraryPage from './components/dispatch/NewItineraryPage';
 import ViewItineraryPage from './components/dispatch/ViewItineraryPage';
@@ -191,6 +192,11 @@ const routes = [
       { 
         path: 'sales/:id', 
         component: <ViewSalesOrderPage />,
+        viewAccess: View.SCM.name,
+      },
+      { 
+        path: 'customers/SORA/:id', 
+        component: <ViewSORAPage />,
         viewAccess: View.SCM.name,
       },
     ]

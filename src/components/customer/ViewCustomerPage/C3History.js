@@ -99,13 +99,13 @@ export default function C3History({ customer }) {
 
 const columns = [
     {
-      title: 'Created At',
-      dataIndex: 'created_at',
-      key: 'created_at',
-      width: 180,
-      ellipsis: true,
-      render: (created_at) => parseDateTime(created_at),
-      sorter: (a, b) => sortByDate(a.created_at, b.created_at),
+        title: 'Created At',
+        dataIndex: 'created_at',
+        key: 'created_at',
+        width: 180,
+        ellipsis: true,
+        render: (created_at) => parseDateTime(created_at),
+        sorter: (a, b) => sortByDate(a.created_at, b.created_at),
     },
     { 
         title: 'Order ID', 
@@ -113,6 +113,7 @@ const columns = [
         key: 'id', 
         width: '11%', 
         ellipsis: true,
+        render: (id) => id ? <Link to={`/customer/sales/${id}`}>{id}</Link> : '-',
         sorter: (a, b) => sortByNumber(a.id, b.id),
     },
     { 

@@ -83,4 +83,9 @@ export class CustomerApiHelper {
         .then(res => res.data);
     }
 
+    static async getSORA(id) {
+        return axiosObject.get(`/customer/SORA`, { params: { customer_id: id } })
+          .then(res => res.data);
+      }
+
 }
