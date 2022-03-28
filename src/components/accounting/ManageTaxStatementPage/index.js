@@ -13,6 +13,7 @@ import { showTotal } from '../../../utilities/table';
 import { RenderCell } from '../../common/TableCell/RenderCell';
 import MyToolbar from "../../common/MyToolbar";
 import { formatCurrency } from '../../../utilities/currency';
+import { sortByDate, sortByNumber, sortByString } from '../../../utilities/sorters';
 
 const breadcrumbs = [
     { url: "/accounting/taxStatements", name: "Accounting" },    
@@ -152,23 +153,23 @@ const columns = [
         title: 'Order Id',
         dataIndex: 'order_id',
         key: 'order_id',
-        width: "11%"
-        //   sorter: (a, b) => sortByString(a.sales_order_id, b.sales_order_id),
+        width: "11%",
+        sorter: (a, b) => sortByNumber(a.order_id, b.order_id)
     },
     {
         title: 'Company Name',
         dataIndex: 'company_name',
         key: 'company_name',
-        width: "34%"
-        //   sorter: (a, b) => sortByString(a.company_name, b.company_name),
+        width: "34%",
+        sorter: (a, b) => sortByString(a.company_name, b.company_name),
     },
     {
         title: 'Charged Under',
         dataIndex: 'charged_under_name',
         key: 'charged_under_name',
         align: 'center',
-        width: "11%"
-        //   sorter: (a, b) => sortByString(a.charged_under_name, b.charged_under_name),
+        width: "11%",
+        sorter: (a, b) => sortByString(a.charged_under_name, b.charged_under_name),
     },
     {
         title: 'Transaction Date',
@@ -177,6 +178,7 @@ const columns = [
         align: 'center',
         width: "11%",
         render: (transaction_date) => parseDate(transaction_date),
+        sorter: (a, b) => sortByDate(a.transaction_date, b.transaction_date),
     },
     {
         title: 'Total Amount',
@@ -185,7 +187,7 @@ const columns = [
         align: 'center',
         width: "11%",
         render: (total_transaction_amount) => formatCurrency(total_transaction_amount),
-        // sorter: (a, b) => sortByString(a.total_transaction_amount, b.total_transaction_amount),
+        sorter: (a, b) => sortByNumber(a.total_transaction_amount, b.total_transaction_amount),
     },
     {
         title: 'GST Rate',
@@ -193,6 +195,7 @@ const columns = [
         key: 'gst_rate',
         align: 'center',
         width: "11%",
+        sorter: (a, b) => sortByNumber(a.gst_rate, b.gst_rate),
     },
     {
         title: 'GST Amount',
@@ -201,6 +204,6 @@ const columns = [
         align: 'center',
         width: "11%",
         render: (gst_amount) => formatCurrency(gst_amount),
-        // sorter: (a, b) => sortByString(a.gst_amount, b.gst_amount),
+        sorter: (a, b) => sortByNumber(a.gst_amount, b.gst_amount),
     },
 ];
