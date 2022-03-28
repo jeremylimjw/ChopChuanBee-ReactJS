@@ -1,7 +1,7 @@
 import React from 'react'
 import { Layout, Menu } from 'antd'
 import { Link } from 'react-router-dom'
-import { HomeOutlined, InboxOutlined, ShoppingOutlined, SolutionOutlined, TeamOutlined, UserOutlined, CarOutlined } from '@ant-design/icons/lib/icons'
+import { HomeOutlined, InboxOutlined, ShoppingOutlined, SolutionOutlined, TeamOutlined, UserOutlined, CarOutlined ,AccountBookOutlined } from '@ant-design/icons/lib/icons'
 import { useApp } from '../../providers/AppProvider'
 import { useLocation } from "react-router-dom";
 import { View } from '../../enums/View'
@@ -53,6 +53,16 @@ const menu = [
     items: [
       { route: '/customer/customers', name: 'Manage Customers' },
       { route: '/customer/sales', name: 'Sales' },
+    ]
+  },
+  {
+    role: View.ACCOUNTING.name,
+    title: 'Accounting',
+    icon: <AccountBookOutlined />,
+    items: [
+      { route: '/accounting/balanceSheets', name: 'Balance Sheets' },
+      { route: '/accounting/incomeStatements', name: 'Income Statements' },
+      { route: '/accounting/taxStatements', name: 'Tax Statements' },
     ]
   },
   {

@@ -25,6 +25,11 @@ import ManageSuppliersPage from './components/supplier/ManageSuppliersPage';
 import ViewSupplierPage from './components/supplier/ViewSupplierPage';
 import ManageCustomersPage from './components/customer/ManageCustomersPage';
 import ViewCustomerPage from './components/customer/ViewCustomerPage';
+import ManageBalanceSheetPage from './components/accounting/ManageBalanceSheetPage';
+import ViewBalanceSheetPage from './components/accounting/ViewBalanceSheetPage';
+import ViewIncomeStatementPage from './components/accounting/ViewIncomeStatementPage';
+import ManageIncomeStatementPage from './components/accounting/ManageIncomeStatementPage';
+import ManageTaxStatementPage from './components/accounting/ManageTaxStatementPage';
 import ManageProcurementsPage from './components/supplier/ManageProcurementsPage';
 import NewProcurementPage from './components/supplier/NewProcurementPage';
 import ViewProcurementPage from './components/supplier/ViewProcurementPage';
@@ -191,6 +196,37 @@ const routes = [
     ]
   },
   {
+    path: "/accounting",
+    component: <Outlet />,
+    childRoutes: [
+      {
+        path: "balanceSheets",
+        component: <ManageBalanceSheetPage />,
+        viewAccess: View.ACCOUNTING.name,
+      },
+      {
+        path: "balanceSheets/:id",
+        component: <ViewBalanceSheetPage />,
+        viewAccess: View.ACCOUNTING.name,
+      },
+      {
+        path: "incomeStatements",
+        component: <ManageIncomeStatementPage />,
+        viewAccess: View.ACCOUNTING.name,
+      },
+      {
+        path: "incomeStatements/:id",
+        component: <ViewIncomeStatementPage />,
+        viewAccess: View.ACCOUNTING.name,
+      },
+      {
+        path: "taxStatements",
+        component: <ManageTaxStatementPage />,
+        viewAccess: View.ACCOUNTING.name,
+      },
+    ],
+  },
+  { 
     path: '/dispatch',
     component: <Outlet />,
     childRoutes: [
