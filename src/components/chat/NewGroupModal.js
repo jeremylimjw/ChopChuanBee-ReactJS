@@ -43,6 +43,7 @@ export default function NewGroupModal({ isModalVisible, setIsModalVisible, handl
                     handleNewChannelEvent(newChannel)
                     setIsModalVisible(false);
                     message.success("New chat group successfully created!");
+                    form.resetFields();
                 })
                 .catch(handleHttpError)
                 .catch(() => setLoading(false));
