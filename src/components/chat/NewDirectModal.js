@@ -43,7 +43,7 @@ function MyModalContent({ setIsModalVisible, handleNewChannelEvent }) {
         setLoading(true);
         EmployeeApiHelper.get({ ...query, status: true, order_by: 'name', limit: LIMIT })
             .then(results => {
-                if (results.length < 10) {
+                if (results.length < LIMIT) {
                     setHasMore(false);
                 }
                 setEmployees(results);
@@ -60,12 +60,12 @@ function MyModalContent({ setIsModalVisible, handleNewChannelEvent }) {
     }, [getEmployees])
 
     function handleNext() {
-        let newPageNo = page + 1;
-        setPage(newPageNo)
+        if (loading) return;
 
         const searchValues = form.getFieldsValue();
 
-        if (loading) return;
+        let newPageNo = page + 1;
+        setPage(newPageNo)
 
         setLoading(true);
         EmployeeApiHelper.get({ ...searchValues, status: true, order_by: 'name', limit: LIMIT, offset: (newPageNo-1)*LIMIT })

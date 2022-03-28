@@ -15,7 +15,7 @@ export default function Chat() {
 
     const [loading, setLoading] = useState(false);
     const [channels, setChannels] = useState([]);
-    const [chat, setChat] = useState(null);
+    const [selectedChatId, setSelectedChatId] = useState(null);
 
     const [isDirectModalVisible, setIsDirectModalVisible] = useState(false);
     const [isNewGroupModalVisible, setIsNewGroupModalVisible] = useState(false);
@@ -54,17 +54,59 @@ export default function Chat() {
         }
     
     }, [socket, handleNewChannelEvent])
+    
+    useEffect(() => {
+        if (!socket) return;
+
+        socket.on("message", data => {
+            const { newText } = data;
+            console.log('message', data.newText.text)
+            
+            if (selectedChatId !== newText.channel_id) {
+                const newChannels = [...channels]
+                const index = newChannels.findIndex(x => x.id === newText.channel_id);
+                if (index > -1) {
+                    newChannels[index] = {
+                        ...newChannels[index], 
+                        unread_count: newChannels[index].unread_count+1,
+                        last_text: newText, 
+                    }
+                    setChannels(newChannels);
+                }
+                // Update last received timestamp
+                socket.emit('update_last_received', {
+                    employee_id: user.id,
+                    channel_id: newText.channel_id,
+                    timestamp: new Date(),
+                })
+            } else {
+                // Update last read timestamp
+                socket.emit('update_last_read', {
+                    employee_id: user.id,
+                    channel_id: newText.channel_id,
+                    timestamp: new Date(),
+                })
+            }
+        })
+  
+        return () => {
+            socket.off("message");
+        }
+    
+    }, [socket, user, selectedChatId, channels, setChannels])
 
     return (
         <>
         { user != null && 
             <>
                 <div id="chat" style={styles.container}>
-                    { chat &&
+                    { selectedChatId &&
                         <ChatBox 
-                            key={chat.id} // To force component re-render
-                            chat={chat} 
-                            setChat={setChat} 
+                            key={selectedChatId} // To force component re-render
+                            selectedChatId={selectedChatId} 
+                            setSelectedChatId={setSelectedChatId} 
+                            channels={channels}
+                            setChannels={setChannels}
                         />
                     }
                     <Channels 
@@ -72,8 +114,8 @@ export default function Chat() {
                         setLoading={setLoading}
                         channels={channels}
                         setChannels={setChannels}
-                        chat={chat} 
-                        setChat={setChat} 
+                        selectedChatId={selectedChatId} 
+                        setSelectedChatId={setSelectedChatId} 
                         setIsDirectModalVisible={setIsDirectModalVisible}
                         setIsNewGroupModalVisible={setIsNewGroupModalVisible}
                     />

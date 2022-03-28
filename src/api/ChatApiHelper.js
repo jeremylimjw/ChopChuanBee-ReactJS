@@ -7,8 +7,22 @@ export class ChatApiHelper {
     }
 
     static async createChannel(newChannel) {
-        return axiosObject
-            .post("/chat/channel", newChannel)
+        return axiosObject.post("/chat/channel", newChannel)
+            .then((res) => res.data)
+    }
+
+    static async getChannelById(params) {
+        return axiosObject.get(`/chat/channel/id`, { params: params })
+            .then(res => res.data);
+    }
+
+    static async getTexts(params) {
+        return axiosObject.get(`/chat/text`, { params: params })
+            .then(res => res.data);
+    }
+
+    static async createText(newText) {
+        return axiosObject.post("/chat/text", newText)
             .then((res) => res.data)
     }
 
