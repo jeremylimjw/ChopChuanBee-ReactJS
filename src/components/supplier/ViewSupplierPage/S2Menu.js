@@ -134,7 +134,6 @@ export default function S2Menu({ supplier }) {
             />
         </>  
     )
-
 }
 
 const columns = [
