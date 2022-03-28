@@ -88,10 +88,12 @@ export const deliveryInstructionsTemplate = (data) => {
       },
       routeTable,
       { text: '', margin: [0, 5] },
+      // Special instruction box
       PDFTools.formatText('SPECIAL INSTRUCTIONS OR REMARKS', 'subHeader'),
       { text: '', margin: [0, 0, 0, 2] },
       PDFTools.generateEmptyBox(802, 100),
       { text: '', margin: [0, 5] },
+      // Signatures 
       {
         columns: [
           PDFTools.formatText('Completed Delivery Orders:', 'subHeader'),

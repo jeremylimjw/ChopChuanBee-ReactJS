@@ -5,12 +5,13 @@ import { generatePdf } from '../../utilities/Report/ReportExporter'
 import { purchaseOrderTemplate } from '../../utilities/Report/Templates/PurchaseOrderTemplate'
 import { salesInvoiceTemplate } from '../../utilities/Report/Templates/SalesInvoiceTemplate'
 import { deliveryInstructionsTemplate } from '../../utilities/Report/Templates/DeliveryInstructionsTemplate'
-import DeliveryStickerTemplate from '../../utilities/Report/Templates/DeliveryStickerTemplate'
+
 import { useNavigate } from 'react-router'
 import MyLayout from '../../components/common/MyLayout'
 import MyCard from '../../components/common/MyCard'
 import { balanceSheetTemplate } from '../../utilities/Report/Templates/BalanceSheetTemplate'
 import { profitLossStatement } from '../../utilities/Report/Templates/ProfitLossStatementTemplate'
+import { deliverySticker } from '../../utilities/Report/Templates/DeliverySticker'
 
 
 const ReportGenerationPage = (props) => {
@@ -243,8 +244,6 @@ const ReportGenerationPage = (props) => {
     warranty_expense: 0
   }
 
-  const itineraryDemo = require('../../utilities/Report/DeliveryItineraryObj.json')
-
   const handleGenerate = (doc) => {
     generatePdf(doc)
   }
@@ -270,31 +269,14 @@ const ReportGenerationPage = (props) => {
         >
           PNL Statement
         </Button>
-        <Button
-          style={{ marginLeft: '30px' }}
-          onClick={() => handleGenerate(deliveryInstructionsTemplate(itineraryDemo))}
-        >
-          Generate Delivery Instructions
-        </Button>
       </MyCard>
       <MyCard>
         <Button
-          onClick={() => window.open('http://localhost:3001/deliverystickers')}
+          onClick={() => handleGenerate(deliverySticker())}
         >Generate Stickers</Button>
       </MyCard>
 
-      <Modal
-        visible={modalVisibility}
-        width={1000}
-        onCancel={() => setModalVisibility(false)}
-        onOk={() => window.open('http://localhost:3001/deliverystickers')}
-      >
-        {/* <Typography.Title style={{ marginBottom: '20px' }} level={4}>Preview</Typography.Title> */}
-        <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-          <DeliveryStickerTemplate />
-          <DeliveryStickerTemplate />
-        </div>
-      </Modal>
+
     </MyLayout>
   )
 }

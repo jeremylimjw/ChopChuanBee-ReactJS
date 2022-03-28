@@ -162,8 +162,10 @@ export default function ViewSalesOrderPage() {
         generatePdf(data, action)
         break
       case 'STICKER':
+        generatePdf(salesOrder, action)
+        break
       case 'PACKING_LIST':
-        generatePdf(data, action)
+        generatePdf(salesOrder, action)
         break
       default:
         break
@@ -207,8 +209,8 @@ export default function ViewSalesOrderPage() {
                     <>
                       <Button icon={<SendOutlined />} onClick={sendOrder}>Send Email</Button>
                       <Button icon={<PrinterOutlined />} onClick={() => viewAsPDF('SO')}>Invoice</Button>
-                      <Button icon={<PrinterOutlined />} onClick={sendOrder}>Packing List</Button>
-                      <Button icon={<PrinterOutlined />} onClick={sendOrder}>Delivery Sticker</Button>
+                      <Button icon={<PrinterOutlined />} onClick={() => viewAsPDF('PACKING_LIST')}>Packing List</Button>
+                      <Button icon={<PrinterOutlined />} onClick={() => viewAsPDF('STICKER')}>Delivery Sticker</Button>
                     </>
                   }
                 </Space>

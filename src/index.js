@@ -41,7 +41,6 @@ import NewItineraryPage from './components/dispatch/NewItineraryPage';
 import ViewItineraryPage from './components/dispatch/ViewItineraryPage';
 import CompleteDeliveryPage from './components/CompleteDeliveryPage';
 import ReportGenerationPage from './pages/Report/ReportGenerationPage';
-import DeliveryStickerPrintPage from './pages/Report/DeliveryStickerPrintPage'
 
 // Add on more routes here
 const routes = [
@@ -264,7 +263,6 @@ ReactDOM.render(
             <Route path="/activate" element={<ActivatePage />} />
             <Route path="/completeDelivery" element={<CompleteDeliveryPage />} />
             <Route path="/reports" element={<ReportGenerationPage />} />
-            <Route path="/deliverystickers" element={<DeliveryStickerPrintPage />} />
             <Route path="/" element={<RequireAuth><App /></RequireAuth>}>
               {routes.map((route, index) => renderRoute(route, index))}
             </Route>

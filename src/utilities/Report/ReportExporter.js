@@ -6,6 +6,8 @@ import { salesInvoiceTemplate } from "./Templates/SalesInvoiceTemplate.js";
 import { deliveryInstructionsTemplate } from "./Templates/DeliveryInstructionsTemplate"
 import { statementOfAccountTemplate } from "./Templates/StatementOfAccountTemplate.js";
 import { balanceSheetTemplate } from "./Templates/BalanceSheetTemplate.js";
+import { packingInstructionTemplate } from "./Templates/PackingInstructionTemplate.js";
+import { deliverySticker } from "./Templates/DeliverySticker.js";
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 pdfMake.fonts = {
   NotoCh: {
@@ -25,7 +27,6 @@ const defaultDoc = {
 
 
 const generatePdf = async (data, templateName) => {
-  console.log(data)
   try {
     switch (templateName) {
       case 'PO':
@@ -42,6 +43,12 @@ const generatePdf = async (data, templateName) => {
         break
       case 'ITINERARY':
         data = deliveryInstructionsTemplate(data)
+        break
+      case 'PACKING_LIST':
+        data = packingInstructionTemplate(data)
+        break
+      case 'STICKER':
+        data = deliverySticker(data)
         break
       default:
         break
