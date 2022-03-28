@@ -16,14 +16,16 @@ export default function ProfitabilityCard(props) {
     const [profMonth, setProfMonth] = useState();
     // const [profDay, setProfDay] = useState();
 
+    // const cogsMonth = [];
+
+    const startOfMonth = props.currDate.startOf('month').toDate();
+    const endOfMonth = props.currDate.endOf('month').toDate();
+
     useEffect(() => { 
         getData();
     },[handleHttpError, loading]);
     
     const getData = async () => {
-        const startOfMonth = props.currDate.startOf('month').toDate();
-        const endOfMonth = props.currDate.endOf('month').toDate();
-
         // const startOfLastMonth = props.currDate.startOf('month').subtract(1, "month").toDate();
         // const endOfLastMonth = props.currDate.endOf('month').toDate();
 
@@ -32,30 +34,29 @@ export default function ProfitabilityCard(props) {
 
         let cogsThisMonth = await AnalyticsApiHelper.getCOGS(startOfMonth, endOfMonth);
         cogsThisMonth.map(x => { 
-            x.name = 'Cost of Goods Sold'; 
-            x.value = parseFloat(x.value) * -1; 
+            x.value = x.value <= 0 ? 0 : parseFloat(x.value) * -1;
             return x;
         });
         setCogsMonth(cogsThisMonth[0]);
+        // cogsMonth.push(cogsThisMonth[0]);
 
         let revThisMonth = await AnalyticsApiHelper.getRevenue(startOfMonth, endOfMonth);
         revThisMonth.map(x => { 
-            x.name = 'Revenue'; 
-            x.value = parseFloat(x.value); 
+            x.value = x.value <= 0 ? 0 : parseFloat(x.value);
             return x;
         });
         setRevMonth(revThisMonth[0]);
 
         let profThisMonth = await AnalyticsApiHelper.getProfits(startOfMonth, endOfMonth);
         profThisMonth.map(x => { 
-            x.name = 'Profits'; 
-            x.value = parseFloat(x.value); 
+            x.value = x.value <= 0 ? 0 : parseFloat(x.value); 
             return x;
         });
         setProfMonth(profThisMonth[0]);
-
         setLoading(false);
     }
+
+    console.log(cogsMonth);
 
     return (
     <>

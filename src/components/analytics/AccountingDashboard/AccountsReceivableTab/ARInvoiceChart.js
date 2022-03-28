@@ -14,7 +14,8 @@ export default function ARCustomerChart() {
         AnalyticsApiHelper.getReceivableInvoices()
             .then(result => { 
                 result.map(x => { 
-                    x.sum = parseFloat(x.sum) * -1; 
+                    x.sum = parseFloat(x.sum) * -1;
+                    x.id = "#" + x.id;
                     return x;
                 } ); 
                 var ReverseArray = [];

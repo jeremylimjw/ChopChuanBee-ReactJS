@@ -15,6 +15,7 @@ export default function APInvoiceChart() {
             .then(result => { 
                 result.map(x => { 
                     x.sum = parseFloat(x.sum);
+                    x.id = "#" + x.id;
                     return x;
                 }); 
                 setData(result);
@@ -75,7 +76,7 @@ export default function APInvoiceChart() {
                 formatter: (v) => `${(v / 1).toFixed(2)} `,
             },
             supplier_invoice_id: {
-                alias: 'Supplier Invoice ID'
+                alias: 'Supplier Invoice ID',
             }
         },
     };

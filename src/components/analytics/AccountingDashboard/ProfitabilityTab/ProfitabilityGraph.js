@@ -50,12 +50,7 @@ export default function ProfitabilityGraph(props) {
 
         getData(start_date, end_date);
     }
-
-    function resetForm() {
-        form.resetFields();
-        onValuesChange(null, form.getFieldsValue());
-    }
-
+    
     const config = {
         data,
         xField: 'date',
@@ -110,7 +105,6 @@ export default function ProfitabilityGraph(props) {
                     <Form.Item name='date'>
                         <DatePicker.RangePicker defaultValue={[moment(props.oneYearAgo, dateFormat), moment(props.currDate, dateFormat)]} />
                     </Form.Item>
-                    <Button onClick={resetForm}>Reset</Button>
                 </Form>
             </MyToolbar>
             {loading ? "" : <Line {...config} /> }
