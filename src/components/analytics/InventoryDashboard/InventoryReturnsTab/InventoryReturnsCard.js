@@ -29,7 +29,7 @@ export default function InventoryReturnsCard(props) {
         >
           <Typography>MOST RETURNED PRODUCT</Typography>
           <Typography.Title level={2} style={{ margin: 0 }}>
-            {mostReturnedProduct.name}
+            {mostReturnedProduct.name ? mostReturnedProduct.name : ""}
           </Typography.Title>
           <Divider style={{ margin: "0.5rem 0" }} />
           <Row>

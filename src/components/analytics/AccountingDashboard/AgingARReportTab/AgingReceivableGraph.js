@@ -17,7 +17,7 @@ export default function AgingReceivableGraph(props) {
     const over30Days = [];
     const over60Days = [];
     const over90Days = [];
-    
+
     const fetchData = async () => {
       await AnalyticsApiHelper.getAgedReceivable()
         .then((results) => {

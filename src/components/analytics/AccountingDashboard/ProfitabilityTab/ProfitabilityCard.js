@@ -51,11 +51,8 @@ export default function ProfitabilityCard(props) {
             setProfMonth(profThisMonth[0]);
             setLoading(false);
         }
-
         getData();
     },[handleHttpError, loading]);
-
-    console.log(cogsMonth);
 
     return (
     <>

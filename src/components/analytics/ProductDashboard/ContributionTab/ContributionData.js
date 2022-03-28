@@ -1,19 +1,18 @@
 import React, { useState } from 'react';
-import { Tabs, Form, Button, DatePicker, Space } from 'antd';
+import { Tabs, Form, Button, DatePicker, Space, message } from 'antd';
 import MyCard from '../../../common/MyCard';
 import MyToolbar from '../../../common/MyToolbar';
 import moment from 'moment';
 import { parseDate } from '../../../../utilities/datetime';
-import InventoryReturnsCard from './InventoryReturnsCard';
-import InventoryReturnsTable from './InventoryReturnsTable';
-import InventoryReturnsGraph from './InventoryReturnsGraph';
+import ContributionCard from './ContributionCard';
+import ContributionChart from './ContributionChart';
 
-export default function InventoryReturnsData(props) {
-    const { TabPane } = Tabs;
+export default function ContributionData(props) {
     const [searchInputForm] = Form.useForm();
     const [startDate, setStartDate] = useState(props.oneYearAgo);
     const [endDate, setEndDate] = useState(props.currDate);
     const [userInput, setUserInput] = useState(false);
+    const [dataExist, setDataExist] = useState(true);
 
     const handleFinish = (values) => {
         let start_date, end_date;
@@ -24,7 +23,14 @@ export default function InventoryReturnsData(props) {
         setStartDate(start_date);
         setEndDate(end_date);
         setUserInput(true);
+        checkDataExist();
     };
+
+    const checkDataExist = () => {
+        if (dataExist == null) {
+            message.error('There is no data for this period. Please try another date range!');
+        }
+    }
 
     const dateFormat = 'YYYY/MM/DD';
 
@@ -44,18 +50,11 @@ export default function InventoryReturnsData(props) {
             </Form>
         </MyCard>
 
-        {/* <InventoryReturnsCard userInput={userInput} startDate={startDate} endDate={endDate} /> */}
+        <ContributionCard userInput={userInput} setUserInput={setUserInput} startDate={startDate} endDate={endDate} />
 
         <MyCard style={{marginLeft: '3px', marginRight: '3px'}}>
-            <MyToolbar title={'Inventory Returns from ' + parseDate(startDate) + ' to ' + parseDate(endDate)}></MyToolbar>
-            <Tabs defaultActiveKey='1'>
-                <TabPane tab='Graph' key='1'>
-                    <InventoryReturnsGraph userInput={userInput} setUserInput={setUserInput} startDate={startDate} endDate={endDate}/>
-                </TabPane>
-                <TabPane tab='Table' key='2'>
-                    <InventoryReturnsTable userInput={userInput} startDate={startDate} endDate={endDate}/>
-                </TabPane>
-            </Tabs>
+            <MyToolbar title={'Product Contribution Margin from ' + parseDate(startDate) + ' to ' + parseDate(endDate)}></MyToolbar>
+            <ContributionChart userInput={userInput} setUserInput={setUserInput} setDataExist={setDataExist} startDate={startDate} endDate={endDate}/>
         </MyCard>
         </>
     )

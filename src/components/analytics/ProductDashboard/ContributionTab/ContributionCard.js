@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Space, Divider, Row } from 'antd';
+import { Typography, Space, Divider, Row, Spin } from 'antd';
 import MyCard from '../../../common/MyCard';
-import { CaretUpFilled, CaretDownFilled } from '@ant-design/icons';
 import { useApp } from '../../../../providers/AppProvider';
 import { AnalyticsApiHelper } from '../../../../api/AnalyticsApiHelper';
-import { parseDateTime } from '../../../../utilities/datetime';
-import { formatCurrency } from '../../../../utilities/currency';
 
 export default function ContributionCard(props) {
     const { handleHttpError } = useApp();
@@ -13,33 +10,35 @@ export default function ContributionCard(props) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        AnalyticsApiHelper.getProductAnalytics(props.oneYearAgo, props.currDate)
+        AnalyticsApiHelper.getProductAnalytics(props.startDate, props.endDate)
           .then((results) => {
             results.map((x) => {
-              x.total_contribution = parseFloat(x.total_contribution);
+              x.contribution_margin = parseFloat(x.contribution) / parseFloat(x.average_selling_price) * 100;
               return x;
             });
             setData(results[0]);
             setLoading(false);
           })
           .catch(handleHttpError);
-      }, [handleHttpError, loading]);
+      }, [handleHttpError, loading, props.userInput]);
 
     return (
         <>
-        <Typography style={{fontSize:'0.8rem', marginBottom: 0, fontStyle:'italic'}}>{"Last Updated: " + parseDateTime(props.currTime)}</Typography>
-
+        { data == null ? "" : 
+        <>
         <Space direction='horizontal' wrap>
             <MyCard style={{minWidth:'220px', marginLeft: '3px', marginBottom: 0}}>
-                <Typography>ALL TIME HIGHEST CONTRIBUTION</Typography>
-                <Typography.Title level={2} style={{margin:0}}>{data.product_name}</Typography.Title>
+                <Typography>HIGHEST CONTRIBUTION MARGIN</Typography>
+                <Typography.Title level={2} style={{margin:0}}>{loading ? <Spin /> : data.product_name}</Typography.Title>
                 <Divider style={{margin:'0.5rem 0'}}/>
                 <Row>
                     <Typography style={{fontSize:'0.8rem', marginRight: 'auto'}}>Total Contribution</Typography>
-                    <Typography style={{fontSize:'0.8rem', marginLeft: 'auto'}}>{formatCurrency(data.total_contribution)}</Typography>
+                    <Typography style={{fontSize:'0.8rem', marginLeft: 'auto'}}>{loading ? <Spin /> : data.contribution_margin.toFixed(2)}</Typography>
                 </Row>
             </MyCard>
         </Space>
+        </>
+        }
         </>
     )
 }

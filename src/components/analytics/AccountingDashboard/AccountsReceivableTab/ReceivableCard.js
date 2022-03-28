@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Typography, Space, Divider, Row } from 'antd';
+import { Typography, Space, Divider, Row, Spin } from 'antd';
 import MyCard from '../../../common/MyCard';
 import { AnalyticsApiHelper } from '../../../../api/AnalyticsApiHelper';
 import { useApp } from '../../../../providers/AppProvider';
@@ -7,7 +7,7 @@ import { formatCurrency } from '../../../../utilities/currency';
 import { parseDateTime } from '../../../../utilities/datetime';
 
 export default function ReceivableCard(props) {
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const { handleHttpError } = useApp();
     const [highestInvoiceARAmt, setHighestInvoiceARAmt] = useState();
     const [highestInvoiceARID, setHighestInvoiceARID] = useState(); //To be used to link to the sales order page
@@ -15,16 +15,13 @@ export default function ReceivableCard(props) {
     const [highestCustomerARName, setHighestCustomerARName] = useState(); //To be added: supplier ID to link to the customer page? (TBC since it doesn't help to link to the customer)
 
     useEffect(() => {
-        setLoading(true);
         AnalyticsApiHelper.getReceivableInvoices()
             .then(result => { setHighestInvoiceARAmt(result[9]["sum"] * -1); setHighestInvoiceARID(result[9]["customer_invoice_id"]); })
-            .catch(handleHttpError)
-            .catch(() => setLoading(false));
-    
+            .catch(handleHttpError);
         AnalyticsApiHelper.getReceivableCustomers()
             .then(result => { setHighestCustomerARAmt(result[0]["total_ar_amount"] * -1); setHighestCustomerARName(result[0]["company_name"]); })
-            .catch(handleHttpError)
-            .catch(() => setLoading(false));
+            .catch(handleHttpError);
+        setLoading(false);
     }, [handleHttpError, loading])
     
     return (
@@ -34,7 +31,7 @@ export default function ReceivableCard(props) {
         <Space direction='horizontal' wrap>
             <MyCard style={{minWidth:'250px', marginLeft: '3px', marginBottom: 0}}>
                 <Typography>HIGHEST OUTSTANDING AMOUNT</Typography>
-                <Typography.Title level={2} style={{margin:0}}>{formatCurrency(highestInvoiceARAmt)}</Typography.Title>
+                <Typography.Title level={2} style={{margin:0}}>{ loading ? <Spin /> : formatCurrency(highestInvoiceARAmt)}</Typography.Title>
                 <Divider style={{margin:'0.5rem 0'}}/>
                 <Row>
                     <Typography style={{fontSize:'0.8rem', marginRight: 'auto'}}>OWING FROM</Typography>
@@ -44,11 +41,11 @@ export default function ReceivableCard(props) {
 
             <MyCard style={{minWidth:'250px', marginLeft: '3px', marginBottom: 0}}>
                 <Typography>HIGHEST ACCOUNTS RECEIVABLE</Typography>
-                <Typography.Title level={2} style={{margin:0}}>{highestCustomerARName}</Typography.Title>
+                <Typography.Title level={2} style={{margin:0}}>{ loading ? <Spin /> : highestCustomerARName}</Typography.Title>
                 <Divider style={{margin:'0.5rem 0'}}/>
                 <Row>
                     <Typography style={{fontSize:'0.8rem', marginRight: 'auto'}}>TOTAL AMOUNT OWED</Typography>
-                    <Typography style={{fontSize:'0.8rem', marginLeft: 'auto'}}>{formatCurrency(highestCustomerARAmt)}</Typography>
+                    <Typography style={{fontSize:'0.8rem', marginLeft: 'auto'}}>{ loading ? <Spin /> : formatCurrency(highestCustomerARAmt)}</Typography>
                 </Row>
             </MyCard>
         </Space>

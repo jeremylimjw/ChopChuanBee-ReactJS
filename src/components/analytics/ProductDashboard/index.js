@@ -1,10 +1,9 @@
-import { Tabs } from 'antd';
+import { Tabs, Tooltip } from 'antd';
 import React from 'react';
 import moment from 'moment';
 import MyLayout from '../../common/MyLayout';
 import ProductAnalyticsData from './ProductAnalyticsTab/ProductAnalyticsData';
-import ContributionChart from './ContributionTab/ContributionChart';
-import ContributionCard from './ContributionTab/ContributionCard';
+import ContributionData from './ContributionTab/ContributionData';
 
 export default function ProductDashboard() {
     const { TabPane } = Tabs;
@@ -14,11 +13,9 @@ export default function ProductDashboard() {
     return (
         <MyLayout bannerTitle='Product Dashboard'>
             <Tabs defaultActiveKey="1" type="card" style={{margin:'24px'}}>
-                <TabPane tab="Contribution" key="1">
-                    <ContributionCard currDate={currDate} oneYearAgo={oneYearAgo} />
-                    <ContributionChart currDate={currDate} oneYearAgo={oneYearAgo} />
+                <TabPane tab={<Tooltip title="Contribution Margin = Contribution Value / Average Selling Price * 100"><div>Contribution Margin</div></Tooltip>} key="1">
+                    <ContributionData currDate={currDate} oneYearAgo={oneYearAgo} />
                 </TabPane>
-
                 <TabPane tab="Product Analytics" key="2">
                     <ProductAnalyticsData currDate={currDate} oneYearAgo={oneYearAgo} />
                 </TabPane>
