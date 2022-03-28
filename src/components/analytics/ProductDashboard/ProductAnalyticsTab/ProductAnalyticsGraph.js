@@ -8,7 +8,7 @@ import MyToolbar from '../../../common/MyToolbar';
 export default function ProductAnalyticsGraph(props) {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
-    const { handleHttpError, hasWriteAccessTo } = useApp();
+    const { handleHttpError } = useApp();
 
     useEffect(() => {
         getData(props.oneYearAgo, props.currDate);     
@@ -17,13 +17,29 @@ export default function ProductAnalyticsGraph(props) {
     //Dummy data for now, have not implemented the relevant API methods to get product analytics by product name and sort it by month in the backend yet
     const getData = async (start, end) => {
         let cogs = await AnalyticsApiHelper.getCOGS(start, end);
-        cogs.map(x => { x.name = 'Quantity Sold'; x.value = parseFloat(x.value) * -1 });
+        cogs.map(x => { 
+            x.name = 'Quantity Sold'; 
+            x.value = parseFloat(x.value) * -1;
+            return x; 
+        });
         let profits = await AnalyticsApiHelper.getProfits(start, end);
-        profits.map(x => { x.name = 'Average Cost of Goods Sold'; x.value = parseFloat(x.value) });
+        profits.map(x => { 
+            x.name = 'Average Cost of Goods Sold'; 
+            x.value = parseFloat(x.value);
+            return x; 
+        });
         let revenue = await AnalyticsApiHelper.getRevenue(start, end);
-        revenue.map(x => { x.name = 'Average Selling Price'; x.value = parseFloat(x.value) });
+        revenue.map(x => { 
+            x.name = 'Average Selling Price'; 
+            x.value = parseFloat(x.value);
+            return x;
+        });
         let contribution = await AnalyticsApiHelper.getRevenue(start, end);
-        contribution.map(x => { x.name = 'Total Contribution Value'; x.value = parseFloat(x.value) });
+        contribution.map(x => { 
+            x.name = 'Total Contribution Value'; 
+            x.value = parseFloat(x.value);
+            return x;
+        });
         setData([...cogs, ...revenue, ...profits, ...contribution]);
         setLoading(false);
     }

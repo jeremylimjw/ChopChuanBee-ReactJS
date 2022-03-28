@@ -10,7 +10,6 @@ export default function ProductDashboard() {
     const { TabPane } = Tabs;
     const oneYearAgo = moment().subtract(1, "year").set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
     const currDate = moment().startOf('day');
-    const currTime = moment();
 
     return (
         <MyLayout bannerTitle='Product Dashboard'>
