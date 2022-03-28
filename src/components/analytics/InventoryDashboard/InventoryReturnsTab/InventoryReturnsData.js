@@ -6,12 +6,13 @@ import InventoryReturnsTable from './InventoryReturnsTable';
 import InventoryReturnsGraph from './InventoryReturnsGraph';
 import moment from 'moment';
 import { parseDate } from '../../../../utilities/datetime';
+import InventoryReturnsCard from './InventoryReturnsCard';
 
 export default function InventoryReturnsData(props) {
     const { TabPane } = Tabs;
     const [searchInputForm] = Form.useForm();
-    const [startDate, setStartDate] = useState(props.oneYearAgo.toDate());
-    const [endDate, setEndDate] = useState(props.currDate.toDate());
+    const [startDate, setStartDate] = useState(props.oneYearAgo);
+    const [endDate, setEndDate] = useState(props.currDate);
     const [userInput, setUserInput] = useState(false);
 
     const handleFinish = (values) => {
@@ -42,6 +43,8 @@ export default function InventoryReturnsData(props) {
                 </Space>
             </Form>
         </MyCard>
+
+        <InventoryReturnsCard userInput={userInput} startDate={startDate} endDate={endDate} />
 
         <MyCard style={{marginLeft: '3px', marginRight: '3px'}}>
             <MyToolbar title={'Inventory Returns from ' + parseDate(props.oneYearAgo) + ' to ' + parseDate(props.currDate)}></MyToolbar>
