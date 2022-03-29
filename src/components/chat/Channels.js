@@ -1,5 +1,5 @@
 import { MessageFilled, UserAddOutlined, UsergroupAddOutlined, UserOutlined } from '@ant-design/icons'
-import { Avatar, Badge, Button, Collapse, List, Spin } from 'antd'
+import { Avatar, Badge, Button, Collapse, List, Space, Spin } from 'antd'
 import React from 'react'
 import { useApp } from '../../providers/AppProvider';
 import moment from 'moment';
@@ -11,6 +11,10 @@ const LIMIT = 20;
 export default function Channels({ loading, setLoading, channels, setChannels, chat, setChat, lastSeenStore, setIsDirectModalVisible, setIsNewGroupModalVisible }) {
 
     const { user, handleHttpError } = useApp();
+
+    function getTotalUnreadCount() {
+        return channels.reduce((prev, current) => prev + current.unread_count, 0)
+    }
 
     function handleChannelClick(clickedChat) {
         if (chat?.id === clickedChat.id) return; // If chat already opened, do nothing
@@ -79,7 +83,7 @@ export default function Channels({ loading, setLoading, channels, setChannels, c
     return (
         <div className="channels-container" style={styles.channelsWrapper}>
             <Collapse style={styles.collapse}>
-                <Collapse.Panel header="Messaging" extra={
+                <Collapse.Panel header={<Space><span>Messaging</span><Badge count={getTotalUnreadCount()} /></Space>} extra={
                     <>
                         <Button type="text" style={styles.grey} shape="circle" icon={<UserAddOutlined />} onClick={e => { e.stopPropagation(); setIsDirectModalVisible(true) }} />
                         <Button type="text" style={styles.grey} shape="circle" icon={<UsergroupAddOutlined />} onClick={e => { e.stopPropagation(); setIsNewGroupModalVisible(true) }} />
