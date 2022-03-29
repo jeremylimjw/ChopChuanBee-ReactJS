@@ -162,6 +162,7 @@ export default function ViewSalesOrderPage() {
         generatePdf(data, action)
         break
       case 'STICKER':
+        console.log(salesOrder)
         generatePdf(salesOrder, action)
         break
       case 'PACKING_LIST':

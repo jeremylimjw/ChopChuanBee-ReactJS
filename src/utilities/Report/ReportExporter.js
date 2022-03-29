@@ -8,6 +8,7 @@ import { statementOfAccountTemplate } from "./Templates/StatementOfAccountTempla
 import { balanceSheetTemplate } from "./Templates/BalanceSheetTemplate.js";
 import { packingInstructionTemplate } from "./Templates/PackingInstructionTemplate.js";
 import { deliverySticker } from "./Templates/DeliverySticker.js";
+import { taxStatementTemplate } from "./Templates/TaxStatement.js";
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 pdfMake.fonts = {
   NotoCh: {
@@ -49,6 +50,9 @@ const generatePdf = async (data, templateName) => {
         break
       case 'STICKER':
         data = deliverySticker(data)
+        break
+      case 'TAX':
+        data = taxStatementTemplate(data)
         break
       default:
         break
