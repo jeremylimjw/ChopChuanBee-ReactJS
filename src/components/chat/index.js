@@ -15,10 +15,22 @@ export default function Chat() {
 
     const [loading, setLoading] = useState(false);
     const [channels, setChannels] = useState([]);
-    const [chat, setChat] = useState(null)
+    const [chat, setChat] = useState(null);
+    const [lastSeenStore, setLastSeenStore] = useState({});
 
     const [isDirectModalVisible, setIsDirectModalVisible] = useState(false);
     const [isNewGroupModalVisible, setIsNewGroupModalVisible] = useState(false);
+
+    // Retrieve all last seens from all channels
+    const retrieveLastSeens = useCallback(
+        (channel_ids) => {
+            ChatApiHelper.getLastSeens({ channel_ids: channel_ids })
+                .then(newLastSeens => {
+                    setLastSeenStore(newLastSeens)
+                });
+        },
+        [setLastSeenStore],
+    )
     
     // Load all channels
     useEffect(() => {
@@ -29,19 +41,27 @@ export default function Chat() {
             .then(channels => {
                 setChannels(channels);
                 setLoading(false);
+
+                // Retrieve last seens from the channels
+                retrieveLastSeens(channels.map(x => x.id))
             })
             .catch(handleHttpError)
             .catch(() => setLoading(false));
     
-    }, [user, setChannels, handleHttpError])
+    }, [user, setChannels, handleHttpError, retrieveLastSeens])
 
     const handleNewChannelEvent = useCallback(
         (newChannel) => {
-            setChannels([newChannel, ...channels]);
+            const newChannels = [newChannel, ...channels];
+            setChannels(newChannels);
+
+            // Retrieve last seens including the new channel users
+            retrieveLastSeens(newChannels.map(x => x.id));
         },
-        [channels, setChannels],
+        [channels, setChannels, retrieveLastSeens],
     )
     
+    // On new channel socket event
     useEffect(() => {
         if (!socket) return;
   
@@ -55,12 +75,27 @@ export default function Chat() {
     
     }, [socket, handleNewChannelEvent])
     
+    // On new last seen socket event
+    useEffect(() => {
+        if (!socket) return;
+  
+        socket.on("update_last_seen", data => {
+            const newLastSeens = {...lastSeenStore, [data.employee_id]: data.timestamp }
+            setLastSeenStore(newLastSeens)
+        })
+  
+        return () => {
+            socket.off("update_last_seen");
+        }
+    
+    }, [socket, lastSeenStore, setLastSeenStore])
+    
+    // On new message socket event
     useEffect(() => {
         if (!socket) return;
 
         socket.on("message", data => {
             const { newText } = data;
-            console.log('message', data.newText.text)
 
             const newChannels = [...channels]
             const index = newChannels.findIndex(x => x.id === newText.channel_id);
@@ -117,6 +152,7 @@ export default function Chat() {
                             setChat={setChat}
                             channels={channels}
                             setChannels={setChannels}
+                            lastSeenStore={lastSeenStore}
                         />
                     }
                     <Channels 
@@ -126,6 +162,7 @@ export default function Chat() {
                         setChannels={setChannels}
                         chat={chat}
                         setChat={setChat}
+                        lastSeenStore={lastSeenStore}
                         setIsDirectModalVisible={setIsDirectModalVisible}
                         setIsNewGroupModalVisible={setIsNewGroupModalVisible}
                     />

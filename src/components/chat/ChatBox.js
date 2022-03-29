@@ -7,10 +7,11 @@ import { REQUIRED } from '../../utilities/form';
 import { useApp } from '../../providers/AppProvider';
 import { ChatApiHelper } from '../../api/ChatApiHelper';
 import { useChatProvider } from '../../providers/ChatProvider';
+import { parseShortDateTime } from '../../utilities/datetime';
 
 const LIMIT = 20;
 
-export default function ChatBox({ chat, setChat, channels, setChannels }) {
+export default function ChatBox({ chat, setChat, channels, setChannels, lastSeenStore }) {
 
     const { socket } = useChatProvider();
     const { user, handleHttpError } = useApp();
@@ -34,15 +35,18 @@ export default function ChatBox({ chat, setChat, channels, setChannels }) {
 
     }, [chat.texts, setHasMore, setPage])
     
+
+    // 
     useEffect(() => {
         if (!socket) return;
   
+        // On a new user's changed last received timestamp
         socket.on("last_received", data => {
-            console.log('last_received')
             const { channel_id, employee_id, timestamp } = data;
 
             if (channel_id !== chat.id) return;
 
+            // Register his/her new timestamp
             const newParticipants = [...chat.participants];
             const index = newParticipants.findIndex(x => x.employee_id === employee_id);
             if (index > -1) {
@@ -54,12 +58,13 @@ export default function ChatBox({ chat, setChat, channels, setChannels }) {
             setChat({...chat, participants: newParticipants });
         })
 
+        // On a new user's changed last read timestamp
         socket.on("last_read", data => {
-            console.log('last_read')
             const { channel_id, employee_id, timestamp } = data;
 
             if (channel_id !== chat.id) return;
             
+            // Register his/her new timestamp
             const newParticipants = [...chat.participants];
             const index = newParticipants.findIndex(x => x.employee_id === employee_id);
             if (index > -1) {
@@ -73,7 +78,6 @@ export default function ChatBox({ chat, setChat, channels, setChannels }) {
         })
   
         return () => {
-            socket.off("message");
             socket.off("last_received");
             socket.off("last_read");
         }
@@ -130,12 +134,22 @@ export default function ChatBox({ chat, setChat, channels, setChannels }) {
     }
 
     function renderTooltip() {
+        function getLastSeen(id) {
+            if (!lastSeenStore[id]) return '';
+            if (lastSeenStore[id] === 'Online') return 'Online';
+            return parseShortDateTime(lastSeenStore[id]);
+        }
         return (
             <>
-                <Badge status="success" text="Dave - Online" style={{ color: 'white'}} />
-                <br />
-                <Badge status="default" text="John - 23/3 8:00 AM" style={{ color: 'white'}} />
-                <br />
+            { chat.participants.map(x => 
+                <>
+                { x.employee_id === user.id ? 
+                    (<><Badge status="success" text={`${x.employee.name} - Online`} style={{ color: 'white'}} /><br /></>)
+                    :
+                    (<><Badge status={`${getLastSeen(x.employee_id) === 'Online' ? 'success' : 'default'}`} text={`${x.employee.name} - ${getLastSeen(x.employee_id)}`} style={{ color: 'white'}} /><br /></>)
+                }
+                </>
+            )}
             </>
         )
     }

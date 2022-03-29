@@ -4,10 +4,11 @@ import React from 'react'
 import { useApp } from '../../providers/AppProvider';
 import moment from 'moment';
 import { ChatApiHelper } from '../../api/ChatApiHelper';
+import { parseShortDateTime } from '../../utilities/datetime';
 
 const LIMIT = 20;
 
-export default function Channels({ loading, setLoading, channels, setChannels, chat, setChat, setIsDirectModalVisible, setIsNewGroupModalVisible }) {
+export default function Channels({ loading, setLoading, channels, setChannels, chat, setChat, lastSeenStore, setIsDirectModalVisible, setIsNewGroupModalVisible }) {
 
     const { user, handleHttpError } = useApp();
 
@@ -37,7 +38,7 @@ export default function Channels({ loading, setLoading, channels, setChannels, c
     }
 
     function renderChannel(channel) {
-        if (channel.title == null) {
+        if (channel.title == null) { // Direct message channel
             const recipients = channel.participants.filter(x => x.employee_id !== user.id);
             
             return (
@@ -48,12 +49,17 @@ export default function Channels({ loading, setLoading, channels, setChannels, c
                                 <Avatar style={{ marginTop: 5 }} size="large" icon={<UserOutlined />} />
                             </Badge>
                         )}
-                        title={<Badge status="success" text={recipients[0]?.employee.name || 'Unknown'} />}
-                        description={channel.last_text && `${moment(channel.last_text).format('lll')} - ${channel.last_text.employee.name}: ${channel.last_text.text}`}
+                        title={(
+                            <Badge 
+                                status={lastSeenStore[recipients[0]?.employee_id] === 'Online' ? 'success' : 'default'} 
+                                text={recipients[0]?.employee.name || 'Unknown'} 
+                            />
+                        )}
+                        description={channel.last_text && `${parseShortDateTime(channel.last_text.created_at)} - ${channel.last_text.employee.name}: ${channel.last_text.text}`}
                     />
                 </List.Item>
             )
-        } else {
+        } else { // Chat channel
             return (
                 <List.Item onClick={() => handleChannelClick(channel)}>
                     <List.Item.Meta

@@ -28,6 +28,12 @@
     overflow: auto;
 }
 
+.channels-container .ant-list-item-meta-description {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .chat-container .ant-collapse-content > .ant-collapse-content-box {
     display: flex;
     flex-direction: column;

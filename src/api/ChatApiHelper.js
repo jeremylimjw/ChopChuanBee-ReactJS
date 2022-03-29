@@ -26,4 +26,9 @@ export class ChatApiHelper {
             .then((res) => res.data)
     }
 
+    static async getLastSeens(params) {
+        return axiosObject.get(`/chat/lastSeen`, { params: params })
+            .then(res => res.data);
+    }
+
 }
