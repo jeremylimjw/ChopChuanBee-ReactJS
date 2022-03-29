@@ -26,6 +26,8 @@ export default function CopyAsTextButton({ purchaseOrder, loading }) {
         `.replace(/  +/g, '');
         
         navigator.clipboard.writeText(text)
+
+        message.success('Successfully copied to clipboard!');
     }
 
     return (

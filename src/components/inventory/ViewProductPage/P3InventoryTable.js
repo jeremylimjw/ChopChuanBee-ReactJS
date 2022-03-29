@@ -12,7 +12,7 @@ import { showTotal } from '../../../utilities/table';
 import MyToolbar from '../../common/MyToolbar';
 import CreateMovementModal from './CreateMovementModal';
 
-export default function P3InventoryTable({ product }) {
+export default function P3InventoryTable({ product, setProduct }) {
 
   const { handleHttpError, hasWriteAccessTo } = useApp();
 
@@ -50,6 +50,7 @@ export default function P3InventoryTable({ product }) {
 
       <CreateMovementModal
         product={product}
+        setProduct={setProduct}
         isModalVisible={isModalVisible}
         setIsModalVisible={setIsModalVisible}
         setMovements={setMovements}
