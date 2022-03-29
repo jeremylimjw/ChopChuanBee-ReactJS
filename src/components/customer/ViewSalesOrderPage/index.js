@@ -2,6 +2,7 @@ import { FileDoneOutlined, FileTextOutlined, PrinterOutlined, RedoOutlined, Save
 import { Button, Form, message, Popconfirm, Progress, Space, Typography } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router';
+import { DeliveryApiHelper } from '../../../api/DeliveryApiHelper';
 import { SalesOrderApiHelper } from '../../../api/SalesOrderApiHelper';
 import { SOStatus } from '../../../enums/SalesOrderStatus';
 import { View } from '../../../enums/View';
@@ -146,11 +147,19 @@ export default function ViewSalesOrderPage() {
       navigate('./../new', { state: { salesOrder: salesOrder }});
     }
 
-    function sendOrder() {
-      console.log(salesOrder)
+    async function sendOrder() {
+      try {
+        const results = await DeliveryApiHelper.getOrders({ sales_order_id: salesOrder.id })
+        const deliveryOrder = results[0]; // NOTE: this maybe undefined if sales order does not have delivery
+
+        console.log(deliveryOrder)
+        console.log(salesOrder)
+
+      } catch(err) {
+        handleHttpError(err);
+      }
+
     }
-
-
 
     return (
       <>
