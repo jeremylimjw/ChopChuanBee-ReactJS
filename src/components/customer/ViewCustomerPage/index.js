@@ -94,7 +94,7 @@ export default function ViewCustomerPage() {
                   }
                 </MyToolbar>
                 {customer.company_name} has outstanding account receivables of&nbsp;
-                <Typography.Title level={5} style={{ display: 'inline-block'}}>{`$${(+customer.ar).toFixed(2)}`}</Typography.Title>.
+                <Typography.Title level={5} style={{ display: 'inline-block'}}>{`$${(-customer.ar).toFixed(2)}`}</Typography.Title>.
               </MyCard>
 
               <MyCard>
