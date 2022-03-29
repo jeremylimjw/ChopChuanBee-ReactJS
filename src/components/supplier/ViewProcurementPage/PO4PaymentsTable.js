@@ -80,6 +80,12 @@ const columns = [
         title: 'Amount', 
         dataIndex: 'amount', 
         align: 'center', 
-        render: (amount) => amount >= 0 ? `$${(+amount).toFixed(2)}` : `-$${(-amount).toFixed(2)}`
+        render: (amount) => {
+            if (amount >= 0) {
+                return <span>{`$${(+amount).toFixed(2)}`}</span>
+            } else {
+                return <span style={{ color: 'red' }}>{`-$${(-amount).toFixed(2)}`}</span>
+            }
+        }
     },
 ];

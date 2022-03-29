@@ -2,6 +2,7 @@ import { FileDoneOutlined, FileTextOutlined, PrinterOutlined, RedoOutlined, Save
 import { Button, Form, message, Popconfirm, Progress, Space, Typography } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router';
+import { DeliveryApiHelper } from '../../../api/DeliveryApiHelper';
 import { SalesOrderApiHelper } from '../../../api/SalesOrderApiHelper';
 import { SOStatus } from '../../../enums/SalesOrderStatus';
 import { View } from '../../../enums/View';
@@ -146,11 +147,19 @@ export default function ViewSalesOrderPage() {
       navigate('./../new', { state: { salesOrder: salesOrder }});
     }
 
-    function sendOrder() {
-      console.log(salesOrder)
+    async function sendEmail() {
+      try {
+        const results = await DeliveryApiHelper.getOrders({ sales_order_id: salesOrder.id })
+        const deliveryOrder = results[0]; // NOTE: this maybe undefined if sales order does not have delivery
+
+        console.log(deliveryOrder)
+        console.log(salesOrder)
+
+      } catch(err) {
+        handleHttpError(err);
+      }
+
     }
-
-
 
     return (
       <>
@@ -187,10 +196,10 @@ export default function ViewSalesOrderPage() {
             <Space size="middle">
               {(!salesOrder.isStatus(SOStatus.PENDING) && !salesOrder.isStatus(SOStatus.CANCELLED)) && 
                 <>
-                  <Button icon={<SendOutlined />} onClick={sendOrder}>Send Email</Button>
-                  <Button icon={<PrinterOutlined />} onClick={sendOrder}>Invoice</Button>
-                  <Button icon={<PrinterOutlined />} onClick={sendOrder}>Packing List</Button>
-                  <Button icon={<PrinterOutlined />} onClick={sendOrder}>Delivery Sticker</Button>
+                  <Button icon={<SendOutlined />} onClick={sendEmail}>Send Email</Button>
+                  <Button icon={<PrinterOutlined />} onClick={sendEmail}>Invoice</Button>
+                  <Button icon={<PrinterOutlined />} onClick={sendEmail}>Packing List</Button>
+                  <Button icon={<PrinterOutlined />} onClick={sendEmail}>Delivery Sticker</Button>
                 </>
               }
             </Space>

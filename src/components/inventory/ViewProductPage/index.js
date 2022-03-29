@@ -94,7 +94,7 @@ export default function ViewProductPage() {
         </Row>
 
         <MyCard style={{ marginTop: 0 }}>
-          <P3InventoryTable product={product} />
+          <P3InventoryTable product={product} setProduct={setProduct} />
         </MyCard>
       
       </MyLayout>
