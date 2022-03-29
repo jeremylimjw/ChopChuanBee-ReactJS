@@ -147,7 +147,7 @@ export default function ViewSalesOrderPage() {
       navigate('./../new', { state: { salesOrder: salesOrder }});
     }
 
-    async function sendOrder() {
+    async function sendEmail() {
       try {
         const results = await DeliveryApiHelper.getOrders({ sales_order_id: salesOrder.id })
         const deliveryOrder = results[0]; // NOTE: this maybe undefined if sales order does not have delivery
@@ -196,10 +196,10 @@ export default function ViewSalesOrderPage() {
             <Space size="middle">
               {(!salesOrder.isStatus(SOStatus.PENDING) && !salesOrder.isStatus(SOStatus.CANCELLED)) && 
                 <>
-                  <Button icon={<SendOutlined />} onClick={sendOrder}>Send Email</Button>
-                  <Button icon={<PrinterOutlined />} onClick={sendOrder}>Invoice</Button>
-                  <Button icon={<PrinterOutlined />} onClick={sendOrder}>Packing List</Button>
-                  <Button icon={<PrinterOutlined />} onClick={sendOrder}>Delivery Sticker</Button>
+                  <Button icon={<SendOutlined />} onClick={sendEmail}>Send Email</Button>
+                  <Button icon={<PrinterOutlined />} onClick={sendEmail}>Invoice</Button>
+                  <Button icon={<PrinterOutlined />} onClick={sendEmail}>Packing List</Button>
+                  <Button icon={<PrinterOutlined />} onClick={sendEmail}>Delivery Sticker</Button>
                 </>
               }
             </Space>

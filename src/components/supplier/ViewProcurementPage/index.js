@@ -189,7 +189,7 @@ export default function ViewProcurementPage() {
       navigate('./../new', { state: { purchaseOrder: purchaseOrder }});
     }
 
-    function sendOrder() {
+    function sendEmail() {
       console.log(purchaseOrder)
     }
 
@@ -234,7 +234,7 @@ export default function ViewProcurementPage() {
 
             <Space size="middle">
               { purchaseOrder.isStatus(POStatus.PENDING) && 
-                <Button icon={<SendOutlined />} disabled={loading} onClick={sendOrder}>Send Order</Button>
+                <Button icon={<SendOutlined />} disabled={loading} onClick={sendEmail}>Send Email</Button>
               }
               <CopyAsTextButton loading={loading} purchaseOrder={purchaseOrder} />
             </Space>
