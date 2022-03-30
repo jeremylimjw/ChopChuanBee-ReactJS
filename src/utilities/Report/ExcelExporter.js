@@ -1,16 +1,20 @@
-export const generateCSV = (headers, data) => {
+export const generateCSV = (fileName, headers, data) => {
   // [[], [], []]
-  let csvFile = ''
-  headers.forEach((item) => csvFile.concat(',', item))
-  console.log(csvFile)
+  let csvFile
+  if (headers) {
+    csvFile = headers.join(',') + '\r\n'
+  }
   data.forEach((row) => {
-    row.forEach((value) => {
-      csvFile.concat(',', value)
+    row.forEach((str) => {
+      let newStr = str.replace(',', ' ')
+      csvFile += newStr + ','
     })
+    csvFile += '\r\n'
   })
-  saveFile(csvFile)
-}
-
-const saveFile = () => {
-
+  const encodedUri = encodeURI(csvFile)
+  const link = document.createElement('a')
+  link.setAttribute("href", "data:text/csv;charset=utf-8,\uFEFF" + encodedUri)
+  link.setAttribute("download", fileName || 'CSV Report')
+  document.body.appendChild(link)
+  link.click()
 }

@@ -10,6 +10,8 @@ import MyCard from '../../common/MyCard';
 import MyToolbar from '../../common/MyToolbar';
 import { formatCurrency } from '../../../utilities/currency';
 import { generatePdf } from '../../../utilities/Report/ReportExporter';
+import { generateCSV } from '../../../utilities/Report/ExcelExporter';
+import moment from 'moment';
 
 export default function IncomeStatementObject({ income, setIncome }) {
     const { handleHttpError, hasWriteAccessTo } = useApp();
@@ -94,6 +96,36 @@ export default function IncomeStatementObject({ income, setIncome }) {
         formatExcel()
         let data = income
         if (action === 'EXCEL') {
+            let headers = ['Income Statement', 'Chop Chuan Bee']
+            let arr = []
+            arr.push(['Period: ', moment(data.start_date).format('LL'), 'to', moment(data.end_date).format('LL')])
+            arr.push([' ', ' '])
+            arr.push(['Revenue', '$'])
+            arr.push(['Revenue', data.revenue])
+            arr.push(['Less:COGS', data.less_cost_of_goods_sold])
+            arr.push(['Less: Sales', data.less_customer_sales_return])
+            arr.push(['Net Revenue', data.totalRevenue])
+            arr.push([' ', ' '])
+            arr.push(['Expenses', '$'])
+            arr.push(['Damaged Inventory', data.damaged_inventory])
+            arr.push(['Salary Expense', data.salary_expense])
+            arr.push(['Interest Expense', data.interest_expense])
+            arr.push(['Tax Expense', data.tax_expense])
+            arr.push(['Warranty Expense', data.warranty_expense])
+            arr.push(['Rental Expense', data.rental_expense])
+            arr.push(['Advertising Expense', data.advertising_expense])
+            arr.push(['Commission Expense', data.commissions_expense])
+            arr.push([' ', ' '])
+            arr.push(['Loss on Sale of Asset', data.loss_on_sale_of_asset])
+            arr.push(['Other Expenses (1)', data.other_expense_1])
+            arr.push(['Other Expenses (2)', data.other_expense_2])
+            arr.push(['Total Expenses', data.totalExpenses])
+            arr.push([' ', ' '])
+            arr.push(['Profit', '$'])
+            arr.push(['Profit for the Period', data.profit])
+            arr.forEach((row) => row[1] = row[1].toString())
+            console.log(arr)
+            generateCSV('Income Statement', headers, arr)
         } else {
             generatePdf(data, 'PNL_STATEMENT')
         }

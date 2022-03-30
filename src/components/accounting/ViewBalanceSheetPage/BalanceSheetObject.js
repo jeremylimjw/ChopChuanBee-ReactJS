@@ -10,6 +10,8 @@ import MyCard from '../../common/MyCard';
 import MyToolbar from '../../common/MyToolbar';
 import { formatCurrency } from '../../../utilities/currency';
 import { generatePdf } from '../../../utilities/Report/ReportExporter';
+import { generateCSV } from '../../../utilities/Report/ExcelExporter';
+import moment from 'moment';
 
 export default function BalanceSheetObject({ BalanceSheet, setBalanceSheet }) {
     const { handleHttpError, hasWriteAccessTo } = useApp();
@@ -54,7 +56,7 @@ export default function BalanceSheetObject({ BalanceSheet, setBalanceSheet }) {
         }
     }
 
-    const formatExcel = () => {
+    const formatData = () => {
         BalanceSheet.cash_sales_of_goods = parseFloat(BalanceSheet.cash_sales_of_goods);
         BalanceSheet.cash_others = parseFloat(BalanceSheet.cash_others);
         BalanceSheet.account_receivable = parseFloat(BalanceSheet.account_receivable);
@@ -111,7 +113,6 @@ export default function BalanceSheetObject({ BalanceSheet, setBalanceSheet }) {
         BalanceSheet.totalEquities = totalEquities;
 
         BalanceSheet.totalLiabilitiesAndEquities = totalLiabilitiesAndEquities;
-        generatePdf(BalanceSheet, 'BALANCE_SHEET')
     }
 
     const handleExportPDF = () => {
@@ -181,12 +182,83 @@ export default function BalanceSheetObject({ BalanceSheet, setBalanceSheet }) {
         generatePdf(balanceSheetPDF, 'BALANCE_SHEET')
     }
 
-    const handleExportExcel = () => {
-        setShowPopConfirmExcel(false);
-        formatExcel();
-        console.log(BalanceSheet);
+    const handleExport = (action) => {
+        formatData()
+        if (action === 'EXCEL') {
+            setShowPopConfirmExcel(false);
+            let arr = []
+            arr.push([`${moment(BalanceSheet.end_date).format('LL')}`, ''])
+            arr.push(['ASSETS', ''])
+            // CA
+            arr.push(['CURRENT ASSETS', ''])
+            arr.push(['Cash (Sales of Goods)', BalanceSheet.cash_sales_of_goods])
+            arr.push(['Cash (Others)', BalanceSheet.cash_others])
+            arr.push(['Account Receivable', BalanceSheet.account_receivable])
+            arr.push(['Inventory', BalanceSheet.inventory])
+            arr.push(['Supplies', BalanceSheet.supplies])
+            arr.push(['Prepaid Insurance', BalanceSheet.prepaid_insurance])
+            arr.push(['Prepaid Rent', BalanceSheet.prepaid_rent])
+            arr.push(['Other Current Asset (1)', BalanceSheet.other_current_asset_1])
+            arr.push(['Other Current Asset (2)', BalanceSheet.other_current_asset_2])
+            arr.push(['Total Current Assets', BalanceSheet.totalCurrentAssets])
+            arr.push(['', ''])
+            // NON CA
+            arr.push(['NON CURRENT ASSETS', ''])
+            arr.push(['Land', BalanceSheet.land])
+            arr.push(['Less: Accumulated Depreciation', BalanceSheet.less_accumulated_depreciation_land])
+            arr.push(['Building', BalanceSheet.building])
+            arr.push(['Less: Accumulated Depreciation', BalanceSheet.less_accumulated_depreciation_building])
+            arr.push(['Equipments', BalanceSheet.equipments])
+            arr.push(['Less: Accumulated Depreciation', BalanceSheet.less_accumulated_depreciation_equipments])
+            arr.push(['Other Non-current Asset (1)', BalanceSheet.other_non_current_asset_1])
+            arr.push(['Other Non-current Asset (2)', BalanceSheet.other_non_current_asset_2])
+            arr.push(['Total Non-Current Assets', BalanceSheet.totalNonCurrentAssets])
+            arr.push(['', ''])
+            // Intangible Assets
+            arr.push(['INTANGIBLE ASSETS', ''])
+            arr.push(['Goodwill', BalanceSheet.goodwill])
+            arr.push(['Trade Names', BalanceSheet.trade_names])
+            arr.push(['Other Intangible Asset (1)', BalanceSheet.other_intangible_asset_1])
+            arr.push(['Other Intangible Asset (2)', BalanceSheet.other_intangible_asset_2])
+            arr.push(['Total Intangible Assets', BalanceSheet.totalIntangibleAssets])
+            arr.push(['', ''])
+            arr.push(['TOTAL ASSETS', BalanceSheet.totalAssets])
+            // Current Liabilities
+            arr.push(['CURRENT LIABILITIES', ''])
+            arr.push(['Account Payable', BalanceSheet.account_payable])
+            arr.push(['Salary Payable', BalanceSheet.salary_payable])
+            arr.push(['Interest Payable', BalanceSheet.interest_payable])
+            arr.push(['Tax Payable', BalanceSheet.taxes_payable])
+            arr.push(['Warranty Payable', BalanceSheet.warranty_payable])
+            arr.push(['Rental Payable', BalanceSheet.rental_payable])
+            arr.push(['Other Current Liability (1)', BalanceSheet.other_current_liability_1])
+            arr.push(['Other Current Liability (2)', BalanceSheet.other_current_liability_2])
+            arr.push(['Total Current Liabilities', BalanceSheet.totalCurrentLiabilities])
+            arr.push(['', ''])
+            // Non Current Liabilities
+            arr.push(['NON CURRENT LIABILITIES', ''])
+            arr.push(['Notes Payable', BalanceSheet.notes_payable])
+            arr.push(['Bonds Payable', BalanceSheet.bonds_payable])
+            arr.push(['Other Non-Current Liability (1)', BalanceSheet.other_non_current_liability_1])
+            arr.push(['Other Non-Current Liability (2)', BalanceSheet.other_non_current_liability_2])
+            arr.push(['Total Non-current Liabilities', BalanceSheet.totalNonCurrentLiabilities])
+            arr.push(['TOTAL LIABILITIES', BalanceSheet.totalLiabilities])
+            arr.push(['', ''])
+            // Equity
+            arr.push(['Share Capital', BalanceSheet.share_capital])
+            arr.push(['Less: Withdrawal', BalanceSheet.less_withdrawal])
+            arr.push(['Retained Earning', BalanceSheet.retained_earning])
+            arr.push(['Other Equity (1)', BalanceSheet.other_equity_1])
+            arr.push(['Other Equity (2)', BalanceSheet.other_equity_2])
+            arr.push(['Total Equity', BalanceSheet.totalEquities])
+            arr.push(['', ''])
+            arr.push(['TOTAL LIABILITIES AND EQUITIES', BalanceSheet.totalLiabilitiesAndEquities])
+            arr.forEach((row) => row[1] = row[1].toString())
+            generateCSV('Balance Sheet', ['BALANCE SHEET'], arr)
+        } else {
+            generatePdf(BalanceSheet)
+        }
     }
-
 
     async function onFinish() {
         try {
@@ -218,11 +290,11 @@ export default function BalanceSheetObject({ BalanceSheet, setBalanceSheet }) {
                                                 <Button type="primary" onClick={onFinish} icon={<SaveOutlined />} loading={loading} style={{ width: 85 }}>Save</Button>
                                                 :
                                                 <>
-                                                    <Popconfirm title="The balance sheet is not balanced. Continue exporting?" placement='leftTop' visible={showPopConfirmPDF} onConfirm={handleExportPDF} disabled={loading}>
+                                                    <Popconfirm title="The balance sheet is not balanced. Continue exporting?" placement='leftTop' visible={showPopConfirmPDF} onConfirm={() => handleExport('PDF')} disabled={loading}>
                                                         <Button onClick={checkPopConfirmPDFVisibility} icon={<PrinterOutlined />} loading={loading} style={{ marginRight: '1rem' }}>Export as PDF</Button>
                                                     </Popconfirm>
 
-                                                    <Popconfirm title="The balance sheet is not balanced. Continue exporting?" placement='leftTop' visible={showPopConfirmExcel} onConfirm={handleExportExcel} disabled={loading}>
+                                                    <Popconfirm title="The balance sheet is not balanced. Continue exporting?" placement='leftTop' visible={showPopConfirmExcel} onConfirm={() => handleExport('EXCEL')} disabled={loading}>
                                                         <Button onClick={checkPopConfirmExcelVisibility} icon={<FileExcelOutlined />} loading={loading} style={{ marginRight: '1rem' }}>Export as Excel</Button>
                                                     </Popconfirm>
 

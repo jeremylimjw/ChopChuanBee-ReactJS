@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Form, Typography, DatePicker, Radio, Button, Table, Select } from "antd";
+import { Form, Typography, DatePicker, Radio, Button, Table, Select, Upload } from "antd";
 import { PrinterOutlined, FileExcelOutlined } from '@ant-design/icons/lib/icons';
 import { useApp } from "../../../providers/AppProvider";
 import MyLayout from "../../common/MyLayout";
@@ -15,6 +15,7 @@ import { formatCurrency } from '../../../utilities/currency';
 import { sortByDate, sortByNumber, sortByString } from '../../../utilities/sorters';
 import { Link } from "react-router-dom";
 import { generatePdf } from "../../../utilities/Report/ReportExporter";
+import { generateCSV } from "../../../utilities/Report/ExcelExporter";
 
 const breadcrumbs = [
     { url: "/accounting/taxStatements", name: "Accounting" },
@@ -108,15 +109,34 @@ export default function ManageTaxStatementPage() {
         generatePdf(pdfData, 'TAX')
     }
 
-    function exportExcel() {
+    const exportExcel = () => {
         let tableHeaders
+        let excelData
         if (taxType === 'input') {
-            tableHeaders = ['Sales Order No.', 'Total Transaction Amt', 'GST Rate', 'GST Amt', 'Transaction Date',
-                'Company', 'Customer ID', 'Customer Name']
+            tableHeaders = ['Sales Order ID', 'Company Name', 'Charged Under', 'Transaction Date', 'Total Amount', 'GST Rate', 'GST Amount']
+            excelData = formatExcelData(tableHeaders)
+            generateCSV('Input Tax Statement', tableHeaders, excelData)
         } else {
-            tableHeaders = ['Purchase Order No.', 'Total Transaction Amt', 'GST Rate', 'GST Amt', 'Transaction Date',
-                'Company', 'Supplier ID', 'Supplier Name']
+            tableHeaders = ['Purchase Order ID', 'Company Name', 'Charged Under', 'Transaction Date', 'Total Amount', 'GST Rate', 'GST Amount']
+            excelData = formatExcelData(tableHeaders)
+            generateCSV('Output Tax Statement', tableHeaders, excelData)
         }
+    }
+
+    const formatExcelData = () => {
+        let excelData = []
+        excelData = items.map((item) => {
+            let arr = []
+            arr.push(item.order_id.toString())
+            arr.push(item.company_name)
+            arr.push(item.charged_under_name)
+            arr.push(moment(item.transaction_date).format('L'))
+            arr.push(item.total_transaction_amount)
+            arr.push(item.gst_rate)
+            arr.push(item.gst_amount)
+            return arr
+        })
+        return excelData
     }
 
     return (
