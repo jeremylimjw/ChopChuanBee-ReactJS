@@ -5,12 +5,10 @@ import { useApp } from '../../../../providers/AppProvider';
 
 export default function APSupplierChart() {
     const [data, setData] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const { handleHttpError } = useApp();
 
     useEffect(() => {        
-        setLoading(true);
-
         AnalyticsApiHelper.getPayableSuppliers()
             .then(result => { 
                 result.map(x => { 
@@ -18,9 +16,9 @@ export default function APSupplierChart() {
                     return x;
                 }); 
                 setData(result);
+                setLoading(false);
             })
-            .catch(handleHttpError)
-            .catch(() => setLoading(false));
+            .catch(handleHttpError);
 
     }, [handleHttpError, loading]);
 
@@ -63,7 +61,7 @@ export default function APSupplierChart() {
             },
         },
         tooltip: {
-            fields: ['company_name', 'total_ap_amount', 's1_name'],
+            fields: ['total_ap_amount', 'company_name', 'contact_person_name'],
             showTitle: false,
         },
         meta: {
@@ -74,7 +72,7 @@ export default function APSupplierChart() {
                 alias: 'Accounts Payable',
                 formatter: (v) => `${(v / 1).toFixed(2)} `,
             },
-            s1_name: {
+            contact_person_name: {
                 alias: 'Contact Person Name',
             }
         },

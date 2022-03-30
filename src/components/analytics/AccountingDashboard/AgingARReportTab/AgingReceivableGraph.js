@@ -21,6 +21,7 @@ export default function AgingReceivableGraph(props) {
     const fetchData = async () => {
       await AnalyticsApiHelper.getAgedReceivable()
         .then((results) => {
+          console.log(results);
           results.forEach((x) => {
             const tempLessThan30 = {
               customer_id: x.customer_id,
@@ -60,8 +61,6 @@ export default function AgingReceivableGraph(props) {
     fetchData();
   }, [handleHttpError, loading]);
 
-
-
   const config = {
     data,
     isStack: true,
@@ -93,7 +92,7 @@ export default function AgingReceivableGraph(props) {
     },
     label: {
       position: "middle",
-      formatter: (x) => "",
+      // formatter: (x) => "",
     },
     interactions: [
       {

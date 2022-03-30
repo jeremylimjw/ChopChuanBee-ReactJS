@@ -29,7 +29,7 @@ export default function InventoryReturnsCard(props) {
         <MyCard style={{ minWidth: "250px", marginLeft: "3px", marginBottom: 0 }}>
           <Typography>MOST RETURNED PRODUCT</Typography>
           <Typography.Title level={2} style={{ margin: 0 }}>
-            {loading ? <Spin /> : mostReturnedProduct.name}
+            {loading ? <Spin /> : mostReturnedProduct.product_name}
           </Typography.Title>
           <Divider style={{ margin: "0.5rem 0" }} />
           <Row>
@@ -53,7 +53,7 @@ export default function InventoryReturnsCard(props) {
               FROM
             </Typography>
             <Typography style={{ fontSize: "0.8rem", marginLeft: "auto" }}>
-              {loading ? <Spin /> : highestValueLoss.name}
+              {loading ? <Spin /> : highestValueLoss.product_name}
             </Typography>
           </Row>
         </MyCard>

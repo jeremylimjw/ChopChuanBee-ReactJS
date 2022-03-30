@@ -22,7 +22,7 @@ export default function ProfitabilityGraph(props) {
         let cogs = await AnalyticsApiHelper.getCOGS(start, end);
         cogs.map(x => { 
             x.name = 'Cost of Goods Sold'; 
-            x.value = x.value >= 0 ? 0 : parseFloat(x.value) * -1; 
+            x.value = x.value <= 0 ? 0 : parseFloat(x.value); 
             return x;
         });
         let profits = await AnalyticsApiHelper.getProfits(start, end);

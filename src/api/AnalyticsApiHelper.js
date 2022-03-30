@@ -91,7 +91,7 @@ export class AnalyticsApiHelper {
 
   static async getAgedReceivable() {
     return axiosObject
-      .get("/analytics/Aging_AR_Table_Demo/")
+      .get("/analytics/Aging_AR_Table_Test/")
       .then((res) => res.data);
   }
 

@@ -5,12 +5,10 @@ import { useApp } from '../../../../providers/AppProvider';
 
 export default function APInvoiceChart() {
     const [data, setData] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const { handleHttpError } = useApp();
 
     useEffect(() => {        
-        setLoading(true);
-
         AnalyticsApiHelper.getPayableInvoices()
             .then(result => { 
                 result.map(x => { 
@@ -19,9 +17,9 @@ export default function APInvoiceChart() {
                     return x;
                 }); 
                 setData(result);
+                setLoading(false);
             })
-            .catch(handleHttpError)
-            .catch(() => setLoading(false));
+            .catch(handleHttpError);
 
     }, [handleHttpError, loading]);
 
@@ -38,7 +36,7 @@ export default function APInvoiceChart() {
         },
         xAxis: {
             title: {
-                text: "Procurement ID",
+                text: "Purchase Order ID",
                 style: {
                     fill: "black",
                     fillOpacity: 0.5,
@@ -64,12 +62,12 @@ export default function APInvoiceChart() {
             },
         },
         tooltip: {
-            fields: ['id', 'supplier_invoice_id', 'sum'],
+            fields: ['id', 'supplier_invoice_id', 'sum', 'company_name', 'contact_person_name'],
             showTitle: false,
         },
         meta: {
             id: {
-                alias: 'Procurement ID',
+                alias: 'Purchase Order ID',
             },
             sum: {
                 alias: 'Accounts Payable',
@@ -77,7 +75,13 @@ export default function APInvoiceChart() {
             },
             supplier_invoice_id: {
                 alias: 'Supplier Invoice ID',
-            }
+            },
+            company_name: {
+                alias: 'Supplier Company Name',
+            },
+            contact_person_name: {
+                alias: 'Contact Person Name',
+            },
         },
     };
 

@@ -5,12 +5,10 @@ import { useApp } from '../../../../providers/AppProvider';
 
 export default function ARCustomerChart() {
     const [data, setData] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const { handleHttpError } = useApp();
 
     useEffect(() => {        
-        setLoading(true);
-
         AnalyticsApiHelper.getReceivableCustomers()
             .then(result => { 
                 result.map(x => { 
@@ -18,10 +16,9 @@ export default function ARCustomerChart() {
                     return x;
                 }); 
                 setData(result);
+                setLoading(false);
             })
-            .catch(handleHttpError)
-            .catch(() => setLoading(false));
-
+            .catch(handleHttpError);
     }, [handleHttpError, loading]);
 
     const config = {
@@ -63,7 +60,7 @@ export default function ARCustomerChart() {
             },
         },
         tooltip: {
-            fields: ['company_name', 'total_ar_amount', 'p1_name'],
+            fields: ['total_ar_amount', 'company_name', 'p1_name'],
             showTitle: false,
         },
         meta: {

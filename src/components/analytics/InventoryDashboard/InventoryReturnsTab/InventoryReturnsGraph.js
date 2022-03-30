@@ -18,15 +18,16 @@ export default function InventoryReturnsGraph(props) {
   const fetchData = async () => {
     await AnalyticsApiHelper.getSupplierReturnedGoods(props.startDate, props.endDate)
       .then((result) => {
+        console.log(result);
         result.forEach((x) => { 
           const tempQtyReturned = {
-            product_name: x.name,
+            product_name: x.product_name,
             metric_name: "Quantity Returned",
             value: parseInt(x.quantity_returned),
           };
           quantityReturned.push(tempQtyReturned);
           const tempTotalValueLoss = {
-            product_name: x.name,
+            product_name: x.product_name,
             metric_name: "Total Value Loss",
             value: parseFloat(x.supplier_returned_goods_total_value),
           };

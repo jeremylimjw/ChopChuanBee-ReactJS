@@ -30,7 +30,7 @@ export default function ProfitabilityCard(props) {
     
             let cogsThisMonth = await AnalyticsApiHelper.getCOGS(startOfMonth, endOfMonth);
             cogsThisMonth.map(x => { 
-                x.value = x.value <= 0 ? 0 : parseFloat(x.value) * -1;
+                x.value = x.value >= 0 ? 0 : parseFloat(x.value);
                 return x;
             });
             setCogsMonth(cogsThisMonth[0]);

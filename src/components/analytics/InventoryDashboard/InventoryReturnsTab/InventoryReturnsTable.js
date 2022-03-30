@@ -5,6 +5,7 @@ import { AnalyticsApiHelper } from "../../../../api/AnalyticsApiHelper";
 import { showTotal } from "../../../../utilities/table";
 import { sortByNumber, sortByString } from '../../../../utilities/sorters';
 import { formatCurrency } from '../../../../utilities/currency';
+import { Link } from 'react-router-dom';
 
 export default function InventoryReturnsTable(props) {
   const { handleHttpError } = useApp();
@@ -24,10 +25,10 @@ export default function InventoryReturnsTable(props) {
   const columns = [
     {
       title: "Product Name",
-      dataIndex: "name",
-      key: "name",
+      dataIndex: "product_name",
+      key: "product_name",
       width: "30%",
-      sorter: (a, b) => sortByString(a.name, b.name),
+      sorter: (a, b) => sortByString(a.product_name, b.product_name),
     },
     {
       title: "Quantity Returned",

@@ -5,12 +5,10 @@ import { useApp } from '../../../../providers/AppProvider';
 
 export default function ARCustomerChart() {
     const [data, setData] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const { handleHttpError } = useApp();
 
     useEffect(() => {        
-        setLoading(true);
-
         AnalyticsApiHelper.getReceivableInvoices()
             .then(result => { 
                 result.map(x => { 
@@ -24,9 +22,9 @@ export default function ARCustomerChart() {
                     ReverseArray.push(result[i]);
                 }
                 setData(ReverseArray);
+                setLoading(false);
             })
-            .catch(handleHttpError)
-            .catch(() => setLoading(false));
+            .catch(handleHttpError);
     }, [handleHttpError, loading]);
 
     const config = {
@@ -68,7 +66,7 @@ export default function ARCustomerChart() {
             },
         },
         tooltip: {
-            fields: ['id', 'sum'],
+            fields: ['id', 'sum', 'company_name', 'contact_person_name'],
             showTitle: false,
         },
         meta: {
@@ -78,6 +76,12 @@ export default function ARCustomerChart() {
             sum: {
                 alias: 'Accounts Receivable',
                 formatter: (v) => `${(v / 1).toFixed(2)} `,
+            },
+            company_name: {
+                alias: 'Customer Company Name',
+            },
+            contact_person_name: {
+                alias: 'Contact Person Name',
             },
         },
     };
