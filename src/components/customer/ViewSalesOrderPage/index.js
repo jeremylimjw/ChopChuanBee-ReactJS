@@ -28,7 +28,6 @@ export default function ViewSalesOrderPage() {
 
   const [loading, setLoading] = useState(false);
   const [salesOrder, setSalesOrder] = useState(null)
-
   const [isDeliveryModalVisible, setIsDeliveryModalVisible] = useState(0);
 
   const breadcrumbs = [
@@ -165,10 +164,17 @@ export default function ViewSalesOrderPage() {
     console.log(salesOrder)
   }
 
-  function viewAsPDF(action) {
+  async function fetchDeliveryOrders() {
+    const results = await DeliveryApiHelper.getOrders({ sales_order_id: salesOrder.id })
+    const deliveryOrder = results[0]; // NOTE: this maybe undefined if sales order does not have delivery
+    return deliveryOrder
+  }
+
+  async function viewAsPDF(action) {
+    let data
     switch (action) {
       case 'SO':
-        let data = {
+        data = {
           ...salesOrder,
           preGstPrice: salesOrder.sumItemSubtotals(),
           totalPrice: salesOrder.getOrderTotal()
@@ -176,8 +182,12 @@ export default function ViewSalesOrderPage() {
         generatePdf(data, action)
         break
       case 'STICKER':
-        console.log(salesOrder)
-        generatePdf(salesOrder, action)
+        const deliveryOrder = await fetchDeliveryOrders()
+        data = {
+          ...salesOrder,
+          deliveryOrder
+        }
+        generatePdf(data, action)
         break
       case 'PACKING_LIST':
         generatePdf(salesOrder, action)

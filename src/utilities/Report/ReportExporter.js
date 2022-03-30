@@ -9,6 +9,7 @@ import { balanceSheetTemplate } from "./Templates/BalanceSheetTemplate.js";
 import { packingInstructionTemplate } from "./Templates/PackingInstructionTemplate.js";
 import { deliverySticker } from "./Templates/DeliverySticker.js";
 import { taxStatementTemplate } from "./Templates/TaxStatement.js";
+import { profitLossStatement } from "./Templates/ProfitLossStatementTemplate.js";
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 pdfMake.fonts = {
   NotoCh: {
@@ -18,14 +19,6 @@ pdfMake.fonts = {
     bolditalics: 'NotoSans-BoldItalic.ttf',
   }
 }
-const defaultDoc = {
-  pageSize: 'A4',
-  defaultStyle: {
-    font: 'NotoCh'
-  },
-  content: []
-}
-
 
 const generatePdf = async (data, templateName) => {
   try {
@@ -41,6 +34,9 @@ const generatePdf = async (data, templateName) => {
         break
       case 'BALANCE_SHEET':
         data = balanceSheetTemplate(data)
+        break
+      case 'PNL_STATEMENT':
+        data = profitLossStatement(data)
         break
       case 'ITINERARY':
         data = deliveryInstructionsTemplate(data)

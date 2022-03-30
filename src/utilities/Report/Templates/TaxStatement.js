@@ -17,21 +17,21 @@ const subHeaderData = (data) => {
 const formatTotalData = (data) => {
   let totalInput = {
     totalTransactAmt: {
-      text: 'Total Transaction Amount',
+      text: 'Total Transaction Amount ($)',
       value: data.totalAmt
     },
     totalIn: {
-      text: 'Total Input Tax',
+      text: 'Total Input Tax ($)',
       value: data.totalTax
     }
   }
   let totalOutput = {
     totalTransactAmt: {
-      text: 'Total Transaction Amount',
+      text: 'Total Transaction Amount ($)',
       value: data.totalAmt
     },
     totalOut: {
-      text: 'Total Output Tax',
+      text: 'Total Output Tax ($)',
       value: data.totalTax
     }
   }
@@ -39,7 +39,7 @@ const formatTotalData = (data) => {
 }
 
 const constructTable = (data, headers) => {
-  const widths = ['*', '*', '*', '*', '*', '*']
+  const widths = ['6%', '20%', '12%', '15%', '20%', '*']
   let tableHeaders = headers.map((val) => PDFTools.formatText(val, 'tableHeader'))
   let taxTable = []
   if (data.length > 0) {
@@ -49,7 +49,7 @@ const constructTable = (data, headers) => {
       arr.push(PDFTools.formatText(transaction.total_transaction_amount, 'tableContent'))
       arr.push(PDFTools.formatText(transaction.gst_rate, 'tableContent'))
       arr.push(PDFTools.formatText(transaction.gst_amount, 'tableContent'))
-      arr.push(PDFTools.formatText(transaction.transaction_date, 'tableContent'))
+      arr.push(PDFTools.formatText(moment(transaction.transaction_date).format('LL'), 'tableContent'))
       arr.push(PDFTools.formatText(transaction.company_name, 'tableContent'))
       return arr
     })
@@ -73,7 +73,11 @@ export const taxStatementTemplate = (data) => {
 }
 
 const inputTemplate = (data) => {
-  let tableHeaders = ['Sales Order No.', 'Total Transaction Amt', 'GST Rate', 'GST Amt', 'Transaction Date',
+  let company = data.items[0].charged_under_name.toUpperCase()
+  let [start, end] = data.dateRange
+  start = moment(start).format('LL')
+  end = moment(end).format('LL')
+  let tableHeaders = ['No.', 'Total Transaction Amt ($)', 'GST Rate (%)', 'GST Amt ($)', 'Transaction Date',
     'Company']
   let taxInputTable = constructTable(data.items, tableHeaders)
   let totalData = formatTotalData(data)
@@ -84,29 +88,33 @@ const inputTemplate = (data) => {
       font: 'NotoCh',
     },
     content: [
+      PDFTools.formatText(company, 'header'),
       PDFTools.formatText('INPUT TAX TRANSACTIONS', 'header'),
+      PDFTools.formatText(`Period:                 ${start} - ${end}`, 'subHeader'),
+      { text: '', margin: [0, 0, 0, 5] },
       PDFTools.dividerLine('horizontal', 515),
-      { text: '', margin: [0, 5] },
+      { text: '', margin: [0, 8] },
       taxInputTable,
-      PDFTools.generateForm(totalData.totalInput.totalTransactAmt, 'formText', '50%'),
-      PDFTools.generateForm(totalData.totalInput.totalIn, 'formText', '50%')
+      { text: '', margin: [0, 5] },
+      PDFTools.generateForm([totalData.totalInput.totalTransactAmt], 'formText', '30%'),
+      PDFTools.generateForm([totalData.totalInput.totalIn], 'formText', '30%')
     ],
     styles: {
       header: {
         fontSize: 18,
         bold: true,
         alignment: 'center',
-        margin: [0, 0, 0, 10]
+        margin: [0, 0, 0, 5]
       },
       subHeader: {
-        fontSize: 12,
-        bold: true,
+        fontSize: 10,
       },
       formText: {
         fontSize: 9
       },
       tableHeader: {
         fontSize: 10,
+        bold: true,
         alignment: 'center'
       },
       tableContent: {
@@ -123,7 +131,11 @@ const inputTemplate = (data) => {
 }
 
 const outputTemplate = (data) => {
-  let tableHeaders = ['Purchase Order No.', 'Total Transaction Amt', 'GST Rate', 'GST Amt', 'Transaction Date',
+  let company = data.items[0].charged_under_name.toUpperCase()
+  let [start, end] = data.dateRange
+  start = moment(start).format('LL')
+  end = moment(end).format('LL')
+  let tableHeaders = ['No.', 'Total Transaction Amt ($)', 'GST Rate (%)', 'GST Amt ($)', 'Transaction Date',
     'Company']
   let taxOutputTable = constructTable(data.items, tableHeaders)
   let totalData = formatTotalData(data)
@@ -134,12 +146,16 @@ const outputTemplate = (data) => {
       font: 'NotoCh',
     },
     content: [
-      PDFTools.formatText('Output Tax Transactions', 'header'),
+      PDFTools.formatText(company, 'header'),
+      PDFTools.formatText('OUTPUT TAX TRANSACTIONS', 'header'),
+      PDFTools.formatText(`Period:                 ${start} - ${end}`, 'subHeader'),
+      { text: '', margin: [0, 0, 0, 5] },
       PDFTools.dividerLine('horizontal', 515),
-      { text: '', margin: [0, 5] },
+      { text: '', margin: [0, 8] },
       taxOutputTable,
-      PDFTools.generateForm(totalData.totalOutput.totalTransactAmt, 'formText'),
-      PDFTools.generateForm(totalData.totalOutput.totalOut, 'formText')
+      { text: '', margin: [0, 5] },
+      PDFTools.generateForm([totalData.totalOutput.totalTransactAmt], 'formText', '30%'),
+      PDFTools.generateForm([totalData.totalOutput.totalOut], 'formText', '30%')
     ],
     styles: {
       header: {

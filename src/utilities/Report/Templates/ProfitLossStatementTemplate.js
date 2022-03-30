@@ -115,10 +115,17 @@ export const profitLossStatement = (data) => {
     content: [
       PDFTools.formatText('CHOP CHUAN BEE', 'header'),
       PDFTools.formatText('Profit and Loss Statement', 'header'),
-      PDFTools.formatText(endDate, 'subHeader'),
+      PDFTools.formatText(`Date: ${endDate}`, 'subHeader'),
       // Revenue
       PDFTools.formatText('Revenue', 'subHeader'),
       PDFTools.dividerLine('horizontal', 515),
+      { text: '', margin: [0, 2] },
+      {
+        columns: [
+          PDFTools.formatText('Revenue', 'formText'),
+          { width: '30%', ...PDFTools.formatText('$', 'formText') },
+        ]
+      },
       { text: '', margin: [0, 2] },
       PDFTools.generateForm(revenueData.netRevenueItems, 'formText', '60%', { width: '10%', text: '' }),
       PDFTools.generateForm([revenueData.total.net_revenue], 'boldFormText', '60%', { width: '10%', text: '' }),
@@ -129,10 +136,24 @@ export const profitLossStatement = (data) => {
       PDFTools.formatText('Expenses', 'subHeader'),
       PDFTools.dividerLine('horizontal', 515),
       { text: '', margin: [0, 2] },
+      {
+        columns: [
+          PDFTools.formatText('Expenses', 'formText'),
+          { width: '30%', ...PDFTools.formatText('$', 'formText') },
+        ]
+      },
+      { text: '', margin: [0, 2] },
       PDFTools.generateForm(expensesData.expenses, 'formText', '60%', { width: '10%', text: '' }),
       PDFTools.generateForm([expensesData.total], 'boldFormText', '60%', { width: '10%', text: '' }),
       PDFTools.formatText('Profit', 'subHeader'),
       PDFTools.dividerLine('horizontal', 515),
+      { text: '', margin: [0, 2] },
+      {
+        columns: [
+          PDFTools.formatText('Profit', 'formText'),
+          { width: '30%', ...PDFTools.formatText('$', 'formText') },
+        ]
+      },
       { text: '', margin: [0, 2] },
       PDFTools.generateForm([profit], 'boldFormText', '60%', { width: '10%', text: '' }),
       { text: '', pageBreak: 'after' },
