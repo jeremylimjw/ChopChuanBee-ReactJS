@@ -40,182 +40,212 @@ import ManageItinerarysPage from './components/dispatch/ManageItinerarysPage';
 import NewItineraryPage from './components/dispatch/NewItineraryPage';
 import ViewItineraryPage from './components/dispatch/ViewItineraryPage';
 import CompleteDeliveryPage from './components/CompleteDeliveryPage';
+import ManageCataloguePage from './components/catalogue/ManageCataloguePage';
+import ManageCategoryPage from './components/catalogue/ManageCategoryPage';
+import ViewCataloguePage from './components/catalogue/ViewCataloguePage';
+import ViewCategoryPage from './components/catalogue/ViewCategoryPage';
 
 // Add on more routes here
 const routes = [
-  {
-    path: '/',
-    component: <MyTemplate />,
-  },
-  {
-    path: '/admin',
-    component: <Outlet />,
-    childRoutes: [
-      { 
-        path: 'accounts', 
-        component: <ManageAccountsPage />,
-        viewAccess: View.ADMIN.name,
-      },
-      { 
-        path: 'accounts/:id', 
-        component: <ViewAccountPage />,
-        viewAccess: View.ADMIN.name,
-      },
-      { 
-        path: 'companyDetails', 
-        component: <ManageChargedUndersPage />,
-        viewAccess: View.ADMIN.name,
-      },
-      { 
-        path: 'companyDetails/:id', 
-        component: <ViewChargedUnderPage />,
-        viewAccess: View.ADMIN.name,
-      },
-      { 
-        path: 'logs', 
-        component: <ViewLogsPage />,
-        viewAccess: View.ADMIN.name,
-      },
-    ]
-  },
-  {
-    path: '/myProfile',
-    component: <MyProfilePage />,
-  },
-  {
-    path: '/myLeaves',
-    component: <MyLeavePage />,
-  },
-  {
-    path: 'humanResource',
-    component: <Outlet />,
-    childRoutes: [
-      { 
-        path: 'employees', 
-        component: <ManageEmployeesPage />,
-        viewAccess: View.HR.name
-      },
-      { 
-        path: 'employees/:id', 
-        component: <ViewEmployeePage />,
-        viewAccess: View.HR.name
-      },
-      { 
-        path: 'leaveApplications', 
-        component: <ManageLeavesPage />,
-        viewAccess: View.HR.name
-      },
-    ]
-  },
-  {
-    path: '/inventory',
-    component: <Outlet />,
-    childRoutes: [
-      { 
-        path: 'products', 
-        component: <ManageProductsPage />,
-        viewAccess: View.INVENTORY.name,
-      },
-      { 
-        path: 'products/:id', 
-        component: <ViewProductPage />,
-        viewAccess: View.INVENTORY.name,
-      },
-      { 
-        path: 'movements', 
-        component: <ViewInventoryMovementsPage />,
-        viewAccess: View.INVENTORY.name,
-      },
-    ]
-  },
-  {
-    path: "/supplier",
-    component: <Outlet />,
-    childRoutes: [
-      {
-        path: "suppliers",
-        component: <ManageSuppliersPage />,
-        viewAccess: View.SCM.name,
-      },
-      {
-        path: "suppliers/:id",
-        component: <ViewSupplierPage />,
-        viewAccess: View.SCM.name,
-      },
-      { 
-        path: 'procurements', 
-        component: <ManageProcurementsPage />,
-        viewAccess: View.SCM.name,
-      },
-      { 
-        path: 'procurements/new', 
-        component: <NewProcurementPage />,
-        viewAccess: View.SCM.name,
-      },
-      { 
-        path: 'procurements/:id', 
-        component: <ViewProcurementPage />,
-        viewAccess: View.SCM.name,
-      },
-    ],
-  },
-  {
-    path: '/customer',
-    component: <Outlet />,
-    childRoutes: [
-      { 
-        path: 'customers', 
-        component: <ManageCustomersPage />,
-        viewAccess: View.CRM.name,
-      },
-      { 
-        path: 'customers/:id', 
-        component: <ViewCustomerPage />,
-        viewAccess: View.CRM.name,
-      },
-      { 
-        path: 'sales', 
-        component: <ManageSalesOrdersPage />,
-        viewAccess: View.SCM.name,
-      },
-      { 
-        path: 'sales/new', 
-        component: <NewSalesOrderPage />,
-        viewAccess: View.SCM.name,
-      },
-      { 
-        path: 'sales/:id', 
-        component: <ViewSalesOrderPage />,
-        viewAccess: View.SCM.name,
-      },
-    ]
-  },
-  {
-    path: '/dispatch',
-    component: <Outlet />,
-    childRoutes: [
-      { 
-        path: 'itinerarys', 
-        component: <ManageItinerarysPage />,
-        viewAccess: View.DISPATCH.name,
-      },
-      { 
-        path: 'itinerarys/new', 
-        component: <NewItineraryPage />,
-        viewAccess: View.DISPATCH.name,
-      },
-      { 
-        path: 'itinerarys/:id', 
-        component: <ViewItineraryPage />,
-        viewAccess: View.DISPATCH.name,
-      },
-      { 
-        path: 'deliveryOrders', 
-        component: <ManageDeliveriesPage />,
-        viewAccess: View.DISPATCH.name,
-      },
-    ]
-  },
+    {
+        path: '/',
+        component: <MyTemplate />,
+    },
+    {
+        path: '/admin',
+        component: <Outlet />,
+        childRoutes: [
+            {
+                path: 'accounts',
+                component: <ManageAccountsPage />,
+                viewAccess: View.ADMIN.name,
+            },
+            {
+                path: 'accounts/:id',
+                component: <ViewAccountPage />,
+                viewAccess: View.ADMIN.name,
+            },
+            {
+                path: 'companyDetails',
+                component: <ManageChargedUndersPage />,
+                viewAccess: View.ADMIN.name,
+            },
+            {
+                path: 'companyDetails/:id',
+                component: <ViewChargedUnderPage />,
+                viewAccess: View.ADMIN.name,
+            },
+            {
+                path: 'logs',
+                component: <ViewLogsPage />,
+                viewAccess: View.ADMIN.name,
+            },
+        ],
+    },
+    {
+        path: '/myProfile',
+        component: <MyProfilePage />,
+    },
+    {
+        path: '/myLeaves',
+        component: <MyLeavePage />,
+    },
+    {
+        path: 'humanResource',
+        component: <Outlet />,
+        childRoutes: [
+            {
+                path: 'employees',
+                component: <ManageEmployeesPage />,
+                viewAccess: View.HR.name,
+            },
+            {
+                path: 'employees/:id',
+                component: <ViewEmployeePage />,
+                viewAccess: View.HR.name,
+            },
+            {
+                path: 'leaveApplications',
+                component: <ManageLeavesPage />,
+                viewAccess: View.HR.name,
+            },
+        ],
+    },
+    {
+        path: '/inventory',
+        component: <Outlet />,
+        childRoutes: [
+            {
+                path: 'products',
+                component: <ManageProductsPage />,
+                viewAccess: View.INVENTORY.name,
+            },
+            {
+                path: 'products/:id',
+                component: <ViewProductPage />,
+                viewAccess: View.INVENTORY.name,
+            },
+            {
+                path: 'movements',
+                component: <ViewInventoryMovementsPage />,
+                viewAccess: View.INVENTORY.name,
+            },
+        ],
+    },
+    {
+        path: '/supplier',
+        component: <Outlet />,
+        childRoutes: [
+            {
+                path: 'suppliers',
+                component: <ManageSuppliersPage />,
+                viewAccess: View.SCM.name,
+            },
+            {
+                path: 'suppliers/:id',
+                component: <ViewSupplierPage />,
+                viewAccess: View.SCM.name,
+            },
+            {
+                path: 'procurements',
+                component: <ManageProcurementsPage />,
+                viewAccess: View.SCM.name,
+            },
+            {
+                path: 'procurements/new',
+                component: <NewProcurementPage />,
+                viewAccess: View.SCM.name,
+            },
+            {
+                path: 'procurements/:id',
+                component: <ViewProcurementPage />,
+                viewAccess: View.SCM.name,
+            },
+        ],
+    },
+    {
+        path: '/customer',
+        component: <Outlet />,
+        childRoutes: [
+            {
+                path: 'customers',
+                component: <ManageCustomersPage />,
+                viewAccess: View.CRM.name,
+            },
+            {
+                path: 'customers/:id',
+                component: <ViewCustomerPage />,
+                viewAccess: View.CRM.name,
+            },
+            {
+                path: 'sales',
+                component: <ManageSalesOrdersPage />,
+                viewAccess: View.SCM.name,
+            },
+            {
+                path: 'sales/new',
+                component: <NewSalesOrderPage />,
+                viewAccess: View.SCM.name,
+            },
+            {
+                path: 'sales/:id',
+                component: <ViewSalesOrderPage />,
+                viewAccess: View.SCM.name,
+            },
+        ],
+    },
+    {
+        path: '/dispatch',
+        component: <Outlet />,
+        childRoutes: [
+            {
+                path: 'itinerarys',
+                component: <ManageItinerarysPage />,
+                viewAccess: View.DISPATCH.name,
+            },
+            {
+                path: 'itinerarys/new',
+                component: <NewItineraryPage />,
+                viewAccess: View.DISPATCH.name,
+            },
+            {
+                path: 'itinerarys/:id',
+                component: <ViewItineraryPage />,
+                viewAccess: View.DISPATCH.name,
+            },
+            {
+                path: 'deliveryOrders',
+                component: <ManageDeliveriesPage />,
+                viewAccess: View.DISPATCH.name,
+            },
+        ],
+    },
+    {
+        path: '/catalogue',
+        component: <Outlet />,
+        childRoutes: [
+            {
+                path: 'catalogues',
+                component: <ManageCataloguePage />,
+                viewAccess: View.CATALOGUE.name,
+            },
+            {
+                path: 'catalogues/:id',
+                component: <ViewCataloguePage />,
+                viewAccess: View.CATALOGUE.name,
+            },
+            {
+                path: 'categories',
+                component: <ManageCategoryPage />,
+                viewAccess: View.CATALOGUE.name,
+            },
+            {
+                path: 'categories/:id',
+                component: <ViewCategoryPage />,
+                viewAccess: View.CATALOGUE.name,
+            },
+        ],
+    },
 ];
 
 function renderRoute(route, index) {
@@ -253,23 +283,30 @@ function renderRoute(route, index) {
 }
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Router>
-      <AppProvider>
-        <Layout style={{ minHeight: '100vh' }}>
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/activate" element={<ActivatePage />} />
-            <Route path="/completeDelivery" element={<CompleteDeliveryPage />} />
-            <Route path="/" element={<RequireAuth><App /></RequireAuth>}>
-              {routes.map((route, index) => renderRoute(route, index))}
-            </Route>
-          </Routes>
-        </Layout>
-      </AppProvider>
-    </Router>
-  </React.StrictMode>,
-  document.getElementById('root')
+    <React.StrictMode>
+        <Router>
+            <AppProvider>
+                <Layout style={{ minHeight: '100vh' }}>
+                    <Routes>
+                        <Route path='/login' element={<LoginPage />} />
+                        <Route path='/activate' element={<ActivatePage />} />
+                        <Route path='/completeDelivery' element={<CompleteDeliveryPage />} />
+                        <Route
+                            path='/'
+                            element={
+                                <RequireAuth>
+                                    <App />
+                                </RequireAuth>
+                            }
+                        >
+                            {routes.map((route, index) => renderRoute(route, index))}
+                        </Route>
+                    </Routes>
+                </Layout>
+            </AppProvider>
+        </Router>
+    </React.StrictMode>,
+    document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function
