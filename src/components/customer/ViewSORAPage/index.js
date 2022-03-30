@@ -11,6 +11,8 @@ import { showTotal } from '../../../utilities/table';
 import { parseDate } from '../../../utilities/datetime';
 import { sortByDate, sortByNumber } from '../../../utilities/sorters';
 import { Link } from 'react-router-dom';
+import { generatePdf } from '../../../utilities/Report/ReportExporter';
+import { ChargedUnderApiHelper } from '../../../api/ChargedUnderApiHelper';
 
 
 export default function ViewSORAPage() {
@@ -21,12 +23,13 @@ export default function ViewSORAPage() {
 
   const [customer, setCustomer] = useState(null);
   const [sora, setSora] = useState(null);
+  const [company, setCompany] = useState(null)
 
   const breadcrumbs = [
     { url: '/customer/customers', name: 'Customer' },
     { url: '/customer/customers', name: 'Customers' },
     { url: `/customer/customers/${id}`, name: customer?.company_name },
-    { url: `/customer/customers/SORA/${id}`, name: 'Statement of Receivable Account'}
+    { url: `/customer/customers/SORA/${id}`, name: 'Statement of Receivable Account' }
   ]
 
   useEffect(() => {
@@ -36,7 +39,7 @@ export default function ViewSORAPage() {
           navigate('../');
           return;
         }
-      setCustomer(result[0]);
+        setCustomer(result[0]);
       }).catch(handleHttpError)
 
     CustomerApiHelper.getSORA(id)
@@ -44,25 +47,43 @@ export default function ViewSORAPage() {
         setSora(result);
       })
       .catch(handleHttpError)
+
+    ChargedUnderApiHelper.get({ name: 'Chop Chuan Bee' })
+      .then(result => {
+        if (result) {
+          setCompany(result[0])
+        }
+      })
+      .catch(handleHttpError);
   }, [id, handleHttpError, navigate]);
+
+  const exportPDF = () => {
+    let data = {
+      customer,
+      sora,
+      company
+    }
+    // console.log(data)
+    generatePdf(data, 'SOA')
+  }
 
   return (
     <>
       <MyLayout breadcrumbs={breadcrumbs} bannerTitle={`${customer?.company_name}`}>
-          <MyCard>
-              <MyToolbar title="Statement of Receivable Account">
-                  <Button icon={<PrinterOutlined />} > Print </Button>
-              </MyToolbar>
-              <Table 
-                  dataSource={sora} 
-                  columns={columns}
-                  rowKey="id" 
-                  pagination={{ showTotal: showTotal }}
-              />
-          </MyCard>
+        <MyCard>
+          <MyToolbar title="Statement of Receivable Account">
+            <Button icon={<PrinterOutlined />} onClick={() => exportPDF()} > Print </Button>
+          </MyToolbar>
+          <Table
+            dataSource={sora}
+            columns={columns}
+            rowKey="id"
+            pagination={{ showTotal: showTotal }}
+          />
+        </MyCard>
       </MyLayout>
     </>
-  ) 
+  )
 }
 
 const columns = [
@@ -114,4 +135,3 @@ const columns = [
     sorter: (a, b) => sortByNumber(a.balance, b.balance),
   },
 ]
-  

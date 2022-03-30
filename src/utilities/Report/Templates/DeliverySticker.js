@@ -1,7 +1,4 @@
 const constructSticker = (data) => {
-  // data = require('./itinerary.json')
-  // data = data.delivery_orders[1]
-  console.log(data)
   let sticker = {
     body: [
       [{ text: 'CHOP CHUAN BEE', style: 'header', colSpan: 2, alignment: 'center' }, ''],
@@ -9,7 +6,7 @@ const constructSticker = (data) => {
       [{ text: `${data.customer.company_name}`, style: 'tableContent' }, { text: `${data.delivery_address} Singapore ${data.delivery_postal_code}`, style: 'tableContent', rowSpan: 3 }],
       [{ text: `${data.customer.p1_name}`, style: 'tableContent' }, ''],
       [{ text: `${data.customer.p1_phone_number}`, style: 'tableContent' }, ''],
-      //[{ image: data.qr_code, height: 100, width: 100, colSpan: 2, alignment: 'center', border: [true, true, true, false] }, ''],
+      [{ image: data.deliveryOrder.qr_code, height: 100, width: 100, colSpan: 2, alignment: 'center', border: [true, true, true, false] }, ''],
       [{ text: `Sales Order ID: ${data.id}`, style: 'tableContent', colSpan: 2, alignment: 'center', border: [true, false, true, true] }, ''],
       [{ text: 'Remarks', style: 'tableHeader', colSpan: 2 }, ''],
       [{ text: `${data.delivery_remarks}`, style: 'tableContent', colSpan: 2, rowSpan: 3 }, ''],
@@ -36,7 +33,7 @@ export const deliverySticker = (data) => {
           { table: constructSticker(data) }
         ]
       },
-      { text: '', margin: [0, 2] },
+      { text: '', margin: [0, 4] },
       {
         columns: [
           { table: constructSticker(data) },
