@@ -10,11 +10,12 @@ import { packingInstructionTemplate } from "./Templates/PackingInstructionTempla
 import { deliverySticker } from "./Templates/DeliverySticker.js";
 import { taxStatementTemplate } from "./Templates/TaxStatement.js";
 import { profitLossStatement } from "./Templates/ProfitLossStatementTemplate.js";
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
+pdfMake.vfs = pdfFonts;
 pdfMake.fonts = {
   NotoCh: {
-    normal: 'NotoSansSC-Regular.otf',
-    bold: 'NotoSansSC-Bold.otf',
+    normal: 'NotoSansSC-Regular.ttf',
+    bold: 'NotoSans-Bold.ttf',
     italics: 'NotoSans-Italic.ttf',
     bolditalics: 'NotoSans-BoldItalic.ttf',
   }
