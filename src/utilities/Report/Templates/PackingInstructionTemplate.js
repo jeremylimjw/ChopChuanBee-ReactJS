@@ -15,7 +15,7 @@ const formatPackerSubHeader = (data) => {
 }
 
 const constructItemTable = (data) => {
-  const tableHeaders = ['No.', 'Item Name', 'Qty', 'Unit', 'Status', 'Box Label']
+  const tableHeaders = ['No.', 'Item Name', 'Qty', 'Unit', 'Completed?', 'Box Label']
     .map((val) => PDFTools.formatText(val, 'tableHeader'))
   let tableItems = data.sales_order_items.map((item, index) => {
     let arr = []
@@ -23,8 +23,8 @@ const constructItemTable = (data) => {
     arr.push(PDFTools.formatText(item.product.name, 'tableContent'))
     arr.push(PDFTools.formatText(item.quantity, 'tableContent'))
     arr.push(PDFTools.formatText(item.product.unit, 'tableContent'))
-    arr.push('-')
-    arr.push('-')
+    arr.push(' ')
+    arr.push(' ')
     return arr
   })
   let widths = ['5%', '*', '8%', '8%', '8%', '12%']
@@ -43,20 +43,24 @@ export const packingInstructionTemplate = (data) => {
   let document = {
     pageSize: 'A4',
     pageOrientation: 'portrait',
-    pageMargins: [20, 10],
+    info: {
+      title: `Packer Instruction Sheet`
+    },
     defaultStyle: {
       font: 'NotoCh',
     },
     content: [
       PDFTools.formatText('PACKER INSTRUCTION SHEET', 'header'),
-      PDFTools.generateForm(packerData, { formWidth: '30%', margin: [20] }),
+      PDFTools.generateForm(packerData, 'formText', '30%'),
+      { text: '', margin: [0, 5] },
+      PDFTools.dividerLine('horizontal', 515),
       { text: '', margin: [0, 5] },
       PDFTools.formatText('Customer Details', 'subHeader'),
       PDFTools.generateForm([customerDetails], 'formText', '50%'),
       { text: '', margin: [0, 5] },
       itemTable,
       // Signature
-      { text: '', margin: [0, 15] },
+      { text: '', margin: [0, 20] },
       {
         columns: [
           PDFTools.dividerLine('horizontal', signatureLineLength),
@@ -69,7 +73,7 @@ export const packingInstructionTemplate = (data) => {
           PDFTools.formatText(`Staff's name and signature`, 'formText')
         ]
       },
-      { text: '', margin: [0, 15] },
+      { text: '', margin: [0, 20] },
       {
         columns: [
           PDFTools.dividerLine('horizontal', signatureLineLength),
@@ -95,7 +99,7 @@ export const packingInstructionTemplate = (data) => {
         bold: true,
       },
       formText: {
-        fontSize: 10
+        fontSize: 9
       },
       tableHeader: {
         fontSize: 10,

@@ -1,4 +1,4 @@
-export const generateCSV = (fileName, headers, data) => {
+export const generateCSV = (data, headers, fileName) => {
   // [[], [], []]
   let csvFile
   if (headers) {

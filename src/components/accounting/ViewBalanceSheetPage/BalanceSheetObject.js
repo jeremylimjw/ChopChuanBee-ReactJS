@@ -254,7 +254,7 @@ export default function BalanceSheetObject({ BalanceSheet, setBalanceSheet }) {
             arr.push(['', ''])
             arr.push(['TOTAL LIABILITIES AND EQUITIES', BalanceSheet.totalLiabilitiesAndEquities])
             arr.forEach((row) => row[1] = row[1].toString())
-            generateCSV('Balance Sheet', ['BALANCE SHEET'], arr)
+            generateCSV(arr, ['BALANCE SHEET'], 'Balance Sheet')
         } else {
             generatePdf(BalanceSheet)
         }

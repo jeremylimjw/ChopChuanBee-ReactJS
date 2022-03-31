@@ -4,11 +4,11 @@ import { PDFTools } from "../PDFTools"
 const formatPOData = (data) => {
   return {
     po_num: {
-      text: 'PURCHASE ORDER NO: ',
+      text: 'Purchase Order No: ',
       value: data.id || ''
     },
     po_date: {
-      text: 'PURCHASE ORDER DATE: ',
+      text: 'Purchase Order Date: ',
       value: moment(data.created_at).format('ll') || ''
     }
   }
@@ -19,19 +19,19 @@ const formatCompanyData = (data) => {
 
   return {
     addr: {
-      text: 'ADDRESS: ',
+      text: 'Address: ',
       value: address || '',
     },
     contactNum: {
-      text: 'CONTACT NO: ',
+      text: 'Contact No: ',
       value: contact_number || '',
     },
     bizRegNum: {
-      text: 'BUSINESS REG NO: ',
+      text: 'Business Reg No: ',
       value: registration_number || '',
     },
     shipping_addr: {
-      text: 'SHIPPING ADDRESS:',
+      text: 'Shipping Address:',
       value: shipping_address
     }
   }
@@ -41,15 +41,15 @@ const formatVendorData = (data) => {
   let vendorData = data.supplier
   return {
     vendorName: {
-      text: 'VENDOR NAME: ',
+      text: 'Vendor Name: ',
       value: vendorData.company_name || '',
     },
     contactPerson: {
-      text: 'CONTACT PERSON: ',
+      text: 'Contact Person: ',
       value: vendorData.s1_name || '',
     },
     contactNum: {
-      text: 'CONTACT NO: ',
+      text: 'Contact No: ',
       value: vendorData.s1_phone_number || '',
     },
   }
@@ -92,7 +92,9 @@ export const purchaseOrderTemplate = (data) => {
     content: [
       PDFTools.formatText('PURCHASE ORDER', 'header'),
       PDFTools.generateForm(poData, { formWidth: '30%', margin: [20] }),
+      { text: '', margin: [0, 5] },
       PDFTools.dividerLine('horizontal', 515),
+      { text: '', margin: [0, 5] },
       {
         columns: [
           PDFTools.formatText('CHOP CHUAN BEE', 'subHeader'),

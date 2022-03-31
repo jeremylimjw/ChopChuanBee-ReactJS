@@ -72,6 +72,9 @@ export const deliveryInstructionsTemplate = (data) => {
     pageSize: 'A4',
     pageOrientation: 'landscape',
     pageMargins: [20, 10],
+    info: {
+      title: `Delivery Itinerary on ${moment(data.created_at).format('ll')}`
+    },
     defaultStyle: {
       font: 'NotoCh',
     },
@@ -91,7 +94,7 @@ export const deliveryInstructionsTemplate = (data) => {
       // Special instruction box
       PDFTools.formatText('SPECIAL INSTRUCTIONS OR REMARKS', 'subHeader'),
       { text: '', margin: [0, 0, 0, 2] },
-      PDFTools.generateEmptyBox(802, 100),
+      PDFTools.generateEmptyBox(802, 50),
       { text: '', margin: [0, 5] },
       // Signatures 
       {

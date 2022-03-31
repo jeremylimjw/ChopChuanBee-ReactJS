@@ -1,4 +1,4 @@
-import { FileDoneOutlined, FileTextOutlined, RedoOutlined, SaveOutlined, SendOutlined, StopOutlined } from '@ant-design/icons/lib/icons';
+import { FileDoneOutlined, FileTextOutlined, RedoOutlined, SaveOutlined, SendOutlined, StopOutlined, PrinterOutlined } from '@ant-design/icons/lib/icons';
 import { Button, Form, message, Popconfirm, Progress, Space, Typography } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router';
@@ -11,6 +11,7 @@ import { POStatus } from '../../../enums/PurchaseOrderStatus';
 import { View } from '../../../enums/View';
 import { PurchaseOrder } from '../../../models/PurchaseOrder';
 import { useApp } from '../../../providers/AppProvider';
+import { generatePdf } from '../../../utilities/Report/ReportExporter';
 import MyCard from '../../common/MyCard';
 import MyLayout from '../../common/MyLayout';
 import CopyAsTextButton from './CopyAsTextButton';
@@ -193,7 +194,10 @@ export default function ViewProcurementPage() {
     console.log(purchaseOrder)
   }
 
-
+  function handlePrintPDF() {
+    console.log(purchaseOrder)
+    generatePdf(purchaseOrder, 'PO')
+  }
 
   return (
     <>
@@ -237,6 +241,7 @@ export default function ViewProcurementPage() {
                     <Button icon={<SendOutlined />} disabled={loading} onClick={sendEmail}>Send Email</Button>
                   }
                   <CopyAsTextButton loading={loading} purchaseOrder={purchaseOrder} />
+                  <Button icon={<PrinterOutlined />} onClick={() => handlePrintPDF()} >Print PDF</Button>
                 </Space>
 
                 <div style={{ marginLeft: 'auto' }}>

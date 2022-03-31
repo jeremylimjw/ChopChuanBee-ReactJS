@@ -228,6 +228,9 @@ export const balanceSheetTemplate = (data) => {
   }
   let document = {
     pageSize: 'A4',
+    info: {
+      title: `Balance Sheet as of ${moment(data.end_date).format('LL')}`
+    },
     defaultStyle: {
       font: 'NotoCh'
     },

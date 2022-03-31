@@ -84,6 +84,9 @@ const inputTemplate = (data) => {
   const doc = {
     pageSize: 'A4',
     pageOrientation: 'portrait',
+    info: {
+      title: `Transactions with Input Tax for ${data.company}`
+    },
     defaultStyle: {
       font: 'NotoCh',
     },
@@ -142,6 +145,9 @@ const outputTemplate = (data) => {
   const doc = {
     pageSize: 'A4',
     pageOrientation: 'portrait',
+    info: {
+      title: `Transactions with Output Tax for ${data.company}`
+    },
     defaultStyle: {
       font: 'NotoCh',
     },

@@ -4,11 +4,11 @@ import { PDFTools } from "../PDFTools"
 const formatTemplateHeader = (data) => {
   return {
     statement_date: {
-      text: 'STATEMENT DATE:',
+      text: 'Statement Date: ',
       value: moment(data.date).format('LL') || ''
     },
     statement_period: {
-      text: 'STATEMENT PERIOD',
+      text: 'Statement Period: ',
       value: `${moment(data.start_date).format('LL')} - ${moment(data.end_date).format('LL')}`
     }
   }
@@ -18,15 +18,15 @@ const formatCompanyData = (data) => {
   let company = data.company
   return {
     addr: {
-      text: 'ADDRESS: ',
+      text: 'Address: ',
       value: company.address || '',
     },
     contactNum: {
-      text: 'CONTACT NO: ',
+      text: 'Contact No: ',
       value: company.contact_number || '',
     },
     bizRegNum: {
-      text: 'BUSINESS REG NO: ',
+      text: 'Business Reg No: ',
       value: company.registration_number || '',
     }
   }
@@ -36,23 +36,23 @@ const formatCustomerData = (data) => {
   let customer = data.customer
   return {
     name: {
-      text: 'NAME:',
+      text: 'Name:',
       value: customer.company_name || ''
     },
     addr: {
-      text: 'ADDRESS:',
+      text: 'Address:',
       value: customer.address || ''
     },
     postalCode: {
-      text: 'POSTAL CODE:',
+      text: 'Postal Code:',
       value: customer.postal_code || ''
     },
     contactName: {
-      text: 'CONTACT PERSON:',
+      text: 'Contact Person:',
       value: customer.p1_name || ''
     },
     contactNum: {
-      text: 'CONTACT NUMBER:',
+      text: 'Contact No:',
       value: customer.p1_phone_number || ''
     },
   }
@@ -75,7 +75,7 @@ const constructTable = (data) => {
       return arr
     })
   } else {
-    formattedData = ['', '', '', '', '', '']
+    formattedData = [['\n', '\n', '\n', '\n', '\n', '\n']]
   }
   let soaTable = PDFTools.tableBuilder(tableHeaders, formattedData, widths)
   return soaTable
@@ -88,6 +88,9 @@ export const statementOfAccountTemplate = (data) => {
   let soaTable = constructTable(data.sora)
   let document = {
     pageSize: 'A4',
+    info: {
+      title: `State of Account Receivables for ${data.customer.company_name}`
+    },
     defaultStyle: {
       font: 'NotoCh'
     },
@@ -112,7 +115,7 @@ export const statementOfAccountTemplate = (data) => {
       soaTable,
       { text: '', margin: [0, 5] },
       PDFTools.formatText('SPECIAL INSTRUCTIONS OR REMARKS', 'subHeader'),
-      PDFTools.generateEmptyBox(515, 200),
+      PDFTools.generateEmptyBox(515, 100),
       PDFTools.formatText(`If you have any questions about this purchase order, please contact ${data.company.contact_number}`, 'footerText')
 
     ],
@@ -138,7 +141,6 @@ export const statementOfAccountTemplate = (data) => {
       },
       tableHeader: {
         fontSize: 10,
-        bold: true,
         alignment: 'center'
       },
       tableContent: {

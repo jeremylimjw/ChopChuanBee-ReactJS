@@ -3,13 +3,13 @@ const constructSticker = (data) => {
     body: [
       [{ text: 'CHOP CHUAN BEE', style: 'header', colSpan: 2, alignment: 'center' }, ''],
       [{ text: 'TO', style: 'subHeader' }, { text: 'ADDRESS', style: 'subHeader' }],
-      [{ text: `${data.customer.company_name}`, style: 'tableContent' }, { text: `${data.delivery_address} Singapore ${data.delivery_postal_code}`, style: 'tableContent', rowSpan: 3 }],
-      [{ text: `${data.customer.p1_name}`, style: 'tableContent' }, ''],
-      [{ text: `${data.customer.p1_phone_number}`, style: 'tableContent' }, ''],
+      [{ text: `Company:\n${data.customer.company_name}`, style: 'tableContent' }, { text: `${data.delivery_address} Singapore ${data.delivery_postal_code}`, style: 'tableContent', rowSpan: 3 }],
+      [{ text: `Name:\n${data.customer.p1_name}`, style: 'tableContent' }, ''],
+      [{ text: `Contact No:\n${data.customer.p1_phone_number}`, style: 'tableContent' }, ''],
       [{ image: data.deliveryOrder.qr_code, height: 100, width: 100, colSpan: 2, alignment: 'center', border: [true, true, true, false] }, ''],
       [{ text: `Sales Order ID: ${data.id}`, style: 'tableContent', colSpan: 2, alignment: 'center', border: [true, false, true, true] }, ''],
       [{ text: 'Remarks', style: 'tableHeader', colSpan: 2 }, ''],
-      [{ text: `${data.delivery_remarks}`, style: 'tableContent', colSpan: 2, rowSpan: 3 }, ''],
+      [{ text: `${data.delivery_remarks || '\n\n '}`, style: 'tableContent', colSpan: 2, rowSpan: 3 }, ''],
       ['', ''],
       ['', '']
     ]
@@ -22,6 +22,9 @@ export const deliverySticker = (data) => {
     pageSize: 'A4',
     pageOrientation: 'portrait',
     pageMargins: [20, 10],
+    info: {
+      title: `Delivery Sticker for ${data.customer.company_name}`
+    },
     defaultStyle: {
       font: 'NotoCh',
     },

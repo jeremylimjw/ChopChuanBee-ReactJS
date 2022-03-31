@@ -115,11 +115,11 @@ export default function ManageTaxStatementPage() {
         if (taxType === 'input') {
             tableHeaders = ['Sales Order ID', 'Company Name', 'Charged Under', 'Transaction Date', 'Total Amount', 'GST Rate', 'GST Amount']
             excelData = formatExcelData(tableHeaders)
-            generateCSV('Input Tax Statement', tableHeaders, excelData)
+            generateCSV(excelData, tableHeaders, 'Input Tax Statement')
         } else {
             tableHeaders = ['Purchase Order ID', 'Company Name', 'Charged Under', 'Transaction Date', 'Total Amount', 'GST Rate', 'GST Amount']
             excelData = formatExcelData(tableHeaders)
-            generateCSV('Output Tax Statement', tableHeaders, excelData)
+            generateCSV(excelData, tableHeaders, 'Output Tax Statement',)
         }
     }
 
