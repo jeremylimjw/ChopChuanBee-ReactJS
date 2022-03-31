@@ -73,7 +73,7 @@ export const taxStatementTemplate = (data) => {
 }
 
 const inputTemplate = (data) => {
-  let company = data.items[0].charged_under_name.toUpperCase()
+  let company = data.items[0]?.charged_under_name.toUpperCase() || ''
   let [start, end] = data.dateRange
   start = moment(start).format('LL')
   end = moment(end).format('LL')
@@ -134,7 +134,7 @@ const inputTemplate = (data) => {
 }
 
 const outputTemplate = (data) => {
-  let company = data.items[0].charged_under_name.toUpperCase()
+  let company = data.items[0]?.charged_under_name.toUpperCase() || ''
   let [start, end] = data.dateRange
   start = moment(start).format('LL')
   end = moment(end).format('LL')
