@@ -36,6 +36,7 @@ export default function SalesReturnsGraph(props) {
       .catch(handleHttpError);
     setData([...quantityReturned, ...totalValueLoss]);
     setLoading(false);
+    props.setUserInput(false);
   }
 
   const config = {

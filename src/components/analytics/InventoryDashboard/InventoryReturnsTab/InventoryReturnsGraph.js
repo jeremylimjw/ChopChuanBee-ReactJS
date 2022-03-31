@@ -18,7 +18,6 @@ export default function InventoryReturnsGraph(props) {
   const fetchData = async () => {
     await AnalyticsApiHelper.getSupplierReturnedGoods(props.startDate, props.endDate)
       .then((result) => {
-        console.log(result);
         result.forEach((x) => { 
           const tempQtyReturned = {
             product_name: x.product_name,

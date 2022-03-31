@@ -21,7 +21,6 @@ export default function AgingReceivableGraph(props) {
     const fetchData = async () => {
       await AnalyticsApiHelper.getAgedReceivable()
         .then((results) => {
-          console.log(results);
           results.forEach((x) => {
             const tempLessThan30 = {
               customer_id: x.customer_id,

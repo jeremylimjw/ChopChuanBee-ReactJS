@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Typography, Space, Divider, Row, Spin } from "antd";
+import { Typography, Space, Divider, Row, Spin, Tooltip } from "antd";
 import MyCard from "../../../common/MyCard";
 import { useApp } from "../../../../providers/AppProvider";
 import { AnalyticsApiHelper } from "../../../../api/AnalyticsApiHelper";
 import { formatCurrency } from "../../../../utilities/currency";
+import { Link } from 'react-router-dom';
 
 export default function InventoryReturnsCard(props) {
   const [loading, setLoading] = useState(true);
@@ -26,10 +27,13 @@ export default function InventoryReturnsCard(props) {
     { mostReturnedProduct == null ? "" : 
     <>
       <Space direction="horizontal" wrap>
-        <MyCard style={{ minWidth: "250px", marginLeft: "3px", marginBottom: 0 }}>
+        <MyCard style={{ maxWidth: "40vw", marginLeft: "3px", marginBottom: 0 }}>
           <Typography>MOST RETURNED PRODUCT</Typography>
           <Typography.Title level={2} style={{ margin: 0 }}>
-            {loading ? <Spin /> : mostReturnedProduct.product_name}
+            { loading 
+                ? <Spin /> 
+                : <><Tooltip title="Click to view product"><Link to={`/inventory/products/${mostReturnedProduct.product_uuid}`}> {mostReturnedProduct.product_name} </Link></Tooltip></>
+            }
           </Typography.Title>
           <Divider style={{ margin: "0.5rem 0" }} />
           <Row>
@@ -42,14 +46,17 @@ export default function InventoryReturnsCard(props) {
           </Row>
         </MyCard>
 
-        <MyCard style={{ minWidth: "250px", marginLeft: "3px", marginBottom: 0 }}>
-          <Typography>HIGHEST VALUE LOSS</Typography>
+        <MyCard style={{ maxWidth: "40vw", marginLeft: "3px", marginBottom: 0 }}>
+          <Typography>HIGHEST TOTAL VALUE LOSS</Typography>
           <Typography.Title level={2} style={{ margin: 0 }}>
-            {loading ? <Spin /> : formatCurrency(highestValueLoss.supplier_returned_goods_total_value)}
+            { loading 
+                ? <Spin /> 
+                : <><Tooltip title="Click to view product"><Link to={`/inventory/products/${highestValueLoss.product_uuid}`}> {formatCurrency(highestValueLoss.supplier_returned_goods_total_value)} </Link></Tooltip></>
+            }
           </Typography.Title>
           <Divider style={{ margin: "0.5rem 0" }} />
           <Row>
-            <Typography style={{ fontSize: "0.8rem", marginRight: "auto" }}>
+            <Typography style={{ fontSize: "0.8rem", marginRight: "20px" }}>
               FROM
             </Typography>
             <Typography style={{ fontSize: "0.8rem", marginLeft: "auto" }}>

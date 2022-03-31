@@ -12,6 +12,24 @@ export class AnalyticsApiHelper {
       .then((res) => res.data);
   }
 
+  static async getCOGSCurrMonth() {
+    return axiosObject
+      .get("/analytics/COGS_table_currentmonth/")
+      .then((res) => res.data);
+  }
+
+  static async getCOGSPrevMonth() {
+    return axiosObject
+      .get("/analytics/COGS_table_previousmonth/")
+      .then((res) => res.data);
+  }
+
+  static async getCOGSToday() {
+    return axiosObject
+      .get("/analytics/COGS_table_today/")
+      .then((res) => res.data);
+  }
+
   static async getRevenue(start_date, end_date) {
     const params = {};
     if (start_date && end_date) {
@@ -23,6 +41,24 @@ export class AnalyticsApiHelper {
       .then((res) => res.data);
   }
 
+  static async getRevenueCurrMonth() {
+    return axiosObject
+      .get("/analytics/Revenue_table_currentmonth/")
+      .then((res) => res.data);
+  }
+
+  static async getRevenuePrevMonth() {
+    return axiosObject
+      .get("/analytics/Revenue_table_previousmonth/")
+      .then((res) => res.data);
+  }
+
+  static async getRevenueToday() {
+    return axiosObject
+      .get("/analytics/Revenue_table_today/")
+      .then((res) => res.data);
+  }
+
   static async getProfits(start_date, end_date) {
     const params = {};
     if (start_date && end_date) {
@@ -31,6 +67,24 @@ export class AnalyticsApiHelper {
     }
     return axiosObject
       .get("/analytics/Profits_table/", { params })
+      .then((res) => res.data);
+  }
+
+  static async getProfitsCurrMonth() {
+    return axiosObject
+      .get("/analytics/Profits_table_currentmonth/")
+      .then((res) => res.data);
+  }
+
+  static async getProfitsPrevMonth() {
+    return axiosObject
+      .get("/analytics/Profits_table_previousmonth/")
+      .then((res) => res.data);
+  }
+
+  static async getProfitsToday() {
+    return axiosObject
+      .get("/analytics/Profits_table_today/")
       .then((res) => res.data);
   }
 
