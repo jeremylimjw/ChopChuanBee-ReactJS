@@ -179,7 +179,6 @@ export default function BalanceSheetObject({ BalanceSheet, setBalanceSheet }) {
         balanceSheetPDF.totalEquities = formatCurrency(totalEquities);
 
         balanceSheetPDF.totalLiabilitiesAndEquities = formatCurrency(totalLiabilitiesAndEquities);
-        generatePdf(balanceSheetPDF, 'BALANCE_SHEET')
     }
 
     const handleExport = (action) => {
@@ -256,7 +255,7 @@ export default function BalanceSheetObject({ BalanceSheet, setBalanceSheet }) {
             arr.forEach((row) => row[1] = row[1].toString())
             generateCSV(arr, ['BALANCE SHEET'], 'Balance Sheet')
         } else {
-            generatePdf(BalanceSheet)
+            generatePdf(BalanceSheet, 'BALANCE_SHEET')
         }
     }
 
