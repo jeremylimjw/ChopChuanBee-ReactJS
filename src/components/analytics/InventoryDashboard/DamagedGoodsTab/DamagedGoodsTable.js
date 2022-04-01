@@ -15,6 +15,7 @@ export default function DamagedGoodsTable(props) {
   useEffect(() => {
     AnalyticsApiHelper.getDamagedGoods(props.startDate, props.endDate)
       .then((results) => {
+        console.log(results);
         setData(results);
         setLoading(false);
       })
@@ -31,7 +32,7 @@ export default function DamagedGoodsTable(props) {
       sorter: (a, b) => sortByString(a.name, b.name),
     },
     {
-      title: "Quantity Returned",
+      title: "Quantity Damaged",
       dataIndex: "quantity_returned",
       key: "quantity_returned",
       width: "20%",

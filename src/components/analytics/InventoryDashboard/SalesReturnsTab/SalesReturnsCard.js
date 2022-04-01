@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Typography, Space, Divider, Row, Spin, Tooltip } from "antd";
+import { Typography, Space, Divider, Row, Spin, Tooltip, message } from "antd";
 import MyCard from "../../../common/MyCard";
 import { useApp } from "../../../../providers/AppProvider";
 import { AnalyticsApiHelper } from "../../../../api/AnalyticsApiHelper";
@@ -15,8 +15,14 @@ export default function SalesReturnsCard(props) {
   useEffect(() => {
     AnalyticsApiHelper.getCustomerReturnedGoods(props.startDate, props.endDate)
       .then((results) => {
-        setMostReturnedProduct(results[0]);
-        setHighestValueLoss(results[0]);
+        if (results.length === 0) {
+          message.error("There is no data available for this period.");
+          setMostReturnedProduct(null);
+          setHighestValueLoss(null);
+        } else {
+          setMostReturnedProduct(results[0]);
+          setHighestValueLoss(results[0]);
+        }
         setLoading(false);
       })
       .catch(handleHttpError);
@@ -24,7 +30,7 @@ export default function SalesReturnsCard(props) {
 
   return (
     <>
-    { mostReturnedProduct == null ? "" : 
+    { mostReturnedProduct && highestValueLoss ?  
     <>
       <Space direction="horizontal" wrap>
         <MyCard style={{ maxWidth: "40vw", marginLeft: "3px", marginBottom: 0 }} >
@@ -32,7 +38,7 @@ export default function SalesReturnsCard(props) {
           <Typography.Title level={2} style={{ margin: 0 }}>
             { loading 
                 ? <Spin /> 
-                : <><Tooltip title="Click to view product"><Link to={`/inventory/products/${mostReturnedProduct.product_uuid}`}> {mostReturnedProduct.name} </Link></Tooltip></>
+                : <><Tooltip title="Click to view product"><Link to={`/inventory/products/${mostReturnedProduct?.product_uuid}`}> {mostReturnedProduct?.name} </Link></Tooltip></>
             }
           </Typography.Title>
           <Divider style={{ margin: "0.5rem 0" }} />
@@ -41,7 +47,7 @@ export default function SalesReturnsCard(props) {
               TOTAL QUANTITY
             </Typography>
             <Typography style={{ fontSize: "0.8rem", marginLeft: "auto" }}>
-              {loading ? <Spin/> : mostReturnedProduct.quantity_returned}
+              {loading ? <Spin/> : mostReturnedProduct?.quantity_returned}
             </Typography>
           </Row>
         </MyCard>
@@ -51,7 +57,7 @@ export default function SalesReturnsCard(props) {
           <Typography.Title level={2} style={{ margin: 0 }}>
             { loading 
                 ? <Spin /> 
-                : <><Tooltip title="Click to view product"><Link to={`/inventory/products/${highestValueLoss.product_uuid}`}> {formatCurrency(highestValueLoss.customer_returned_goods_total_value)} </Link></Tooltip></>
+                : <><Tooltip title="Click to view product"><Link to={`/inventory/products/${highestValueLoss?.product_uuid}`}> {formatCurrency(highestValueLoss?.customer_returned_goods_total_value)} </Link></Tooltip></>
             }
           </Typography.Title>
           <Divider style={{ margin: "0.5rem 0" }} />
@@ -60,13 +66,13 @@ export default function SalesReturnsCard(props) {
               FROM
             </Typography>
             <Typography style={{ fontSize: "0.8rem", marginLeft: "auto" }}>
-              {loading ? <Spin/> : highestValueLoss.name}
+              {loading ? <Spin/> : highestValueLoss?.name}
             </Typography>
           </Row>
         </MyCard>
       </Space>
-    </>
-    }
+    </> 
+    : "" }
     </>
   );
 }

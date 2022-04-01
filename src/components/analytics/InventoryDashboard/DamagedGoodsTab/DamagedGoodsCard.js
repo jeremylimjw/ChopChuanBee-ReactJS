@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Typography, Space, Divider, Row, Spin, Tooltip } from "antd";
+import { Typography, Space, Divider, Row, Spin, Tooltip, message } from "antd";
 import MyCard from "../../../common/MyCard";
 import { useApp } from "../../../../providers/AppProvider";
 import { AnalyticsApiHelper } from "../../../../api/AnalyticsApiHelper";
@@ -15,8 +15,14 @@ export default function DamagedGoodsCard(props) {
   useEffect(() => {
     AnalyticsApiHelper.getDamagedGoods(props.startDate, props.endDate)
       .then((results) => {
-        setMostDamagedProduct(results[0]);
-        setHighestValueLoss(results[0]);
+        if (results.length === 0) {
+          message.error("There is no data available for this period.");
+          setMostDamagedProduct(null);
+          setHighestValueLoss(null);
+        } else {
+          setMostDamagedProduct(results[0]);
+          setHighestValueLoss(results[0]);
+        }
         setLoading(false);
       })
       .catch(handleHttpError);
@@ -24,7 +30,7 @@ export default function DamagedGoodsCard(props) {
 
   return (
     <>
-    { mostDamagedProduct == null ? "" : 
+    { mostDamagedProduct && highestValueLoss ?  
     <>
       <Space direction="horizontal" wrap>
         <MyCard style={{ maxWidth: "40vw", marginLeft: "3px", marginBottom: 0 }} >
@@ -32,7 +38,7 @@ export default function DamagedGoodsCard(props) {
           <Typography.Title level={2} style={{ margin: 0 }}>
             { loading 
                 ? <Spin /> 
-                : <><Tooltip title="Click to view product"><Link to={`/inventory/products/${mostDamagedProduct.product_uuid}`}> {mostDamagedProduct.name} </Link></Tooltip></>
+                : <><Tooltip title="Click to view product"><Link to={`/inventory/products/${mostDamagedProduct?.product_uuid}`}> {mostDamagedProduct?.name} </Link></Tooltip></>
             }
           </Typography.Title>
           <Divider style={{ margin: "0.5rem 0" }} />
@@ -41,7 +47,7 @@ export default function DamagedGoodsCard(props) {
               TOTAL QUANTITY
             </Typography>
             <Typography style={{ fontSize: "0.8rem", marginLeft: "auto" }}>
-              {mostDamagedProduct.quantity_returned}
+              {mostDamagedProduct?.quantity_returned}
             </Typography>
           </Row>
         </MyCard>
@@ -51,7 +57,7 @@ export default function DamagedGoodsCard(props) {
           <Typography.Title level={2} style={{ margin: 0 }}>
             { loading 
                 ? <Spin /> 
-                : <><Tooltip title="Click to view product"><Link to={`/inventory/products/${highestValueLoss.product_uuid}`}> {formatCurrency(highestValueLoss.total_damaged_inventory_value)} </Link></Tooltip></>
+                : <><Tooltip title="Click to view product"><Link to={`/inventory/products/${highestValueLoss?.product_uuid}`}> {formatCurrency(highestValueLoss?.total_damaged_inventory_value)} </Link></Tooltip></>
             }
           </Typography.Title>
           <Divider style={{ margin: "0.5rem 0" }} />
@@ -60,13 +66,13 @@ export default function DamagedGoodsCard(props) {
               FROM
             </Typography>
             <Typography style={{ fontSize: "0.8rem", marginLeft: "auto" }}>
-              {highestValueLoss.name}
+              {highestValueLoss?.name}
             </Typography>
           </Row>
         </MyCard>
       </Space>
     </>
-    }
+    : "" }
     </>
   );
 }

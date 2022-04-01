@@ -91,7 +91,7 @@ export default function AgingReceivableGraph(props) {
     },
     label: {
       position: "middle",
-      // formatter: (x) => "",
+      formatter: (x) => "",
     },
     interactions: [
       {
