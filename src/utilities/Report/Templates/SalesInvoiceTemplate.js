@@ -72,7 +72,7 @@ const constructSalesOrderTable = (data) => {
       arr.push(PDFTools.formatText(item.quantity, 'tableContent'))
       arr.push(PDFTools.formatText(item.product.unit, 'tableContent'))
       arr.push(PDFTools.formatText(item.unit_price, 'tableContent'))
-      let sum = item.unit_price && item.quantity ? parseInt(item.unit_price) * parseInt(item.quantity) : '-'
+      let sum = item.unit_price && item.quantity ? (parseFloat(item.unit_price) * parseInt(item.quantity)).toFixed('2') : '-'
       arr.push(PDFTools.formatText(`${sum}`, 'tableContent'))
       return arr
     })
