@@ -27,7 +27,7 @@ const constructItemTable = (data) => {
     arr.push(' ')
     return arr
   })
-  let widths = ['5%', '*', '8%', '8%', '8%', '12%']
+  let widths = ['5%', '*', '10%', '10%', '15%', '12%']
   let itemTable = PDFTools.tableBuilder(tableHeaders, tableItems, widths)
   return itemTable
 }
