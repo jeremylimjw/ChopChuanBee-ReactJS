@@ -2,8 +2,7 @@ import { Tabs } from 'antd';
 import React from 'react';
 import moment from 'moment';
 import MyLayout from '../../common/MyLayout';
-import ProfitabilityCard from './ProfitabilityTab/ProfitabilityCard';
-import ProfitabilityGraph from './ProfitabilityTab/ProfitabilityGraph';
+import ProfitabilityData from './ProfitabilityTab/ProfitabilityData';
 import PayableCard from './AccountsPayableTab/PayableCard';
 import PayableGraph from './AccountsPayableTab/PayableGraph';
 import ReceivableCard from './AccountsReceivableTab/ReceivableCard';
@@ -14,16 +13,14 @@ import CustomerAnalyticsData from './CustomerAnalyticsTab/CustomerAnalyticsData'
 
 export default function AccountingDashboard() {
     const { TabPane } = Tabs;
-    const oneYearAgo = moment().subtract(1, "year").set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
-    const currDate = moment().startOf('day');
     const currTime = moment();
+    const oneYearAgo = moment().clone().subtract(1, "year").set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
 
     return (
         <MyLayout bannerTitle='Accounting Dashboard'>
             <Tabs defaultActiveKey="1" type="card" style={{margin:'24px'}}>
                 <TabPane tab="Profitability" key="1">
-                    <ProfitabilityCard currTime={currTime} currDate={currDate} />
-                    <ProfitabilityGraph currDate={currDate} oneYearAgo={oneYearAgo} />
+                    <ProfitabilityData currTime={currTime} oneYearAgo={oneYearAgo} />
                 </TabPane>
 
                 <TabPane tab="Outstanding Accounts Payable" key="2">

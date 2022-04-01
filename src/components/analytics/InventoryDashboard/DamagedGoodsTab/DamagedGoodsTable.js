@@ -15,7 +15,6 @@ export default function DamagedGoodsTable(props) {
   useEffect(() => {
     AnalyticsApiHelper.getDamagedGoods(props.startDate, props.endDate)
       .then((results) => {
-        console.log(results);
         setData(results);
         setLoading(false);
       })

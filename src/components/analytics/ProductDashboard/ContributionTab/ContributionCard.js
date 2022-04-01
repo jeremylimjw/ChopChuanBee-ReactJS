@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Space, Divider, Row, Spin, Tooltip } from 'antd';
+import { Typography, Space, Divider, Row, Spin, Tooltip, message } from 'antd';
 import MyCard from '../../../common/MyCard';
 import { useApp } from '../../../../providers/AppProvider';
 import { AnalyticsApiHelper } from '../../../../api/AnalyticsApiHelper';
@@ -14,10 +14,15 @@ export default function ContributionCard(props) {
     useEffect(() => {
         AnalyticsApiHelper.getProductAnalytics(props.startDate, props.endDate)
           .then((results) => {
-            results.map((x) => {
-              x.contribution_margin = parseFloat(x.contribution) / parseFloat(x.average_selling_price) * 100;
-              return x;
-            });
+            if (results.length === 0) {
+                message.error("There is no data available for this period.");
+                setData(null);
+            } else {
+                results.map((x) => {
+                    x.contribution_margin = parseFloat(x.contribution) / parseFloat(x.average_selling_price) * 100;
+                    return x;
+                });
+            };
             setData(results[0]);
             setLoading(false);
           })

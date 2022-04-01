@@ -1,54 +1,53 @@
 import React, { useState, useEffect } from 'react';
-import { Form, DatePicker } from 'antd';
 import { Line } from '@ant-design/plots';
 import { AnalyticsApiHelper } from '../../../../api/AnalyticsApiHelper';
-import debounce from 'lodash.debounce';
-import moment from 'moment';
-import MyCard from '../../../common/MyCard';
-import MyToolbar from '../../../common/MyToolbar';
 import { useApp } from '../../../../providers/AppProvider';
 
 export default function ProfitabilityGraph(props) {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [form] = Form.useForm();
     const { handleHttpError } = useApp();
 
+    const profitability = [];
+
     useEffect(() => {
-        getData(props.oneYearAgo, props.currDate);
-    }, [handleHttpError, loading]);
+        getData();
+    }, [handleHttpError, loading, props.userInput]);
 
-    const getData = async (start, end) => {
-        let cogs = await AnalyticsApiHelper.getCOGS(start, end);
-        cogs.map(x => { 
-            x.name = 'Cost of Goods Sold'; 
-            x.value = x.value <= 0 ? 0 : parseFloat(x.value); 
-            return x;
-        });
-        let profits = await AnalyticsApiHelper.getProfits(start, end);
-        profits.map(x => { 
-            x.name = 'Profits'; 
-            x.value = x.value <= 0 ? 0 : parseFloat(x.value);
-            return x;
-        });
-        let revenue = await AnalyticsApiHelper.getRevenue(start, end);
-        revenue.map(x => { 
-            x.name = 'Revenue'; 
-            x.value = x.value <= 0 ? 0 : parseFloat(x.value);
-            return x;
-        });
-        setData([...cogs, ...revenue, ...profits]);
+    const getData = async () => {
+        await AnalyticsApiHelper.getRevenue(props.startDate, props.endDate)
+        .then((result) => {
+            result.map(x => {
+                x.name = 'Revenue'; 
+                x.value = x.value <= 0 ? 0 : parseFloat(x.value); 
+                profitability.push(x);
+                return x;
+            });
+        })
+        .catch(handleHttpError);
+        await AnalyticsApiHelper.getCOGS(props.startDate, props.endDate)
+        .then((result) => {
+            result.map(x => {
+                x.name = 'Cost of Goods Sold'; 
+                x.value = x.value <= 0 ? 0 : parseFloat(x.value); 
+                profitability.push(x);
+                return x;
+            });
+        })
+        .catch(handleHttpError);
+        await AnalyticsApiHelper.getProfits(props.startDate, props.endDate)
+        .then((result) => {
+            result.map(x => {
+                x.name = 'Profits'; 
+                x.value = x.value <= 0 ? 0 : parseFloat(x.value); 
+                profitability.push(x);
+                return x;
+            });
+        })
+        .catch(handleHttpError);
+        setData(profitability);
         setLoading(false);
-    }
-
-    function onValuesChange(_, form) {
-        let start_date, end_date;
-        if (form.date && form.date[0] && form.date[1]) {
-            start_date = moment(form.date[0]).set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toDate();
-            end_date = moment(form.date[1]).set({ hour: 23, minute: 59, second: 59, millisecond: 999 }).toDate();
-        }
-
-        getData(start_date, end_date);
+        props.setUserInput(false);
     }
 
     const config = {
@@ -96,18 +95,5 @@ export default function ProfitabilityGraph(props) {
         }
     };
 
-    const dateFormat = 'YYYY/MM/DD';
-
-    return (
-        <MyCard style={{marginLeft: '3px', marginRight: '3px'}}>
-            <MyToolbar title='Profitability Trend'>
-                <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
-                    <Form.Item name='date'>
-                        <DatePicker.RangePicker defaultValue={[moment(props.oneYearAgo, dateFormat), moment(props.currDate, dateFormat)]} />
-                    </Form.Item>
-                </Form>
-            </MyToolbar>
-            {loading ? "" : <Line {...config} /> }
-        </MyCard>
-    );
+    return <Line {...config} />;
 }

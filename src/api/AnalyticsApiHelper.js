@@ -12,18 +12,6 @@ export class AnalyticsApiHelper {
       .then((res) => res.data);
   }
 
-  static async getCOGSCurrMonth() {
-    return axiosObject
-      .get("/analytics/COGS_table_currentmonth/")
-      .then((res) => res.data);
-  }
-
-  static async getCOGSPrevMonth() {
-    return axiosObject
-      .get("/analytics/COGS_table_previousmonth/")
-      .then((res) => res.data);
-  }
-
   static async getCOGSToday() {
     return axiosObject
       .get("/analytics/COGS_table_today/")
@@ -38,18 +26,6 @@ export class AnalyticsApiHelper {
     }
     return axiosObject
       .get("/analytics/Revenue_table/", { params })
-      .then((res) => res.data);
-  }
-
-  static async getRevenueCurrMonth() {
-    return axiosObject
-      .get("/analytics/Revenue_table_currentmonth/")
-      .then((res) => res.data);
-  }
-
-  static async getRevenuePrevMonth() {
-    return axiosObject
-      .get("/analytics/Revenue_table_previousmonth/")
       .then((res) => res.data);
   }
 
@@ -70,18 +46,6 @@ export class AnalyticsApiHelper {
       .then((res) => res.data);
   }
 
-  static async getProfitsCurrMonth() {
-    return axiosObject
-      .get("/analytics/Profits_table_currentmonth/")
-      .then((res) => res.data);
-  }
-
-  static async getProfitsPrevMonth() {
-    return axiosObject
-      .get("/analytics/Profits_table_previousmonth/")
-      .then((res) => res.data);
-  }
-
   static async getProfitsToday() {
     return axiosObject
       .get("/analytics/Profits_table_today/")
@@ -89,34 +53,26 @@ export class AnalyticsApiHelper {
   }
 
   static async getPayableInvoices() {
-    const params = {};
-    params.order_by = "sum_desc";
     return axiosObject
-      .get("/analytics/Unsettled_AP/", { params })
+      .get("/analytics/Unsettled_AP/")
       .then((res) => res.data);
   }
 
   static async getPayableSuppliers() {
-    const params = {};
-    params.order_by = "sum_desc";
     return axiosObject
-      .get("/analytics/Supplier_AP/", { params })
+      .get("/analytics/Supplier_AP/")
       .then((res) => res.data);
   }
 
   static async getReceivableInvoices() {
-    const params = {};
-    params.order_by = "sum_desc";
     return axiosObject
-      .get("/analytics/Unsettled_AR/", { params })
+      .get("/analytics/Unsettled_AR/")
       .then((res) => res.data);
   }
 
   static async getReceivableCustomers() {
-    const params = {};
-    params.order_by = "sum_desc";
     return axiosObject
-      .get("/analytics/Customer_AR/", { params })
+      .get("/analytics/Customer_AR/")
       .then((res) => res.data);
   }
 
@@ -145,7 +101,7 @@ export class AnalyticsApiHelper {
 
   static async getAgedReceivable() {
     return axiosObject
-      .get("/analytics/Aging_AR_Table_Demo/")
+      .get("/analytics/Aging_AR_Table_Test/")
       .then((res) => res.data);
   }
 
