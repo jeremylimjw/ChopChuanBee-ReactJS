@@ -13,7 +13,7 @@ export default function Channels({ loading, setLoading, channels, setChannels, c
     const { user, handleHttpError } = useApp();
 
     function getTotalUnreadCount() {
-        return channels.reduce((prev, current) => prev + current.unread_count, 0)
+        return channels.reduce((prev, current) => prev + (current.unread_count || 0), 0)
     }
 
     function handleChannelClick(clickedChat) {

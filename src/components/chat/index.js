@@ -170,6 +170,7 @@ export default function Chat() {
                 </div>
                 
                 <NewDirectModal
+                    channels={channels}
                     isModalVisible={isDirectModalVisible}
                     setIsModalVisible={setIsDirectModalVisible}
                     handleNewChannelEvent={handleNewChannelEvent}

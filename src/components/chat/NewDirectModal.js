@@ -10,7 +10,7 @@ import { useApp } from '../../providers/AppProvider'
 
 const LIMIT = 10;
 
-export default function NewDirectModal({ isModalVisible, setIsModalVisible, handleNewChannelEvent }) {
+export default function NewDirectModal({ channels, isModalVisible, setIsModalVisible, handleNewChannelEvent }) {
 
     return (
         <Modal width={600} bodyStyle={{ paddingTop: 0, paddingBottom: 0, height: '60vh' }}
@@ -21,6 +21,7 @@ export default function NewDirectModal({ isModalVisible, setIsModalVisible, hand
           destroyOnClose
         >
             <MyModalContent 
+                channels={channels}
                 setIsModalVisible={setIsModalVisible}
                 handleNewChannelEvent={handleNewChannelEvent}
             />
@@ -28,7 +29,7 @@ export default function NewDirectModal({ isModalVisible, setIsModalVisible, hand
     )
 }
 
-function MyModalContent({ setIsModalVisible, handleNewChannelEvent }) {
+function MyModalContent({ channels, setIsModalVisible, handleNewChannelEvent }) {
 
     const { user, handleHttpError } = useApp();
 
@@ -93,6 +94,17 @@ function MyModalContent({ setIsModalVisible, handleNewChannelEvent }) {
         if (user.id === employee.id) {
             message.error('Cannot create chat with self!');
             return;
+        }
+
+        for (let channel of channels) {
+            if (channel.title == null) { // Only those that are DMs
+                for (let participant of channel.participants) {
+                    if (participant.employee_id === employee.id) {
+                        message.error(`Already have a direct message with ${employee.name}!`);
+                        return;
+                    }
+                }
+            }
         }
 
         const channel = {

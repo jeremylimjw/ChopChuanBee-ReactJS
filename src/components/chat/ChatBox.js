@@ -1,5 +1,5 @@
 import { CloseOutlined, MessageFilled, UserOutlined } from '@ant-design/icons'
-import { Avatar, Badge, Button, Collapse, Comment, Divider, Form, Input, Spin, Tooltip } from 'antd'
+import { Avatar, Badge, Button, Collapse, Comment, Divider, Form, Input, Space, Spin, Tooltip } from 'antd'
 import React, { useEffect, useState } from 'react'
 import moment from 'moment';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -140,18 +140,26 @@ export default function ChatBox({ chat, setChat, channels, setChannels, lastSeen
             return parseShortDateTime(lastSeenStore[id]);
         }
 
+        function isAdmin() {
+            if (user.id === chat.owner_id) return true;
+            return false;
+        }
+
         return (
-            <>
-            { chat.participants.map((x, index) => 
-                <div key={index}>
-                    { x.employee_id === user.id ? 
-                        <Badge status="success" text={`${x.employee.name} - Online`} style={{ color: 'white'}} />
-                        :
-                        <Badge status={`${getLastSeen(x.employee_id) === 'Online' ? 'success' : 'default'}`} text={`${x.employee.name} - ${getLastSeen(x.employee_id)}`} style={{ color: 'white'}} />
-                    }
-                </div>
-            )}
-            </>
+            <Space direction='vertical' style={{ padding: 5 }}>
+                { chat.participants.map((x, index) => 
+                    <div key={index}>
+                        { x.employee_id === user.id ? 
+                            <Badge status="success" text={`${x.employee.name} - Online`} style={{ color: 'white'}} />
+                            :
+                            <Badge status={`${getLastSeen(x.employee_id) === 'Online' ? 'success' : 'default'}`} text={`${x.employee.name} - ${getLastSeen(x.employee_id)}`} style={{ color: 'white'}} />
+                        }
+                    </div>
+                )}
+                { isAdmin() && 
+                    <Button type='danger' style={{ width: '100%' }}>Delete Chat</Button>
+                }
+            </Space>
         )
     }
 
