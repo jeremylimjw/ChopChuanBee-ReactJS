@@ -205,7 +205,9 @@ export default function ChatBox({ chat, setChat, channels, setChannels, lastSeen
                             :
                             <>
                                 <Badge status={`${getLastSeen(x.employee_id) === 'Online' ? 'success' : 'default'}`} text={`${x.employee.name} - ${getLastSeen(x.employee_id)}`} style={{ color: 'white'}} />
-                                <Button type="text" style={{ color: '#ff4d4f' }} shape="circle" icon={<DeleteFilled />} onClick={e => deleteParticipant(e, x.employee_id)} />
+                                { chat.title != null && isAdmin() && 
+                                    <Button type="text" style={{ color: '#ff4d4f' }} shape="circle" icon={<DeleteFilled />} onClick={e => deleteParticipant(e, x.employee_id)} />
+                                }
                             </>
                         }
                     </div>

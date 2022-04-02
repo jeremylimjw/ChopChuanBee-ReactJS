@@ -126,7 +126,7 @@ function MyModalContent({ chat, setChat, setIsModalVisible }) {
                 </Form.Item>
             </Form>
 
-            <div id="scrollableDiv"
+            <div id="newParticipantModal"
                 style={{
                   height: '80%',
                   overflow: 'auto',
@@ -140,7 +140,7 @@ function MyModalContent({ chat, setChat, setIsModalVisible }) {
                     hasMore={hasMore}
                     loader={<div style={{ textAlign: 'center' }}><Spin /></div>}
                     endMessage={<Divider plain>End of results</Divider>}
-                    scrollableTarget="scrollableDiv"
+                    scrollableTarget="newParticipantModal"
                 >
                     <List className="new-direct-modal"
                         itemLayout="horizontal"
