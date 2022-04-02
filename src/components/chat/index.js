@@ -140,6 +140,32 @@ export default function Chat() {
     
     }, [socket, user, chat, setChat, channels, setChannels])
 
+    const deleteChat = useCallback(
+        (channel_id) => {
+            if (chat?.id === channel_id) {
+                setChat(null);
+            }
+    
+            const newChannels = channels.filter(x => x.id !== channel_id);
+            setChannels(newChannels);
+        },
+      [chat, setChat, channels, setChannels],
+    )
+    
+    // On delete chat event
+    useEffect(() => {
+        if (!socket) return;
+  
+        socket.on("remove_channel", data => {
+            deleteChat(data.channel_id);
+        })
+  
+        return () => {
+            socket.off("remove_channel");
+        }
+    
+    }, [socket, deleteChat])
+
     return (
         <>
         { user != null && 
@@ -153,6 +179,7 @@ export default function Chat() {
                             channels={channels}
                             setChannels={setChannels}
                             lastSeenStore={lastSeenStore}
+                            deleteChat={deleteChat}
                         />
                     }
                     <Channels 

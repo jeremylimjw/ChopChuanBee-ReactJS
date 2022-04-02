@@ -1,5 +1,5 @@
 import { CloseOutlined, MessageFilled, UserOutlined } from '@ant-design/icons'
-import { Avatar, Badge, Button, Collapse, Comment, Divider, Form, Input, Space, Spin, Tooltip } from 'antd'
+import { Avatar, Badge, Button, Collapse, Comment, Divider, Form, Input, message, Space, Spin, Tooltip } from 'antd'
 import React, { useEffect, useState } from 'react'
 import moment from 'moment';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -11,7 +11,7 @@ import { parseShortDateTime } from '../../utilities/datetime';
 
 const LIMIT = 20;
 
-export default function ChatBox({ chat, setChat, channels, setChannels, lastSeenStore }) {
+export default function ChatBox({ chat, setChat, channels, setChannels, lastSeenStore, deleteChat }) {
 
     const { socket } = useChatProvider();
     const { user, handleHttpError } = useApp();
@@ -36,7 +36,6 @@ export default function ChatBox({ chat, setChat, channels, setChannels, lastSeen
     }, [chat.texts, setHasMore, setPage])
     
 
-    // 
     useEffect(() => {
         if (!socket) return;
   
@@ -85,6 +84,7 @@ export default function ChatBox({ chat, setChat, channels, setChannels, lastSeen
     }, [chat, setChat, socket])
 
 
+    // TODO
     function handleNext() {
         if (loading) return;
 
@@ -145,6 +145,23 @@ export default function ChatBox({ chat, setChat, channels, setChannels, lastSeen
             return false;
         }
 
+        function deleteChat(e) {
+            if (e.stopPropagation) e.stopPropagation();
+            
+            setSubmitting(true);
+            ChatApiHelper.deleteChannel(chat.id)
+                .then(() => {
+                    setSubmitting(false);
+                    message.success('Chat successfully deleted!')
+
+                    const newChannels = channels.filter(x => x.id !== chat.id);
+                    setChannels(newChannels);
+                    setChat(null);
+                })
+                .catch(handleHttpError)
+                .catch(() => setSubmitting(false));
+        }
+
         return (
             <Space direction='vertical' style={{ padding: 5 }}>
                 { chat.participants.map((x, index) => 
@@ -156,8 +173,15 @@ export default function ChatBox({ chat, setChat, channels, setChannels, lastSeen
                         }
                     </div>
                 )}
-                { isAdmin() && 
-                    <Button type='danger' style={{ width: '100%' }}>Delete Chat</Button>
+
+                { chat.title != null &&
+                    <>
+                    { isAdmin() ? 
+                        <Button type='danger' style={{ width: '100%' }} onClick={deleteChat}>Delete Chat</Button>
+                        :
+                        <Button type='danger' style={{ width: '100%' }}>Leave Chat</Button>
+                    }
+                    </>
                 }
             </Space>
         )

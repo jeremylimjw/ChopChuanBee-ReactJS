@@ -16,6 +16,11 @@ export class ChatApiHelper {
             .then(res => res.data);
     }
 
+    static async deleteChannel(channelId) {
+        return axiosObject.delete("/chat/channel", { params: { channel_id: channelId }})
+            .then((res) => res.data)
+    }
+
     static async getTexts(params) {
         return axiosObject.get(`/chat/text`, { params: params })
             .then(res => res.data);
