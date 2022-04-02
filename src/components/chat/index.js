@@ -182,7 +182,7 @@ export default function Chat() {
             }
     
         },
-      [chat, setChat, channels, setChannels],
+      [user, chat, setChat, channels, setChannels],
     )
     
     // On delete chat event
@@ -198,6 +198,32 @@ export default function Chat() {
         }
     
     }, [socket, removeParticipant])
+
+    const addParticipant = useCallback(
+        (newParticipant) => {
+            // If chat is opened
+            if (chat?.id === newParticipant.channel_id) {
+                const newParticipants = [...chat.participants, newParticipant];
+                setChat({ ...chat, participants: newParticipants });
+            }
+    
+        },
+      [chat, setChat],
+    )
+    
+    // On delete chat event
+    useEffect(() => {
+        if (!socket) return;
+  
+        socket.on("add_channel_participant", data => {
+            addParticipant(data.newParticipant);
+        })
+  
+        return () => {
+            socket.off("add_channel_participant");
+        }
+    
+    }, [socket, addParticipant])
 
     return (
         <>

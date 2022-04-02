@@ -8,6 +8,7 @@ import { useApp } from '../../providers/AppProvider';
 import { ChatApiHelper } from '../../api/ChatApiHelper';
 import { useChatProvider } from '../../providers/ChatProvider';
 import { parseShortDateTime } from '../../utilities/datetime';
+import NewParticipantModal from './NewParticipantModal';
 
 const LIMIT = 20;
 
@@ -18,6 +19,7 @@ export default function ChatBox({ chat, setChat, channels, setChannels, lastSeen
 
     const [form] = Form.useForm();
 
+    const [isModalVisible, setIsModalVisible] = useState(false);
     const [loading, setLoading] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [hasMore, setHasMore] = useState(true)
@@ -212,7 +214,10 @@ export default function ChatBox({ chat, setChat, channels, setChannels, lastSeen
                 { chat.title != null &&
                     <>
                     { isAdmin() ? 
-                        <Button type='danger' style={{ width: '100%' }} onClick={deleteChat}>Delete Chat</Button>
+                        <>
+                            <Button type='primary' style={{ width: '100%' }} onClick={e => { e.stopPropagation(); setIsModalVisible(true) }}>Add User</Button>
+                            <Button type='danger' style={{ width: '100%' }} onClick={deleteChat}>Delete Chat</Button>
+                        </>
                         :
                         <Button type='danger' style={{ width: '100%' }} onClick={leaveChat}>Leave Chat</Button>
                     }
@@ -352,6 +357,13 @@ export default function ChatBox({ chat, setChat, channels, setChannels, lastSeen
 
                     </Collapse.Panel>
                 </Collapse>
+
+                <NewParticipantModal 
+                    chat={chat}
+                    setChat={setChat}
+                    isModalVisible={isModalVisible}
+                    setIsModalVisible={setIsModalVisible}
+                />
             </div>
             }
         </>
