@@ -135,20 +135,21 @@ export default function ChatBox({ chat, setChat, channels, setChannels, lastSeen
 
     function renderTooltip() {
         function getLastSeen(id) {
-            if (!lastSeenStore[id]) return '';
+            if (!lastSeenStore[id]) return 'Offline';
             if (lastSeenStore[id] === 'Online') return 'Online';
             return parseShortDateTime(lastSeenStore[id]);
         }
+
         return (
             <>
-            { chat.participants.map(x => 
-                <>
-                { x.employee_id === user.id ? 
-                    (<><Badge status="success" text={`${x.employee.name} - Online`} style={{ color: 'white'}} /><br /></>)
-                    :
-                    (<><Badge status={`${getLastSeen(x.employee_id) === 'Online' ? 'success' : 'default'}`} text={`${x.employee.name} - ${getLastSeen(x.employee_id)}`} style={{ color: 'white'}} /><br /></>)
-                }
-                </>
+            { chat.participants.map((x, index) => 
+                <div key={index}>
+                    { x.employee_id === user.id ? 
+                        <Badge status="success" text={`${x.employee.name} - Online`} style={{ color: 'white'}} />
+                        :
+                        <Badge status={`${getLastSeen(x.employee_id) === 'Online' ? 'success' : 'default'}`} text={`${x.employee.name} - ${getLastSeen(x.employee_id)}`} style={{ color: 'white'}} />
+                    }
+                </div>
             )}
             </>
         )
