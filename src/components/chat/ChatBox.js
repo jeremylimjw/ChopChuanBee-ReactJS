@@ -1,4 +1,4 @@
-import { CloseOutlined, MessageFilled, UserOutlined } from '@ant-design/icons'
+import { CloseOutlined, DeleteFilled, MessageFilled, UserOutlined } from '@ant-design/icons'
 import { Avatar, Badge, Button, Collapse, Comment, Divider, Form, Input, message, Space, Spin, Tooltip } from 'antd'
 import React, { useEffect, useState } from 'react'
 import moment from 'moment';
@@ -162,6 +162,38 @@ export default function ChatBox({ chat, setChat, channels, setChannels, lastSeen
                 .catch(() => setSubmitting(false));
         }
 
+        function leaveChat(e) {
+            if (e.stopPropagation) e.stopPropagation();
+
+            setSubmitting(true);
+            ChatApiHelper.deleteChannelParticipant({ channel_id: chat.id, employee_id: user.id })
+                .then(() => {
+                    setSubmitting(false);
+                    message.success('Successfully left group!')
+
+                    setChannels(channels.filter(x => x.id !== chat.id));
+                    setChat(null);
+                })
+                .catch(handleHttpError)
+                .catch(() => setSubmitting(false));
+        }
+
+        function deleteParticipant(e, participantId) {
+            if (e.stopPropagation) e.stopPropagation();
+
+            setSubmitting(true);
+            ChatApiHelper.deleteChannelParticipant({ channel_id: chat.id, employee_id: participantId })
+                .then(() => {
+                    setSubmitting(false);
+                    message.success('Participant successfully removed!')
+
+                    const newParticipants = chat.participants.filter(x => x.employee_id !== participantId);
+                    setChat({ ...chat, participants: newParticipants });
+                })
+                .catch(handleHttpError)
+                .catch(() => setSubmitting(false));
+        }
+
         return (
             <Space direction='vertical' style={{ padding: 5 }}>
                 { chat.participants.map((x, index) => 
@@ -169,7 +201,10 @@ export default function ChatBox({ chat, setChat, channels, setChannels, lastSeen
                         { x.employee_id === user.id ? 
                             <Badge status="success" text={`${x.employee.name} - Online`} style={{ color: 'white'}} />
                             :
-                            <Badge status={`${getLastSeen(x.employee_id) === 'Online' ? 'success' : 'default'}`} text={`${x.employee.name} - ${getLastSeen(x.employee_id)}`} style={{ color: 'white'}} />
+                            <>
+                                <Badge status={`${getLastSeen(x.employee_id) === 'Online' ? 'success' : 'default'}`} text={`${x.employee.name} - ${getLastSeen(x.employee_id)}`} style={{ color: 'white'}} />
+                                <Button type="text" style={{ color: '#ff4d4f' }} shape="circle" icon={<DeleteFilled />} onClick={e => deleteParticipant(e, x.employee_id)} />
+                            </>
                         }
                     </div>
                 )}
@@ -179,7 +214,7 @@ export default function ChatBox({ chat, setChat, channels, setChannels, lastSeen
                     { isAdmin() ? 
                         <Button type='danger' style={{ width: '100%' }} onClick={deleteChat}>Delete Chat</Button>
                         :
-                        <Button type='danger' style={{ width: '100%' }}>Leave Chat</Button>
+                        <Button type='danger' style={{ width: '100%' }} onClick={leaveChat}>Leave Chat</Button>
                     }
                     </>
                 }

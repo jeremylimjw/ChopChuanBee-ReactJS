@@ -166,6 +166,39 @@ export default function Chat() {
     
     }, [socket, deleteChat])
 
+    const removeParticipant = useCallback(
+        (channel_id, employee_id) => {
+            // If user is being removed, delete channel
+            if (employee_id === user.id) {
+                setChannels(channels.filter(x => x.id !== channel_id));
+
+                if (chat?.id === channel_id) {
+                    setChat(null); // Close the chat if its opened
+                }
+            }
+            else if (chat?.id === channel_id) { // If chat is just opened
+                const newParticipants = chat.participants.filter(x => x.employee_id !== employee_id);
+                setChat({ ...chat, participants: newParticipants });
+            }
+    
+        },
+      [chat, setChat, channels, setChannels],
+    )
+    
+    // On delete chat event
+    useEffect(() => {
+        if (!socket) return;
+  
+        socket.on("remove_channel_participant", data => {
+            removeParticipant(data.channel_id, data.employee_id);
+        })
+  
+        return () => {
+            socket.off("remove_channel_participant");
+        }
+    
+    }, [socket, removeParticipant])
+
     return (
         <>
         { user != null && 
