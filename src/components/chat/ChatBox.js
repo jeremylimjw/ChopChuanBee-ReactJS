@@ -1,6 +1,6 @@
 import { CloseOutlined, DeleteFilled, MessageFilled, UserOutlined } from '@ant-design/icons'
 import { Avatar, Badge, Button, Collapse, Comment, Divider, Form, Input, message, Space, Spin, Tooltip } from 'antd'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import moment from 'moment';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { REQUIRED } from '../../utilities/form';
@@ -17,25 +17,21 @@ export default function ChatBox({ chat, setChat, channels, setChannels, lastSeen
     const { socket } = useChatProvider();
     const { user, handleHttpError } = useApp();
 
+    const txtInput = useRef();
+
     const [form] = Form.useForm();
 
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [loading, setLoading] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [hasMore, setHasMore] = useState(true)
-    const [page, setPage] = useState(1)
 
     // Load the single channel
     useEffect(() => {
-        // Reset values
-        setPage(1);
-        setHasMore(true);
-
         if (chat.texts.length < LIMIT) {
             setHasMore(false);
         }
-
-    }, [chat.texts, setHasMore, setPage])
+    }, [chat.texts, setHasMore])
     
 
     useEffect(() => {
@@ -90,13 +86,9 @@ export default function ChatBox({ chat, setChat, channels, setChannels, lastSeen
     function handleNext() {
         if (loading) return;
 
-        console.log('handleNext()')
-        let newPageNo = page + 1;
-        setPage(newPageNo)
-
-        ChatApiHelper.getTexts({ channel_id: chat.id, limit: LIMIT, offset: newPageNo })
+        ChatApiHelper.getTexts({ channel_id: chat.id, limit: LIMIT, cutoff_id: chat.texts[chat.texts.length-1].id })
             .then(texts => {
-                if (chat.texts.length < LIMIT) {
+                if (texts.length < LIMIT) {
                     setHasMore(false);
                 }
 
@@ -271,6 +263,8 @@ export default function ChatBox({ chat, setChat, channels, setChannels, lastSeen
                     setChannels([...channel, ...newChannels])
 
                     setSubmitting(false);
+
+                    txtInput.current.focus();
                 })
                 .catch(handleHttpError)
                 .catch(() => setSubmitting(false));
@@ -350,7 +344,7 @@ export default function ChatBox({ chat, setChat, channels, setChannels, lastSeen
                         
                         <Form form={form} onFinish={onFinish}>
                             <Form.Item style={{ margin: 0 }} name="text" rules={[REQUIRED]}>
-                                <Input.TextArea onKeyDown={handleKeyDown} />
+                                <Input.TextArea onKeyDown={handleKeyDown} ref={txtInput} />
                             </Form.Item>
                             <Form.Item style={{ margin: 0 }}>
                                 <Button htmlType='submit' style={{ width: '100%' }} type="primary" loading={submitting}>Send</Button>

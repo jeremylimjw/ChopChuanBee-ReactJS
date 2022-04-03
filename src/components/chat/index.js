@@ -24,7 +24,7 @@ export default function Chat() {
     // Retrieve all last seens from all channels
     const retrieveLastSeens = useCallback(
         (channel_ids) => {
-            ChatApiHelper.getLastSeens({ channel_ids: channel_ids })
+            ChatApiHelper.getLastSeens(channel_ids)
                 .then(newLastSeens => {
                     setLastSeenStore(newLastSeens)
                 });
