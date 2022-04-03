@@ -18,7 +18,7 @@ export default function AccountingDashboard() {
 
     return (
         <MyLayout bannerTitle='Accounting Dashboard'>
-            <Tabs defaultActiveKey="1" type="card" style={{margin:'24px'}}>
+            <Tabs defaultActiveKey="1" type="card" style={{ margin: '24px' }}>
                 <TabPane tab="Profitability" key="1">
                     <ProfitabilityData currTime={currTime} oneYearAgo={oneYearAgo} />
                 </TabPane>
@@ -36,10 +36,9 @@ export default function AccountingDashboard() {
                 <TabPane tab="Aging Accounts Receivable" key="4">
                     <AgingReceivableGraph />
                 </TabPane>
-                
+
                 <TabPane tab="Customer Analytics" key="5">
                     <CustomerAnalyticsData />
-                    <CustomerAnalyticsCard />
                 </TabPane>
             </Tabs>
         </MyLayout>
