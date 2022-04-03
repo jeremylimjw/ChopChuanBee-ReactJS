@@ -197,7 +197,7 @@ export default function ViewProcurementPage() {
     }
 
     setLoading(true);
-    const pdf = await generatePdf(purchaseOrder, 'PO')
+    const pdf = await generatePdf(purchaseOrder, 'PO', false)
 
     pdf.getBuffer(buffer => {
       PurchaseOrderApiHelper.sendEmail(purchaseOrder.id, buffer)
@@ -213,7 +213,6 @@ export default function ViewProcurementPage() {
 
   async function handlePrintPDF() {
     const pdf = await generatePdf(purchaseOrder, 'PO');
-    pdf.open();
   }
 
   return (

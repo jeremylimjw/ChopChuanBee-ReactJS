@@ -21,7 +21,7 @@ pdfMake.fonts = {
   }
 }
 
-const generatePdf = async (data, templateName) => {
+const generatePdf = async (data, templateName, open = true) => {
   try {
     switch (templateName) {
       case 'PO':
@@ -55,6 +55,10 @@ const generatePdf = async (data, templateName) => {
         break
     }
     let pdf = pdfMake.createPdf(data)
+
+    if (open === true) {
+      pdf.open();
+    }
 
     return pdf;
     

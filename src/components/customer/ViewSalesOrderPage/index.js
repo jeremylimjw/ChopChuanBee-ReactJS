@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router';
 import { DeliveryApiHelper } from '../../../api/DeliveryApiHelper';
 import { SalesOrderApiHelper } from '../../../api/SalesOrderApiHelper';
+import { POStatus } from '../../../enums/PurchaseOrderStatus';
 import { SOStatus } from '../../../enums/SalesOrderStatus';
 import { View } from '../../../enums/View';
 import { SalesOrder } from '../../../models/SalesOrder';
@@ -160,8 +161,30 @@ export default function ViewSalesOrderPage() {
       .catch(() => setLoading(false));
   }
 
-  function sendOrder() {
-    console.log(salesOrder)
+  async function sendEmail() {
+    if (!salesOrder.customer.company_email) {
+      message.error('Customer does not have an email!');
+      return;
+    }
+
+    setLoading(true);
+    const data = {
+      ...salesOrder,
+      preGstPrice: salesOrder.sumItemSubtotals(),
+      totalPrice: salesOrder.getOrderTotal()
+    }
+    const pdf = await generatePdf(data, 'SO', false)
+
+    pdf.getBuffer(buffer => {
+      SalesOrderApiHelper.sendEmail(salesOrder.id, buffer)
+        .then(() => {
+          message.success('Email successfully sent to customer!')
+          setSalesOrder(new SalesOrder({...salesOrder, sales_order_status_id: POStatus.SENT_EMAIL.id }))
+          setLoading(false);
+        })
+        .catch(handleHttpError)
+        .catch(() => setLoading(false));
+    })
   }
 
   async function fetchDeliveryOrders() {
@@ -183,6 +206,10 @@ export default function ViewSalesOrderPage() {
         break
       case 'STICKER':
         const deliveryOrder = await fetchDeliveryOrders()
+        if (deliveryOrder == null) {
+          message.error('Delivery order not found for this order!');
+          return;
+        }
         data = {
           ...salesOrder,
           deliveryOrder
@@ -232,7 +259,7 @@ export default function ViewSalesOrderPage() {
                 <Space size="middle">
                   {(!salesOrder.isStatus(SOStatus.PENDING) && !salesOrder.isStatus(SOStatus.CANCELLED)) &&
                     <>
-                      <Button icon={<SendOutlined />} onClick={sendOrder}>Send Email</Button>
+                      <Button icon={<SendOutlined />} onClick={sendEmail}>Send Email</Button>
                       <Button icon={<PrinterOutlined />} onClick={() => viewAsPDF('SO')}>Invoice</Button>
                       <Button icon={<PrinterOutlined />} onClick={() => viewAsPDF('PACKING_LIST')}>Packing List</Button>
                       <Button icon={<PrinterOutlined />} onClick={() => viewAsPDF('STICKER')}>Delivery Sticker</Button>
