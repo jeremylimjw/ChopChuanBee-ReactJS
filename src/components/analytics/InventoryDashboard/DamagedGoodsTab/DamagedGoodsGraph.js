@@ -8,7 +8,7 @@ export default function DamagedGoodsGraph(props) {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
 
-  const quantityReturned = [];
+  const quantityDamaged = [];
   const totalValueLoss = [];
 
   useEffect(() => {
@@ -16,15 +16,15 @@ export default function DamagedGoodsGraph(props) {
   }, [handleHttpError, loading, props.userInput]);
 
   const fetchData = async () => {
-    await AnalyticsApiHelper.getDamagedGoods(props.startDate, props.endDate)
+    await AnalyticsApiHelper.getDamagedGoodsOrderByValueDesc(props.startDate, props.endDate)
       .then((result) => {
         result.forEach((x) => { 
-          const tempQtyReturned = {
+          const tempQtyDamaged = {
             product_name: x.name,
             metric_name: "Quantity Damaged",
-            value: parseInt(x.quantity_returned),
+            value: parseInt(x.quantity_damaged),
           };
-          quantityReturned.push(tempQtyReturned);
+          quantityDamaged.push(tempQtyDamaged);
           const tempTotalValueLoss = {
             product_name: x.name,
             metric_name: "Total Value Loss",
@@ -34,7 +34,7 @@ export default function DamagedGoodsGraph(props) {
         });
       })
       .catch(handleHttpError);
-    setData([...quantityReturned, ...totalValueLoss]);
+    setData([...quantityDamaged, ...totalValueLoss]);
     setLoading(false);
     props.setUserInput(false);
   }

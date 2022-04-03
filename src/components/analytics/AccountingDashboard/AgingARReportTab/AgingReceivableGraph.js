@@ -21,32 +21,33 @@ export default function AgingReceivableGraph(props) {
     const fetchData = async () => {
       await AnalyticsApiHelper.getAgedReceivable()
         .then((results) => {
+          console.log(results);
           results.forEach((x) => {
             const tempLessThan30 = {
               customer_id: x.customer_id,
               company_name: x.company_name,
-              accounts_receivable: parseFloat(x.over_less_than_60),
+              accounts_receivable: parseFloat(x.over_less_than_30),
               aged_duration: "Less Than 30 Days",
             };
             lessThan30Days.push(tempLessThan30);
             const tempOver30 = {
               customer_id: x.customer_id,
               company_name: x.company_name,
-              accounts_receivable: parseFloat(x.overdue_61_to_180_days),
+              accounts_receivable: parseFloat(x.overdue_31_to_60_days),
               aged_duration: "Over 30 Days",
             };
             over30Days.push(tempOver30);
             const tempOver60 = {
               customer_id: x.customer_id,
               company_name: x.company_name,
-              accounts_receivable: parseFloat(x.overdue_181_to_270_days),
+              accounts_receivable: parseFloat(x.overdue_61_to_90_days),
               aged_duration: "Over 60 Days",
             };
             over60Days.push(tempOver60);
             const tempOver90 = {
               customer_id: x.customer_id,
               company_name: x.company_name,
-              accounts_receivable: parseFloat(x.overdue_more_than_271_days),
+              accounts_receivable: parseFloat(x.overdue_more_than_91_days),
               aged_duration: "Over 90 Days",
             };
             over90Days.push(tempOver90);

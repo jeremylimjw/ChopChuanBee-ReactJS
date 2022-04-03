@@ -101,11 +101,11 @@ export class AnalyticsApiHelper {
 
   static async getAgedReceivable() {
     return axiosObject
-      .get("/analytics/Aging_AR_Table_Test/")
+      .get("/analytics/Aging_AR_Table/")
       .then((res) => res.data);
   }
 
-  static async getSupplierReturnedGoods(start_date, end_date) {
+  static async getSupplierReturnedGoodsOrderByValueDesc(start_date, end_date) {
     const params = {};
     if (start_date && end_date) {
       params.start_date = start_date.toISOString();
@@ -116,7 +116,18 @@ export class AnalyticsApiHelper {
       .then((res) => res.data);
   }
 
-  static async getCustomerReturnedGoods(start_date, end_date) {
+  static async getSupplierReturnedGoodsOrderByQtyDesc(start_date, end_date) {
+    const params = {};
+    if (start_date && end_date) {
+      params.start_date = start_date.toISOString();
+      params.end_date = end_date.toISOString();
+    }
+    return axiosObject
+      .get("/analytics/Supplier_Returned_Goods_Qn_Desc/", { params })
+      .then((res) => res.data);
+  }
+
+  static async getCustomerReturnedGoodsOrderByValueDesc(start_date, end_date) {
     const params = {};
     if (start_date && end_date) {
       params.start_date = start_date.toISOString();
@@ -127,7 +138,18 @@ export class AnalyticsApiHelper {
       .then((res) => res.data);
   }
 
-  static async getDamagedGoods(start_date, end_date) {
+  static async getCustomerReturnedGoodsOrderByQtyDesc(start_date, end_date) {
+    const params = {};
+    if (start_date && end_date) {
+      params.start_date = start_date.toISOString();
+      params.end_date = end_date.toISOString();
+    }
+    return axiosObject
+      .get("/analytics/Customer_Returned_Goods_Qn_Desc/", { params })
+      .then((res) => res.data);
+  }
+
+  static async getDamagedGoodsOrderByValueDesc(start_date, end_date) {
     const params = {};
     if (start_date && end_date) {
       params.start_date = start_date.toISOString();
@@ -135,6 +157,17 @@ export class AnalyticsApiHelper {
     }
     return axiosObject
       .get("/analytics/Damaged_Goods/", { params })
+      .then((res) => res.data);
+  }
+
+  static async getDamagedGoodsOrderByQtyDesc(start_date, end_date) {
+    const params = {};
+    if (start_date && end_date) {
+      params.start_date = start_date.toISOString();
+      params.end_date = end_date.toISOString();
+    }
+    return axiosObject
+      .get("/analytics/Damaged_Goods_Qn_Desc/", { params })
       .then((res) => res.data);
   }
 }

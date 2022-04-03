@@ -11,22 +11,46 @@ export default function DamagedGoodsCard(props) {
   const { handleHttpError } = useApp();
   const [mostDamagedProduct, setMostDamagedProduct] = useState([]);
   const [highestValueLoss, setHighestValueLoss] = useState([]);
+  const [errorMessage, setErrorMessage] = useState(false);
 
   useEffect(() => {
-    AnalyticsApiHelper.getDamagedGoods(props.startDate, props.endDate)
-      .then((results) => {
-        if (results.length === 0) {
-          message.error("There is no data available for this period.");
-          setMostDamagedProduct(null);
-          setHighestValueLoss(null);
-        } else {
-          setMostDamagedProduct(results[0]);
-          setHighestValueLoss(results[0]);
-        }
-        setLoading(false);
-      })
-      .catch(handleHttpError);
+    fetchData();
+    setLoading(false);
+    checkErrorMessage();
   }, [handleHttpError, loading, props.userInput]);
+
+  const checkErrorMessage = () => {
+    if (errorMessage) {
+      message.error("There is no data available for this period.");
+      setErrorMessage(false);
+    }
+  }
+
+  const fetchData = () => {
+    AnalyticsApiHelper.getDamagedGoodsOrderByQtyDesc(props.startDate, props.endDate)
+    .then((results) => {
+      console.log(results);
+      if (results.length === 0) {
+        setErrorMessage(true);
+        setMostDamagedProduct(null);
+      } else {
+        setMostDamagedProduct(results[0]);
+      }
+    })
+    .catch(handleHttpError);
+
+    AnalyticsApiHelper.getDamagedGoodsOrderByValueDesc(props.startDate, props.endDate)
+    .then((results) => {
+      console.log(results);
+      if (results.length === 0) {
+        setErrorMessage(true);
+        setHighestValueLoss(null);
+      } else {
+        setHighestValueLoss(results[0]);
+      }
+    })
+    .catch(handleHttpError);
+  }
 
   return (
     <>
@@ -47,7 +71,7 @@ export default function DamagedGoodsCard(props) {
               TOTAL QUANTITY
             </Typography>
             <Typography style={{ fontSize: "0.8rem", marginLeft: "auto" }}>
-              {mostDamagedProduct?.quantity_returned}
+              {mostDamagedProduct?.quantity_damaged}
             </Typography>
           </Row>
         </MyCard>

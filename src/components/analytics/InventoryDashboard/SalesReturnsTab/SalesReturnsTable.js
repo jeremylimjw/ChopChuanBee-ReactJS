@@ -13,7 +13,7 @@ export default function SalesReturnsTable(props) {
   const [data, setData] = useState();
 
   useEffect(() => {
-    AnalyticsApiHelper.getCustomerReturnedGoods(props.startDate, props.endDate)
+    AnalyticsApiHelper.getCustomerReturnedGoodsOrderByValueDesc(props.startDate, props.endDate)
       .then((results) => {
         setData(results);
         setLoading(false);

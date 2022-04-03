@@ -9,24 +9,46 @@ import { Link } from 'react-router-dom';
 export default function InventoryReturnsCard(props) {
   const [loading, setLoading] = useState(true);
   const { handleHttpError } = useApp();
-  const [mostReturnedProduct, setMostReturnedProduct] = useState([]);
-  const [highestValueLoss, setHighestValueLoss] = useState([]);
+  const [mostReturnedProduct, setMostReturnedProduct] = useState();
+  const [highestValueLoss, setHighestValueLoss] = useState();
+  const [errorMessage, setErrorMessage] = useState(false);
 
   useEffect(() => {
-    AnalyticsApiHelper.getSupplierReturnedGoods(props.startDate, props.endDate)
+    fetchData();
+    setLoading(false);
+    checkErrorMessage();
+  }, [handleHttpError, loading, props.userInput]);
+
+  const checkErrorMessage = () => {
+    if (errorMessage) {
+      message.error("There is no data available for this period.");
+      setErrorMessage(false);
+    }
+  }
+
+  const fetchData = async () => {
+    await AnalyticsApiHelper.getSupplierReturnedGoodsOrderByQtyDesc(props.startDate, props.endDate)
       .then((results) => {
         if (results.length === 0) {
-          message.error("There is no data available for this period.");
+          setErrorMessage(true);
           setMostReturnedProduct(null);
-          setHighestValueLoss(null);
         } else {
           setMostReturnedProduct(results[0]);
+        }
+      })
+      .catch(handleHttpError);
+
+      await AnalyticsApiHelper.getSupplierReturnedGoodsOrderByValueDesc(props.startDate, props.endDate)
+      .then((results) => {
+        if (results.length === 0) {
+          setErrorMessage(true);
+          setHighestValueLoss(null);
+        } else {
           setHighestValueLoss(results[0]);
         }
       })
       .catch(handleHttpError);
-      setLoading(false);
-  }, [handleHttpError, loading, props.userInput]);
+  }
 
   return (
     <>

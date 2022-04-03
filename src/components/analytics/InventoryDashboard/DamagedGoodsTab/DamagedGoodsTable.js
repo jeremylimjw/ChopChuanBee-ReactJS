@@ -13,7 +13,7 @@ export default function DamagedGoodsTable(props) {
   const [data, setData] = useState();
 
   useEffect(() => {
-    AnalyticsApiHelper.getDamagedGoods(props.startDate, props.endDate)
+    AnalyticsApiHelper.getDamagedGoodsOrderByValueDesc(props.startDate, props.endDate)
       .then((results) => {
         setData(results);
         setLoading(false);
@@ -32,10 +32,10 @@ export default function DamagedGoodsTable(props) {
     },
     {
       title: "Quantity Damaged",
-      dataIndex: "quantity_returned",
-      key: "quantity_returned",
+      dataIndex: "quantity_damaged",
+      key: "quantity_damaged",
       width: "20%",
-      sorter: (a, b) => sortByNumber(a.quantity_returned, b.quantity_returned),
+      sorter: (a, b) => sortByNumber(a.quantity_damaged, b.quantity_damaged),
     },
     {
       title: "Total Value Loss",
