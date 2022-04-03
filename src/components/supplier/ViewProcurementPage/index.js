@@ -190,13 +190,30 @@ export default function ViewProcurementPage() {
     navigate('./../new', { state: { purchaseOrder: purchaseOrder } });
   }
 
-  function sendEmail() {
-    console.log(purchaseOrder)
+  async function sendEmail() {
+    if (!purchaseOrder.supplier.company_email) {
+      message.error('Supplier does not have an email!');
+      return;
+    }
+
+    setLoading(true);
+    const pdf = await generatePdf(purchaseOrder, 'PO')
+
+    pdf.getBuffer(buffer => {
+      PurchaseOrderApiHelper.sendEmail(purchaseOrder.id, buffer)
+        .then(() => {
+          message.success('Email successfully sent to supplier!')
+          setPurchaseOrder(new PurchaseOrder({...purchaseOrder, purchase_order_status_id: POStatus.SENT_EMAIL.id }))
+          setLoading(false);
+        })
+        .catch(handleHttpError)
+        .catch(() => setLoading(false));
+    })
   }
 
-  function handlePrintPDF() {
-    console.log(purchaseOrder)
-    generatePdf(purchaseOrder, 'PO')
+  async function handlePrintPDF() {
+    const pdf = await generatePdf(purchaseOrder, 'PO');
+    pdf.open();
   }
 
   return (
@@ -229,7 +246,7 @@ export default function ViewProcurementPage() {
 
           </div>
 
-          <MyCard style={{ marginTop: 12 }} title={!purchaseOrder.isStatus(POStatus.PENDING, POStatus.SENT) ? 'Order Items' : null}>
+          <MyCard style={{ marginTop: 12 }} title={!purchaseOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL, POStatus.SENT_TEXT) ? 'Order Items' : null}>
 
             <PO3ItemsTable purchaseOrder={purchaseOrder} setPurchaseOrder={setPurchaseOrder} loading={loading} setLoading={setLoading} />
 
@@ -237,11 +254,31 @@ export default function ViewProcurementPage() {
               <div style={{ display: 'flex', marginTop: 30 }}>
 
                 <Space size="middle">
-                  {purchaseOrder.isStatus(POStatus.PENDING) &&
-                    <Button icon={<SendOutlined />} disabled={loading} onClick={sendEmail}>Send Email</Button>
+                  {purchaseOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL, POStatus.SENT_TEXT) &&
+                    <>
+                    {purchaseOrder.isStatus(POStatus.SENT_EMAIL, POStatus.SENT_TEXT) ?
+                      <>
+                        <Popconfirm title="This order has already been sent. Send again?" onConfirm={sendEmail} disabled={loading}>
+                          <Button icon={<SendOutlined />} disabled={loading}>Send Email</Button>
+                        </Popconfirm>
+                      </>
+                      :
+                      <>
+                        <Button icon={<SendOutlined />} disabled={loading} onClick={sendEmail}>Send Email</Button>
+                      </>
+                    }
+                    </>
                   }
-                  <CopyAsTextButton loading={loading} purchaseOrder={purchaseOrder} />
+                  
+                  <CopyAsTextButton 
+                    loading={loading} 
+                    setLoading={setLoading} 
+                    purchaseOrder={purchaseOrder} 
+                    setPurchaseOrder={setPurchaseOrder}
+                  />
+
                   <Button icon={<PrinterOutlined />} onClick={() => handlePrintPDF()} >Print PDF</Button>
+
                 </Space>
 
                 <div style={{ marginLeft: 'auto' }}>
@@ -249,17 +286,17 @@ export default function ViewProcurementPage() {
 
                     <Button icon={<RedoOutlined />} onClick={navigateToCreateForm}>Reorder</Button>
 
-                    {purchaseOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED) &&
+                    {purchaseOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL, POStatus.SENT_TEXT) &&
                       <Popconfirm title="Are you sure? This action cannot be undone." onConfirm={cancelOrder} disabled={loading}>
                         <Button icon={<StopOutlined />} disabled={loading}>Cancel Order</Button>
                       </Popconfirm>
                     }
 
-                    {purchaseOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED) &&
+                    {purchaseOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL, POStatus.SENT_TEXT) &&
                       <Button icon={<SaveOutlined />} disabled={loading} onClick={saveForLater}>Save for later</Button>
                     }
 
-                    {purchaseOrder.isStatus(POStatus.PENDING) &&
+                    {purchaseOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL, POStatus.SENT_TEXT) &&
                       <Popconfirm title="Are you sure?" onConfirm={convertToInvoice} disabled={loading}>
                         <Button type="primary" icon={<FileTextOutlined />} disabled={loading}>Convert to Invoice</Button>
                       </Popconfirm>

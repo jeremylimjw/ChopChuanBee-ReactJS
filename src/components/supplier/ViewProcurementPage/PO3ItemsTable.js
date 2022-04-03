@@ -33,7 +33,7 @@ export default function PO3ItemsTable({ purchaseOrder, setPurchaseOrder, loading
   columns[4].sorter = (a, b) => sortByNumber(+myPrices[a.product?.id] || 0, +myPrices[b.product?.id] || 0);
   columns[5].onCell = (record) => ({ type: 'input_number', field: 'quantity', record, handleSave })
   columns[6].onCell = (record) => ({ type: 'input_number', field: 'unit_cost', currency: 'true', record, handleSave })
-  columns[8].render = (_, record) => <Button shape="circle" icon={<DeleteOutlined />} onClick={() => handleDeleteRow(record)} disabled={!hasWriteAccessTo(View.SCM.id) || !purchaseOrder.isStatus(POStatus.PENDING)} />
+  columns[8].render = (_, record) => <Button shape="circle" icon={<DeleteOutlined />} onClick={() => handleDeleteRow(record)} disabled={!hasWriteAccessTo(View.SCM.id) || !purchaseOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL, POStatus.SENT_TEXT)} />
   
   useEffect(() => {
     if (purchaseOrder.supplier != null) {
@@ -100,7 +100,7 @@ export default function PO3ItemsTable({ purchaseOrder, setPurchaseOrder, loading
     <>
       { purchaseOrder != null && 
         <>
-        { purchaseOrder.isStatus(POStatus.PENDING, POStatus.SENT) && 
+        { purchaseOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL, POStatus.SENT_TEXT) && 
           <MyToolbar title="Order Items">
             { hasWriteAccessTo(View.SCM.name) && 
               <Button icon={<PlusOutlined />} disabled={loading} onClick={() => handleAddRow()}>Add More Items</Button>
@@ -113,7 +113,7 @@ export default function PO3ItemsTable({ purchaseOrder, setPurchaseOrder, loading
             columns={columns}
             dataSource={purchaseOrder.purchase_order_items}
             rowKey={() => Math.random()}
-            components={purchaseOrder.isStatus(POStatus.PENDING) ? { body: { cell: CustomCell } } : {}}
+            components={purchaseOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL, POStatus.SENT_TEXT) ? { body: { cell: CustomCell } } : {}}
             summary={pageData => {
               if (purchaseOrder == null) return <></>
 
@@ -141,7 +141,7 @@ export default function PO3ItemsTable({ purchaseOrder, setPurchaseOrder, loading
                       <Typography.Text strong>Offset</Typography.Text>
                     </Table.Summary.Cell>
                     <Table.Summary.Cell align='center'>
-                      { purchaseOrder.isStatus(POStatus.PENDING) 
+                      { purchaseOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL, POStatus.SENT_TEXT)
                         ?
                         <InputNumber value={purchaseOrder.offset} style={{ width: 80 }} prefix="$"
                           onChange={(value) => setPurchaseOrder(new PurchaseOrder({...purchaseOrder, offset: value }))} 

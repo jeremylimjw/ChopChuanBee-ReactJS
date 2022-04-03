@@ -55,7 +55,9 @@ const generatePdf = async (data, templateName) => {
         break
     }
     let pdf = pdfMake.createPdf(data)
-    pdf.open()
+
+    return pdf;
+    
   } catch (err) {
     console.log(err)
     message.error('Error generating PDF report, please ensure details are filled up')
