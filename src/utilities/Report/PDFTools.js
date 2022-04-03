@@ -82,6 +82,19 @@ export class PDFTools {
     }
   }
 
+  static generateRemarkBox(text, style, width) {
+    return {
+      table: {
+        heights: [15, 50],
+        widths: width,
+        body: [
+          [{ text: 'SPECIAL INSTRUCTIONS OR REMARKS', style: { bold: true }, border: [] }],
+          [this.formatText(text, style)]
+        ]
+      }
+    }
+  }
+
   static generateEmptyBox(width, height) {
     return {
       canvas: [{

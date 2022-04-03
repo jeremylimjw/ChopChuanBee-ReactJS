@@ -2,14 +2,15 @@ import moment from "moment"
 import { PDFTools } from "../PDFTools"
 
 const formatTemplateHeader = (data) => {
+  data.sora.sort()
   return {
     statement_date: {
-      text: 'Statement Date: ',
-      value: moment(data.date).format('LL') || ''
+      text: 'Statement Creation Date: ',
+      value: moment().format('LL') || ''
     },
     statement_period: {
       text: 'Statement Period: ',
-      value: `${moment(data.start_date).format('LL')} - ${moment(data.end_date).format('LL')}`
+      value: `${moment(data.start).format('MMMM')} - ${moment(data.end).format('MMMM')}`
     }
   }
 }
@@ -82,6 +83,7 @@ const constructTable = (data) => {
 }
 
 export const statementOfAccountTemplate = (data) => {
+  console.log(data)
   let templateHeader = formatTemplateHeader(data)
   let companyData = formatCompanyData(data)
   let customerData = formatCustomerData(data)
@@ -113,10 +115,7 @@ export const statementOfAccountTemplate = (data) => {
       },
       { text: '', margin: [0, 8] },
       soaTable,
-      { text: '', margin: [0, 5] },
-      PDFTools.formatText('SPECIAL INSTRUCTIONS OR REMARKS', 'subHeader'),
-      PDFTools.generateEmptyBox(515, 100),
-      PDFTools.formatText(`If you have any questions about this purchase order, please contact ${data.company.contact_number}`, 'footerText')
+      PDFTools.formatText(`If you have any questions about this statement, please contact ${data.company.contact_number}`, 'footerText')
 
     ],
     styles: {

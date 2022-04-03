@@ -58,12 +58,15 @@ export default function ViewSORAPage() {
   }, [id, handleHttpError, navigate]);
 
   const exportPDF = () => {
+    let dateSortedArr = sora.sort((a, b) => sortByDate(a.created_at, b.created_at))
+    let [start, end] = [dateSortedArr[0].created_at, dateSortedArr[dateSortedArr.length - 1].created_at]
     let data = {
       customer,
       sora,
-      company
+      company,
+      start,
+      end
     }
-    // console.log(data)
     generatePdf(data, 'SOA')
   }
 

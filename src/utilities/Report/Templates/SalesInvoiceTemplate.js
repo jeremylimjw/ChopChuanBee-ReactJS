@@ -80,7 +80,7 @@ const constructSalesOrderTable = (data) => {
     SOTableItems = [['-', '-', '-', '-', '-', '-']]
   }
   SOTableItems.push(
-    [{ ...PDFTools.formatText('Subtotal', { fontSize: '10', alignment: 'left' }), colSpan: 5 }, {}, {}, {}, {}, PDFTools.formatText(data.preGstPrice, 'tableContent')],
+    [{ ...PDFTools.formatText('Subtotal', { fontSize: '10', alignment: 'left' }), colSpan: 5 }, {}, {}, {}, {}, PDFTools.formatText(parseFloat(data.preGstPrice).toFixed('2'), 'tableContent')],
     [{ ...PDFTools.formatText('GST Rate', { fontSize: '10', alignment: 'left' }), colSpan: 5 }, {}, {}, {}, {}, PDFTools.formatText(`${data.gst_rate}%`, 'tableContent')],
     [{ ...PDFTools.formatText('Total', { fontSize: '10', alignment: 'left' }), colSpan: 5 }, {}, {}, {}, {}, PDFTools.formatText(data.totalPrice, 'tableContent')],
   )
@@ -120,8 +120,8 @@ export const salesInvoiceTemplate = (data) => {
       },
       PDFTools.formatText('', 'header'),
       SOTable,
-      PDFTools.formatText('SPECIAL INSTRUCTIONS OR REMARKS', 'subHeader'),
-      PDFTools.generateEmptyBox(515, 100),
+      { text: '', margin: [0, 5] },
+      PDFTools.generateRemarkBox(data?.remarks, 'formText', [515]),
       PDFTools.formatText(`If you have any questions about this purchase order, please contact ${companyData.contactNum.value}`, 'footerText')
     ],
     styles: {

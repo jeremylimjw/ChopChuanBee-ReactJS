@@ -109,9 +109,11 @@ export const purchaseOrderTemplate = (data) => {
       },
       PDFTools.formatText('', 'header'),
       POTable,
-      PDFTools.formatText('SPECIAL INSTRUCTIONS OR REMARKS', 'subHeader'),
-      PDFTools.generateEmptyBox(515, 100),
-      PDFTools.formatText(`If you have any questions about this purchase order, please contact ${companyData.contactNum.value}`, 'footerText')
+      { text: '', margin: [0, 5] },
+      PDFTools.generateRemarkBox(data?.remarks, 'formText', [515]),
+      PDFTools.formatText(`If you have any questions about this purchase order, please contact ${companyData.contactNum.value}`, 'footerText'),
+
+
     ],
     styles: {
       header: {
