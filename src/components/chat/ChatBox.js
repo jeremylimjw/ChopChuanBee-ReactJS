@@ -12,7 +12,7 @@ import NewParticipantModal from './NewParticipantModal';
 
 const LIMIT = 20;
 
-export default function ChatBox({ chat, setChat, channels, setChannels, lastSeenStore, deleteChat }) {
+export default function ChatBox({ chat, setChat, channels, setChannels, lastSeenStore }) {
 
     const { socket } = useChatProvider();
     const { user, handleHttpError } = useApp();
@@ -108,7 +108,7 @@ export default function ChatBox({ chat, setChat, channels, setChannels, lastSeen
             return (
                 <>
                     <Tooltip title={renderTooltip}>
-                        <Badge status="success" offset={[0,20]} dot>
+                        <Badge status={lastSeenStore[recipients[0]?.employee_id] === 'Online' ? 'success' : 'default'} offset={[0,20]} dot>
                             <Avatar size="small" icon={<UserOutlined />} />
                         </Badge>
                     </Tooltip>

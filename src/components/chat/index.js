@@ -238,7 +238,6 @@ export default function Chat() {
                             channels={channels}
                             setChannels={setChannels}
                             lastSeenStore={lastSeenStore}
-                            deleteChat={deleteChat}
                         />
                     }
                     <Channels 
