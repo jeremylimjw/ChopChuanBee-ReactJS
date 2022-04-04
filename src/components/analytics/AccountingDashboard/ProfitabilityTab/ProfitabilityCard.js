@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Typography, Space, Divider, Row, Spin, message } from 'antd';
+import { Typography, Space, Divider, Row, Spin } from 'antd';
 import MyCard from '../../../common/MyCard';
 import { CaretUpFilled, CaretDownFilled } from '@ant-design/icons';
 import { useApp } from '../../../../providers/AppProvider';
@@ -19,28 +19,21 @@ export default function ProfitabilityCard(props) {
     const [profTotal, setProfTotal]= useState(0);
     const [profFinalMonth, setProfFinalMonth] = useState();
     const [profSecondFinalMonth, setProfSecondFinalMonth] = useState();
-    const [errorMessage, setErrorMessage] = useState(false);
 
     useEffect(() => {
         fetchData();
         setLoading(false);
-        checkErrorMessage();
-    },[handleHttpError, loading, props.userInput]);
+    },[handleHttpError, props.userInput]);
 
-    const checkErrorMessage = () => {
-        if (errorMessage) {
-            message.error("There is no data available for this period.");
-            setErrorMessage(false);
-        }
-    }
+    const finalMonthStart = props.endDate.clone().startOf('month').toDate();
+    const finalMonthEnd = props.endDate.clone().endOf('month').toDate();
+    const secondFinalMonthStart = props.endDate.clone().subtract(1, "month").startOf('month').toDate();
+    const secondFinalMonthEnd = props.endDate.clone().subtract(1, "month").endOf('month').toDate();
 
     const fetchData = async () => {
         // Get total revenue, cost of goods sold, and profits for the given period
         await AnalyticsApiHelper.getRevenue(props.startDate, props.endDate)
         .then((result) => {
-            if (result.length === 0) {
-                setErrorMessage(true);
-            }
             let sum = 0;
             result.forEach(x => {
                 sum = sum + parseFloat(x.value);
@@ -51,9 +44,6 @@ export default function ProfitabilityCard(props) {
         .catch(handleHttpError);
         await AnalyticsApiHelper.getCOGS(props.startDate, props.endDate)
         .then((result) => {
-            if (result.length === 0) {
-                setErrorMessage(true);
-            }
             let sum = 0;
             result.forEach(x => {
                 sum = sum + parseFloat(x.value);
@@ -64,9 +54,6 @@ export default function ProfitabilityCard(props) {
         .catch(handleHttpError);
         await AnalyticsApiHelper.getProfits(props.startDate, props.endDate)
         .then((result) => {
-            if (result.length === 0) {
-                setErrorMessage(true);
-            }
             let sum = 0;
             result.forEach(x => {
                 sum = sum + parseFloat(x.value);
@@ -77,9 +64,6 @@ export default function ProfitabilityCard(props) {
         .catch(handleHttpError);
 
         // Get final month's (up to end date) revenue, cost of goods sold, and profits for the given period
-        const finalMonthStart = props.endDate.clone().startOf('month').toDate();
-        const finalMonthEnd = props.endDate.clone().endOf('month').toDate();
-
         await AnalyticsApiHelper.getRevenue(finalMonthStart, finalMonthEnd)
         .then((result) => {
             if (result.length === 0) {
@@ -108,10 +92,7 @@ export default function ProfitabilityCard(props) {
         })
         .catch(handleHttpError);
 
-        // Get second final month's revenue, cost of goods sold, and profits for the given period
-        const secondFinalMonthStart = props.endDate.clone().subtract(1, "month").startOf('month').toDate();
-        const secondFinalMonthEnd = props.endDate.clone().subtract(1, "month").endOf('month').toDate();
-        
+        // Get second final month's revenue, cost of goods sold, and profits for the given period        
         await AnalyticsApiHelper.getRevenue(secondFinalMonthStart, secondFinalMonthEnd)
         .then((result) => {
             if (result.length === 0) {
@@ -166,13 +147,13 @@ export default function ProfitabilityCard(props) {
                 <Typography.Title level={2} style={{margin:0}}>{loading ? <Spin/> : formatCurrency(revTotal)}</Typography.Title>
                 <Divider style={{margin:'0.5rem 0'}}/>
                 <Row>
-                    <Typography style={{fontSize:'0.8rem', marginRight: '10px'}}>THIS MONTH (To {loading ? <Spin/> : parseDate(props.endDate)}) </Typography>
+                    <Typography style={{fontSize:'0.8rem', marginRight: '8px'}}> {parseDate(finalMonthStart) + " - " + parseDate(props.endDate)} </Typography>
                     <Typography style={{fontSize:'0.8rem', marginLeft: 'auto'}}>
                         {loading ? <Spin/> : 
                             <>
                                 {revDiff < 0
-                                    ? revDiff === "NaN" ? "" : <><CaretDownFilled style={{color:'red'}}/><span style={{color:'red', marginRight: '10px'}}>{revDiff.substring(1, revDiff.length)}%</span></>
-                                    : revDiff === "NaN" || revDiff === 0 ? "" : <><CaretUpFilled style={{color:'green'}}/><span style={{color:'green', marginRight: '10px'}}>{revDiff}%</span></>
+                                    ? revDiff === "NaN" ? "" : <><CaretDownFilled style={{color:'red'}}/><span style={{color:'red', marginRight: '8px'}}>{revDiff.substring(1, revDiff.length)}%</span></>
+                                    : revDiff === "NaN" || revDiff === 0 ? "" : <><CaretUpFilled style={{color:'green'}}/><span style={{color:'green', marginRight: '8px'}}>{revDiff}%</span></>
                                 }
                                 {formatCurrency(revFinalMonth)}
                             </>
@@ -180,7 +161,7 @@ export default function ProfitabilityCard(props) {
                     </Typography>
                 </Row>
                 <Row>
-                    <Typography style={{fontSize:'0.8rem', marginRight: 'auto'}}>LAST MONTH</Typography>
+                    <Typography style={{fontSize:'0.8rem', marginRight: 'auto'}}>{parseDate(secondFinalMonthStart) + " - " + parseDate(secondFinalMonthEnd)}</Typography>
                     <Typography style={{fontSize:'0.8rem', marginLeft: 'auto'}}>{loading ? <Spin/> : formatCurrency(revSecondFinalMonth)}</Typography>
                 </Row>
             </MyCard>
@@ -190,13 +171,13 @@ export default function ProfitabilityCard(props) {
                 <Typography.Title level={2} style={{margin:0}}>{loading ? <Spin/> : formatCurrency(cogsTotal)}</Typography.Title>
                 <Divider style={{margin:'0.5rem 0'}}/>
                 <Row>
-                <Typography style={{fontSize:'0.8rem', marginRight: '10px'}}>THIS MONTH (To {loading ? <Spin/> : parseDate(props.endDate)}) </Typography>
+                <Typography style={{fontSize:'0.8rem', marginRight: '8px'}}> {parseDate(finalMonthStart) + " - " + parseDate(props.endDate)} </Typography>
                     <Typography style={{fontSize:'0.8rem', marginLeft: 'auto'}}>
                         {loading ? <Spin/> : 
                             <>
                                 {cogsDiff < 0
-                                    ? cogsDiff === "NaN" ? "" : <><CaretDownFilled style={{color:'red'}}/><span style={{color:'red', marginRight: '10px'}}>{cogsDiff.substring(1, cogsDiff.length)}%</span></>
-                                    : cogsDiff === "NaN" || cogsDiff === 0 ? "" : <><CaretUpFilled style={{color:'green'}}/><span style={{color:'green', marginRight: '10px'}}>{cogsDiff}%</span></>
+                                    ? cogsDiff === "NaN" ? "" : <><CaretDownFilled style={{color:'red'}}/><span style={{color:'red', marginRight: '8px'}}>{cogsDiff.substring(1, cogsDiff.length)}%</span></>
+                                    : cogsDiff === "NaN" || cogsDiff === 0 ? "" : <><CaretUpFilled style={{color:'green'}}/><span style={{color:'green', marginRight: '8px'}}>{cogsDiff}%</span></>
                                 }
                                 {formatCurrency(cogsFinalMonth)}
                             </>
@@ -204,7 +185,7 @@ export default function ProfitabilityCard(props) {
                     </Typography>
                 </Row>
                 <Row>
-                    <Typography style={{fontSize:'0.8rem', marginRight: 'auto'}}>LAST MONTH</Typography>
+                    <Typography style={{fontSize:'0.8rem', marginRight: 'auto'}}>{parseDate(secondFinalMonthStart) + " - " + parseDate(secondFinalMonthEnd)}</Typography>
                     <Typography style={{fontSize:'0.8rem', marginLeft: 'auto'}}>{loading ? <Spin/> : formatCurrency(cogsSecondFinalMonth)}</Typography>
                 </Row>
             </MyCard>
@@ -214,14 +195,14 @@ export default function ProfitabilityCard(props) {
                 <Typography.Title level={2} style={{margin:0}}>{loading ? <Spin/> : formatCurrency(profTotal)}</Typography.Title>
                 <Divider style={{margin:'0.5rem 0'}}/>
                 <Row>
-                <Typography style={{fontSize:'0.8rem', marginRight: '10px'}}>THIS MONTH (To {loading ? <Spin/> : parseDate(props.endDate)}) </Typography>
+                <Typography style={{fontSize:'0.8rem', marginRight: '8px'}}> {parseDate(finalMonthStart) + " - " + parseDate(props.endDate)} </Typography>
                     <Typography style={{fontSize:'0.8rem', marginLeft: 'auto'}}>
                         <Typography style={{fontSize:'0.8rem', marginLeft: 'auto'}}>
                         {loading ? <Spin/> : 
                             <>
                                 {profDiff < 0
-                                    ? profDiff === "NaN" ? "" : <><CaretDownFilled style={{color:'red'}}/><span style={{color:'red', marginRight: '10px'}}>{profDiff.substring(1, cogsDiff.length)}%</span></>
-                                    : profDiff === "NaN" || profDiff === 0 ? "" :  <><CaretUpFilled style={{color:'green'}}/><span style={{color:'green', marginRight: '10px'}}>{profDiff}%</span></>
+                                    ? profDiff === "NaN" ? "" : <><CaretDownFilled style={{color:'red'}}/><span style={{color:'red', marginRight: '8px'}}>{profDiff.substring(1, cogsDiff.length)}%</span></>
+                                    : profDiff === "NaN" || profDiff === 0 ? "" :  <><CaretUpFilled style={{color:'green'}}/><span style={{color:'green', marginRight: '8px'}}>{profDiff}%</span></>
                                 }
                                 {formatCurrency(profFinalMonth)}
                             </>
@@ -230,12 +211,16 @@ export default function ProfitabilityCard(props) {
                     </Typography>
                 </Row>
                 <Row>
-                    <Typography style={{fontSize:'0.8rem', marginRight: 'auto'}}>LAST MONTH</Typography>
+                    <Typography style={{fontSize:'0.8rem', marginRight: 'auto'}}>{parseDate(secondFinalMonthStart) + " - " + parseDate(secondFinalMonthEnd)}</Typography>
                     <Typography style={{fontSize:'0.8rem', marginLeft: 'auto'}}>{loading ? <Spin/> : formatCurrency(profSecondFinalMonth)}</Typography>
                 </Row>
             </MyCard>
         </Space>
-        : "" }
+        : 
+        <MyCard style={{minWidth:'23.5vw', marginLeft: '3px', marginRight: '3px' }}>
+            <Typography.Title level={5} style={{margin:0}}>There is no data available for this period.</Typography.Title>
+        </MyCard>
+        }
     </>
     )
 }

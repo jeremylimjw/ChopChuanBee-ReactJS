@@ -11,26 +11,16 @@ export default function InventoryReturnsCard(props) {
   const { handleHttpError } = useApp();
   const [mostReturnedProduct, setMostReturnedProduct] = useState();
   const [highestValueLoss, setHighestValueLoss] = useState();
-  const [errorMessage, setErrorMessage] = useState(false);
 
   useEffect(() => {
     fetchData();
     setLoading(false);
-    checkErrorMessage();
   }, [handleHttpError, loading, props.userInput]);
-
-  const checkErrorMessage = () => {
-    if (errorMessage) {
-      message.error("There is no data available for this period.");
-      setErrorMessage(false);
-    }
-  }
 
   const fetchData = async () => {
     await AnalyticsApiHelper.getSupplierReturnedGoodsOrderByQtyDesc(props.startDate, props.endDate)
       .then((results) => {
         if (results.length === 0) {
-          setErrorMessage(true);
           setMostReturnedProduct(null);
         } else {
           setMostReturnedProduct(results[0]);
@@ -41,7 +31,6 @@ export default function InventoryReturnsCard(props) {
       await AnalyticsApiHelper.getSupplierReturnedGoodsOrderByValueDesc(props.startDate, props.endDate)
       .then((results) => {
         if (results.length === 0) {
-          setErrorMessage(true);
           setHighestValueLoss(null);
         } else {
           setHighestValueLoss(results[0]);
@@ -94,7 +83,11 @@ export default function InventoryReturnsCard(props) {
         </MyCard>
       </Space>
     </>
-    : ""  }
+    : 
+    <MyCard style={{minWidth:'23.5vw', marginLeft: '3px', marginRight: '3px' }}>
+        <Typography.Title level={5} style={{margin:0}}>There is no data available for this period.</Typography.Title>
+    </MyCard>
+    }
     </>
   );
 }

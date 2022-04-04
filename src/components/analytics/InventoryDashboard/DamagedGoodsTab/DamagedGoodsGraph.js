@@ -54,6 +54,10 @@ export default function DamagedGoodsGraph(props) {
           stroke: "black",
         },
       },
+      label: {
+        autoHide: true,
+        autoRotate: true,
+      },
     },
     yAxis: {
       title: {
@@ -92,5 +96,5 @@ export default function DamagedGoodsGraph(props) {
     },
   };
 
-  return <Column {...config} />;
+  return <> { data.length === 0 ? "" : <Column {...config} /> } </>;
 }

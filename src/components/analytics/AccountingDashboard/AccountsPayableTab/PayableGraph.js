@@ -12,7 +12,7 @@ export default function PayableGraph() {
         <MyCard style={{marginLeft: '3px', marginRight: '3px'}}>
             <MyToolbar title='10 Outstanding Accounts Payable'>
             </MyToolbar>
-            <Tabs defaultActiveKey='1'>
+            <Tabs defaultActiveKey='1' type="card">
                 <TabPane tab='Invoice Level' key='1'>
                     <APInvoiceChart />
                 </TabPane>

@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Line } from '@ant-design/plots';
 import { AnalyticsApiHelper } from '../../../../api/AnalyticsApiHelper';
 import { useApp } from '../../../../providers/AppProvider';
+import { parseDate } from '../../../../utilities/datetime';
+import MyToolbar from '../../../common/MyToolbar';
+import MyCard from '../../../common/MyCard';
 
 export default function ProfitabilityGraph(props) {
     const [data, setData] = useState([]);
@@ -64,6 +67,10 @@ export default function ProfitabilityGraph(props) {
                     stroke: "black",
                 },
             },
+            label: {
+                autoHide: true,
+                autoRotate: true,
+            },
         },
         yAxis: {
             title: {
@@ -95,5 +102,14 @@ export default function ProfitabilityGraph(props) {
         }
     };
 
-    return <Line {...config} />;
+    return <>
+    {data.length === 0 ? "" :             
+        <>
+            <MyCard style={{marginLeft: '3px', marginRight: '3px'}}>
+            <MyToolbar title={'Profitability Trend From ' + parseDate(props.startDate) + ' to ' + parseDate(props.endDate)}></MyToolbar>
+            <Line {...config} />
+            </MyCard>
+        </> 
+    }
+    </>;
 }

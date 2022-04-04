@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Space, Divider, Row, Spin, Tooltip, message } from 'antd';
+import { Typography, Space, Divider, Row, Spin, Tooltip } from 'antd';
 import MyCard from '../../../common/MyCard';
 import { useApp } from '../../../../providers/AppProvider';
 import { AnalyticsApiHelper } from '../../../../api/AnalyticsApiHelper';
@@ -15,7 +15,6 @@ export default function ContributionCard(props) {
         AnalyticsApiHelper.getProductAnalytics(props.startDate, props.endDate)
           .then((results) => {
             if (results.length === 0) {
-                message.error("There is no data available for this period.");
                 setData(null);
             } else {
                 results.map((x) => {
@@ -31,7 +30,11 @@ export default function ContributionCard(props) {
 
     return (
         <>
-        { data == null ? "" : 
+        { data == null ? 
+            <MyCard style={{minWidth:'23.5vw', marginLeft: '3px', marginRight: '3px' }}>
+                <Typography.Title level={5} style={{margin:0}}>There is no data available for this period.</Typography.Title>
+            </MyCard> 
+        : 
         <>
         <Space direction='horizontal' wrap>
             <MyCard style={{minWidth:'220px', marginLeft: '3px', marginBottom: 0}}>

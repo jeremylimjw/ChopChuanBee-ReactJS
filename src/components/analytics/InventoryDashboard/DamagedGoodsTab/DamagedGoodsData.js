@@ -47,7 +47,7 @@ export default function DamagedGoodsData(props) {
 
         <MyCard style={{marginLeft: '3px', marginRight: '3px'}}>
             <MyToolbar title={'Damaged Goods from ' + parseDate(startDate) + ' to ' + parseDate(endDate)}></MyToolbar>
-            <Tabs defaultActiveKey='1'>
+            <Tabs defaultActiveKey='1' type="card">
                 <TabPane tab='Graph' key='1'>
                     <DamagedGoodsGraph userInput={userInput} setUserInput={setUserInput} startDate={startDate} endDate={endDate}/>
                 </TabPane>

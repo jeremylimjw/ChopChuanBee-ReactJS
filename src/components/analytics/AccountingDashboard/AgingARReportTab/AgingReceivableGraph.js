@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Typography } from 'antd';
 import { Column } from "@ant-design/plots";
-import MyCard from "../../../common/MyCard";
-import MyToolbar from "../../../common/MyToolbar";
 import { useApp } from "../../../../providers/AppProvider";
 import { AnalyticsApiHelper } from "../../../../api/AnalyticsApiHelper";
-import { parseDateTime } from '../../../../utilities/datetime';
 
-export default function AgingReceivableGraph(props) {
+export default function AgingReceivableGraph() {
   const { handleHttpError } = useApp();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -21,34 +17,33 @@ export default function AgingReceivableGraph(props) {
     const fetchData = async () => {
       await AnalyticsApiHelper.getAgedReceivable()
         .then((results) => {
-          console.log(results);
           results.forEach((x) => {
             const tempLessThan30 = {
               customer_id: x.customer_id,
               company_name: x.company_name,
               accounts_receivable: parseFloat(x.over_less_than_30),
-              aged_duration: "Less Than 30 Days",
+              aged_duration: "Less than 30 Days",
             };
             lessThan30Days.push(tempLessThan30);
             const tempOver30 = {
               customer_id: x.customer_id,
               company_name: x.company_name,
               accounts_receivable: parseFloat(x.overdue_31_to_60_days),
-              aged_duration: "Over 30 Days",
+              aged_duration: "Over 30 to 60 Days",
             };
             over30Days.push(tempOver30);
             const tempOver60 = {
               customer_id: x.customer_id,
               company_name: x.company_name,
               accounts_receivable: parseFloat(x.overdue_61_to_90_days),
-              aged_duration: "Over 60 Days",
+              aged_duration: "Over 60 to 90 Days",
             };
             over60Days.push(tempOver60);
             const tempOver90 = {
               customer_id: x.customer_id,
               company_name: x.company_name,
               accounts_receivable: parseFloat(x.overdue_more_than_91_days),
-              aged_duration: "Over 90 Days",
+              aged_duration: "More than 90 Days",
             };
             over90Days.push(tempOver90);
           });
@@ -69,12 +64,16 @@ export default function AgingReceivableGraph(props) {
     seriesField: "aged_duration",
     xAxis: {
       title: {
-        text: "Customer Name",
+        text: "Customer Company Name",
         style: {
           fill: "black",
           fillOpacity: 0.5,
           stroke: "black",
         },
+      },
+      label: {
+        autoHide: true,
+        autoRotate: true,
       },
     },
     yAxis: {
@@ -112,13 +111,5 @@ export default function AgingReceivableGraph(props) {
     },
   };
 
-  return (
-    <>
-      <Typography style={{fontSize:'0.8rem', marginBottom: 0, fontStyle:'italic'}}>{"Last Updated: " + parseDateTime(props.currTime)}</Typography>
-      <MyCard style={{ marginLeft: "3px", marginRight: "3px" }}>
-        <MyToolbar title="Aging Accounts Receivable"></MyToolbar>
-        <Column {...config} />
-      </MyCard>
-    </>
-  );
+  return <> { data.length === 0 ? "" : <Column {...config} /> } </>;
 }

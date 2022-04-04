@@ -39,6 +39,8 @@ export default function ReceivableCard(props) {
     <>
         <Typography style={{fontSize:'0.8rem', marginBottom: 0, fontStyle:'italic'}}>{"Last Updated: " + parseDateTime(props.currTime)}</Typography>
 
+        { highestInvoiceARAmt || highestCustomerARAmt ?
+
         <Space direction='horizontal' wrap>
             <MyCard style={{minWidth:'250px', marginLeft: '3px', marginBottom: 0}}>
                 <Typography>HIGHEST OUTSTANDING INVOICE AMOUNT</Typography>
@@ -70,6 +72,14 @@ export default function ReceivableCard(props) {
                 </Row>
             </MyCard>
         </Space>
+        
+        :
+
+        <MyCard style={{minWidth:'23.5vw', marginLeft: '3px', marginRight: '3px' }}>
+            <Typography.Title level={5} style={{margin:0}}>There is no data available for this period.</Typography.Title>
+        </MyCard>
+
+        }
     </>
     )
 }

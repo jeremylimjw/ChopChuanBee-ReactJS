@@ -5,6 +5,7 @@ import moment from "moment";
 import InventoryReturnsData from "./InventoryReturnsTab/InventoryReturnsData";
 import SalesReturnsData from "./SalesReturnsTab/SalesReturnsData";
 import DamagedGoodsData from "./DamagedGoodsTab/DamagedGoodsData";
+import '../analytics-style.css';
 
 export default function InventoryDashboard() {
   const { TabPane } = Tabs;

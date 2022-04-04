@@ -4,6 +4,7 @@ import moment from 'moment';
 import MyLayout from '../../common/MyLayout';
 import ProductAnalyticsData from './ProductAnalyticsTab/ProductAnalyticsData';
 import ContributionData from './ContributionTab/ContributionData';
+import '../analytics-style.css';
 
 export default function ProductDashboard() {
     const { TabPane } = Tabs;

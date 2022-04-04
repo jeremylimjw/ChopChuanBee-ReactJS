@@ -47,7 +47,7 @@ export default function SalesReturnsData(props) {
 
         <MyCard style={{marginLeft: '3px', marginRight: '3px'}}>
             <MyToolbar title={'Sales Returns from ' + parseDate(startDate) + ' to ' + parseDate(endDate)}></MyToolbar>
-            <Tabs defaultActiveKey='1'>
+            <Tabs defaultActiveKey='1' type="card">
                 <TabPane tab='Graph' key='1'>
                     <SalesReturnsGraph userInput={userInput} setUserInput={setUserInput} startDate={startDate} endDate={endDate}/>
                 </TabPane>

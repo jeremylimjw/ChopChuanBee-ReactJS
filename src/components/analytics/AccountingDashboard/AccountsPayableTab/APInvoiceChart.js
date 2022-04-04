@@ -45,7 +45,7 @@ export default function APInvoiceChart() {
             },
             label: {
                 autoHide: true,
-                autoRotate: false,
+                autoRotate: true,
             },
         },
         yAxis: {
@@ -85,5 +85,5 @@ export default function APInvoiceChart() {
         },
     };
 
-    return <Column {...config} />;
+    return <> { data.length === 0 ? "" : <Column {...config} /> } </>;
 }

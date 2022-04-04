@@ -7,9 +7,9 @@ import PayableCard from './AccountsPayableTab/PayableCard';
 import PayableGraph from './AccountsPayableTab/PayableGraph';
 import ReceivableCard from './AccountsReceivableTab/ReceivableCard';
 import ReceivableGraph from './AccountsReceivableTab/ReceivableGraph';
-import AgingReceivableGraph from './AgingARReportTab/AgingReceivableGraph';
-import CustomerAnalyticsCard from './CustomerAnalyticsTab/CustomerAnalyticsCard';
+import AgingReceivableData from './AgingARReportTab/AgingReceivableData';
 import CustomerAnalyticsData from './CustomerAnalyticsTab/CustomerAnalyticsData';
+import '../analytics-style.css';
 
 export default function AccountingDashboard() {
     const { TabPane } = Tabs;
@@ -34,7 +34,7 @@ export default function AccountingDashboard() {
                 </TabPane>
 
                 <TabPane tab="Aging Accounts Receivable" key="4">
-                    <AgingReceivableGraph />
+                    <AgingReceivableData currTime={currTime} />
                 </TabPane>
 
                 <TabPane tab="Customer Analytics" key="5">

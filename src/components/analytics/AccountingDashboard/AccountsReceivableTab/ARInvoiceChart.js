@@ -49,7 +49,7 @@ export default function ARCustomerChart() {
             },
             label: {
                 autoHide: true,
-                autoRotate: false,
+                autoRotate: true,
             },
         },
         yAxis: {
@@ -86,5 +86,5 @@ export default function ARCustomerChart() {
         },
     };
 
-    return <Column {...config} />;
+    return <> { data.length === 0 ? "" : <Column {...config} /> } </>;
 }

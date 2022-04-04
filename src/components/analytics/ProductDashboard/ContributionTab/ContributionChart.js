@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Column } from "@ant-design/plots";
 import { useApp } from "../../../../providers/AppProvider";
 import { AnalyticsApiHelper } from "../../../../api/AnalyticsApiHelper";
+import MyCard from '../../../common/MyCard';
+import MyToolbar from '../../../common/MyToolbar';
+import { parseDate } from "../../../../utilities/datetime";
 
 export default function ContributionChart(props) {
   const { handleHttpError } = useApp();
@@ -44,7 +47,7 @@ export default function ContributionChart(props) {
       },
       label: {
         autoHide: true,
-        autoRotate: false,
+        autoRotate: true,
       },
     },
     yAxis: {
@@ -87,5 +90,10 @@ export default function ContributionChart(props) {
     },
   };
 
-  return <Column {...config} />
+  return <> { data.length === 0 ? "" : 
+  <MyCard style={{marginLeft: '3px', marginRight: '3px'}}>
+    <MyToolbar title={'Product Contribution Margin From ' + parseDate(props.startDate) + ' to ' + parseDate(props.endDate)}></MyToolbar>
+    <Column {...config} /> 
+  </MyCard>
+  } </>;
 }

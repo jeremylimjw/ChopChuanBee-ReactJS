@@ -42,11 +42,7 @@ export default function ContributionData(props) {
         </MyCard>
 
         <ContributionCard userInput={userInput} startDate={startDate} endDate={endDate} />
-
-        <MyCard style={{marginLeft: '3px', marginRight: '3px'}}>
-            <MyToolbar title={'Product Contribution Margin From ' + parseDate(startDate) + ' to ' + parseDate(endDate)}></MyToolbar>
-            <ContributionChart userInput={userInput} setUserInput={setUserInput} startDate={startDate} endDate={endDate}/>
-        </MyCard>
+        <ContributionChart userInput={userInput} setUserInput={setUserInput} startDate={startDate} endDate={endDate}/>
         </>
     )
 }

@@ -47,7 +47,7 @@ export default function InventoryReturnsData(props) {
 
         <MyCard style={{marginLeft: '3px', marginRight: '3px'}}>
             <MyToolbar title={'Inventory Returns From ' + parseDate(startDate) + ' to ' + parseDate(endDate)}></MyToolbar>
-            <Tabs defaultActiveKey='1'>
+            <Tabs defaultActiveKey='1' type="card">
                 <TabPane tab='Graph' key='1'>
                     <InventoryReturnsGraph userInput={userInput} setUserInput={setUserInput} startDate={startDate} endDate={endDate}/>
                 </TabPane>

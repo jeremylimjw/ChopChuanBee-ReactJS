@@ -4,6 +4,7 @@ import MyCard from "../../common/MyCard";
 import { useApp } from '../../../providers/AppProvider';
 import { AnalyticsApiHelper } from '../../../api/AnalyticsApiHelper';
 import { formatCurrency } from '../../../utilities/currency';
+import { parseDate } from '../../../utilities/datetime';
 
 export default function TodayProfitability(props) {
     const [loading, setLoading] = useState(true);
@@ -56,31 +57,31 @@ export default function TodayProfitability(props) {
     return <>
     { revToday || cogsToday || profToday ?
     <div style={{display: "flex", flexDirection: "row"}} >
-        <MyCard style={{ minWidth: "16vw" }} >
+        <MyCard style={{ minWidth: "16vw", marginBottom: 0 }} >
+            <Typography>DATE</Typography>
+            <Typography.Title level={2} style={{ margin: 0 }}>
+            {parseDate(props.currDate)}
+            </Typography.Title>
+        </MyCard>
+        
+        <MyCard style={{ minWidth: "16vw", marginBottom: 0 }} >
             <Typography>REVENUE</Typography>
             <Typography.Title level={2} style={{ margin: 0 }}>
             {loading ? <Spin/> : formatCurrency(revToday)}
             </Typography.Title>
         </MyCard>
 
-        <MyCard style={{ minWidth: "16vw" }} >
+        <MyCard style={{ minWidth: "16vw", marginBottom: 0 }} >
             <Typography>COGS</Typography>
             <Typography.Title level={2} style={{ margin: 0 }}>
             {loading ? <Spin/> : formatCurrency(cogsToday)}
             </Typography.Title>
         </MyCard>
 
-        <MyCard style={{ minWidth: "16vw" }} >
+        <MyCard style={{ minWidth: "16vw", marginBottom: 0 }} >
             <Typography>PROFITS</Typography>
             <Typography.Title level={2} style={{ margin: 0 }}>
             {loading ? <Spin/> : formatCurrency(profToday)}
-            </Typography.Title>
-        </MyCard>
-
-        <MyCard style={{ minWidth: "16vw" }} >
-            <Typography>PRODUCTS SOLD</Typography>
-            <Typography.Title level={2} style={{ margin: 0 }}>
-            250
             </Typography.Title>
         </MyCard>
     </div>

@@ -12,7 +12,7 @@ export default function ReceivableGraph() {
         <MyCard style={{marginLeft: '3px', marginRight: '3px'}}>
             <MyToolbar title='10 Outstanding Accounts Receivable'>
             </MyToolbar>
-            <Tabs defaultActiveKey='1'>
+            <Tabs defaultActiveKey='1' type="card">
                 <TabPane tab='Invoice Level' key='1'>
                     <ARInvoiceChart />
                 </TabPane>

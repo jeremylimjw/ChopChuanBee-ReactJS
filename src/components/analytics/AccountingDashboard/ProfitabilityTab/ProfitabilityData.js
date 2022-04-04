@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import { Tabs, Form, Button, DatePicker } from 'antd';
+import { Form, Button, DatePicker } from 'antd';
 import MyCard from '../../../common/MyCard';
-import MyToolbar from '../../../common/MyToolbar';
 import moment from 'moment';
-import { parseDate } from '../../../../utilities/datetime';
 import { REQUIRED } from "../../../../utilities/form";
 import ProfitabilityCard from './ProfitabilityCard';
 import ProfitabilityGraph from './ProfitabilityGraph';
@@ -41,12 +39,8 @@ export default function ProfitabilityData(props) {
             </Form>
         </MyCard>
 
-        <ProfitabilityCard userInput={userInput} startDate={startDate} endDate={endDate} />
-
-        <MyCard style={{marginLeft: '3px', marginRight: '3px'}}>
-            <MyToolbar title={'Profitability Trend From ' + parseDate(startDate) + ' to ' + parseDate(endDate)}></MyToolbar>
-            <ProfitabilityGraph userInput={userInput} setUserInput={setUserInput} startDate={startDate} endDate={endDate}/>
-        </MyCard>
+        <ProfitabilityCard userInput={userInput} startDate={startDate} endDate={endDate} />        
+        <ProfitabilityGraph userInput={userInput} setUserInput={setUserInput} startDate={startDate} endDate={endDate}/>
         </>
     )
 }
