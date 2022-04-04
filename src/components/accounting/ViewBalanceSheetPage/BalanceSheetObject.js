@@ -289,11 +289,11 @@ export default function BalanceSheetObject({ BalanceSheet, setBalanceSheet }) {
                                                 <Button type="primary" onClick={onFinish} icon={<SaveOutlined />} loading={loading} style={{ width: 85 }}>Save</Button>
                                                 :
                                                 <>
-                                                    <Popconfirm title="The balance sheet is not balanced. Continue exporting?" placement='leftTop' visible={showPopConfirmPDF} onConfirm={() => handleExport('PDF')} disabled={loading}>
+                                                    <Popconfirm title="The balance sheet is not balanced. Continue exporting?" placement='leftTop' visible={showPopConfirmPDF} onConfirm={() => handleExport('PDF')} onCancel={() => setShowPopConfirmPDF(false)} disabled={loading}>
                                                         <Button onClick={checkPopConfirmPDFVisibility} icon={<PrinterOutlined />} loading={loading} style={{ marginRight: '1rem' }}>Export as PDF</Button>
                                                     </Popconfirm>
 
-                                                    <Popconfirm title="The balance sheet is not balanced. Continue exporting?" placement='leftTop' visible={showPopConfirmExcel} onConfirm={() => handleExport('EXCEL')} disabled={loading}>
+                                                    <Popconfirm title="The balance sheet is not balanced. Continue exporting?" placement='leftTop' visible={showPopConfirmExcel} onConfirm={() => handleExport('EXCEL')} onCancel={() => setShowPopConfirmExcel(false)} disabled={loading}>
                                                         <Button onClick={checkPopConfirmExcelVisibility} icon={<FileExcelOutlined />} loading={loading} style={{ marginRight: '1rem' }}>Export as Excel</Button>
                                                     </Popconfirm>
 

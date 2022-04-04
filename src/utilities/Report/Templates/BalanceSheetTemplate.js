@@ -96,7 +96,7 @@ const formatAssets = (data) => {
   let total = {
     totalAssets: {
       text: 'Total Assets',
-      value: data.total_assets
+      value: data.totalAssets
     },
     total_current: {
       text: 'Total Current Assets',
