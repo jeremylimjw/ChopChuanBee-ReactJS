@@ -103,7 +103,7 @@ export default function IncomeStatementObject({ income, setIncome }) {
             arr.push(['Revenue', '$'])
             arr.push(['Revenue', data.revenue])
             arr.push(['Less:COGS', data.less_cost_of_goods_sold])
-            arr.push(['Less: Sales', data.less_customer_sales_return])
+            arr.push(['Less: Customer Sales Return', data.less_customer_sales_return])
             arr.push(['Net Revenue', data.totalRevenue])
             arr.push([' ', ' '])
             arr.push(['Expenses', '$'])

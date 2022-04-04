@@ -37,7 +37,7 @@ const formatDelInstData = (data) => {
 
 const constructRoutesTable = (data) => {
   const widths = ['3%', '*', '*', '*', '*', '20%', '8%', '15%']
-  const routesTableHeaders = ['No', 'Company Name', 'Contact Name', 'Contact No.',
+  const routesTableHeaders = ['ID', 'Company Name', 'Contact Name', 'Contact No.',
     'Sales Order No.', 'Address', 'Postal Code', 'Remarks']
     .map((val) => PDFTools.formatText(val, 'tableHeader'))
   let itinerary = []
@@ -45,7 +45,7 @@ const constructRoutesTable = (data) => {
     data.delivery_orders.sort((a, b) => a.sequence - b.sequence)
     data.delivery_orders.map((order) => {
       let arr = []
-      arr.push(PDFTools.formatText(order.sequence, 'tableContent'))
+      arr.push(PDFTools.formatText(order.sequence + 1, 'tableContent'))
       arr.push(PDFTools.formatText(order?.sales_order.customer.company_name, 'tableContent'))
       arr.push(PDFTools.formatText(order?.sales_order.customer.p1_name, 'tableContent'))
       arr.push(PDFTools.formatText(order?.sales_order.customer.p1_phone_number, 'tableContent'))

@@ -13,7 +13,7 @@ const formatRevenueData = (data) => {
       value: data.less_cost_of_goods_sold
     },
     sales: {
-      text: 'Less: Customer Sales',
+      text: 'Less: Customer Sales Return',
       value: data.less_customer_sales_return
     },
   }
