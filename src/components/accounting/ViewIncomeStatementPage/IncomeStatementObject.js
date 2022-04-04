@@ -89,7 +89,6 @@ export default function IncomeStatementObject({ income, setIncome }) {
 
         incomeStatementPDF.profit = formatCurrency(profit);
 
-        console.log(incomeStatementPDF);
     }
 
     const exportReport = (action) => {

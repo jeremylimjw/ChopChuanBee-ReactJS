@@ -83,7 +83,6 @@ const constructTable = (data) => {
 }
 
 export const statementOfAccountTemplate = (data) => {
-  console.log(data)
   let templateHeader = formatTemplateHeader(data)
   let companyData = formatCompanyData(data)
   let customerData = formatCustomerData(data)

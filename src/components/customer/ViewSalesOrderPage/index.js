@@ -206,6 +206,7 @@ export default function ViewSalesOrderPage() {
         break
       case 'STICKER':
         const deliveryOrder = await fetchDeliveryOrders()
+        console.log(deliveryOrder)
         if (deliveryOrder == null) {
           message.error('Delivery order not found for this order!');
           return;
