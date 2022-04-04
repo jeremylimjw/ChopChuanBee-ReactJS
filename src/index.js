@@ -26,7 +26,7 @@ import ViewSupplierPage from './components/supplier/ViewSupplierPage';
 import ManageCustomersPage from './components/customer/ManageCustomersPage';
 import ViewCustomerPage from './components/customer/ViewCustomerPage';
 import TodayDashboard from './components/analytics/TodayDashboard';
-import PaymentsDashboard from './components/analytics/AccountingDashboard';
+import PaymentsDashboard from './components/analytics/PaymentsDashboard';
 import ProfitabilityDashboard from './components/analytics/ProfitabilityDashboard';
 import InventoryDashboard from './components/analytics/InventoryDashboard';
 import ProductDashboard from './components/analytics/ProductDashboard';
