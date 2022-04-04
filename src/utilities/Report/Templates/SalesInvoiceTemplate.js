@@ -122,7 +122,7 @@ export const salesInvoiceTemplate = (data) => {
       SOTable,
       { text: '', margin: [0, 5] },
       PDFTools.generateRemarkBox(data?.remarks, 'formText', [515]),
-      PDFTools.formatText(`If you have any questions about this purchase order, please contact ${companyData.contactNum.value}`, 'footerText')
+      PDFTools.formatText(`If you have any questions about this sales order, please contact ${companyData.contactNum.value}`, 'footerText')
     ],
     styles: {
       header: {

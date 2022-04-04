@@ -66,7 +66,7 @@ const formatAssets = (data) => {
       value: data.less_accumulated_depreciation_equipments
     },
     other_non_ca_1: {
-      text: 'Other Non-current Assets (1)',
+      text: 'Other Non-current Asset (1)',
       value: data.other_non_current_asset_1
     },
     other_non_ca_2: {
