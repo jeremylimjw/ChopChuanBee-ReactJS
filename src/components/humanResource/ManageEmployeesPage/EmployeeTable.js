@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { SearchOutlined } from '@ant-design/icons/lib/icons';
+import { SearchOutlined, FileExcelOutlined } from '@ant-design/icons/lib/icons';
 import { Button, Input, Table, Form, Select } from 'antd';
 import { Link } from 'react-router-dom';
 import debounce from 'lodash.debounce';
@@ -9,10 +9,12 @@ import MyToolbar from '../../common/MyToolbar';
 import { sortByNumber, sortByString } from '../../../utilities/sorters';
 import { getRoleTag, Role } from '../../../enums/Role';
 import EmailLink from '../../../utilities/EmailLink';
+import { View } from '../../../enums/View';
+import { generateCSV } from '../../../utilities/Report/ExcelExporter';
 
 const EmployeeTable = () => {
 
-  const { handleHttpError } = useApp();
+  const { handleHttpError, hasWriteAccessTo } = useApp();
   const [loading, setLoading] = useState();
   const [employees, setEmployees] = useState([]);
   const [form] = Form.useForm();
@@ -21,45 +23,64 @@ const EmployeeTable = () => {
     setLoading(true);
     EmployeeApiHelper.get({ status: true }) // Status = true to filter out deactivated employees
       .then(results => {
-          setEmployees(results);
-          setLoading(false);
+        setEmployees(results);
+        setLoading(false);
       })
       .catch(handleHttpError)
       .catch(() => setLoading(false))
   }, [handleHttpError, setLoading])
 
   function onValuesChange(_, form) {
-      EmployeeApiHelper.get({ ...form, status: true }) // Status = true to filter out deactivated employees
-          .then(results => {
-              setEmployees(results);
-              setLoading(false);
-          })
-          .catch(handleHttpError)
-          .catch(() => setLoading(false))
+    EmployeeApiHelper.get({ ...form, status: true }) // Status = true to filter out deactivated employees
+      .then(results => {
+        setEmployees(results);
+        setLoading(false);
+      })
+      .catch(handleHttpError)
+      .catch(() => setLoading(false))
   }
 
   function resetForm() {
-      form.resetFields();
-      onValuesChange(null, form.getFieldsValue());
+    form.resetFields();
+    onValuesChange(null, form.getFieldsValue());
+  }
+
+  const handleExcelExport = () => {
+    const tableHeaders = ['Name', 'Role', 'Contact Number', 'NOK Name', 'NOK Number', 'Email']
+    let excelData = []
+    excelData = employees.map((record) => {
+      return [
+        record.name,
+        getRoleTag(record.role_id).props.children || '-',
+        record.contact_number || '-',
+        record.nok_name || '-',
+        record.nok_number || '-',
+        record.email || '-'
+      ]
+    })
+    generateCSV(excelData, tableHeaders, 'Employees List')
   }
 
   return (
     <>
       <MyToolbar title='Employees'>
         <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
-            <Form.Item name="name">
-                <Input placeholder='Search Name' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
-            </Form.Item>
-            <Form.Item name="role_id">
-              <Select style={{ width: 140 }} placeholder="Filter by Role">
-                <Select.Option value={null}>All</Select.Option>
-                {Object.keys(Role).map((key, idx) => <Select.Option key={idx} value={Role[key].id}>{Role[key].name}</Select.Option>)}
-              </Select>
-            </Form.Item>
-            <Button onClick={resetForm}>Reset</Button>
+          <Form.Item name="name">
+            <Input placeholder='Search Name' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
+          </Form.Item>
+          <Form.Item name="role_id">
+            <Select style={{ width: 140 }} placeholder="Filter by Role">
+              <Select.Option value={null}>All</Select.Option>
+              {Object.keys(Role).map((key, idx) => <Select.Option key={idx} value={Role[key].id}>{Role[key].name}</Select.Option>)}
+            </Select>
+          </Form.Item>
+          <Button onClick={resetForm}>Reset</Button>
         </Form>
       </MyToolbar>
       <Table dataSource={employees} columns={tableColumns} loading={loading} rowKey="id" />
+      {hasWriteAccessTo(View.HR.name) &&
+        <Button type="primary" icon={<FileExcelOutlined />} onClick={() => handleExcelExport()}>Export as Excel</Button>
+      }
     </>
   );
 }
@@ -76,14 +97,14 @@ const tableColumns = [
     sorter: (a, b) => sortByString(a.name, b.name),
   },
   {
-      title: 'Role',
-      dataIndex: 'role_id',
-      key: 'role_id',
-      width: 100,
-      align: 'center',
-      ellipsis: true,
-      render: (role_id) => getRoleTag(role_id),
-      sorter: (a, b) => sortByNumber(a.role_id, b.role_id),
+    title: 'Role',
+    dataIndex: 'role_id',
+    key: 'role_id',
+    width: 100,
+    align: 'center',
+    ellipsis: true,
+    render: (role_id) => getRoleTag(role_id),
+    sorter: (a, b) => sortByNumber(a.role_id, b.role_id),
   },
   {
     title: 'Contact Number',

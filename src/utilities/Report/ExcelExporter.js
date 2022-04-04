@@ -6,7 +6,12 @@ export const generateCSV = (data, headers, fileName) => {
   }
   data.forEach((row) => {
     row.forEach((str) => {
-      let newStr = str.replace(',', ' ')
+      let newStr
+      if (typeof str === 'string') {
+        newStr = str.replace(',', ' ')
+      } else {
+        newStr = str.toString().replace(',', ' ')
+      }
       csvFile += newStr + ','
     })
     csvFile += '\r\n'
