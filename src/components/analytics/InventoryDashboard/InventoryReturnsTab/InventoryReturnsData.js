@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Tabs, Form, Button, DatePicker } from 'antd';
+import { Tabs, Form, Button, DatePicker, Typography } from 'antd';
 import MyCard from '../../../common/MyCard';
 import MyToolbar from '../../../common/MyToolbar';
 import moment from 'moment';
@@ -32,7 +32,8 @@ export default function InventoryReturnsData(props) {
     return (
         <>
         <MyCard style={{margin: '3px'}}>
-            <Form form={searchInputForm} layout='inline' onFinish={handleFinish}>
+            <Typography>The Inventory Returns chart displays <span style={{color:"#1890ff", fontWeight:"bold"}}>a list of products that have been returned to our suppliers</span>, along with its corresponding quantity and value, during the period below.</Typography>
+            <Form form={searchInputForm} layout='inline' onFinish={handleFinish} style={{marginTop: "20px"}}>
                 <Form.Item name="date" rules={[REQUIRED]}>
                     <DatePicker.RangePicker defaultValue={[moment(props.oneYearAgo, dateFormat), moment(props.currDate, dateFormat)]} />
                 </Form.Item>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Tabs, Form, Button, Input, DatePicker, Space, Select } from 'antd';
+import { Tabs, Form, Button, Input, DatePicker, Space, Select, Typography } from 'antd';
 import MyCard from '../../../common/MyCard';
 import MyToolbar from '../../../common/MyToolbar';
 import CustomerAnalyticsTable from './CustomerAnalyticsTable';
@@ -86,8 +86,8 @@ export default function CustomerAnalyticsData() {
         <>
 
             <MyCard style={{ margin: '3px' }}>
-                <MyToolbar title='Customer Analytics' />
-                <Form form={searchInputForm} layout='inline' onFinish={handleFinish}>
+            <Typography>The Customer Analytics chart displays the amount of <span style={{color:"#1890ff", fontWeight:"bold"}}>Revenue, Cost of Goods Sold (COGS) and Profits earned for each sales invoice belonging to a customer</span> during the period below.</Typography>
+                <Form form={searchInputForm} layout='inline' onFinish={handleFinish} style={{marginTop: "20px"}}>
                     <Form.Item name="id">
                         <Select
                             showSearch={true}

@@ -1,4 +1,4 @@
-import { Tabs, Tooltip } from 'antd';
+import { Tabs } from 'antd';
 import React from 'react';
 import moment from 'moment';
 import MyLayout from '../../common/MyLayout';
@@ -14,11 +14,12 @@ export default function ProductDashboard() {
     return (
         <MyLayout bannerTitle='Product Dashboard'>
             <Tabs defaultActiveKey="1" type="card" style={{margin:'24px'}}>
-                <TabPane tab={<Tooltip title="Contribution Margin = Contribution Value / Average Selling Price * 100"><div>Contribution Margin</div></Tooltip>} key="1">
-                    <ContributionData currDate={currDate} oneYearAgo={oneYearAgo} />
-                </TabPane>
-                <TabPane tab="Product Analytics" key="2">
+                <TabPane tab="Product Analytics" key="1">
                     <ProductAnalyticsData currDate={currDate} oneYearAgo={oneYearAgo} />
+                </TabPane>
+                
+                <TabPane tab="Contribution Margin" key="2">
+                    <ContributionData currDate={currDate} oneYearAgo={oneYearAgo} />
                 </TabPane>
             </Tabs>
         </MyLayout>

@@ -77,5 +77,5 @@ export default function ARCustomerChart() {
         },
     };
 
-    return <> { data.length === 0 ? "" : <Column {...config} /> } </>;
+    return <> { data.length === 0 ? "" : <Column {...config} style={{marginTop:"50px"}}/> } </>;
 }

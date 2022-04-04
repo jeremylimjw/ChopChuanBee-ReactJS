@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import { Form, Button, DatePicker, Space } from 'antd';
+import { Form, Button, DatePicker, Typography } from 'antd';
 import MyCard from '../../../common/MyCard';
-import MyToolbar from '../../../common/MyToolbar';
 import moment from 'moment';
-import { parseDate } from '../../../../utilities/datetime';
 import { REQUIRED } from "../../../../utilities/form";
 import ContributionCard from './ContributionCard';
 import ContributionChart from './ContributionChart';
@@ -30,7 +28,8 @@ export default function ContributionData(props) {
     return (
         <>
         <MyCard style={{margin: '3px'}}>
-            <Form form={searchInputForm} layout='inline' onFinish={handleFinish}>
+        <Typography>The Contribution Margin chart displays <span style={{color:"#1890ff", fontWeight:"bold"}}>the contribution margin for each product</span> calculated by: <span style={{fontFamily:"monospace", backgroundColor:"lightgrey", borderRadius:"5px", padding:"0 5px"}}>Contribution Margin = Contribution Value / Average Selling Price * 100</span> during the period below.</Typography>
+            <Form form={searchInputForm} layout='inline' onFinish={handleFinish} style={{marginTop:"20px"}}>
                 <Form.Item name="date" rules={[REQUIRED]}>
                     <DatePicker.RangePicker defaultValue={[moment(props.oneYearAgo, dateFormat), moment(props.currDate, dateFormat)]} />
                 </Form.Item>

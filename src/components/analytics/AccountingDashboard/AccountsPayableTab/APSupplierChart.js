@@ -78,5 +78,5 @@ export default function APSupplierChart() {
         },
     };
 
-    return <> { data.length === 0 ? "" : <Column {...config} /> } </>;
+    return <> { data.length === 0 ? "" : <Column {...config} style={{marginTop:"50px"}} /> } </>;
 }

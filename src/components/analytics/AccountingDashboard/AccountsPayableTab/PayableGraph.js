@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tabs } from 'antd';
+import { Tabs, Typography } from 'antd';
 import MyCard from '../../../common/MyCard';
 import MyToolbar from '../../../common/MyToolbar';
 import APInvoiceChart from './APInvoiceChart';
@@ -14,10 +14,12 @@ export default function PayableGraph() {
             </MyToolbar>
             <Tabs defaultActiveKey='1' type="card">
                 <TabPane tab='Invoice Level' key='1'>
+                    <Typography>The Accounts Payable Insights (Invoice Level) chart below displays the <span style={{color:"#1890ff", fontWeight:"bold"}}>Top 10 supplier invoices with the highest value of outstanding accounts payable</span>.</Typography>
                     <APInvoiceChart />
                 </TabPane>
                 <TabPane tab='Supplier Level' key='2'>
-                    <APSupplierChart />
+                <Typography>The Accounts Payable Insights (Supplier Level) chart below displays the <span style={{color:"#1890ff", fontWeight:"bold"}}>Top 10 suppliers with the highest value of outstanding accounts payable</span>.</Typography>
+                <APSupplierChart />
                 </TabPane>
             </Tabs>
         </MyCard>

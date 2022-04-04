@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import { Form, Button, DatePicker } from 'antd';
+import { Form, Button, DatePicker, Typography } from 'antd';
 import MyCard from '../../../common/MyCard';
 import moment from 'moment';
 import { REQUIRED } from "../../../../utilities/form";
-import ProfitabilityCard from './ProfitabilityCard';
-import ProfitabilityGraph from './ProfitabilityGraph';
 
-export default function ProfitabilityData(props) {
+export default function CashFlowData(props) {
     const [searchInputForm] = Form.useForm();
     const [startDate, setStartDate] = useState(props.oneYearAgo);
     const [endDate, setEndDate] = useState(props.currTime);
@@ -28,7 +26,8 @@ export default function ProfitabilityData(props) {
     return (
         <>
         <MyCard style={{margin: '3px'}}>
-            <Form form={searchInputForm} layout='inline' onFinish={handleFinish}>
+            <Typography>The Cash Flow chart displays the monthly trends for <span style={{color:"#1890ff", fontWeight:"bold"}}>Cash Inflow, Cash Outflow and Net Cash Flow</span> during the period below. All the figures account for Customer Returns and Supplier Returns. </Typography>
+            <Form form={searchInputForm} layout='inline' onFinish={handleFinish} style={{marginTop: "20px"}}>
                 <Form.Item name="date" rules={[REQUIRED]}>
                     <DatePicker.RangePicker defaultValue={[moment(props.oneYearAgo, dateFormat), moment(props.currTime, dateFormat)]} />
                 </Form.Item>
@@ -39,8 +38,8 @@ export default function ProfitabilityData(props) {
             </Form>
         </MyCard>
 
-        <ProfitabilityCard userInput={userInput} startDate={startDate} endDate={endDate} />        
-        <ProfitabilityGraph userInput={userInput} setUserInput={setUserInput} startDate={startDate} endDate={endDate}/>
+        {/* <ProfitabilityCard userInput={userInput} startDate={startDate} endDate={endDate} />         */}
+        {/* <ProfitabilityGraph userInput={userInput} setUserInput={setUserInput} startDate={startDate} endDate={endDate}/> */}
         </>
     )
 }
