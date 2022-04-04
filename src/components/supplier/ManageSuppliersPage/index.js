@@ -14,6 +14,7 @@ import { sortByDate, sortByNumber, sortByString } from "../../../utilities/sorte
 import { getActiveTag } from "../../../enums/ActivationStatus";
 import MyToolbar from "../../common/MyToolbar";
 import { View } from "../../../enums/View";
+import EmailLink from "../../../utilities/EmailLink";
 
 const breadcrumbs = [
   { url: "/supplier/suppliers", name: "Supplier" },
@@ -30,7 +31,7 @@ export default function ManageSuppliersPage() {
 
   useEffect(() => {
     setLoading(true);
-    SupplierAPIHelper.getAll()
+    SupplierAPIHelper.get()
       .then(results => {
         setSuppliers(results);
         setLoading(false);
@@ -133,16 +134,18 @@ const columns = [
     dataIndex: 'company_email',
     key: 'company_email',
     ellipsis: true,
-    render: (company_email) => company_email || '-',
+    render: (company_email) => <EmailLink email={company_email} />,
     sorter: (a, b) => sortByString(a.company_email, b.company_email),
   },
   {
     title: 'AP',
-    key: 'AP',
-    width: 80,
+    dataIndex: 'ap',
+    key: 'ap',
+    width: 100,
+    align: 'center',
     ellipsis: true,
-    render: (AR) => '-',
-    sorter: (a, b) => sortByString(a.company_email, b.company_email),
+    render: (ap) => `$${(+ap).toFixed(2)}`,
+    sorter: (a, b) => sortByNumber(a.ap, b.ap),
   },
   {
     title: 'Status',

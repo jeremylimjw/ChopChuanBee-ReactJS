@@ -7,8 +7,8 @@ import { View } from '../../../enums/View';
 import { useApp } from '../../../providers/AppProvider';
 import { sortByString } from '../../../utilities/sorters';
 import { showTotal } from '../../../utilities/table';
+import { CustomCell } from '../../common/CustomCell';
 import MyToolbar from '../../common/MyToolbar';
-import { RenderCell } from '../../common/TableCell/RenderCell';
 
 export default function C2Menu({ customer }) {
 
@@ -18,8 +18,8 @@ export default function C2Menu({ customer }) {
   const [items, setItems] = useState([]);
   const [products, setProducts] = useState([]);
 
-  columns[1].onCell = (record) => ({ type: 'input', field: 'product_alias', items, setItems, record });
-  columns[2].onCell = (record) => ({ type: 'product_select', field: 'product',  items, setItems, record, products });
+  columns[1].onCell = (record) => ({ type: 'input', toggleable: 'true', field: 'product_alias', record, handleSave });
+  columns[2].onCell = (record) => ({ type: 'product_select', toggleable: 'true', field: 'product', record, handleSave, products });
   columns[4].render = (_, record) => <Button shape="circle" icon={<DeleteOutlined />} onClick={() => handleDeleteRow(record)} loading={loading} />;
 
   useEffect(() => {
@@ -52,10 +52,29 @@ export default function C2Menu({ customer }) {
     setItems(newItems);
   };
 
+  function handleSave(newRecord) {
+    const newItems = [...items];
+    // Allow match record by 'id' or 'key'
+    const index = newItems.findIndex(x => {
+        if (newRecord.id) {
+            return (x.id === newRecord.id)
+        } else if (newRecord.key) {
+            return (x.key === newRecord.key)
+        } else {
+            return false;
+        }
+    });
+    const item = newItems[index];
+    newItems.splice(index, 1, { ...item, ...newRecord });
+    setItems(newItems);
+  }
+
   function handleMenuUpdate() {
+    const newItems = items.filter(x => (x.product_alias) && (x.product != null))
     setLoading(true);
-    CustomerApiHelper.updateMenu(customer.id, items)
+    CustomerApiHelper.updateMenu(customer.id, newItems)
       .then(() => {
+        setItems(newItems);
         setLoading(false);
         message.success(`Customer Menu successfully updated!`)
       })
@@ -68,7 +87,7 @@ export default function C2Menu({ customer }) {
       <MyToolbar title={`Menu`}>
         { hasWriteAccessTo(View.CRM.name) && 
         <>
-          <Button onClick={handleAddRow} icon={<PlusOutlined />} disabled={!hasWriteAccessTo(View.CRM.name)}>New</Button>
+          <Button onClick={handleAddRow} icon={<PlusOutlined />}>New</Button>
           <Button type='primary' onClick={handleMenuUpdate} icon={<SaveOutlined />} loading={loading}>Save</Button>
         </>
         }
@@ -78,9 +97,10 @@ export default function C2Menu({ customer }) {
         columns={columns} 
         loading={loading} 
         rowKey={() => Math.random()} 
-        components={{ body: { cell: RenderCell } }} 
+        components={{ body: { cell: CustomCell } }} 
         pagination={{ pageSize: 6, showTotal: showTotal }}
       />
+      
     </>  
   )
 }
@@ -89,29 +109,34 @@ const columns = [
   {
       title: 'No',
       width: 50,
+      ellipsis: true,
       render: (_, record, index) => index+1,
   },
   {
     title: 'Alias',
     dataIndex: 'product_alias',
     key: 'product_alias',
+    ellipsis: true,
+    width: '20%',
     sorter: (a, b) => sortByString(a.product_alias, b.product_alias),
   },
   {
     title: 'Product Name',
     dataIndex: 'product',
     key: 'product',
-    width: 280,
+    ellipsis: true,
+    width: 300,
     render: (product) => product?.name,
     sorter: (a, b) => sortByString(a.product?.name, b.product?.name),
   },
   {
     title: 'Latest Price',
-    dataIndex: 'id',
-    key: 'id',
+    dataIndex: 'latest_price',
+    key: 'latest_price',
     align: 'center',
+    ellipsis: true,
     width: 120,
-    render: (id) => '-',
+    render: (latest_price) => latest_price || '-',
     sorter: (a, b) => sortByString(a.product?.name, b.product?.name),
   },
   { 

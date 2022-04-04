@@ -1,49 +1,42 @@
-import { BellOutlined, UserOutlined } from '@ant-design/icons/lib/icons'
-import { Menu, Layout, Popover, Button, Space } from 'antd'
+import { LineChartOutlined, UserOutlined, KeyOutlined, ExportOutlined, ContainerOutlined } from '@ant-design/icons/lib/icons'
+import { Menu, Layout } from 'antd'
 import React, { useState } from 'react'
 import { useApp } from '../../providers/AppProvider'
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import ChangePasswordModal from '../general/ChangePasswordModal';
 
-const Navbar = () => {
+export default function Navbar() {
   const { Header } = Layout
-  const { logout } = useApp();
+  const { user, logout } = useApp();
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [isModalVisible, setIsModalVisible] = useState(false);
-
-  const content = (
-    <>
-      <Space direction='vertical'>
-        <Button style={{ padding: '0' }} onClick={() => navigate('/myProfile')} type="link">My Profile</Button>
-        <Button style={{ padding: '0' }} onClick={() => navigate('/myLeaves')} type="link">My Leaves</Button>
-        <Button style={{ padding: '0' }} onClick={() => setIsModalVisible(true)} type="link">Change Password</Button>
-        <Button style={{ padding: '0' }} type="link" onClick={logout}>Logout</Button>
-      </Space>
-    </>
-  );
-
+  
   return (
     <Header style={styles.header}>
-      <Menu mode='horizontal' theme='dark' style={{ float: 'right' }}>
-        <Menu.Item key='1'>
-          <BellOutlined style={{ fontSize: '16px' }} />
+      <Menu mode='horizontal' theme="dark" style={{float: 'right'}} selectedKeys={[location.pathname]}>
+
+        <Menu.Item key="/analytics" icon={<LineChartOutlined />}>
+          Analytics
         </Menu.Item>
-        <Menu.Item key='2'>
-          <Popover placement="bottom" content={content}>
-            <UserOutlined style={{ fontSize: '16px' }} />
-          </Popover>
-        </Menu.Item>
+        
+        <Menu.SubMenu key="subMenu" icon={<UserOutlined />} title={user?.name} style={{ width: 100 }}>
+            <Menu.Item key="/myProfile" onClick={() => navigate('/myProfile')} icon={<UserOutlined />}>My Profile</Menu.Item>
+            <Menu.Item key="/myLeaves" onClick={() => navigate('/myLeaves')} icon={<ContainerOutlined />}>My Leaves</Menu.Item>
+            <Menu.Item key="changePassword" onClick={() => setIsModalVisible(true)} icon={<KeyOutlined />}>Change Password</Menu.Item>
+            <Menu.Item key="logout" onClick={logout} icon={<ExportOutlined />}>Logout</Menu.Item>
+        </Menu.SubMenu>
+        
       </Menu>
 
       <ChangePasswordModal isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} />
 
     </Header>
   )
-}
 
-export default Navbar
+}
 
 const styles = {
   header: {

@@ -4,7 +4,8 @@ import React, { useState } from 'react'
 import { SupplierAPIHelper } from '../../../api/SupplierAPIHelper';
 import { View } from '../../../enums/View';
 import { useApp } from '../../../providers/AppProvider';
-import { EMAIL, REQUIRED } from '../../../utilities/form';
+import EmailLink from '../../../utilities/EmailLink';
+import { EMAIL, REQUIRED, NUMBER, exactLength } from '../../../utilities/form';
 import MyToolbar from '../../common/MyToolbar';
 
 export default function S1Form({ supplier, setSupplier }) {
@@ -66,7 +67,7 @@ export default function S1Form({ supplier, setSupplier }) {
                         }
                     </Form.Item>
 
-                    <Form.Item label="Postal Code" name="postal_code" rules={editing ? [REQUIRED] : []}>
+                    <Form.Item label="Postal Code" name="postal_code" rules={editing ? [REQUIRED, exactLength(6), NUMBER] : []}>
                         {!editing ? 
                             <Typography>{supplier.postal_code || '-'}</Typography>
                         :
@@ -76,7 +77,7 @@ export default function S1Form({ supplier, setSupplier }) {
 
                     <Form.Item label="Email" name="company_email" rules={[EMAIL]}>
                         {!editing ? 
-                            <Typography>{supplier.company_email || '-'}</Typography>
+                            <EmailLink email={supplier.company_email} />
                         :
                             <Input />
                         }
@@ -120,9 +121,9 @@ export default function S1Form({ supplier, setSupplier }) {
                         }
                     </Form.Item>
 
-                    <Form.Item label="Contact Number" name="p2_phone_number">
+                    <Form.Item label="Contact Number" name="s2_phone_number">
                         {!editing ? 
-                            <Typography>{supplier.p2_phone_number || '-'}</Typography>
+                            <Typography>{supplier.s2_phone_number || '-'}</Typography>
                         :
                             <Input />
                         }

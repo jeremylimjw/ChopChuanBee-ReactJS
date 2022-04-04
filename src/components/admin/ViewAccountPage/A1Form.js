@@ -5,7 +5,8 @@ import { EmployeeApiHelper } from '../../../api/EmployeeApiHelper';
 import { getRoleTag, Role } from '../../../enums/Role';
 import { View } from '../../../enums/View';
 import { useApp } from '../../../providers/AppProvider';
-import { EMAIL, REQUIRED } from '../../../utilities/form';
+import EmailLink from '../../../utilities/EmailLink';
+import { EMAIL, REQUIRED, NUMBER, exactLength } from '../../../utilities/form';
 import MyToolbar from '../../common/MyToolbar';
 
 export default function A1Form({ employee, setEmployee }) {
@@ -71,7 +72,7 @@ export default function A1Form({ employee, setEmployee }) {
                 
                 <Form.Item label="Email" name="email" rules={editing ? [REQUIRED, EMAIL] : []}>
                     {!editing ? 
-                        <Typography>{employee.email || '-'}</Typography>
+                        <EmailLink email={employee.email} />
                     :
                         <Input />
                     }
@@ -93,7 +94,7 @@ export default function A1Form({ employee, setEmployee }) {
                     }
                 </Form.Item>
                 
-                <Form.Item label="Postal Code" name="postal_code">
+                <Form.Item label="Postal Code" name="postal_code" rules={editing ? [exactLength(6), NUMBER] : []}>
                     {!editing ? 
                         <Typography>{employee.postal_code || '-'}</Typography>
                     :
@@ -103,7 +104,7 @@ export default function A1Form({ employee, setEmployee }) {
                 
                 <Form.Item label="NOK Name" name="nok_name">
                     {!editing ? 
-                        <Typography>{employee.contact_number || '-'}</Typography>
+                        <Typography>{employee.nok_name || '-'}</Typography>
                     :
                         <Input />
                     }

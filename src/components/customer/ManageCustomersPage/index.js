@@ -14,6 +14,7 @@ import { showTotal } from '../../../utilities/table';
 import { parseDate } from '../../../utilities/datetime';
 import { sortByDate, sortByNumber, sortByString } from '../../../utilities/sorters';
 import { getActiveTag } from '../../../enums/ActivationStatus';
+import EmailLink from '../../../utilities/EmailLink';
 
 const breadcrumbs = [
   { url: '/customer/customers', name: 'Customer' },
@@ -137,16 +138,18 @@ const columns = [
     dataIndex: 'company_email',
     key: 'company_email',
     ellipsis: true,
-    render: (company_email) => company_email || '-',
+    render: (company_email) => <EmailLink email={company_email} />,
     sorter: (a, b) => sortByString(a.company_email, b.company_email),
   },
   {
     title: 'AR',
-    key: 'AR',
-    width: 80,
+    dataIndex: 'ar',
+    key: 'ar',
+    width: 100,
+    align: 'center',
     ellipsis: true,
-    render: (AR) => '-',
-    sorter: (a, b) => sortByString(a.company_email, b.company_email),
+    render: (ar) => `$${(-ar).toFixed(2)}`,
+    sorter: (a, b) => sortByNumber(a.ar, b.ar),
   },
   {
     title: 'Status',

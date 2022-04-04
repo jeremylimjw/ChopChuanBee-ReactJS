@@ -1,7 +1,7 @@
 import { Card } from 'antd';
 import React from 'react';
 
-export default function MyCard({ children, style, title  }) {
+export default function MyCard({ children, style, title }) {
     const styles = {
         container: {
             margin: 24,

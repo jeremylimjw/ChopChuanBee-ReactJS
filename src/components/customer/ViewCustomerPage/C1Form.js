@@ -1,11 +1,12 @@
 import { EditOutlined, SaveOutlined } from '@ant-design/icons/lib/icons';
-import { Button, Divider, Form, Input, message, Radio, Typography } from 'antd'
-import React, { useState } from 'react'
+import { Button, Divider, Form, Input, message, Radio, Select, Typography } from 'antd'
+import React, { useEffect, useState } from 'react'
+import { ChargedUnderApiHelper } from '../../../api/ChargedUnderApiHelper';
 import { CustomerApiHelper } from '../../../api/CustomerApiHelper';
-import { getChargedUnderTag } from '../../../enums/ChargedUnder';
 import { View } from '../../../enums/View';
 import { useApp } from '../../../providers/AppProvider';
-import { EMAIL, REQUIRED } from '../../../utilities/form';
+import EmailLink from '../../../utilities/EmailLink';
+import { EMAIL, REQUIRED, NUMBER, exactLength } from '../../../utilities/form';
 import MyToolbar from '../../common/MyToolbar';
 
 export default function C1Form({ customer, setCustomer }) {
@@ -15,6 +16,15 @@ export default function C1Form({ customer, setCustomer }) {
     const [editing, setEditing] = useState(false);
     const [loading, setLoading] = useState(false);
     const [form] = Form.useForm();
+    const [chargedUnders, setChargedUnders] = useState([]);
+    
+    useEffect(() => {
+        ChargedUnderApiHelper.getAvailable()
+            .then(results => {
+                setChargedUnders(results)
+            })
+            .catch(handleHttpError);
+    }, [handleHttpError])
 
     async function onFinish() {
         try {
@@ -23,7 +33,8 @@ export default function C1Form({ customer, setCustomer }) {
             CustomerApiHelper.update({...values, id: customer.id })
                 .then(() => {
                     setLoading(false);
-                    setCustomer({...customer, ...values });
+                    const index = chargedUnders.findIndex(x => x.id === values.charged_under_id);
+                    setCustomer({...customer, ...values, charged_under: {...chargedUnders[index] } });
                     message.success('Customer successfully updated!');
                     setEditing(false);
                 })
@@ -57,39 +68,6 @@ export default function C1Form({ customer, setCustomer }) {
                         }
                     </Form.Item>
 
-                    <Form.Item name="gst" label="GST" rules={editing ? [REQUIRED] : []}>
-                        {!editing ? 
-                            <Typography>{customer.gst ? 'Yes' : 'No'}</Typography>
-                        :
-                            <Radio.Group>
-                                <Radio value={true}>Yes</Radio>
-                                <Radio value={false}>No</Radio>
-                            </Radio.Group>
-                        }
-                    </Form.Item>
-
-                    <Form.Item name="gst_show" label="Show GST" rules={editing ? [REQUIRED] : []}>
-                        {!editing ? 
-                            <Typography>{customer.gst_show ? 'Yes': 'No'}</Typography>
-                        :
-                            <Radio.Group>
-                                <Radio value={true}>Yes</Radio>
-                                <Radio value={false}>No</Radio>
-                            </Radio.Group>
-                        }
-                    </Form.Item>
-
-                    <Form.Item name="charged_under_id" label="Charged Under" rules={editing ? [REQUIRED] : []}>
-                        {!editing ? 
-                            <Typography>{getChargedUnderTag(customer.charged_under_id)}</Typography>
-                        :
-                            <Radio.Group>
-                                <Radio value={1}>CCB</Radio>
-                                <Radio value={2}>CBFS</Radio>
-                            </Radio.Group>
-                        }
-                    </Form.Item>
-
                     <Form.Item label="Address" name="address" rules={editing ? [REQUIRED] : []}>
                         {!editing ? 
                             <Typography>{customer.address || '-'}</Typography>
@@ -98,7 +76,7 @@ export default function C1Form({ customer, setCustomer }) {
                         }
                     </Form.Item>
 
-                    <Form.Item label="Postal Code" name="postal_code" rules={editing ? [REQUIRED] : []}>
+                    <Form.Item label="Postal Code" name="postal_code" rules={editing ? [REQUIRED, exactLength(6), NUMBER] : []}>
                         {!editing ? 
                             <Typography>{customer.postal_code || '-'}</Typography>
                         :
@@ -108,9 +86,32 @@ export default function C1Form({ customer, setCustomer }) {
 
                     <Form.Item label="Email" name="company_email" rules={[EMAIL]}>
                         {!editing ? 
-                            <Typography>{customer.company_email || '-'}</Typography>
+                            <EmailLink email={customer.company_email} />
                         :
                             <Input />
+                        }
+                    </Form.Item>
+
+                    <Form.Item name="gst_show" label="Show GST">
+                        {!editing ? 
+                            <Typography>{customer.gst_show == null ? '-': (customer.gst_show ? 'Yes': 'No')}</Typography>
+                        :
+                            <Radio.Group>
+                                <Radio value={null}>None</Radio>
+                                <Radio value={false}>No</Radio>
+                                <Radio value={true}>Yes</Radio>
+                            </Radio.Group>
+                        }
+                    </Form.Item>
+
+                    <Form.Item name="charged_under_id" label="Charged Under">
+                        {!editing ? 
+                            <Typography>{customer.charged_under?.name || '-'}</Typography>
+                        :
+                            <Select style={{ width: 180 }}>
+                                <Select.Option value={null}>None</Select.Option>
+                                { chargedUnders.map((x, idx) => <Select.Option key={idx} value={x.id}>{x.name}</Select.Option>)}
+                            </Select>
                         }
                     </Form.Item>
 

@@ -12,6 +12,7 @@ import { getViewTag, View } from '../../enums/View';
 import { parseDateTimeSeconds } from '../../utilities/datetime';
 import { sortByDate, sortByNumber, sortByString } from '../../utilities/sorters';
 import { showTotal } from '../../utilities/table';
+import { Link } from 'react-router-dom';
 
 const breadcrumbs = [
     { url: '/admin/logs', name: 'Admin' },
@@ -57,7 +58,6 @@ export default function ViewLogsPage() {
         form.resetFields();
         onValuesChange(null, form.getFieldsValue());
     }
-    
 
     return (
         <MyLayout breadcrumbs={breadcrumbs} bannerTitle="View Logs">
@@ -74,6 +74,7 @@ export default function ViewLogsPage() {
                         </Form.Item>
                         <Form.Item name="view_id">
                             <Select style={{ width: 150 }} placeholder="Filter by View" >
+                                <Select.Option value={null}>All</Select.Option>
                                 { Object.keys(View).map((key, index) => <Select.Option key={index} value={View[key].id}>{View[key].name}</Select.Option>) }
                             </Select>
                         </Form.Item>
@@ -109,7 +110,7 @@ const columns = [
     dataIndex: 'employee',
     key: 'employee',
     width: '15%',
-    render: (employee) => employee?.name,
+    render: (employee) => employee ? <Link to={`/humanResource/employees/${employee.id}`}>{employee?.name}</Link> : '-',
     sorter: (a, b) => sortByString(a.employee.name, b.employee.name),
   },
   {
