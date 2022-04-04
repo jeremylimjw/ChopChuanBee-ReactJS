@@ -29,7 +29,6 @@ export default function DamagedGoodsCard(props) {
   const fetchData = () => {
     AnalyticsApiHelper.getDamagedGoodsOrderByQtyDesc(props.startDate, props.endDate)
     .then((results) => {
-      console.log(results);
       if (results.length === 0) {
         setErrorMessage(true);
         setMostDamagedProduct(null);
@@ -41,7 +40,6 @@ export default function DamagedGoodsCard(props) {
 
     AnalyticsApiHelper.getDamagedGoodsOrderByValueDesc(props.startDate, props.endDate)
     .then((results) => {
-      console.log(results);
       if (results.length === 0) {
         setErrorMessage(true);
         setHighestValueLoss(null);

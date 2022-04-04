@@ -159,7 +159,7 @@ export default function ProfitabilityCard(props) {
 
     return (
     <>
-    { cogsTotal ?
+    { revTotal || cogsTotal || profTotal ?
         <Space direction='horizontal' wrap>
             <MyCard style={{minWidth:'23.5vw', marginLeft: '3px', marginRight: '3px', marginBottom: 0}}>
                 <Typography>TOTAL REVENUE</Typography>
