@@ -201,6 +201,17 @@ export default function Chat() {
 
     const addParticipant = useCallback(
         (newParticipant) => {
+            // If new participant is the user, refresh all channels to get unread_count and last texts, etc.
+            if (newParticipant.employee_id === user.id) {
+                ChatApiHelper.getChannels({ employee_id: user.id })
+                    .then(channels => {
+                        setChannels(channels);
+
+                        // Retrieve last seens from the channels
+                        retrieveLastSeens(channels.map(x => x.id))
+                    })
+                    .catch(handleHttpError)
+            }
             // If chat is opened
             if (chat?.id === newParticipant.channel_id) {
                 const newParticipants = [...chat.participants, newParticipant];
@@ -208,7 +219,7 @@ export default function Chat() {
             }
     
         },
-      [chat, setChat],
+      [user, chat, setChat, setChannels, handleHttpError, retrieveLastSeens],
     )
     
     // On delete chat event
