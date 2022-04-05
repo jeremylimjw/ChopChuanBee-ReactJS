@@ -99,7 +99,7 @@ export default function ManageLeavesPage() {
                 parseDate(record.start_date),
                 parseDate(record.end_date),
                 record.num_days,
-                record.remarks,
+                record.remarks || '-',
                 getLeaveStatusTag(record.leave_status_id).props.children
             ]
         })
