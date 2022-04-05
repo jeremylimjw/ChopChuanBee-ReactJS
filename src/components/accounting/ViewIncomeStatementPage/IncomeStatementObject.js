@@ -123,7 +123,6 @@ export default function IncomeStatementObject({ income, setIncome }) {
             arr.push(['Profit', '$'])
             arr.push(['Profit for the Period', data.profit])
             arr.forEach((row) => row[1] = row[1].toString())
-            console.log(arr)
             generateCSV(arr, headers, 'Income Statement')
         } else {
             generatePdf(data, 'PNL_STATEMENT')

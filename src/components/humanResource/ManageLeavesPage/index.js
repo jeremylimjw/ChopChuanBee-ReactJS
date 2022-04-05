@@ -92,7 +92,6 @@ export default function ManageLeavesPage() {
         const tableHeaders = ['Created At', 'Name', 'Type', 'Start Date', 'End Date', 'Days', 'Remarks', 'Status']
         let excelData = []
         excelData = leaveApplications.map((record) => {
-            console.log(record)
             return [
                 parseDateTime(record.created_at),
                 record.leave_account.employee.name,
