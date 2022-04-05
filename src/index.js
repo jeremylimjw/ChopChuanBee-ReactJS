@@ -10,7 +10,6 @@ import RequireAuth from './auth/RequireAuth';
 import { View } from './enums/View';
 
 import LoginPage from './components/LoginPage';
-import MyTemplate from './components/MyTemplate';
 import ManageAccountsPage from './components/admin/ManageAccountsPage';
 import ViewAccountPage from './components/admin/ViewAccountPage';
 import ViewLogsPage from './components/admin/ViewLogsPage';
@@ -46,12 +45,13 @@ import ManageItinerarysPage from './components/dispatch/ManageItinerarysPage';
 import NewItineraryPage from './components/dispatch/NewItineraryPage';
 import ViewItineraryPage from './components/dispatch/ViewItineraryPage';
 import CompleteDeliveryPage from './components/CompleteDeliveryPage';
+import Home from './components/Home';
 
 // Add on more routes here
 const routes = [
   {
     path: '/',
-    component: <MyTemplate />,
+    component: <Home />,
   },
   {
     path: '/admin',

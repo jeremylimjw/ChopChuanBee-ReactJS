@@ -71,4 +71,9 @@ export class PurchaseOrderApiHelper {
         return axiosObject.post(`/purchaseOrder/inventory`, { inventory_movements: inventoryMovements })
             .then(res => res.data);
     }
+    
+    static async sendEmail(id, document) {
+        return axiosObject.post(`/purchaseOrder/sendEmail`, { id: id, document: document })
+            .then(res => res.data);
+    }
 }

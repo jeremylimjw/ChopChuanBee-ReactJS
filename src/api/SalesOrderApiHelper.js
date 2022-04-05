@@ -77,4 +77,9 @@ export class SalesOrderApiHelper {
         return axiosObject.post(`/salesOrder/inventory/refund`, { inventory_movements: inventoryMovements })
             .then(res => res.data);
     }
+    
+    static async sendEmail(id, document) {
+        return axiosObject.post(`/salesOrder/sendEmail`, { id: id, document: document })
+            .then(res => res.data);
+    }
 }

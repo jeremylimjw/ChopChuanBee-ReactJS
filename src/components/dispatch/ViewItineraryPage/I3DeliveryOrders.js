@@ -9,6 +9,7 @@ import { getDeliveryStatusTag } from '../../../enums/DeliveryStatus'
 import { View } from '../../../enums/View'
 import { useApp } from '../../../providers/AppProvider'
 import { parseDateTimeSeconds } from '../../../utilities/datetime'
+import { generatePdf } from '../../../utilities/Report/ReportExporter'
 import DraggableTableRow from '../../common/DraggableTableRow'
 import MyCard from '../../common/MyCard'
 import MyToolbar from '../../common/MyToolbar'
@@ -45,7 +46,7 @@ export default function I3DeliveryOrders({ itinerary, setItinerary, loading, set
     }
 
     function handleAddNewRows(deliveryOrders) {
-        const newItems = [...itinerary.delivery_orders,  ...deliveryOrders];
+        const newItems = [...itinerary.delivery_orders, ...deliveryOrders];
         const newItinerary = { ...itinerary, delivery_orders: newItems };
 
         setLoading(true);
@@ -75,12 +76,12 @@ export default function I3DeliveryOrders({ itinerary, setItinerary, loading, set
                 newOrders.push(itinerary.delivery_orders[index]);
             }
 
-            const newItinerary = {...itinerary, delivery_orders: newOrders };
+            const newItinerary = { ...itinerary, delivery_orders: newOrders };
 
             // Update the itinerary
             await DeliveryApiHelper.updateItinerary(newItinerary);
             setItinerary(newItinerary);
-            
+
             message.success('Delivery orders successfully optimized!');
             setLoading(false);
 
@@ -91,7 +92,7 @@ export default function I3DeliveryOrders({ itinerary, setItinerary, loading, set
     }
 
     function printItinerary() {
-        console.log(JSON.stringify(itinerary, null, 2))
+        generatePdf(itinerary, 'ITINERARY')
     }
 
     return (
@@ -99,18 +100,18 @@ export default function I3DeliveryOrders({ itinerary, setItinerary, loading, set
             <MyCard style={{ marginTop: 0 }}>
 
                 <MyToolbar title="Delivery Itinerary">
-                    { hasWriteAccessTo(View.DISPATCH.name) && 
-                    <Button type='primary' icon={<PlusOutlined />} onClick={() => setShowAddOrder(true)} loading={loading}>Add</Button>
+                    {hasWriteAccessTo(View.DISPATCH.name) &&
+                        <Button type='primary' icon={<PlusOutlined />} onClick={() => setShowAddOrder(true)} loading={loading}>Add</Button>
                     }
                 </MyToolbar>
 
                 <DndProvider backend={HTML5Backend}>
-                    <Table 
-                        columns={columns} 
-                        dataSource={itinerary.delivery_orders} 
+                    <Table
+                        columns={columns}
+                        dataSource={itinerary.delivery_orders}
                         components={{ body: { row: DraggableTableRow } }}
                         onRow={(record, index) => ({ index, moveRow })}
-                        rowKey="id" 
+                        rowKey="id"
                         pagination={false}
                     />
                 </DndProvider>
@@ -120,27 +121,27 @@ export default function I3DeliveryOrders({ itinerary, setItinerary, loading, set
                     <Space size="middle">
                         <Button icon={<PrinterOutlined />} onClick={printItinerary}>Print</Button>
                     </Space>
-                    
-                    { hasWriteAccessTo(View.DISPATCH.id) && 
-                    <div style={{ marginLeft: 'auto' }}>
-                        <Space size="middle">
-                            <Button icon={<ReloadOutlined />} onClick={optimizeRoutes} loading={loading}>Optimize</Button>
-                        </Space>
-                    </div>
+
+                    {hasWriteAccessTo(View.DISPATCH.id) &&
+                        <div style={{ marginLeft: 'auto' }}>
+                            <Space size="middle">
+                                <Button icon={<ReloadOutlined />} onClick={optimizeRoutes} loading={loading}>Optimize</Button>
+                            </Space>
+                        </div>
                     }
                 </div>
 
             </MyCard>
 
-            <ViewDeliveryOrderModal 
-                showDeliveryOrder={showDeliveryOrder} 
-                setShowDeliveryOrder={setShowDeliveryOrder} 
+            <ViewDeliveryOrderModal
+                showDeliveryOrder={showDeliveryOrder}
+                setShowDeliveryOrder={setShowDeliveryOrder}
                 myCallback={myCallback}
             />
 
-            <AddDeliveryModal 
-                isModalVisible={showAddOrder} 
-                setIsModalVisible={setShowAddOrder} 
+            <AddDeliveryModal
+                isModalVisible={showAddOrder}
+                setIsModalVisible={setShowAddOrder}
                 myCallback={handleAddNewRows}
                 loading={loading}
             />
@@ -148,13 +149,13 @@ export default function I3DeliveryOrders({ itinerary, setItinerary, loading, set
         </>
     )
 }
-  
+
 const columns = [
     {
         title: 'No',
         dataIndex: 'no',
         width: 80,
-        render: (_, record, index) => index+1,
+        render: (_, record, index) => index + 1,
     },
     {
         title: 'Created At',

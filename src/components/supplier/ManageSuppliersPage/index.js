@@ -1,6 +1,6 @@
 import { Button, Table, Input, Select, Form } from "antd";
 import React, { useEffect, useState } from "react";
-import { PlusOutlined, SearchOutlined } from "@ant-design/icons/lib/icons";
+import { PlusOutlined, SearchOutlined, FileExcelOutlined } from "@ant-design/icons/lib/icons";
 import { Link } from "react-router-dom";
 import debounce from "lodash.debounce";
 import { useApp } from "../../../providers/AppProvider";
@@ -15,6 +15,7 @@ import { getActiveTag } from "../../../enums/ActivationStatus";
 import MyToolbar from "../../common/MyToolbar";
 import { View } from "../../../enums/View";
 import EmailLink from "../../../utilities/EmailLink";
+import { generateCSV } from "../../../utilities/Report/ExcelExporter";
 
 const breadcrumbs = [
   { url: "/supplier/suppliers", name: "Supplier" },
@@ -42,17 +43,33 @@ export default function ManageSuppliersPage() {
 
   function onValuesChange(_, form) {
     SupplierAPIHelper.get(form)
-        .then(results => {
-          setSuppliers(results);
-            setLoading(false);
-        })
-        .catch(handleHttpError)
-        .catch(() => setLoading(false))
+      .then(results => {
+        setSuppliers(results);
+        setLoading(false);
+      })
+      .catch(handleHttpError)
+      .catch(() => setLoading(false))
   }
 
   function resetForm() {
-      form.resetFields();
-      onValuesChange(null, form.getFieldsValue());
+    form.resetFields();
+    onValuesChange(null, form.getFieldsValue());
+  }
+
+  const handleExcelExport = () => {
+    const tableHeaders = ['Created At', 'Company', 'Contact Person', 'Contact Number', 'Email', 'AP', 'Status']
+    let excelData = suppliers.map((record) => {
+      return [
+        parseDate(record.created_at),
+        record.company_name,
+        record.s1_name,
+        record.s1_phone_number || '-',
+        record.company_email || '-',
+        `$${(+record.ap).toFixed(2)}`,
+        getActiveTag(record.deactivated_date).props.children,
+      ]
+    })
+    generateCSV(excelData, tableHeaders, 'Suppliers List')
   }
 
   return (
@@ -61,10 +78,10 @@ export default function ManageSuppliersPage() {
         <MyToolbar title="Suppliers">
           <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
             <Form.Item name="company_name">
-                <Input placeholder='Search Company' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
+              <Input placeholder='Search Company' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
             </Form.Item>
             <Form.Item name="s1_name">
-                <Input placeholder='Search Person Name' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
+              <Input placeholder='Search Person Name' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
             </Form.Item>
             <Form.Item name="status">
               <Select style={{ width: 140 }} placeholder="Filter by Status">
@@ -75,18 +92,21 @@ export default function ManageSuppliersPage() {
             </Form.Item>
             <Button onClick={resetForm}>Reset</Button>
           </Form>
-          { hasWriteAccessTo(View.SCM.name) && 
+          {hasWriteAccessTo(View.SCM.name) &&
             <Button type="primary" icon={<PlusOutlined />} onClick={() => setIsModalVisible(true)}>New</Button>
           }
         </MyToolbar>
 
-        <Table 
-          dataSource={suppliers} 
-          columns={columns} 
-          loading={loading} 
-          rowKey="id" 
+        <Table
+          dataSource={suppliers}
+          columns={columns}
+          loading={loading}
+          rowKey="id"
           pagination={{ showTotal: showTotal }}
         />
+        {hasWriteAccessTo(View.SCM.name) &&
+          <Button type="primary" icon={<FileExcelOutlined />} onClick={() => handleExcelExport()}>Export as Excel</Button>
+        }
       </MyCard>
 
       <NewSupplierModal suppliers={suppliers} setSuppliers={setSuppliers} isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} />
