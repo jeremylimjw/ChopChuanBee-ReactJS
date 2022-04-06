@@ -14,7 +14,7 @@ export default function CustomerAnalyticsGraph(props) {
     const profits = []
     data.forEach((item) => {
       let obj = {
-        sales_order_id: item.sales_order_id,
+        sales_order_id: `#${item.sales_order_id}`,
         company_name: item.company_name,
         revenue: `Total Revenue:  $${parseFloat(item.total_revenue)}`
       }
@@ -56,6 +56,9 @@ export default function CustomerAnalyticsGraph(props) {
           fillOpacity: 0.5,
           stroke: "black",
         },
+      },
+      label: {
+        formatter: (v) => `${(v / 1).toFixed(2)} `,
       },
     },
     columnBackground: {

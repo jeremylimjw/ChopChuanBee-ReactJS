@@ -170,4 +170,17 @@ export class AnalyticsApiHelper {
       .get("/analytics/Damaged_Goods_Qn_Desc/", { params })
       .then((res) => res.data);
   }
+
+  static async getProductMonthlyInsights(id, start_date, end_date) {
+    const params = { product_id: id }
+    if (start_date && end_date) {
+      params.start_date = start_date.toISOString();
+      params.end_date = end_date.toISOString();
+    }
+
+    return axiosObject
+      .get("/analytics/Product_Monthly_Insights", { params })
+      .then((res) => res.data)
+  }
+
 }
