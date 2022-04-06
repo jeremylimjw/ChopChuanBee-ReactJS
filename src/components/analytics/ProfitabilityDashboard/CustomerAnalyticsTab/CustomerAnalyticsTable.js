@@ -40,26 +40,29 @@ export default function CustomerAnalyticsTable(props) {
             width: '23%',
         },
         {
-            title: 'Total Revenue',
+            title: 'Total Revenue ($)',
             dataIndex: 'total_revenue',
             key: 'total_revenue',
             width: '23%',
+            render: (x) => parseFloat(x).toFixed('2')
         },
         {
-            title: 'Total Cost of Goods Sold',
+            title: 'Total Cost of Goods Sold ($)',
             dataIndex: 'total_cogs',
             key: 'total_cogs',
             width: '23%',
+            render: (x) => parseFloat(x).toFixed('2')
         },
         {
-            title: 'Total Profits',
+            title: 'Total Profits ($)',
             dataIndex: 'total_profits',
             key: 'total_profits',
             width: '23%',
+            render: (x) => parseFloat(x).toFixed('2')
         },
         {
             title: 'Action',
-            dataIndex: 'id',
+            dataIndex: 'sales_order_id',
             key: 'link',
             width: '8%',
             render: (id) => <Link to={`/customer/sales/${id}`}>View</Link>
