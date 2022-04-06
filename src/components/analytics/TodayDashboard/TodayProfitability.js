@@ -57,28 +57,28 @@ export default function TodayProfitability(props) {
     return <>
     { revToday || cogsToday || profToday ?
     <div style={{display: "flex", flexDirection: "row"}} >
-        <MyCard style={{ minWidth: "16vw", marginBottom: 0 }} >
+        <MyCard style={{ marginBottom: 0, marginRight: 0, width: "-webkit-fill-available" }} >
             <Typography>DATE</Typography>
             <Typography.Title level={2} style={{ margin: 0 }}>
             {parseDate(props.currDate)}
             </Typography.Title>
         </MyCard>
         
-        <MyCard style={{ minWidth: "16vw", marginBottom: 0 }} >
+        <MyCard style={{ marginBottom: 0, marginRight: 0, width: "-webkit-fill-available" }} >
             <Typography>REVENUE</Typography>
             <Typography.Title level={2} style={{ margin: 0 }}>
             {loading ? <Spin/> : formatCurrency(revToday)}
             </Typography.Title>
         </MyCard>
 
-        <MyCard style={{ minWidth: "16vw", marginBottom: 0 }} >
+        <MyCard style={{ marginBottom: 0, marginRight: 0, width: "-webkit-fill-available" }} >
             <Typography>COGS</Typography>
             <Typography.Title level={2} style={{ margin: 0 }}>
             {loading ? <Spin/> : formatCurrency(cogsToday)}
             </Typography.Title>
         </MyCard>
 
-        <MyCard style={{ minWidth: "16vw", marginBottom: 0 }} >
+        <MyCard style={{ marginBottom: 0, width: "-webkit-fill-available" }} >
             <Typography>PROFITS</Typography>
             <Typography.Title level={2} style={{ margin: 0 }}>
             {loading ? <Spin/> : formatCurrency(profToday)}

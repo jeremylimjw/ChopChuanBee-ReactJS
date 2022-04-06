@@ -4,8 +4,10 @@ import { showTotal } from "../../../utilities/table";
 import { sortByNumber, sortByString } from '../../../utilities/sorters';
 import { formatCurrency } from '../../../utilities/currency';
 import { Link } from 'react-router-dom';
+import MyCard from "../../common/MyCard";
+import MyToolbar from "../../common/MyToolbar";
 
-export default function TodayProductsTable(props) {    
+export default function TodayPurhcaseOrders(props) {    
     const columns = [
         {
             title: "Product Name",
@@ -39,12 +41,17 @@ export default function TodayProductsTable(props) {
         },
     ];
 
-    return <Table
-        dataSource={props.data}
-        columns={columns}
-        loading={props.loading}
-        rowKey="product_uuid"
-        size="small"
-        pagination={{ pageSize: 5, showTotal }}
-    />
+    return (<>
+    <MyCard style={{ marginBottom: 0, width: "-webkit-fill-available" }} >
+        <MyToolbar title="List of Purchase Orders Created Today"></MyToolbar>
+        {/* <Table
+            dataSource={data}
+            columns={columns}
+            loading={props.loading}
+            rowKey="product_uuid"
+            size="small"
+            pagination={{ pageSize: 5, showTotal }}
+        /> */}
+    </MyCard>
+    </>)
 }
