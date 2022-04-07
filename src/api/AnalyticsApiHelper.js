@@ -183,4 +183,15 @@ export class AnalyticsApiHelper {
       .then((res) => res.data)
   }
 
+  static async getAPARSummaryData(start_date, end_date) {
+    const params = {}
+    if (start_date && end_date) {
+      params.start_date = start_date.toISOString();
+      params.end_date = end_date.toISOString();
+    }
+    return axiosObject
+      .get("/analytics/summary_table", { params })
+      .then((res) => res.data)
+  }
 }
+
