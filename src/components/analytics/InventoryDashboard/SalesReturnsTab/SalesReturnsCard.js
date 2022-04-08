@@ -1,43 +1,49 @@
-import React, { useEffect, useState } from "react";
-import { Typography, Space, Divider, Row, Spin, Tooltip, message } from "antd";
+import React, { useEffect, useState, useCallback } from "react";
+import { Typography, Space, Divider, Row, Spin, Tooltip } from "antd";
 import MyCard from "../../../common/MyCard";
 import { useApp } from "../../../../providers/AppProvider";
 import { AnalyticsApiHelper } from "../../../../api/AnalyticsApiHelper";
 import { formatCurrency } from "../../../../utilities/currency";
 import { Link } from 'react-router-dom';
 
-export default function SalesReturnsCard(props) {
-  const [loading, setLoading] = useState(true);
+export default function SalesReturnsCard(props) {//
+  const [loading, setLoading] = useState(false);
   const { handleHttpError } = useApp();
   const [mostReturnedProduct, setMostReturnedProduct] = useState([]);
   const [highestValueLoss, setHighestValueLoss] = useState([]);
 
+  const fetchData = useCallback(
+    async () => {
+      setLoading(true);
+      AnalyticsApiHelper.getCustomerReturnedGoodsOrderByQtyDesc(props.startDate, props.endDate)
+        .then((results) => {
+          if (results.length === 0) {
+            setMostReturnedProduct(null);
+          } else {
+            setMostReturnedProduct(results[0]);
+          }
+          setLoading(false);
+        })
+        .catch(handleHttpError)
+        .catch(() => setLoading(false));
+  
+      AnalyticsApiHelper.getCustomerReturnedGoodsOrderByValueDesc(props.startDate, props.endDate)
+        .then((results) => {
+          if (results.length === 0) {
+            setHighestValueLoss(null);
+          } else {
+            setHighestValueLoss(results[0]);
+          }
+          setLoading(false);
+        })
+        .catch(handleHttpError);
+    },
+    [props, setMostReturnedProduct, setHighestValueLoss, handleHttpError],
+  )
+
   useEffect(() => {
     fetchData();
-    setLoading(false);
-  }, [handleHttpError, loading, props.userInput]);
-
-  const fetchData = () => {
-    AnalyticsApiHelper.getCustomerReturnedGoodsOrderByQtyDesc(props.startDate, props.endDate)
-    .then((results) => {
-      if (results.length === 0) {
-        setMostReturnedProduct(null);
-      } else {
-        setMostReturnedProduct(results[0]);
-      }
-    })
-    .catch(handleHttpError);
-
-    AnalyticsApiHelper.getCustomerReturnedGoodsOrderByValueDesc(props.startDate, props.endDate)
-    .then((results) => {
-      if (results.length === 0) {
-        setHighestValueLoss(null);
-      } else {
-        setHighestValueLoss(results[0]);
-      }
-    })
-    .catch(handleHttpError);
-  }
+  }, [fetchData]);
 
   return (
     <>

@@ -1,43 +1,44 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Column } from "@ant-design/plots";
 import { AnalyticsApiHelper } from '../../../../api/AnalyticsApiHelper';
 import { useApp } from '../../../../providers/AppProvider';
 
-export default function DamagedGoodsGraph(props) {
+export default function DamagedGoodsGraph(props) {//
   const { handleHttpError } = useApp();
-  const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
 
-  const quantityDamaged = [];
-  const totalValueLoss = [];
+  const fetchData = useCallback(
+    async () => {
+      await AnalyticsApiHelper.getDamagedGoodsOrderByValueDesc(props.startDate, props.endDate)
+        .then((result) => {
+          const quantityDamaged = [];
+          const totalValueLoss = [];
+
+          result.forEach((x) => { 
+            const tempQtyDamaged = {
+              product_name: x.name,
+              metric_name: "Quantity Damaged",
+              value: parseInt(x.quantity_damaged),
+            };
+            quantityDamaged.push(tempQtyDamaged);
+            const tempTotalValueLoss = {
+              product_name: x.name,
+              metric_name: "Total Value Loss",
+              value: parseFloat(x.total_damaged_inventory_value),
+            };
+            totalValueLoss.push(tempTotalValueLoss);
+          });
+          setData([...quantityDamaged, ...totalValueLoss]);
+          props.setUserInput(false);
+        })
+        .catch(handleHttpError);
+    },
+    [props, handleHttpError, setData],
+  )
 
   useEffect(() => {
     fetchData();
-  }, [handleHttpError, loading, props.userInput]);
-
-  const fetchData = async () => {
-    await AnalyticsApiHelper.getDamagedGoodsOrderByValueDesc(props.startDate, props.endDate)
-      .then((result) => {
-        result.forEach((x) => { 
-          const tempQtyDamaged = {
-            product_name: x.name,
-            metric_name: "Quantity Damaged",
-            value: parseInt(x.quantity_damaged),
-          };
-          quantityDamaged.push(tempQtyDamaged);
-          const tempTotalValueLoss = {
-            product_name: x.name,
-            metric_name: "Total Value Loss",
-            value: parseFloat(x.total_damaged_inventory_value),
-          };
-          totalValueLoss.push(tempTotalValueLoss);
-        });
-      })
-      .catch(handleHttpError);
-    setData([...quantityDamaged, ...totalValueLoss]);
-    setLoading(false);
-    props.setUserInput(false);
-  }
+  }, [fetchData]);
 
   const config = {
     data,

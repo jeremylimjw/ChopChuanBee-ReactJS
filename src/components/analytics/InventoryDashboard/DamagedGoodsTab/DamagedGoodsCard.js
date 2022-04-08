@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Typography, Space, Divider, Row, Spin, Tooltip, message } from "antd";
+import { Typography, Space, Divider, Row, Spin, Tooltip } from "antd";
 import MyCard from "../../../common/MyCard";
 import { useApp } from "../../../../providers/AppProvider";
 import { AnalyticsApiHelper } from "../../../../api/AnalyticsApiHelper";
@@ -13,11 +13,6 @@ export default function DamagedGoodsCard(props) {
   const [highestValueLoss, setHighestValueLoss] = useState([]);
 
   useEffect(() => {
-    fetchData();
-    setLoading(false);
-  }, [handleHttpError, loading, props.userInput]);
-
-  const fetchData = () => {
     AnalyticsApiHelper.getDamagedGoodsOrderByQtyDesc(props.startDate, props.endDate)
     .then((results) => {
       if (results.length === 0) {
@@ -37,7 +32,8 @@ export default function DamagedGoodsCard(props) {
       }
     })
     .catch(handleHttpError);
-  }
+    setLoading(false);
+  }, [handleHttpError, loading, props.userInput, props.startDate, props.endDate, setMostDamagedProduct, setHighestValueLoss]);
 
   return (
     <>

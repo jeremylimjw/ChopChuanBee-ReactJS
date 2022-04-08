@@ -20,7 +20,7 @@ export default function DamagedGoodsTable(props) {
       })
       .catch(handleHttpError);
       props.setUserInput(false);
-  }, [handleHttpError, loading, props.userInput]);
+  }, [handleHttpError, loading, props]);
 
   const columns = [
     {

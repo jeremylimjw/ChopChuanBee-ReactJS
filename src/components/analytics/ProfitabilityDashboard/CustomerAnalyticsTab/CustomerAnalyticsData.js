@@ -1,12 +1,10 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { Tabs, Form, Button, Input, DatePicker, Space, Select, Typography } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Tabs, Form, Button, DatePicker, Space, Select, Typography } from 'antd';
 import MyCard from '../../../common/MyCard';
 import MyToolbar from '../../../common/MyToolbar';
 import CustomerAnalyticsTable from './CustomerAnalyticsTable';
 import CustomerAnalyticsGraph from './CustomerAnalyticsGraph';
 import { AnalyticsApiHelper } from '../../../../api/AnalyticsApiHelper';
-import moment from 'moment';
-import { SearchOutlined } from '@ant-design/icons';
 import { CustomerApiHelper } from '../../../../api/CustomerApiHelper';
 import { useApp } from '../../../../providers/AppProvider';
 import CustomerAnalyticsCard from './CustomerAnalyticsCard';
@@ -95,8 +93,8 @@ export default function CustomerAnalyticsData() {
                             })}
                             filterOption={false}
                         >
-                            {customerList.map((customer) => {
-                                return <Select.Option value={customer.id}>{customer.company_name}</Select.Option>
+                            {customerList.map((customer, index) => {
+                                return <Select.Option value={customer.id} key={index}>{customer.company_name}</Select.Option>
                             })}
                         </Select>
                     </Form.Item>

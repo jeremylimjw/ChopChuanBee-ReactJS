@@ -20,7 +20,7 @@ export default function SalesReturnsTable(props) {
         props.setUserInput(false);
       })
       .catch(handleHttpError);
-  }, [handleHttpError, loading, props.userInput]);
+  }, [handleHttpError, loading, props]);
 
   const columns = [
     {

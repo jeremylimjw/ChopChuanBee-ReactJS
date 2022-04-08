@@ -1,43 +1,45 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Column } from "@ant-design/plots";
 import { AnalyticsApiHelper } from '../../../../api/AnalyticsApiHelper';
 import { useApp } from '../../../../providers/AppProvider';
 
 export default function SalesReturnsGraph(props) {
   const { handleHttpError } = useApp();
-  const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
 
-  const quantityReturned = [];
-  const totalValueLoss = [];
+  const fetchData = useCallback(
+    async () => {
+      await AnalyticsApiHelper.getCustomerReturnedGoodsOrderByValueDesc(props.startDate, props.endDate)
+        .then((result) => {
+          const quantityReturned = [];
+          const totalValueLoss = [];
+
+          result.forEach((x) => { 
+            const tempQtyReturned = {
+              product_name: x.name,
+              metric_name: "Quantity Returned",
+              value: parseInt(x.quantity_returned),
+            };
+            quantityReturned.push(tempQtyReturned);
+            const tempTotalValueLoss = {
+              product_name: x.name,
+              metric_name: "Total Value Loss",
+              value: parseFloat(x.customer_returned_goods_total_value),
+            };
+            totalValueLoss.push(tempTotalValueLoss);
+          });
+
+          setData([...quantityReturned, ...totalValueLoss]);
+          props.setUserInput(false);
+        })
+        .catch(handleHttpError);
+    },
+    [props, handleHttpError, setData],
+  )
 
   useEffect(() => {
     fetchData();
-  }, [handleHttpError, loading, props.userInput]);
-
-  const fetchData = async () => {
-    await AnalyticsApiHelper.getCustomerReturnedGoodsOrderByValueDesc(props.startDate, props.endDate)
-      .then((result) => {
-        result.forEach((x) => { 
-          const tempQtyReturned = {
-            product_name: x.name,
-            metric_name: "Quantity Returned",
-            value: parseInt(x.quantity_returned),
-          };
-          quantityReturned.push(tempQtyReturned);
-          const tempTotalValueLoss = {
-            product_name: x.name,
-            metric_name: "Total Value Loss",
-            value: parseFloat(x.customer_returned_goods_total_value),
-          };
-          totalValueLoss.push(tempTotalValueLoss);
-        });
-      })
-      .catch(handleHttpError);
-    setData([...quantityReturned, ...totalValueLoss]);
-    setLoading(false);
-    props.setUserInput(false);
-  }
+  }, [fetchData]);
 
   const config = {
     data,
