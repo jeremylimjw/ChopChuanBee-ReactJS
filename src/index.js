@@ -10,7 +10,6 @@ import RequireAuth from './auth/RequireAuth';
 import { View } from './enums/View';
 
 import LoginPage from './components/LoginPage';
-import MyTemplate from './components/MyTemplate';
 import ManageAccountsPage from './components/admin/ManageAccountsPage';
 import ViewAccountPage from './components/admin/ViewAccountPage';
 import ViewLogsPage from './components/admin/ViewLogsPage';
@@ -51,12 +50,13 @@ import PaymentsDashboard from './components/analytics/PaymentsDashboard';
 import ProfitabilityDashboard from './components/analytics/ProfitabilityDashboard';
 import InventoryDashboard from './components/analytics/InventoryDashboard';
 import ProductDashboard from './components/analytics/ProductDashboard';
+import Home from './components/Home';
 
 // Add on more routes here
 const routes = [
   {
     path: '/',
-    component: <MyTemplate />,
+    component: <Home />,
   },
   {
     path: '/admin',

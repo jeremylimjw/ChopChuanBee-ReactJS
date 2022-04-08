@@ -8,7 +8,7 @@ import { View } from '../../enums/View'
 
 
 // Add on more menu items here
-const menu = [
+export const menu = [
   {
     role: View.ADMIN.name,
     title: 'Admin',
@@ -88,7 +88,7 @@ const menu = [
   },
 ]
 
-export default function Sidebar() {
+export function Sidebar() {
 
     const { hasViewAccessTo } = useApp();
     const location = useLocation();
