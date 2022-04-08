@@ -93,6 +93,8 @@ export default function AgingReceivableGraph() {
       position: "middle",
       formatter: (x) => "",
     },
+    colorField: 'aged_duration',
+    color:['#e84258','#fd8060', '#fee191','#b0d8a4'],
     interactions: [
       {
         aged_duration: "active-region",
