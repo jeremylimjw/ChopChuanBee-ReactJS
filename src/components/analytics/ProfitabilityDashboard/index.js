@@ -25,11 +25,11 @@ export default function ProfitabilityDashboard() {
                 </TabPane>
 
                 <TabPane tab="Sales Breakdown" key="3">
-                    <SalesBreakdownData />
+                    <SalesBreakdownData currTime={currTime} oneYearAgo={oneYearAgo} />
                 </TabPane>
 
                 <TabPane tab="Cash Flow" key="4">
-                    <CashFlowData />
+                    <CashFlowData currTime={currTime} oneYearAgo={oneYearAgo} />
                 </TabPane>
             </Tabs>
         </MyLayout>

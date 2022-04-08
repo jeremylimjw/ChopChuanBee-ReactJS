@@ -215,5 +215,35 @@ export class AnalyticsApiHelper {
       .get("/analytics/SOtable", { params })
       .then((res) => res.data)
   }
+
+
+  // --- Inventory Dashboard
+  // Inventory Level
+  static async getRankedInventory() {
+    return axiosObject.get("/analytics/Minimum_Inventory_10")
+      .then((res) => res.data)
+  }
+
+
+  // --- Profitability Dashboard
+  // Sales Breakdown
+  static async getSalesBreakdown(start_date, end_date) {
+    const params = {
+      start_date: start_date.toISOString(),
+      end_date: end_date.toISOString(),
+    }
+    return axiosObject.get("/analytics/Sales_Breakdown", { params })
+      .then((res) => res.data)
+  }
+  // Cash Flow
+  static async getCashFlow(start_date, end_date) {
+    const params = {
+      start_date: start_date.toISOString(),
+      end_date: end_date.toISOString(),
+    }
+    return axiosObject.get("/analytics/cash_flow", { params })
+      .then((res) => res.data)
+  }
+
 }
 
