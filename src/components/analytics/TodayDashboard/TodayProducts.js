@@ -25,7 +25,7 @@ export default function TodayProducts(props) {
       }, [handleHttpError, loading]);
 
     return <>
-    { data.length === 0 ? "" :
+    {/* { data.length === 0 ? "" : */}
     <div style={{display: "flex", flexDirection: "row"}} >
         <MyCard style={{ marginRight: 0, marginBottom: 0, width: "-webkit-fill-available" }} >
             <MyToolbar title="Products Sold Today"></MyToolbar>
@@ -36,6 +36,7 @@ export default function TodayProducts(props) {
             <MyToolbar title="Top 5 Products Sold Today By Contribution Margin"></MyToolbar>
             <TodayProductsChart data={data} />
         </MyCard>
-    </div> }
+    </div> 
+    {/* } */}
   </>
 }

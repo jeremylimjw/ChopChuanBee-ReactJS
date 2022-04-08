@@ -193,5 +193,27 @@ export class AnalyticsApiHelper {
       .get("/analytics/summary_table", { params })
       .then((res) => res.data)
   }
+
+  static async getPOTable(start_date, end_date) {
+    const params = {}
+    if (start_date && end_date) {
+      params.start_date = start_date.toISOString();
+      params.end_date = end_date.toISOString();
+    }
+    return axiosObject
+      .get("/analytics/POtable", { params })
+      .then((res) => res.data)
+  }
+
+  static async getSOTable(start_date, end_date) {
+    const params = {}
+    if (start_date && end_date) {
+      params.start_date = start_date.toISOString();
+      params.end_date = end_date.toISOString();
+    }
+    return axiosObject
+      .get("/analytics/SOtable", { params })
+      .then((res) => res.data)
+  }
 }
 

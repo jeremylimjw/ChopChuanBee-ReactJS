@@ -18,17 +18,17 @@ export default function TodayDashboard() {
     <MyLayout bannerTitle="Today Dashboard">
         <div style={{display: 'flex', flexDirection: 'column'}}>
           <TodayProfitability currDate={currDate} currTime={currTime} />
-          <TodayProducts currDate={oneYearAgo} currTime={currTime} />
+          <TodayProducts currDate={currDate} currTime={currTime} />
 
           <div style={{display: 'flex', flexDirection: 'row'}}>
-            <TodaySalesOrders currDate={oneYearAgo} currTime={currTime} />
-            <TodayPurchaseOrders currDate={oneYearAgo} currTime={currTime} />
+            <TodaySalesOrders currDate={currDate} currTime={currTime} />
+            <TodayPurchaseOrders currDate={currDate} currTime={currTime} />
           </div>
 
           <div style={{display: 'flex', flexDirection: 'row'}}>
-            <TodayInventoryReturns currDate={oneYearAgo} currTime={currTime} />
-            <TodaySalesReturns currDate={oneYearAgo} currTime={currTime} />
-            <TodayDamagedGoods currDate={oneYearAgo} currTime={currTime} />
+            <TodayInventoryReturns currDate={currDate} currTime={currTime} />
+            <TodaySalesReturns currDate={currDate} currTime={currTime} />
+            <TodayDamagedGoods currDate={currDate} currTime={currTime} />
           </div>
         </div>
     </MyLayout>

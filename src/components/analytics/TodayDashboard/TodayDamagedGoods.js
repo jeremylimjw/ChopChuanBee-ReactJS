@@ -48,7 +48,7 @@ export default function TodayDamagedGoods(props) {
     ];
 
     return (<>
-    { data.length === 0 ? "" :
+    {/* { data.length === 0 ? "" : */}
     <MyCard style={{ marginBottom: 0, width: "-webkit-fill-available" }} >
         <MyToolbar title="Damaged Goods Today"></MyToolbar>
         <Table
@@ -60,6 +60,6 @@ export default function TodayDamagedGoods(props) {
             pagination={{ pageSize: 3, showTotal }}
         />
     </MyCard>
-    }
+    {/* } */}
     </>)
 }

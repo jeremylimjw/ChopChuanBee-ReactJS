@@ -48,7 +48,7 @@ export default function TodaySalesReturns(props) {
     ];
 
     return (<>
-    { data.length === 0 ? "" :
+    {/* { data.length === 0 ? "" : */}
     <MyCard style={{ marginRight: 0, marginBottom: 0, width: "-webkit-fill-available" }} >
         <MyToolbar title="Sales Returns Today"></MyToolbar>
         <Table
@@ -60,6 +60,6 @@ export default function TodaySalesReturns(props) {
             pagination={{ pageSize: 3, showTotal }}
         />
     </MyCard>
-    }
+    {/* } */}
     </>)
 }
