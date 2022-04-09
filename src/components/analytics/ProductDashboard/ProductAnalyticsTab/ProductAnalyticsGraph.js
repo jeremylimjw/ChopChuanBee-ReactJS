@@ -25,10 +25,13 @@ export default function ProductAnalyticsGraph(props) {
     setProduct(props.data)
     setDateRange(props.dateRange)
     formatChartData(props.data.data)
-  }, [handleHttpError, loading]);
+    setLoading(false)
+  }, [handleHttpError]);
 
   async function onValuesChange(_, form) {
-    // setLoading(true)
+    let productID = product.info.product_uuid
+    let productName = product.info.product_name
+    setLoading(true)
     let start_date, end_date;
     if (form.date && form.date[0] && form.date[1]) {
       start_date = moment(form.date[0]).set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toDate();
@@ -40,15 +43,16 @@ export default function ProductAnalyticsGraph(props) {
     let newPeriodData = {
       data: result,
       info: consolidatedResult.length > 0
-        ? consolidatedResult.find(x => x.product_uuid === product.info.product_uuid)
+        ? { ...consolidatedResult.find(x => x.product_uuid === product.info.product_uuid), product_uuid: productID, product_name: productName }
         : {
-          product_uuid: product.info.product_uuid,
-          product_name: product.info.product_name
+          product_uuid: productID,
+          product_name: productName
         },
       dateRange: [start_date, end_date],
     }
     setProduct(newPeriodData)
     formatChartData(result)
+
   }
 
   const formatChartData = (data) => {
@@ -82,6 +86,7 @@ export default function ProductAnalyticsGraph(props) {
     setLineData([...avgCOGS, ...avgPrice])
     setContributionLineData([...totalContribution])
     setBarData(qtySold)
+    setLoading(false)
   }
 
 
@@ -168,46 +173,47 @@ export default function ProductAnalyticsGraph(props) {
         <ProductAnalyticsCard
           title='Average Cost of Goods Sold'
           productName=''
-          indicatorValue={`$${parseFloat(product?.info.average_cogs || 0).toFixed('2')}` || '$0'}
+          indicatorValue={`$${parseFloat(product?.info?.average_cogs || 0).toFixed('2')}` || '$0'}
         />
         <ProductAnalyticsCard
           title='Average Selling Price'
           productName=''
-          indicatorValue={`$${parseFloat(product?.info.average_selling_price || 0).toFixed('2')}` || '$0'}
+          indicatorValue={`$${parseFloat(product?.info?.average_selling_price || 0).toFixed('2')}` || '$0'}
         />
         <ProductAnalyticsCard
           title='Quantity Sold'
           productName=''
-          indicatorValue={product?.info.quantity_sold || 0}
+          indicatorValue={product?.info?.quantity_sold || 0}
         />
         <ProductAnalyticsCard
           title='Total Contribution Value'
           productName=''
-          indicatorValue={`$${parseFloat(product?.info.total_contribution || 0).toFixed('2')}` || '$0'}
+          indicatorValue={`$${parseFloat(product?.info?.total_contribution || 0).toFixed('2')}` || '$0'}
         />
         <ProductAnalyticsCard
           title='Inventory Turnover'
           productName=''
-          indicatorValue={`${parseFloat(product?.info.inventory_turnaround_period || 0).toFixed('2')}` || '0.00'}
+          indicatorValue={`${parseFloat(product?.info?.inventory_turnaround_period || 0).toFixed('2')}` || '0.00'}
         />
       </Space>
       <MyCard style={{ marginLeft: '3px', marginRight: '3px' }}>
-        <MyToolbar title={product?.info.product_name}>
+        <MyToolbar title={product?.info?.product_name}>
           <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
             <Form.Item name='date'>
               <DatePicker.RangePicker defaultValue={[moment(props.data.dateRange[0], dateFormat), moment(props.data.dateRange[1], dateFormat)]} />
             </Form.Item>
           </Form>
         </MyToolbar>
-        <Tabs defaultActiveKey='1' type="card">
-          <Tabs.TabPane tab='Price' key='1'>
-            <Line {...lineConfig} />
-          </Tabs.TabPane>
-          <Tabs.TabPane tab='Sales' key='2'>
-            <DualAxes {...dualAxisConfig} />
-          </Tabs.TabPane>
-        </Tabs>
-
+        {loading ? <div /> :
+          <Tabs defaultActiveKey='1' type="card">
+            <Tabs.TabPane tab='Price' key='1'>
+              <Line {...lineConfig} />
+            </Tabs.TabPane>
+            <Tabs.TabPane tab='Sales' key='2'>
+              <DualAxes {...dualAxisConfig} />
+            </Tabs.TabPane>
+          </Tabs>
+        }
         <Button
           icon={<LeftOutlined />}
           onClick={() => props.handleViewMode({

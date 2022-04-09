@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Column } from '@ant-design/plots';
-import { DatePicker, Form, Tabs, Typography } from 'antd';
+import { DatePicker, Form, Typography } from 'antd';
 import MyCard from '../../../common/MyCard';
 import { AnalyticsApiHelper } from '../../../../api/AnalyticsApiHelper';
 import { useApp } from '../../../../providers/AppProvider';
@@ -15,14 +15,13 @@ export default function ARTrendsGraph() {
     const [dateRange, setDateRange] = useState([])
     const { handleHttpError } = useApp();
     const [form] = Form.useForm()
-    let start = moment().subtract(1, 'year')
+    let start = moment().subtract(1, 'year').endOf('month')
     let end = moment().startOf('day')
 
     useEffect(() => {
         setDateRange([start, end])
         AnalyticsApiHelper.getAPARSummaryData(start, end)
             .then((results) => {
-                console.log(results)
                 formatChartData(results)
                 setLoading(false)
             })
@@ -31,17 +30,15 @@ export default function ARTrendsGraph() {
 
     function onValuesChange(_, form) {
         // setLoading(true)
-        console.log(form)
         let start_date, end_date;
         if (form.date && form.date[0] && form.date[1]) {
-            start_date = moment(form.date[0]).toDate();
-            end_date = moment(form.date[1]).toDate();
+            start_date = moment(form.date[0]).endOf('month').toDate();
+            end_date = moment(form.date[1]).endOf('month').add(1, 'day').toDate();
         }
         setDateRange([start_date, end_date])
         AnalyticsApiHelper.getAPARSummaryData(start_date, end_date)
             .then((results) => {
                 formatChartData(results)
-                console.log(results)
                 setLoading(false)
             })
     }
@@ -53,12 +50,12 @@ export default function ARTrendsGraph() {
             apBalance.push({
                 name: 'Outstanding AP',
                 value: parseFloat(item.balance_ap),
-                date: moment(item.all_months).subtract(1, 'day').format('MMMM')
+                date: moment(item.all_months).subtract(1, 'day').format('MMMM YY')
             })
             apSettled.push({
                 name: 'Settled AP',
                 value: parseFloat(item.ap_settled),
-                date: moment(item.all_months).subtract(1, 'day').format('MMMM')
+                date: moment(item.all_months).subtract(1, 'day').format('MMMM YY')
             })
         })
         setData([...apBalance, ...apSettled])

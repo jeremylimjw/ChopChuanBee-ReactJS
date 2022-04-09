@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ProductAnalyticsTable from './ProductAnalyticsTable';
-import { Form, Typography, Tabs } from 'antd';
+import { Typography } from 'antd';
 import MyCard from '../../../common/MyCard';
 import moment from 'moment';
 import ProductAnalyticsGraph from './ProductAnalyticsGraph';
@@ -9,15 +9,11 @@ import { AnalyticsApiHelper } from '../../../../api/AnalyticsApiHelper';
 
 export default function ProductAnalyticsData(props) {
   const { handleHttpError } = useApp();
-  const { TabPane } = Tabs;
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([])
   const [productData, setProductData] = useState()
   const [dateRange, setDateRange] = useState()
   const [tableMode, setTableMode] = useState(true)
-  const [initialized, setInitialized] = useState(false)
-  const [searchInputForm] = Form.useForm();
-  const dateFormat = 'YYYY/MM/DD';
 
   useEffect(() => {
     let start = moment().subtract(1, 'year')
@@ -49,7 +45,6 @@ export default function ProductAnalyticsData(props) {
         data: result
       })
     } else {
-      setDateRange(item.dateRange)
       setTableMode(true)
     }
   }

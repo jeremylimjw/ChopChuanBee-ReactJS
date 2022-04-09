@@ -1,17 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useApp } from '../../../../providers/AppProvider';
-import { Table, Form, Button, Input, DatePicker, Space } from 'antd';
-import MyCard from '../../../common/MyCard';
+import { Table, Form, Button, Input } from 'antd';
 import MyToolbar from '../../../common/MyToolbar';
-import { AnalyticsApiHelper } from '../../../../api/AnalyticsApiHelper';
 import { showTotal } from '../../../../utilities/table';
-import moment from 'moment';
-import debounce from 'lodash.debounce';
 import { Link } from 'react-router-dom';
 import { SearchOutlined } from '@ant-design/icons';
 
 export default function CustomerAnalyticsTable(props) {
-    const { handleHttpError, hasWriteAccessTo } = useApp();
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
     const [form] = Form.useForm();
@@ -21,10 +15,14 @@ export default function CustomerAnalyticsTable(props) {
     }, [props.data])
 
     const handleSearch = (str) => {
-        let arr = props.data.filter((item) => {
-            return item.sales_order_id.toString() === str.toLowerCase()
-        })
-        setData(arr)
+        if (str) {
+            let arr = props.data.filter((item) => {
+                return item.sales_order_id.toString().includes(str.toLowerCase())
+            })
+            setData(arr)
+        } else {
+            setData(props.data)
+        }
     }
 
     function resetForm() {

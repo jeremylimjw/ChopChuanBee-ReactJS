@@ -9,7 +9,6 @@ export default function CustomerAnalyticsCard(props) {
     const { handleHttpError } = useApp();
     const start = props.period[0].format('LL')
     const end = props.period[1].format('LL')
-    console.log(start)
     return (
         <>
             <MyCard style={{ minWidth: '250px', marginLeft: '3px' }}>

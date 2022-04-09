@@ -15,7 +15,7 @@ export default function ARTrendsGraph() {
   const [dateRange, setDateRange] = useState([])
   const { handleHttpError } = useApp();
   const [form] = Form.useForm()
-  let start = moment().subtract(1, 'year')
+  let start = moment().subtract(1, 'year').endOf('month')
   let end = moment().startOf('day')
 
   useEffect(() => {
@@ -30,11 +30,10 @@ export default function ARTrendsGraph() {
 
   function onValuesChange(_, form) {
     // setLoading(true)
-    console.log(form)
     let start_date, end_date;
     if (form.date && form.date[0] && form.date[1]) {
-      start_date = moment(form.date[0]).toDate();
-      end_date = moment(form.date[1]).toDate();
+      start_date = moment(form.date[0]).endOf('month').toDate();
+      end_date = moment(form.date[1]).endOf('month').add(1, 'day').toDate();
     }
     setDateRange([start_date, end_date])
     AnalyticsApiHelper.getAPARSummaryData(start_date, end_date)
@@ -51,12 +50,12 @@ export default function ARTrendsGraph() {
       arBalance.push({
         name: 'Outstanding AR',
         value: parseFloat(item.balance_ar),
-        date: moment(item.all_months).subtract(1, 'day').format('MMMM')
+        date: moment(item.all_months).subtract(1, 'day').format('MMMM YY')
       })
       arSettled.push({
         name: 'AR Settled',
         value: parseFloat(item.ar_settled),
-        date: moment(item.all_months).subtract(1, 'day').format('MMMM')
+        date: moment(item.all_months).subtract(1, 'day').format('MMMM YY')
       })
     })
     setData([...arBalance, ...arSettled])
