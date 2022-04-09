@@ -31,7 +31,6 @@ export default function ManageCataloguePage() {
     const dataFetch = useCallback(() => {
         CatalogueApiHelper.getAllMenuItems()
             .then((results) => {
-                console.log(results)
                 setCatalogues(results);
             })
             .catch(handleHttpError);
@@ -49,7 +48,8 @@ export default function ManageCataloguePage() {
     }, []);
 
     function onValuesChange(_, form) {
-        CatalogueApiHelper.get(form)
+        setLoading(true);
+        CatalogueApiHelper.getAllMenuItems(form)
             .then((results) => {
                 setCatalogues(results);
                 setLoading(false);
@@ -127,7 +127,7 @@ export default function ManageCataloguePage() {
                             />
                         </Form.Item>
 
-                        <Form.Item name='Category'>
+                        <Form.Item name='menu_category_id'>
                             <Select style={{ width: 140 }} placeholder='Filter by Category'>
                                 {allCategory?.map((category) => (
                                     <Select.Option value={category?.id}>{category?.name}</Select.Option>

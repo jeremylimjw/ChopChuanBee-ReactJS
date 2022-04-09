@@ -1,10 +1,16 @@
 import { axiosObject } from './axiosWrapper';
 
 export class CatalogueApiHelper {
-    static async getAllMenuItems() {
+    static async getAllMenuItems(query) {
         const params = {
             short: true,
         };
+        if (query?.name) {
+            params.name_like = query.name;
+        }
+        if (query?.menu_category_id) {
+            params.menu_category_id = query.menu_category_id;
+        }
         return axiosObject.get('/productCatalogue', { params: params })
             .then((res) => res.data);
     }
