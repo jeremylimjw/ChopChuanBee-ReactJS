@@ -23,8 +23,8 @@ export class CatalogueApiHelper {
                 name: menuItem.name,
                 description: menuItem.description,
                 image: image,
-                menu_category_id: menuItem.category_Id,
-                product_id: menuItem.product_Id,
+                menu_category_id: menuItem.menu_category_id,
+                product_id: menuItem.product_id,
             })
             .then((res) => res.data);
     }

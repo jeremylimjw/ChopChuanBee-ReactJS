@@ -1,6 +1,6 @@
 import { EditOutlined, SaveOutlined, UploadOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { Popconfirm, Button, message, Form, Input, InputNumber, Typography, Upload, Table } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import { CatalogueApiHelper } from '../../api/CatalogueApiHelper';
@@ -27,10 +27,9 @@ export default function ViewCataloguePage(props) {
         { url: `/catalogue/categories/${category?.id}`, name: category?.name },
     ];
 
-    useEffect(() => {
+    const dataFetch = useCallback(() => {
         CatalogueApiHelper.getMenuCategoryById(id)
             .then((result) => {
-                console.log(result[0].attachedMenuItems);
                 if (result.length === 0) {
                     navigate('../../');
                     return;
@@ -39,12 +38,15 @@ export default function ViewCataloguePage(props) {
                 setFilteredCatalogue(result[0]?.attachedMenuItems);
             })
             .catch(handleHttpError);
+    }, [setCategory, setFilteredCatalogue]);
+
+    useEffect(() => {
+        dataFetch();
     }, [id, handleHttpError, navigate]);
 
     function handleCategoryDeletion() {
         CatalogueApiHelper.deleteCategory(id)
             .then((updateMenuItem) => {
-                // console.log(id);
                 setLoading(false);
                 navigate('../categories');
                 message.success('Category successfully deleted!');
@@ -62,7 +64,7 @@ export default function ViewCataloguePage(props) {
                     title='Confirm delete?'
                     placement='leftTop'
                     onConfirm={handleCategoryDeletion}
-                    disabled={loading}
+                    disabled={filteredCatalogue?.length > 0 ? true : false}
                 >
                     <Button
                         type='danger'
@@ -78,10 +80,11 @@ export default function ViewCataloguePage(props) {
         );
     }
 
-    function handleCatalogueDelete() {
+    function handleCatalogueDelete(id) {
         CatalogueApiHelper.deleteMenuItem(id)
             .then((updateMenuItem) => {
                 setLoading(false);
+                dataFetch();
                 message.success('Catalogue successfully deleted!');
             })
             .catch(handleHttpError)
@@ -115,11 +118,10 @@ export default function ViewCataloguePage(props) {
             width: 100,
             ellipsis: true,
             render: (id, record) => (
-                // console.log('record', record.id),
                 <Popconfirm
                     title='Confirm delete?'
                     placement='leftTop'
-                    // onConfirm={handleCatalogueDelete(record.id)}
+                    onConfirm={() => handleCatalogueDelete(record.id)}
                 >
                     <Button type='danger' icon={<MinusCircleOutlined />} style={{ width: 100 }}>
                         Delete

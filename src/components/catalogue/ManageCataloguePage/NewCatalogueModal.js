@@ -15,19 +15,6 @@ export default function NewCatalogueModal({ isModalVisible, setIsModalVisible, m
     const [allProduct, setAllProduct] = useState([]);
     const [allCategory, setAllCategory] = useState();
 
-    // const onProductSearch = useCallback(
-    //     (name) => {
-    //         ProductApiHelper.get()
-    //             .then((results) => {
-    //                 setAllProduct(results);
-    //                 setLoading(false);
-    //             })
-    //             .catch(handleHttpError)
-    //             .catch(() => setLoading(false));
-    //     },
-    //     [handleHttpError, setLoading]
-    // );
-
     const getProduct = () => {
         ProductApiHelper.get()
             .then((results) => {
@@ -38,38 +25,16 @@ export default function NewCatalogueModal({ isModalVisible, setIsModalVisible, m
             .catch(() => setLoading(false));
     };
 
-    // const onCategorySearch = useCallback(
-    //     (name) => {
-    //         CatalogueApiHelper.getAllCategory()
-    //             .then((results) => {
-    //                 setAllCategory(results);
-    //                 setLoading(false);
-    //             })
-    //             .catch(handleHttpError)
-    //             .catch(() => setLoading(false));
-    //     },
-    //     [handleHttpError, setLoading]
-    // );
-
     useEffect(() => {
-        // if (isModalVisible) {
-        //     onSearch('');
-        // }
         CatalogueApiHelper.getAllCategory()
             .then((results) => {
                 setAllCategory(results);
                 getProduct();
-
                 setLoading(false);
             })
             .catch(handleHttpError)
             .catch(() => setLoading(false));
-    }, [
-        isModalVisible,
-        form,
-        setProduct,
-        // onSearch
-    ]);
+    }, [isModalVisible, form, setAllCategory, setLoading]);
 
     function onCancel() {
         setIsModalVisible(false);
@@ -80,7 +45,6 @@ export default function NewCatalogueModal({ isModalVisible, setIsModalVisible, m
     async function handleSubmit() {
         try {
             const menuItem = await form.validateFields();
-            console.log(menuItem);
             setLoading(true);
 
             CatalogueApiHelper.createNewMenu(menuItem)
@@ -135,7 +99,7 @@ export default function NewCatalogueModal({ isModalVisible, setIsModalVisible, m
                     <Input.TextArea rows={4} />
                 </Form.Item>
 
-                <Form.Item label='Upload Image' name='image'>
+                <Form.Item label='Upload Image' name='image' rules={[REQUIRED]}>
                     <Upload.Dragger listType='picture' accept='.png,.jpeg,.svg' beforeUpload={() => false} maxCount={1}>
                         Drag image here OR
                         <br />

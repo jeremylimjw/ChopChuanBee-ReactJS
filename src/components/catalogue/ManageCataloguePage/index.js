@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Button, Form, Input, Select, Table, Tag } from 'antd';
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
@@ -19,7 +19,7 @@ const breadcrumbs = [
     { url: '/catalogue/menuItems', name: 'Menu Items' },
 ];
 
-export default function ManageAccountsPage() {
+export default function ManageCataloguePage() {
     const { handleHttpError, hasWriteAccessTo } = useApp();
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -28,29 +28,26 @@ export default function ManageAccountsPage() {
 
     const [form] = Form.useForm();
 
-    useEffect(() => {
-        fetchData();
-        setLoading(false);
-    }, [handleHttpError, loading]);
-
-    const fetchData = async () => {
-        await CatalogueApiHelper.getAllMenuItems()
+    const dataFetch = useCallback(() => {
+        CatalogueApiHelper.getAllMenuItems()
             .then((results) => {
-                console.log(results);
                 setCatalogues(results);
             })
             .catch(handleHttpError);
 
-        await CatalogueApiHelper.getAllCategory()
+        CatalogueApiHelper.getAllCategory()
             .then((results) => {
-                // console.log(results);
                 setAllCategory(results);
             })
             .catch(handleHttpError);
-    };
+    }, [setCatalogues, setAllCategory]);
+
+    useEffect(() => {
+        dataFetch();
+        setLoading(false);
+    }, [handleHttpError, loading]);
 
     function onValuesChange(_, form) {
-        console.log('searching');
         CatalogueApiHelper.get(form)
             .then((results) => {
                 setCatalogues(results);
@@ -146,7 +143,6 @@ export default function ManageAccountsPage() {
                 </MyToolbar>
 
                 <Table
-                    // dataSource={data}
                     dataSource={catalogues}
                     columns={columns}
                     loading={loading}

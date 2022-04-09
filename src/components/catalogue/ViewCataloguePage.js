@@ -10,7 +10,6 @@ import MyCard from '../common/MyCard';
 import MyLayout from '../common/MyLayout';
 import MyToolbar from '../common/MyToolbar';
 import { REQUIRED } from '../../utilities/form';
-import { DeleteOutlined } from '@ant-design/icons/lib/icons';
 
 export default function ViewCataloguePage(props) {
     const { id } = useParams();
@@ -34,10 +33,9 @@ export default function ViewCataloguePage(props) {
 
     useEffect(() => form.resetFields(), [catalogue]);
 
-    useEffect(() => {
+    const dataFetch = useCallback(() => {
         CatalogueApiHelper.getMenuItemById(id)
             .then((result) => {
-                console.log(result);
                 if (result.length === 0) {
                     navigate('../../');
                     return;
@@ -47,6 +45,10 @@ export default function ViewCataloguePage(props) {
                 getProduct();
             })
             .catch(handleHttpError);
+    }, [setCategory]);
+
+    useEffect(() => {
+        dataFetch();
     }, [id, handleHttpError, navigate]);
 
     const getProduct = () => {
@@ -72,7 +74,7 @@ export default function ViewCataloguePage(props) {
     async function onFinish() {
         try {
             const values = await form.validateFields();
-            console.log(values);
+            values.id = id;
             setLoading(true);
             CatalogueApiHelper.updateMenuItem({ ...catalogue, ...values })
                 .then(() => {
@@ -80,6 +82,7 @@ export default function ViewCataloguePage(props) {
                     message.success(`Scheme successfully updated!`);
                     setLoading(false);
                     setEditing(false);
+                    dataFetch();
                 })
                 .catch(handleHttpError)
                 .catch(() => setLoading(false));
@@ -89,7 +92,6 @@ export default function ViewCataloguePage(props) {
     function handleDelete() {
         CatalogueApiHelper.deleteMenuItem(id)
             .then((updateMenuItem) => {
-                // console.log(id);
                 setLoading(false);
                 navigate('../menuItems');
                 message.success('Catalogue successfully deleted!');
@@ -153,7 +155,7 @@ export default function ViewCataloguePage(props) {
                             {!editing ? <Typography>{catalogue?.name || '-'}</Typography> : <Input />}
                         </Form.Item>
 
-                        <Form.Item label='Product' name='product_name'>
+                        <Form.Item label='Product' name='product_id'>
                             {!editing ? (
                                 <Typography>{catalogue?.product_name || '-'}</Typography>
                             ) : (
@@ -191,7 +193,7 @@ export default function ViewCataloguePage(props) {
                             )}
                         </Form.Item>
 
-                        <Form.Item label='Upload Image' name='image'>
+                        <Form.Item label='Upload Image' name='image' rules={[REQUIRED]}>
                             {!editing ? (
                                 <Image src={catalogue?.image} />
                             ) : (
@@ -201,8 +203,6 @@ export default function ViewCataloguePage(props) {
                                     beforeUpload={() => false}
                                     defaultFileList={[
                                         {
-                                            // uid: 'abc',
-                                            // name:"existing_file.png"
                                             url: `${catalogue?.image}`,
                                         },
                                     ]}

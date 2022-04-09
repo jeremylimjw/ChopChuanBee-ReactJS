@@ -30,7 +30,6 @@ export default function ManageCategoryPage() {
         setLoading(true);
         CatalogueApiHelper.getAllCategory()
             .then((results) => {
-                // console.log(results);
                 setCategories(results);
                 setLoading(false);
             })
@@ -54,7 +53,6 @@ export default function ManageCategoryPage() {
                 </MyToolbar>
 
                 <Table
-                    // dataSource={data}
                     dataSource={categories}
                     columns={columns}
                     loading={loading}
