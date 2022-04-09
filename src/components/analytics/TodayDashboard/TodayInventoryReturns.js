@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Table } from "antd";
 import { showTotal } from "../../../utilities/table";
 import { sortByNumber, sortByString } from '../../../utilities/sorters';
@@ -13,14 +13,20 @@ export default function TodayInventoryReturns(props) {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState([]);
 
+    const fetchData = useCallback(
+        async() => {
+            await AnalyticsApiHelper.getSupplierReturnedGoodsOrderByQtyDesc(props.currDate, props.currTime)
+            .then((results) => {
+              setData(results);
+              setLoading(false);
+            })
+            .catch(handleHttpError);
+        }, [props, handleHttpError, setData]
+    )
+
     useEffect(() => {
-        AnalyticsApiHelper.getSupplierReturnedGoodsOrderByQtyDesc(props.currDate, props.currTime)
-          .then((results) => {
-            setData(results);
-            setLoading(false);
-          })
-          .catch(handleHttpError);
-      }, [handleHttpError, loading]);
+        fetchData();
+      }, [fetchData, loading]);
 
     const columns = [
         {
@@ -48,7 +54,6 @@ export default function TodayInventoryReturns(props) {
     ];
 
     return (<>
-    {/* { data.length === 0 ? "" : */}
     <MyCard style={{ marginRight: 0, marginBottom: 0, width: "-webkit-fill-available" }} >
         <MyToolbar title="Inventory Returns Today"></MyToolbar>
         <Table
@@ -60,6 +65,5 @@ export default function TodayInventoryReturns(props) {
             pagination={{ pageSize: 3, showTotal }}
         />
     </MyCard>
-    {/* } */}
     </>)
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Table } from "antd";
 import { showTotal } from "../../../utilities/table";
 import { sortByNumber, sortByString } from '../../../utilities/sorters';
@@ -11,16 +11,22 @@ import { AnalyticsApiHelper } from "../../../api/AnalyticsApiHelper";
 export default function TodayDamagedGoods(props) {    
     const { handleHttpError } = useApp();
     const [data, setData] = useState([]);
-    const [loading, setLoading] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    const fetchData = useCallback(
+        async() => {
+            await AnalyticsApiHelper.getDamagedGoodsOrderByQtyDesc(props.currDate, props.currTime)
+            .then((results) => {
+              setData(results);
+              setLoading(false);
+            })
+            .catch(handleHttpError);
+        }, [props, handleHttpError, setData]
+    )
 
     useEffect(() => {
-        AnalyticsApiHelper.getDamagedGoodsOrderByQtyDesc(props.currDate, props.currTime)
-          .then((results) => {
-            setData(results);
-            setLoading(false);
-          })
-          .catch(handleHttpError);
-      }, [handleHttpError, loading]);
+        fetchData();
+      }, [fetchData, loading]);
 
     const columns = [
         {
@@ -48,7 +54,6 @@ export default function TodayDamagedGoods(props) {
     ];
 
     return (<>
-    {/* { data.length === 0 ? "" : */}
     <MyCard style={{ marginBottom: 0, width: "-webkit-fill-available" }} >
         <MyToolbar title="Damaged Goods Today"></MyToolbar>
         <Table
@@ -60,6 +65,5 @@ export default function TodayDamagedGoods(props) {
             pagination={{ pageSize: 3, showTotal }}
         />
     </MyCard>
-    {/* } */}
     </>)
 }

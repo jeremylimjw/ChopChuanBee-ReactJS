@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Table } from "antd";
 import { showTotal } from "../../../utilities/table";
 import { sortByNumber, sortByString } from '../../../utilities/sorters';
@@ -14,24 +14,32 @@ export default function TodayPurchaseOrders(props) {
     const [loading, setLoading]  = useState(true);
     const [data, setData] = useState([]);
 
+    const fetchData = useCallback(
+        async () => {
+            await AnalyticsApiHelper.getPOTable(props.currDate, props.currTime)
+            .then((results) => {
+              results.map(x => {
+                  x.supplier_name = x.supplier.company_name;
+                  let PO_items_sum = 0;
+                  x.purchase_order_items.forEach((item) => {
+                      if (item.unit_cost !== null) {
+                          PO_items_sum += parseFloat(item.unit_cost) * parseInt(item.quantity);
+                      }
+                  })
+                  x.total_amount = PO_items_sum;
+                  return x;
+              }); 
+              setData(results);
+              setLoading(false);
+            })
+            .catch(handleHttpError);
+        }
+        ,[props, handleHttpError, setData]
+    )
+
     useEffect(() => {
-        AnalyticsApiHelper.getPOTable(props.currDate, props.currTime)
-          .then((results) => {
-            results.forEach(item => {console.log(item.created_at)})
-            results.map(x => {
-                x.supplier_name = x.supplier.company_name;
-                let PO_items_sum = 0;
-                x.purchase_order_items.forEach((item) => {
-                    PO_items_sum += parseFloat(item.unit_cost) * parseInt(item.quantity);
-                })
-                x.total_amount = PO_items_sum;
-                return x;
-            }); 
-            setData(results);
-            setLoading(false);
-          })
-          .catch(handleHttpError);
-      }, [handleHttpError, loading]);
+        fetchData();
+    }, [fetchData, loading]);
 
     const columns = [
         {

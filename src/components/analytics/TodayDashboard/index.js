@@ -10,7 +10,6 @@ import TodaySalesReturns from "./TodaySalesReturns";
 import TodayDamagedGoods from "./TodayDamagedGoods";
 
 export default function TodayDashboard() {
-  const oneYearAgo = moment().clone().subtract(1, "year").set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
   const currDate = moment().clone().startOf('day');
   const currTime = moment();
 

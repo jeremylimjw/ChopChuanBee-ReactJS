@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Table } from "antd";
 import { showTotal } from "../../../utilities/table";
 import { sortByNumber, sortByString } from '../../../utilities/sorters';
@@ -14,24 +14,30 @@ export default function TodaySalesOrders(props) {
     const [loading, setLoading]  = useState(true);
     const [data, setData] = useState([]);
 
+    const fetchData = useCallback(
+        async () => {
+            await AnalyticsApiHelper.getSOTable(props.currDate, props.currTime)
+            .then((results) => {
+              results.map(x => { 
+                  x.customer_name = x.customer.company_name;
+                  let SO_items_sum = 0;
+                  x.sales_order_items.forEach((item) => {
+                      SO_items_sum += parseFloat(item.unit_price) * parseInt(item.quantity);
+                  })
+                  x.total_amount = SO_items_sum;
+                  return x;
+              }); 
+              setData(results);
+              setLoading(false);
+            })
+            .catch(handleHttpError);
+        }
+        ,[props, handleHttpError, setData]
+    )
+
     useEffect(() => {
-        AnalyticsApiHelper.getSOTable(props.currDate, props.currTime)
-          .then((results) => {
-              console.log(results);
-            results.map(x => { 
-                x.customer_name = x.customer.company_name;
-                let SO_items_sum = 0;
-                x.sales_order_items.forEach((item) => {
-                    SO_items_sum += parseFloat(item.unit_price) * parseInt(item.quantity);
-                })
-                x.total_amount = SO_items_sum;
-                return x;
-            }); 
-            setData(results);
-            setLoading(false);
-          })
-          .catch(handleHttpError);
-      }, [handleHttpError, loading]);
+        fetchData();
+    }, [fetchData, loading]);
 
     const columns = [
         {

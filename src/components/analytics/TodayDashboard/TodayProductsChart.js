@@ -21,20 +21,20 @@ export default function TodayProductsChart(props) {
     data = props.data;
   }
 
-  data = data.sort(GetSortOrder("contribution_margin"));
+  data = data.sort(GetSortOrder("quantity_sold"));
 
   const config = {
     data,
-    xField: "contribution_margin",
+    xField: "quantity_sold",
     yField: "product_name",
     barWidthRatio: 0.8,
     tooltip: {
-      fields: ["product_name", "contribution_margin"],
+      fields: ["product_name", "quantity_sold"],
       showTitle: false,
     },
     meta: { 
-      contribution_margin: { 
-        alias: "Contribution Margin"
+      quantity_sold: { 
+        alias: "Quantity Sold"
       },
       product_name: {
         alias: "Product Name"
