@@ -1,4 +1,4 @@
-import { MinusCircleOutlined } from '@ant-design/icons';
+import { MinusCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Popconfirm, Button, message, Table } from 'antd';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router';
@@ -38,11 +38,11 @@ export default function ViewCataloguePage(props) {
                 setFilteredCatalogue(result[0]?.attachedMenuItems);
             })
             .catch(handleHttpError);
-    }, [setCategory, setFilteredCatalogue]);
+    }, [setCategory, setFilteredCatalogue, id, navigate, handleHttpError]);
 
     useEffect(() => {
         dataFetch();
-    }, [id, handleHttpError, navigate]);
+    }, [dataFetch]);
 
     function handleCategoryDeletion() {
         CatalogueApiHelper.deleteCategory(id)
@@ -106,26 +106,23 @@ export default function ViewCataloguePage(props) {
             title: 'Name',
             dataIndex: 'name',
             key: 'name',
-            width: '18%',
+            width: 100,
             ellipsis: true,
             sorter: (a, b) => sortByString(a.name, b.name),
             render: (product, record) => <Link to={`../menuItems/${record.id}`}>{product}</Link>,
         },
         {
             dataIndex: 'id',
-            title: 'Action',
             key: 'link',
-            width: 100,
-            ellipsis: true,
+            align: 'center',
+            width: 20,
             render: (id, record) => (
                 <Popconfirm
                     title='Confirm delete?'
                     placement='leftTop'
                     onConfirm={() => handleCatalogueDelete(record.id)}
                 >
-                    <Button type='danger' icon={<MinusCircleOutlined />} style={{ width: 100 }}>
-                        Delete
-                    </Button>
+                    <Button shape='circle' icon={<DeleteOutlined />} />
                 </Popconfirm>
             ),
         },
@@ -135,7 +132,7 @@ export default function ViewCataloguePage(props) {
         <>
             <MyLayout breadcrumbs={breadcrumbs} bannerTitle={`${category?.name}`} bannerRight={renderDeletionButton()}>
                 <MyCard>
-                    <MyToolbar title='Details'></MyToolbar>
+                    <MyToolbar title='Menu Items'></MyToolbar>
                     <Table
                         dataSource={filteredCatalogue}
                         columns={columns}

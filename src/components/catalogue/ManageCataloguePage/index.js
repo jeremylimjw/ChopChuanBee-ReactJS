@@ -40,12 +40,12 @@ export default function ManageCataloguePage() {
                 setAllCategory(results);
             })
             .catch(handleHttpError);
-    }, [setCatalogues, setAllCategory]);
+    }, [setCatalogues, setAllCategory, handleHttpError]);
 
     useEffect(() => {
         dataFetch();
         setLoading(false);
-    }, []);
+    }, [dataFetch]);
 
     function onValuesChange(_, form) {
         setLoading(true);
