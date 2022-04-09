@@ -11,7 +11,7 @@ import TodayDamagedGoods from "./TodayDamagedGoods";
 
 export default function TodayDashboard() {
   const currDate = moment().clone().startOf('day');
-  const currTime = moment();
+  const currTime = moment().set({ hour: 23, minute: 59, second: 59, millisecond: 999 });
 
   return (
     <MyLayout bannerTitle="Today Dashboard">

@@ -11,11 +11,11 @@ import { AnalyticsApiHelper } from "../../../api/AnalyticsApiHelper";
 export default function TodayInventoryReturns(props) {    
     const { handleHttpError } = useApp();
     const [data, setData] = useState([]);
-    const [loading, setLoading] = useState([]);
+    const [loading, setLoading]  = useState(true);
 
     const fetchData = useCallback(
         async() => {
-            await AnalyticsApiHelper.getSupplierReturnedGoodsOrderByQtyDesc(props.currDate, props.currTime)
+            await AnalyticsApiHelper.getSupplierReturnedGoodsOrderByValueDesc(props.currDate, props.currTime)
             .then((results) => {
               setData(results);
               setLoading(false);

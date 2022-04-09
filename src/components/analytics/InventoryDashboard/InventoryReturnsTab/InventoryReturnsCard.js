@@ -6,7 +6,7 @@ import { AnalyticsApiHelper } from "../../../../api/AnalyticsApiHelper";
 import { formatCurrency } from "../../../../utilities/currency";
 import { Link } from 'react-router-dom';
 
-export default function InventoryReturnsCard(props) {//
+export default function InventoryReturnsCard(props) {
   const [loading, setLoading] = useState(true);
   const { handleHttpError } = useApp();
   const [mostReturnedProduct, setMostReturnedProduct] = useState();
