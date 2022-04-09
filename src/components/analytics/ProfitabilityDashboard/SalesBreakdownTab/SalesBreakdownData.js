@@ -110,12 +110,17 @@ const chartConfig = {
             label: {
                 formatter: (v) => `${(v / 1).toFixed(2)} `,
             },
-        }
+        },
     },
     legend: {
         position: 'top',
     },
     tooltip: {
         showTitle: false
+    },
+    meta: {
+        value: {
+            formatter: (v) => `${(v / 1).toFixed(2)} `,
+        }
     }
 }

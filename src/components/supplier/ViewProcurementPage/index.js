@@ -285,7 +285,7 @@ export default function ViewProcurementPage() {
 
                     <Button icon={<RedoOutlined />} onClick={navigateToCreateForm}>Reorder</Button>
 
-                    {purchaseOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL, POStatus.SENT_TEXT) &&
+                    {purchaseOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL, POStatus.SENT_TEXT, POStatus.ACCEPTED) &&
                       <Popconfirm title="Are you sure? This action cannot be undone." onConfirm={cancelOrder} disabled={loading}>
                         <Button icon={<StopOutlined />} disabled={loading}>Cancel Order</Button>
                       </Popconfirm>

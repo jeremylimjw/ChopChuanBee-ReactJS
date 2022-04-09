@@ -124,5 +124,10 @@ const chartConfig = {
     },
     tooltip: {
         showTitle: false
+    },
+    meta: {
+        value: {
+            formatter: (v) => `${(v / 1).toFixed(2)} `,
+        }
     }
 }
