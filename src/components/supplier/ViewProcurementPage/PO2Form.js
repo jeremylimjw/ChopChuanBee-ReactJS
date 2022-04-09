@@ -71,7 +71,7 @@ export default function PO2Form({ form, purchaseOrder, setPurchaseOrder, loading
                 </Form.Item>
 
                 <Form.Item label="Invoice ID" name="supplier_invoice_id" rules={purchaseOrder.isStatus(POStatus.ACCEPTED) ? [REQUIRED] : []}>
-                    {purchaseOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED) ? 
+                    {purchaseOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL, POStatus.SENT_TEXT, POStatus.ACCEPTED) ? 
                         <Input />
                     :
                         <Typography.Text>{purchaseOrder.supplier_invoice_id}</Typography.Text>
@@ -79,8 +79,8 @@ export default function PO2Form({ form, purchaseOrder, setPurchaseOrder, loading
                 </Form.Item>
 
                 <Form.Item name="charged_under" hidden><Input /></Form.Item>
-                <Form.Item name="charged_under_id" label="Charged Under" rules={purchaseOrder.isStatus(POStatus.PENDING) ? [REQUIRED] : []}>
-                    {purchaseOrder.isStatus(POStatus.PENDING) ? 
+                <Form.Item name="charged_under_id" label="Charged Under" rules={purchaseOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL, POStatus.SENT_TEXT) ? [REQUIRED] : []}>
+                    {purchaseOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL, POStatus.SENT_TEXT) ? 
                         <Select style={{ width: 180 }} onSelect={handleChargedUnderChange}>
                             <Select.Option value={null}>None</Select.Option>
                             { chargedUnders.map((x, idx) => <Select.Option key={idx} value={x.id}>{x.name}</Select.Option>)}
@@ -90,8 +90,8 @@ export default function PO2Form({ form, purchaseOrder, setPurchaseOrder, loading
                     }
                 </Form.Item>
 
-                <Form.Item label="GST" name="has_gst" rules={purchaseOrder.isStatus(POStatus.PENDING) ? [REQUIRED] : []}>
-                    {purchaseOrder.isStatus(POStatus.PENDING) ? 
+                <Form.Item label="GST" name="has_gst" rules={purchaseOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL, POStatus.SENT_TEXT) ? [REQUIRED] : []}>
+                    {purchaseOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL, POStatus.SENT_TEXT) ? 
                         <Radio.Group>
                             <Radio value={1}>None</Radio>
                             <Radio value={2}>Inclusive</Radio>
@@ -103,8 +103,8 @@ export default function PO2Form({ form, purchaseOrder, setPurchaseOrder, loading
                 </Form.Item>
 
                 {showGstRate &&
-                    <Form.Item label="GST Rate" name="gst_rate" rules={purchaseOrder.isStatus(POStatus.PENDING) ? [REQUIRED] : []}>
-                        {purchaseOrder.isStatus(POStatus.PENDING) ? 
+                    <Form.Item label="GST Rate" name="gst_rate" rules={purchaseOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL, POStatus.SENT_TEXT) ? [REQUIRED] : []}>
+                        {purchaseOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL, POStatus.SENT_TEXT) ? 
                             <InputNumber min={0} addonAfter="%" style={{ width: 100 }} />
                         :
                             <Typography.Text>{purchaseOrder.gst_rate} %</Typography.Text>
@@ -112,8 +112,8 @@ export default function PO2Form({ form, purchaseOrder, setPurchaseOrder, loading
                     </Form.Item>
                 }
 
-                <Form.Item label="Payment Term" name="payment_term_id" rules={purchaseOrder.isStatus(POStatus.PENDING) ? [REQUIRED] : []}>
-                    {purchaseOrder.isStatus(POStatus.PENDING) ? 
+                <Form.Item label="Payment Term" name="payment_term_id" rules={purchaseOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL, POStatus.SENT_TEXT) ? [REQUIRED] : []}>
+                    {purchaseOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL, POStatus.SENT_TEXT) ? 
                         <Radio.Group>
                             {Object.keys(PaymentTerm).map((key, idx) => <Radio key={idx} value={PaymentTerm[key].id}>{PaymentTerm[key].name}</Radio>)}
                         </Radio.Group>
@@ -123,8 +123,8 @@ export default function PO2Form({ form, purchaseOrder, setPurchaseOrder, loading
                 </Form.Item>
 
                 {showPaymentMethod &&
-                    <Form.Item label="Payment Method" name="payment_method_id" rules={purchaseOrder.isStatus(POStatus.PENDING) ? [REQUIRED] : []}>
-                        {purchaseOrder.isStatus(POStatus.PENDING) ? 
+                    <Form.Item label="Payment Method" name="payment_method_id" rules={purchaseOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL, POStatus.SENT_TEXT) ? [REQUIRED] : []}>
+                        {purchaseOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL, POStatus.SENT_TEXT) ? 
                             <Select style={{ width: 150 }}>
                                 {Object.keys(PaymentMethod).map((key, idx) => <Select.Option key={idx} value={PaymentMethod[key].id}>{PaymentMethod[key].name}</Select.Option>)}
                             </Select>
@@ -135,7 +135,7 @@ export default function PO2Form({ form, purchaseOrder, setPurchaseOrder, loading
                 }
 
                 <Form.Item label="Remarks" name="remarks">
-                    {purchaseOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED) ? 
+                    {purchaseOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL, POStatus.SENT_TEXT, POStatus.ACCEPTED) ? 
                         <TextArea />
                     :
                         <Typography.Text>{purchaseOrder.remarks || '-'}</Typography.Text>

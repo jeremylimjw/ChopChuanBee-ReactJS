@@ -1,9 +1,9 @@
 import { Form, InputNumber, message, Modal } from 'antd';
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { ProductApiHelper } from '../../../api/ProductApiHelper';
 import { useApp } from '../../../providers/AppProvider';
 
-export default function CreateMovementModal({ product, isModalVisible, setIsModalVisible, setMovements }) {
+export default function CreateMovementModal({ product, setProduct, isModalVisible, setIsModalVisible, setMovements }) {
 
     const { handleHttpError } = useApp();
 
@@ -16,14 +16,29 @@ export default function CreateMovementModal({ product, isModalVisible, setIsModa
         setLoading(true);
         ProductApiHelper.createDamagedInventory(product.id, form.quantity)
             .then(newMovements => {
-                message.success('Damaged inventory successfully recorded!')
                 setMovements(newMovements);
+
+                return refreshProduct(product.id); // refresh product to update stock balance on view
+            })
+            .then(() => {
+                message.success('Damaged inventory successfully recorded!')
                 setLoading(false);
                 setIsModalVisible(false);
             })
             .catch(handleHttpError)
             .catch(() => setLoading(false));
     }
+
+    const refreshProduct = useCallback((productId) => {
+        return ProductApiHelper.getById(productId)
+          .then(result => {
+            if (result.length !== 0) {
+                setProduct(result[0]);
+            }
+          })
+          .catch(handleHttpError)
+      },[setProduct, handleHttpError],
+    )
 
     return (
         <Modal title="Create Damaged Inventory" visible={isModalVisible} width={400}

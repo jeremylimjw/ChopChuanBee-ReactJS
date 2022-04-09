@@ -1,0 +1,47 @@
+#chat .ant-comment-inner {
+    padding: 0;
+    padding-top: 8px;
+}
+
+#chat .ant-comment-actions {
+    margin-top: 0;
+    text-align: right;
+}
+
+#chat .ant-collapse-header {
+    height: 48.5px;
+    display: flex;
+    align-items: center;
+}
+
+#chat .ant-list-item:hover, .new-direct-modal .ant-list-item:hover {
+    background-color: #ebebeb;
+}
+
+#chat .ant-list-item {
+    padding: 16px;
+}
+
+.channels-container .ant-collapse-content > .ant-collapse-content-box {
+    padding: 0;
+    height: 60vh;
+    overflow: auto;
+}
+
+.channels-container .ant-list-item-meta-description {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.chat-container .ant-collapse-content > .ant-collapse-content-box {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    height: 40vh;
+}
+
+.new-direct-modal .ant-list-item, .channels-container .ant-list-item {
+    cursor: pointer;
+    padding: 16px;
+}

@@ -3,8 +3,12 @@ import { axiosObject } from './axiosWrapper';
 export class EmployeeApiHelper {
     static async get(query) {
         const params = { order_by: 'created_at_desc' };
+        if (query?.order_by)
+            params.order_by = query.order_by;
         if (query?.limit)
             params.limit = query.limit;
+        if (query?.offset)
+            params.offset = query.offset;
         if (query?.id)
             params.id = query.id;
         if (query?.name)

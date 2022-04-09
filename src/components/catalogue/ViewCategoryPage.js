@@ -1,5 +1,5 @@
-import { EditOutlined, SaveOutlined, UploadOutlined, MinusCircleOutlined } from '@ant-design/icons';
-import { Popconfirm, Button, message, Form, Input, InputNumber, Typography, Upload, Table } from 'antd';
+import { MinusCircleOutlined } from '@ant-design/icons';
+import { Popconfirm, Button, message, Table } from 'antd';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { Link } from 'react-router-dom';

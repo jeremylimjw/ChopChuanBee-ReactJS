@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Button, Form, Input, Select, Table, Tag } from 'antd';
+import { Button, Form, Input, Select, Table } from 'antd';
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import debounce from 'lodash.debounce';
@@ -31,6 +31,7 @@ export default function ManageCataloguePage() {
     const dataFetch = useCallback(() => {
         CatalogueApiHelper.getAllMenuItems()
             .then((results) => {
+                console.log(results)
                 setCatalogues(results);
             })
             .catch(handleHttpError);
@@ -45,7 +46,7 @@ export default function ManageCataloguePage() {
     useEffect(() => {
         dataFetch();
         setLoading(false);
-    }, [handleHttpError, loading]);
+    }, []);
 
     function onValuesChange(_, form) {
         CatalogueApiHelper.get(form)

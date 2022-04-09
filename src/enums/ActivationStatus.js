@@ -4,3 +4,8 @@ export function getActiveTag(field, labels=['Active', 'Inactive']) {
     if (field == null) return <Tag color='green'>{labels[0]}</Tag>;
     return <Tag color='volcano'>{labels[1]}</Tag>
 }
+
+export function getListTag(field, labels=['Listed', 'Unlisted']) {
+    if (field == null) return <Tag color='green'>{labels[0]}</Tag>;
+    return <Tag color='volcano'>{labels[1]}</Tag>
+}

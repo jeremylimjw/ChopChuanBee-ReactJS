@@ -1,4 +1,4 @@
-import { PlusOutlined, SearchOutlined } from '@ant-design/icons/lib/icons';
+import { PlusOutlined, SearchOutlined, FileExcelOutlined } from '@ant-design/icons/lib/icons';
 import { Button, DatePicker, Form, Input, Progress, Select, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -16,6 +16,7 @@ import { View } from '../../enums/View';
 import { PaymentTerm } from '../../enums/PaymentTerm';
 import { SalesOrder } from '../../models/SalesOrder';
 import { SalesOrderApiHelper } from '../../api/SalesOrderApiHelper';
+import { generateCSV } from '../../utilities/Report/ExcelExporter';
 
 const breadcrumbs = [
     { url: '/customer/sales', name: 'Customer' },
@@ -48,8 +49,8 @@ export default function ManageSalesOrdersPage() {
             endDate = moment(form.date[1]).set({ hour: 23, minute: 59, second: 59, millisecond: 999 }).toDate();
         }
         SalesOrderApiHelper.get({ ...form, startDate, endDate })
-            .then((results) => {
-                setSalesOrders(results.map((x) => new SalesOrder(x)));
+            .then(results => {
+                setSalesOrders(results.map(x => new SalesOrder(x)));
                 setLoading(false);
             })
             .catch(handleHttpError)
@@ -59,6 +60,34 @@ export default function ManageSalesOrdersPage() {
     function resetForm() {
         form.resetFields();
         onValuesChange(null, form.getFieldsValue());
+    }
+
+    const handleExcelExport = () => {
+        let tableHeaders = ['Created At', 'Order ID', 'Customer', 'Payment Term', 'Total', 'Paid', 'Status']
+        let excelData = []
+        excelData = salesOrders.map((record) => {
+            let paymentProgress = record.getPaymentProgress()
+            return [
+                parseDateTime(record.created_at),
+                record.id,
+                record.customer.company_name,
+                record.getPaymentTermTag().props.children,
+                `$${record.getOrderTotal().toFixed(2)}`,
+                isNaN(paymentProgress) ? '0%' : formatExcelProgressField(paymentProgress),
+                record.getStatusTag().props.children
+            ]
+        })
+        generateCSV(excelData, tableHeaders, 'Sales Orders List')
+    }
+
+    const formatExcelProgressField = (value) => {
+        if (value > 100) {
+            return '100%'
+        } else if (value < 0) {
+            return '0%'
+        } else {
+            return `${value}%`
+        }
     }
 
     return (
@@ -86,33 +115,31 @@ export default function ManageSalesOrdersPage() {
                         <Form.Item name='payment_term_id'>
                             <Select style={{ width: 160 }} placeholder='Filter by Payment Term'>
                                 <Select.Option value={null}>All</Select.Option>
-                                {Object.keys(PaymentTerm).map((key, idx) => (
-                                    <Select.Option key={idx} value={PaymentTerm[key].id}>
-                                        {PaymentTerm[key].name}
-                                    </Select.Option>
-                                ))}
+                                {Object.keys(PaymentTerm).map((key, idx) =>
+                                    <Select.Option key={idx} value={PaymentTerm[key].id}>{PaymentTerm[key].name}</Select.Option>)
+                                }
                             </Select>
                         </Form.Item>
                         <Form.Item name='sales_order_status_id'>
                             <Select style={{ width: 160 }} placeholder='Filter by Status'>
                                 <Select.Option value={null}>All</Select.Option>
-                                {Object.keys(POStatus).map((key, idx) => (
-                                    <Select.Option key={idx} value={POStatus[key].id}>
-                                        {POStatus[key].name}
-                                    </Select.Option>
-                                ))}
+                                {Object.keys(POStatus).map((key, idx) =>
+                                    <Select.Option key={idx} value={POStatus[key].id}>{POStatus[key].name}</Select.Option>)
+                                }
                             </Select>
                         </Form.Item>
                         <Button onClick={resetForm}>Reset</Button>
                     </Form>
-                    {hasWriteAccessTo(View.CRM.name) && (
-                        <Button type='primary' icon={<PlusOutlined />} onClick={() => navigate('./new')}>
-                            New
-                        </Button>
-                    )}
+                    {hasWriteAccessTo(View.CRM.name) &&
+                        <Button type="primary" icon={<PlusOutlined />} onClick={() => navigate('./new')}>New</Button>
+                    }
                 </MyToolbar>
-                <Table dataSource={salesOrders} columns={tableColumns} rowKey='id' loading={loading} />
+                <Table dataSource={salesOrders} columns={tableColumns} rowKey="id" loading={loading} />
+                {hasWriteAccessTo(View.SCM.name) &&
+                    <Button type="primary" icon={<FileExcelOutlined />} onClick={() => handleExcelExport()}>Export as Excel</Button>
+                }
             </MyCard>
+
         </MyLayout>
     );
 }
@@ -140,8 +167,7 @@ const tableColumns = [
         dataIndex: 'customer',
         key: 'customer',
         ellipsis: true,
-        render: (customer) =>
-            customer ? <Link to={`/customer/customers/${customer.id}`}>{customer.company_name}</Link> : '-',
+        render: (customer) => customer ? <Link to={`/customer/customers/${customer.id}`}>{customer.company_name}</Link> : '-',
         sorter: (a, b) => sortByString(a.customer.company_name, b.customer.company_name),
     },
     {
@@ -167,7 +193,7 @@ const tableColumns = [
         key: 'payments_total',
         align: 'center',
         width: 100,
-        render: (_, record) => <Progress type='circle' percent={record.getPaymentProgress()} width={40} />,
+        render: (_, record) => <Progress type="circle" percent={record.getPaymentProgress()} width={40} />,
         sorter: (a, b) => sortByNumber(a.getPaymentProgress(), b.getPaymentProgress()),
     },
     {
@@ -179,10 +205,10 @@ const tableColumns = [
         sorter: (a, b) => sortByNumber(a.purchase_order_status_id, b.purchase_order_status_id),
     },
     {
-        dataIndex: 'id',
-        title: '',
-        key: 'link',
+        dataIndex: "id",
+        title: "",
+        key: "link",
         width: 100,
-        render: (id) => <Link to={`./${id}`}>View</Link>,
-    },
-];
+        render: (id) => <Link to={`./${id}`}>View</Link>
+    }
+]

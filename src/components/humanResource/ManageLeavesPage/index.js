@@ -1,6 +1,6 @@
 import { Button, Form, Input, message, Popconfirm, Select, Table } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react'
-import { PlusOutlined } from '@ant-design/icons/lib/icons';
+import { PlusOutlined, FileExcelOutlined } from '@ant-design/icons/lib/icons';
 import debounce from 'lodash.debounce';
 import { Link } from 'react-router-dom';
 import { useApp } from '../../../providers/AppProvider';
@@ -15,6 +15,7 @@ import NewLeaveFormModal from './NewLeaveFormModal';
 import MyCard from '../../common/MyCard';
 import MyToolbar from '../../common/MyToolbar';
 import MyLayout from '../../common/MyLayout';
+import { generateCSV } from '../../../utilities/Report/ExcelExporter';
 
 const breadcrumbs = [
     { url: '/humanResource/leaveApplications', name: 'Human Resource' },
@@ -50,7 +51,7 @@ export default function ManageLeavesPage() {
             .catch(handleHttpError)
             .catch(() => setLoading(false))
     }, [handleHttpError, setLoading, setLeaveApplications])
-    
+
 
     useEffect(() => {
         getLeaveApplications()
@@ -67,13 +68,13 @@ export default function ManageLeavesPage() {
 
     function updateLeaveStatus(record, leaveStatus) {
         setLoading(true);
-        HRApiHelper.updateLeaveApplication({...record, leave_status_id: leaveStatus.id })
+        HRApiHelper.updateLeaveApplication({ ...record, leave_status_id: leaveStatus.id })
             .then(() => {
                 setLoading(false);
                 const newItems = [...leaveApplications];
                 const idx = newItems.findIndex(x => x.id === record.id);
                 if (idx > -1) {
-                    newItems[idx] = {...newItems[idx], leave_status_id: leaveStatus.id }
+                    newItems[idx] = { ...newItems[idx], leave_status_id: leaveStatus.id }
                 }
                 setLeaveApplications(newItems);
                 message.success(`Application successfully ${leaveStatus.name.toLowerCase()}!`)
@@ -87,50 +88,70 @@ export default function ManageLeavesPage() {
         setIsModalVisible(false)
     }
 
+    const handleExcelExport = () => {
+        const tableHeaders = ['Created At', 'Name', 'Type', 'Start Date', 'End Date', 'Days', 'Remarks', 'Status']
+        let excelData = []
+        excelData = leaveApplications.map((record) => {
+            return [
+                parseDateTime(record.created_at),
+                record.leave_account.employee.name,
+                getLeaveTypeTag(record.leave_account.leave_type_id).props.children,
+                parseDate(record.start_date),
+                parseDate(record.end_date),
+                record.num_days,
+                record.remarks || '-',
+                getLeaveStatusTag(record.leave_status_id).props.children
+            ]
+        })
+        generateCSV(excelData, tableHeaders, 'Leave Applications List')
+    }
+
     return (
         <MyLayout breadcrumbs={breadcrumbs} bannerTitle="Manage Leave Applications">
-  
-          <MyCard>
-  
-            <MyToolbar title="Leave Applications">
-                <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
-                    <Form.Item name="employee_name">
-                        <Input placeholder='Search Name' />
-                    </Form.Item>
-                    <Form.Item name="leave_type_id">
-                        <Select style={{ width: 180 }} placeholder="Filter by Type">
-                            <Select.Option value={null}>All</Select.Option>
-                            { Object.keys(LeaveType).map((key, idx) => 
-                                <Select.Option key={idx} value={LeaveType[key].id}>{LeaveType[key].name}</Select.Option>
-                            )}
-                        </Select>
-                    </Form.Item>
-                    <Form.Item name="leave_status_id">
-                        <Select style={{ width: 180 }} placeholder="Filter by Status">
-                            <Select.Option value={null}>All</Select.Option>
-                            { Object.keys(LeaveStatus).map((key, idx) => 
-                                <Select.Option key={idx} value={LeaveStatus[key].id}>{LeaveStatus[key].name}</Select.Option>
-                            )}
-                        </Select>
-                    </Form.Item>
-                    <Button onClick={resetForm}>Reset</Button>
-                </Form>
-                { hasWriteAccessTo(View.HR.name) && 
-                  <Button type='primary' onClick={() => setIsModalVisible(true)} icon={<PlusOutlined />}>New</Button>
+
+            <MyCard>
+
+                <MyToolbar title="Leave Applications">
+                    <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
+                        <Form.Item name="employee_name">
+                            <Input placeholder='Search Name' />
+                        </Form.Item>
+                        <Form.Item name="leave_type_id">
+                            <Select style={{ width: 180 }} placeholder="Filter by Type">
+                                <Select.Option value={null}>All</Select.Option>
+                                {Object.keys(LeaveType).map((key, idx) =>
+                                    <Select.Option key={idx} value={LeaveType[key].id}>{LeaveType[key].name}</Select.Option>
+                                )}
+                            </Select>
+                        </Form.Item>
+                        <Form.Item name="leave_status_id">
+                            <Select style={{ width: 180 }} placeholder="Filter by Status">
+                                <Select.Option value={null}>All</Select.Option>
+                                {Object.keys(LeaveStatus).map((key, idx) =>
+                                    <Select.Option key={idx} value={LeaveStatus[key].id}>{LeaveStatus[key].name}</Select.Option>
+                                )}
+                            </Select>
+                        </Form.Item>
+                        <Button onClick={resetForm}>Reset</Button>
+                    </Form>
+                    {hasWriteAccessTo(View.HR.name) &&
+                        <Button type='primary' onClick={() => setIsModalVisible(true)} icon={<PlusOutlined />}>New</Button>
+                    }
+                </MyToolbar>
+
+                <Table
+                    dataSource={leaveApplications}
+                    columns={columns}
+                    loading={loading}
+                    rowKey="id"
+                    pagination={{ showTotal: showTotal }}
+                />
+                {hasWriteAccessTo(View.HR.name) &&
+                    <Button type="primary" icon={<FileExcelOutlined />} onClick={() => handleExcelExport()}>Export as Excel</Button>
                 }
-            </MyToolbar>
-  
-            <Table 
-                dataSource={leaveApplications} 
-                columns={columns}
-                loading={loading} 
-                rowKey="id" 
-                pagination={{ showTotal: showTotal }}
-            />
-                
             </MyCard>
-            
-            <NewLeaveFormModal 
+
+            <NewLeaveFormModal
                 isModalVisible={isModalVisible}
                 setIsModalVisible={setIsModalVisible}
                 myCallback={myCallback}
@@ -207,9 +228,9 @@ const columns = [
         render: (leave_status_id) => getLeaveStatusTag(leave_status_id),
         sorter: (a, b) => sortByNumber(a.leave_status_id, b.leave_status_id),
     },
-    { 
-        title: "Action", 
-        key: "link", 
+    {
+        title: "Action",
+        key: "link",
         width: 150,
         ellipsis: true,
     },

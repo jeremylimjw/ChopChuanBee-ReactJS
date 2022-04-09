@@ -1,89 +1,92 @@
-import React from 'react';
-import { Layout, Menu } from 'antd';
-import { Link } from 'react-router-dom';
-import {
-    HomeOutlined,
-    InboxOutlined,
-    ShoppingOutlined,
-    SolutionOutlined,
-    TeamOutlined,
-    UserOutlined,
-    CarOutlined,
-    DesktopOutlined,
-} from '@ant-design/icons/lib/icons';
-import { useApp } from '../../providers/AppProvider';
-import { useLocation } from 'react-router-dom';
-import { View } from '../../enums/View';
+import React from 'react'
+import { Layout, Menu } from 'antd'
+import { Link } from 'react-router-dom'
+import { HomeOutlined, InboxOutlined, ShoppingOutlined, SolutionOutlined, TeamOutlined, UserOutlined, CarOutlined ,AccountBookOutlined, DesktopOutlined } from '@ant-design/icons/lib/icons'
+import { useApp } from '../../providers/AppProvider'
+import { useLocation } from "react-router-dom";
+import { View } from '../../enums/View'
+
 
 // Add on more menu items here
-const menu = [
-    {
-        role: View.ADMIN.name,
-        title: 'Admin',
-        icon: <UserOutlined />,
-        items: [
-            { route: '/admin/accounts', name: 'Manage Accounts' },
-            { route: '/admin/companyDetails', name: 'Company Details' },
-            { route: '/admin/logs', name: 'Logs' },
-        ],
-    },
-    {
-        role: View.HR.name,
-        title: 'Human Resource',
-        icon: <TeamOutlined />,
-        items: [
-            { route: '/humanResource/employees', name: 'Manage Employees' },
-            { route: '/humanResource/leaveApplications', name: 'Leave Applications' },
-        ],
-    },
-    {
-        role: View.INVENTORY.name,
-        title: 'Inventory',
-        icon: <InboxOutlined />,
-        items: [
-            { route: '/inventory/products', name: 'Manage Products' },
-            { route: '/inventory/movements', name: 'Inv. Movements' },
-        ],
-    },
-    {
-        role: View.SCM.name,
-        title: 'Supplier',
-        icon: <ShoppingOutlined />,
-        items: [
-            { route: '/supplier/suppliers', name: 'Manage Suppliers' },
-            { route: '/supplier/procurements', name: 'Procurements' },
-        ],
-    },
-    {
-        role: View.CRM.name,
-        title: 'Customer',
-        icon: <SolutionOutlined />,
-        items: [
-            { route: '/customer/customers', name: 'Manage Customers' },
-            { route: '/customer/sales', name: 'Sales' },
-        ],
-    },
-    {
-        role: View.DISPATCH.name,
-        title: 'Dispatch',
-        icon: <CarOutlined />,
-        items: [
-            { route: '/dispatch/itinerarys', name: 'Manage Itineraries' },
-            { route: '/dispatch/deliveryOrders', name: 'Manage Deliveries' },
-        ],
-    },
-    {
-        role: View.CATALOGUE.name,
-        title: 'Catalogue',
-        icon: <DesktopOutlined />,
-        items: [
-            { route: '/catalogue/menuItems', name: 'Manage Menu Items' },
-            { route: '/catalogue/categories', name: 'Manage Categories' },
-        ],
-    },
-];
+export const menu = [
+  {
+    role: View.ADMIN.name,
+    title: 'Admin',
+    icon: <UserOutlined />,
+    items: [
+      { route: '/admin/accounts', name: 'Manage Accounts' },
+      { route: '/admin/companyDetails', name: 'Company Details' },
+      { route: '/admin/logs', name: 'Logs' },
+    ]
+  },
+  {
+    role: View.HR.name,
+    title: 'Human Resource',
+    icon: <TeamOutlined />,
+    items: [
+      { route: '/humanResource/employees', name: 'Manage Employees' },
+      { route: '/humanResource/leaveApplications', name: 'Leave Applications' },
+    ]
+  },
+  {
+    role: View.INVENTORY.name,
+    title: 'Inventory',
+    icon: <InboxOutlined />,
+    items: [
+      { route: '/inventory/products', name: 'Manage Products' },
+      { route: '/inventory/movements', name: 'Inv. Movements' },
+    ]
+  },
+  {
+    role: View.SCM.name,
+    title: 'Supplier',
+    icon: <ShoppingOutlined />,
+    items: [
+      { route: '/supplier/suppliers', name: 'Manage Suppliers' },
+      { route: '/supplier/procurements', name: 'Procurements' },
+    ]
+  },
+  {
+    role: View.CRM.name,
+    title: 'Customer',
+    icon: <SolutionOutlined />,
+    items: [
+      { route: '/customer/customers', name: 'Manage Customers' },
+      { route: '/customer/sales', name: 'Sales' },
+    ]
+  },
+  {
+    role: View.ACCOUNTING.name,
+    title: 'Accounting',
+    icon: <AccountBookOutlined />,
+    items: [
+      { route: '/accounting/balanceSheets', name: 'Balance Sheets' },
+      { route: '/accounting/incomeStatements', name: 'Income Statements' },
+      { route: '/accounting/taxStatements', name: 'Tax Statements' },
+    ]
+  },
+  {
+    role: View.DISPATCH.name,
+    title: 'Dispatch',
+    icon: <CarOutlined />,
+    items: [
+      { route: '/dispatch/itinerarys', name: 'Manage Itineraries' },
+      { route: '/dispatch/deliveryOrders', name: 'Manage Deliveries' },
+    ]
+  },
+  {
+    role: View.CATALOGUE.name,
+    title: 'Catalogue',
+    icon: <DesktopOutlined />,
+    items: [
+      { route: '/catalogue/menuItems', name: 'Manage Menu Items' },
+      { route: '/catalogue/categories', name: 'Manage Categories' },
+    ],
+  },
+]
 
-export default function Sidebar() {
+export function Sidebar() {
+
     const { hasViewAccessTo } = useApp();
     const location = useLocation();
 

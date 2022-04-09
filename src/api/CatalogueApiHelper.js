@@ -2,7 +2,11 @@ import { axiosObject } from './axiosWrapper';
 
 export class CatalogueApiHelper {
     static async getAllMenuItems() {
-        return axiosObject.get('/productCatalogue').then((res) => res.data);
+        const params = {
+            short: true,
+        };
+        return axiosObject.get('/productCatalogue', { params: params })
+            .then((res) => res.data);
     }
 
     static async getMenuItemById(id) {

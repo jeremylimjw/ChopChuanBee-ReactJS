@@ -1,9 +1,15 @@
 import { CopyOutlined } from '@ant-design/icons/lib/icons'
-import { Button, message } from 'antd'
+import { Button, message, Popconfirm } from 'antd'
 import React from 'react'
+import { PurchaseOrderApiHelper } from '../../../api/PurchaseOrderApiHelper';
+import { POStatus } from '../../../enums/PurchaseOrderStatus';
+import { PurchaseOrder } from '../../../models/PurchaseOrder';
+import { useApp } from '../../../providers/AppProvider';
 import { parseDate } from '../../../utilities/datetime'
 
-export default function CopyAsTextButton({ purchaseOrder, loading }) {
+export default function CopyAsTextButton({ purchaseOrder, setPurchaseOrder, loading, setLoading }) {
+
+    const { handleHttpError } = useApp();
 
     function copyAsText() {
         if (purchaseOrder.charged_under == null) {
@@ -26,9 +32,33 @@ export default function CopyAsTextButton({ purchaseOrder, loading }) {
         `.replace(/  +/g, '');
         
         navigator.clipboard.writeText(text)
+
+        message.success('Successfully copied to clipboard!');
+    }
+
+    function updateOrderStatus() {
+        const newPurchaseOrder = {...purchaseOrder, purchase_order_status_id: POStatus.SENT_TEXT.id };
+
+        setLoading(true);
+        PurchaseOrderApiHelper.updateStatusOnly(newPurchaseOrder)
+            .then(() => {
+                message.success("Purchase order successfully updated!")
+                setPurchaseOrder(new PurchaseOrder(newPurchaseOrder));
+                setLoading(false);
+            })
+            .catch(handleHttpError)
+            .catch(() => setLoading(false));
     }
 
     return (
-        <Button icon={<CopyOutlined />} disabled={loading} onClick={copyAsText}>Copy as Text</Button>
+        <>
+        {purchaseOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL) ?
+            <Popconfirm title="Mark order as Sent (Text)?" onConfirm={updateOrderStatus} disabled={loading} onClick={copyAsText}>
+                <Button icon={<CopyOutlined />} disabled={loading}>Copy as Text</Button>
+            </Popconfirm>
+            :
+            <Button icon={<CopyOutlined />} disabled={loading} onClick={copyAsText}>Copy as Text</Button>
+        }
+        </>
     )
 }
