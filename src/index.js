@@ -225,12 +225,12 @@ const routes = [
         component: <Outlet />,
         childRoutes: [
             {
-                path: 'catalogues',
+                path: 'menuItems',
                 component: <ManageCataloguePage />,
                 viewAccess: View.CATALOGUE.name,
             },
             {
-                path: 'catalogues/:id',
+                path: 'menuItems/:id',
                 component: <ViewCataloguePage />,
                 viewAccess: View.CATALOGUE.name,
             },

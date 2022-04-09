@@ -1,6 +1,6 @@
 import { EditOutlined, SaveOutlined, UploadOutlined, MinusCircleOutlined } from '@ant-design/icons';
-import { Popconfirm, Button, message, Form, Input, InputNumber, Typography, Upload } from 'antd';
-import React, { useEffect, useState } from 'react';
+import { Popconfirm, Button, message, Form, Input, Select, Typography, Upload, Image } from 'antd';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { CatalogueApiHelper } from '../../api/CatalogueApiHelper';
 import { ProductApiHelper } from '../../api/ProductApiHelper';
@@ -15,81 +15,95 @@ import { DeleteOutlined } from '@ant-design/icons/lib/icons';
 export default function ViewCataloguePage(props) {
     const { id } = useParams();
     const navigate = useNavigate();
-    const data = {
-        id: 1,
-        name: 'Dried Abalone',
-        description: 'test 1',
-        images: ['test1.jpg', 'test11.jpg'],
-        category: 'Dried Seafoods',
-        product: 'Abalone',
-    };
 
     const { handleHttpError, hasWriteAccessTo } = useApp();
     const [catalogue, setCatalogue] = useState();
-    // const [chargedUnder, setChargedUnder] = useState();
     const [loading, setLoading] = useState(false);
     const [editing, setEditing] = useState(false);
+    const [allProduct, setAllProduct] = useState([]);
+    const [allCategory, setAllCategory] = useState();
+    const [product, setProduct] = useState();
+    const [category, setCategory] = useState();
     const [form] = Form.useForm();
 
     const breadcrumbs = [
-        { url: '/catalogue/catalogues', name: 'Catalogue' },
-        { url: '/catalogue/catalogues', name: 'Catalogues' },
-        //   { url: `/catalogue/catalogue/${catalogue?.id}`, name: catalogue?.name },
+        { url: '/catalogue/menuItems', name: 'Catalogue' },
+        { url: '/catalogue/menuItems', name: 'Menu Items' },
+        { url: `/catalogue/menuItems/${catalogue?.id}`, name: catalogue?.name },
     ];
 
-    // useEffect(() => {
-    //     CatalogueApiHelper.get({ id: id })
-    //         .then(result => {
-    //             if (result.length === 0) {
-    //                 navigate('../../');
-    //                 return;
-    //             }
-    //             setChargedUnder(result[0]);
-    //         })
-    //         .catch(handleHttpError)
-    // }, [id, handleHttpError, navigate]);
+    useEffect(() => form.resetFields(), [catalogue]);
+
+    useEffect(() => {
+        CatalogueApiHelper.getMenuItemById(id)
+            .then((result) => {
+                console.log(result);
+                if (result.length === 0) {
+                    navigate('../../');
+                    return;
+                }
+                setCatalogue(result[0]);
+                getCategory();
+                getProduct();
+            })
+            .catch(handleHttpError);
+    }, [id, handleHttpError, navigate]);
+
+    const getProduct = () => {
+        ProductApiHelper.get()
+            .then((results) => {
+                setAllProduct(results);
+                setLoading(false);
+            })
+            .catch(handleHttpError)
+            .catch(() => setLoading(false));
+    };
+
+    const getCategory = () => {
+        CatalogueApiHelper.getAllCategory()
+            .then((results) => {
+                setAllCategory(results);
+                setLoading(false);
+            })
+            .catch(handleHttpError)
+            .catch(() => setLoading(false));
+    };
 
     async function onFinish() {
         try {
             const values = await form.validateFields();
+            console.log(values);
             setLoading(true);
-            setCatalogue({ ...catalogue, ...values });
-            message.success(`Scheme successfully updated!`);
-            setLoading(false);
-            setEditing(false);
-            // CatalogueApiHelper.update({ ...catalogue, ...values })
-            //     .then(() => {
-            //         setCatalogue({ ...catalogue, ...values });
-            //         message.success(`Scheme successfully updated!`);
-            //         setLoading(false);
-            //         setEditing(false);
-            //     })
-            //     .catch(handleHttpError)
-            //     .catch(() => setLoading(false));
+            CatalogueApiHelper.updateMenuItem({ ...catalogue, ...values })
+                .then(() => {
+                    setCatalogue({ ...catalogue, ...values });
+                    message.success(`Scheme successfully updated!`);
+                    setLoading(false);
+                    setEditing(false);
+                })
+                .catch(handleHttpError)
+                .catch(() => setLoading(false));
         } catch (err) {}
     }
 
-    function handleDeactivate() {
-        setLoading(true);
-        message.success(`Catalogue successfully deleted!`);
-        setLoading(false);
-
-        // const promise = catalogue.deactivated_date == null ? CatalogueApiHelper.deactivate(catalogue.id) : CatalogueApiHelper.activate(catalogue.id);
-        // promise.then(newFields => {
-        //     setLoading(false);
-        //     setCatalogue({...catalogue, ...newFields });
-        //     message.success(`Catalogue successfully ${catalogue.deactivated_date == null ? 'unlisted' : 'relisted' }!`);
-        // })
-        // .catch(handleHttpError)
-        // .catch(() => setLoading(false));
+    function handleDelete() {
+        CatalogueApiHelper.deleteMenuItem(id)
+            .then((updateMenuItem) => {
+                // console.log(id);
+                setLoading(false);
+                navigate('../menuItems');
+                message.success('Catalogue successfully deleted!');
+            })
+            .catch(handleHttpError)
+            .catch(() => setLoading(false));
     }
 
-    function renderDeactivateButton() {
+    function renderDeleteButton() {
         if (!hasWriteAccessTo(View.CATALOGUE.name)) return <></>;
 
         return (
             <>
-                <Popconfirm title='Confirm delete?' placement='leftTop' onConfirm={handleDeactivate} disabled={loading}>
+                <Popconfirm title='Confirm delete?' placement='leftTop' onConfirm={handleDelete} disabled={loading}>
                     <Button type='danger' loading={loading} icon={<MinusCircleOutlined />} style={{ width: 100 }}>
                         Delete
                     </Button>
@@ -100,12 +114,7 @@ export default function ViewCataloguePage(props) {
 
     return (
         <>
-            <MyLayout
-                breadcrumbs={breadcrumbs}
-                // bannerTitle={`${chargedUnder.name} ${chargedUnder.deactivated_date == null ? '' : '(Unlisted)'}`}
-                bannerTitle='Dried Abalone'
-                bannerRight={renderDeactivateButton()}
-            >
+            <MyLayout breadcrumbs={breadcrumbs} bannerTitle={catalogue?.name} bannerRight={renderDeleteButton()}>
                 <MyCard style={{ width: 550 }}>
                     <MyToolbar title='Details'>
                         {hasWriteAccessTo(View.CATALOGUE.name) && (
@@ -138,66 +147,71 @@ export default function ViewCataloguePage(props) {
                         wrapperCol={{ span: 16 }}
                         autoComplete='off'
                         labelAlign='left'
-                        initialValues={{ ...data }}
+                        initialValues={{ ...catalogue }}
                     >
                         <Form.Item label='Catalogue Name' name='name' rules={editing ? [REQUIRED] : []}>
+                            {!editing ? <Typography>{catalogue?.name || '-'}</Typography> : <Input />}
+                        </Form.Item>
+
+                        <Form.Item label='Product' name='product_name'>
                             {!editing ? (
-                                <Typography>
-                                    Dried Abalone
-                                    {/* {chargedUnder.name || '-'} */}
-                                </Typography>
+                                <Typography>{catalogue?.product_name || '-'}</Typography>
                             ) : (
-                                <Input />
+                                <Select
+                                    showSearch
+                                    options={allProduct.map((x) => ({ label: x.name, value: x.id }))}
+                                    placeholder='Search Product'
+                                    defaultValue={{ value: catalogue?.product_id, label: catalogue?.product_name }}
+                                    onSelect={(_, option) => setProduct(option.label)}
+                                    filterOption={false}
+                                />
                             )}
                         </Form.Item>
 
-                        <Form.Item label='Product' name='product' rules={editing ? [REQUIRED] : []}>
+                        <Form.Item label='Category' name='menu_category_id'>
                             {!editing ? (
-                                <Typography>
-                                    Abalone
-                                    {/* {chargedUnder.address || '-'} */}
-                                </Typography>
+                                <Typography>{catalogue?.menu_category_name}</Typography>
                             ) : (
-                                <Input />
-                            )}
-                        </Form.Item>
-
-                        <Form.Item label='Category' name='category' rules={editing ? [REQUIRED] : []}>
-                            {!editing ? (
-                                <Typography>
-                                    Dried Seafood
-                                    {/* {chargedUnder.shipping_address || '-'} */}
-                                </Typography>
-                            ) : (
-                                <Input />
+                                <Select
+                                    showSearch
+                                    options={allCategory?.map((x) => ({ label: x?.name, value: x?.id }))}
+                                    placeholder='Search Category'
+                                    defaultValue={{ value: catalogue?.category_id, label: catalogue?.category_name }}
+                                    onSelect={(_, option) => setCategory(option.label)}
+                                    filterOption={false}
+                                />
                             )}
                         </Form.Item>
 
                         <Form.Item label='Description' name='description' rules={editing ? [REQUIRED] : []}>
                             {!editing ? (
-                                <Typography>
-                                    testing
-                                    {/* {chargedUnder.contact_number || '-'} */}
-                                </Typography>
+                                <Typography>{catalogue?.description}</Typography>
                             ) : (
-                                <Input.TextArea rows={4} />
+                                <Input.TextArea defaultValue={catalogue?.description} rows={4} />
                             )}
                         </Form.Item>
 
-                        <Form.Item label='Upload Image(s)' name='images' rules={[REQUIRED]}>
-                            <Upload.Dragger
-                                listType='picture'
-                                multiple
-                                action={'http://localhost:3001/catalogue/catalogues'}
-                                accept='.png,.jpeg,.svg'
-                                // beforeUpload={(file) => {
-                                //     console.log(file);
-                                // }}
-                            >
-                                Drag image(s) here OR
-                                <br />
-                                <Button icon={<UploadOutlined />}>Click to Upload</Button>
-                            </Upload.Dragger>
+                        <Form.Item label='Upload Image' name='image'>
+                            {!editing ? (
+                                <Image src={catalogue?.image} />
+                            ) : (
+                                <Upload.Dragger
+                                    listType='picture'
+                                    accept='.png,.jpeg,.svg'
+                                    beforeUpload={() => false}
+                                    defaultFileList={[
+                                        {
+                                            // uid: 'abc',
+                                            // name:"existing_file.png"
+                                            url: `${catalogue?.image}`,
+                                        },
+                                    ]}
+                                >
+                                    Drag image here OR
+                                    <br />
+                                    <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                                </Upload.Dragger>
+                            )}
                         </Form.Item>
                     </Form>{' '}
                 </MyCard>

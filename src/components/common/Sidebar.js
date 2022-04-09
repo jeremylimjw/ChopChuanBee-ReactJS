@@ -77,7 +77,7 @@ const menu = [
         title: 'Catalogue',
         icon: <DesktopOutlined />,
         items: [
-            { route: '/catalogue/catalogues', name: 'Manage Catalogues' },
+            { route: '/catalogue/menuItems', name: 'Manage Menu Items' },
             { route: '/catalogue/categories', name: 'Manage Categories' },
         ],
     },

@@ -1,5 +1,5 @@
-import { Form, Input, InputNumber, message, Modal, Select, Upload, Button } from 'antd';
-import React, { useCallback, useEffect, useState } from 'react';
+import { Form, Input, message, Modal } from 'antd';
+import React, { useState } from 'react';
 import { CatalogueApiHelper } from '../../../api/CatalogueApiHelper';
 import { useApp } from '../../../providers/AppProvider';
 import { REQUIRED } from '../../../utilities/form';
@@ -14,22 +14,25 @@ export default function NewCategoryModal({ isModalVisible, setIsModalVisible, my
         form.resetFields();
     }
 
+    function resetForm() {
+        form.resetFields();
+    }
+
     async function handleSubmit() {
         try {
             const values = await form.validateFields();
             setLoading(true);
-            message.success('Category successfully created!');
-            setLoading(false);
-            setIsModalVisible(false);
-            // CatalogueApiHelper.create(values)
-            //     .then(newChargedUnder => {
-            //         myCallback(newChargedUnder);
-            //         message.success('Catalogue successfully created!')
-            //         setLoading(false);
-            //         setIsModalVisible(false);
-            //     })
-            //     .catch(handleHttpError)
-            //     .catch(() => setLoading(false));
+
+            CatalogueApiHelper.createNewCategory(values)
+                .then((newCategory) => {
+                    myCallback(newCategory);
+                    message.success('Catalogue successfully created!');
+                    setLoading(false);
+                    resetForm();
+                    setIsModalVisible(false);
+                })
+                .catch(handleHttpError)
+                .catch(() => setLoading(false));
         } catch (err) {}
     }
 
@@ -39,7 +42,7 @@ export default function NewCategoryModal({ isModalVisible, setIsModalVisible, my
             title='Create a Catalogue'
             visible={isModalVisible}
             onOk={handleSubmit}
-            onCancel={() => setIsModalVisible(false)}
+            onCancel={() => onCancel()}
             destroyOnClose
             okButtonProps={{ loading: loading }}
         >

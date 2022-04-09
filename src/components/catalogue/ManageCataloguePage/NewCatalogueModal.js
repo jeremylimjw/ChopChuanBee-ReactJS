@@ -1,4 +1,4 @@
-import { Form, Input, InputNumber, message, Modal, Select, Upload, Button } from 'antd';
+import { Form, Input, message, Modal, Select, Upload, Button } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
 import { CatalogueApiHelper } from '../../../api/CatalogueApiHelper';
 import { ProductApiHelper } from '../../../api/ProductApiHelper';
@@ -11,26 +11,65 @@ export default function NewCatalogueModal({ isModalVisible, setIsModalVisible, m
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
     const [product, setProduct] = useState();
+    const [category, setCategory] = useState();
     const [allProduct, setAllProduct] = useState([]);
+    const [allCategory, setAllCategory] = useState();
 
-    const onSearch = useCallback(
-        (name) => {
-            ProductApiHelper.get()
-                .then((results) => {
-                    setAllProduct(results);
-                    setLoading(false);
-                })
-                .catch(handleHttpError)
-                .catch(() => setLoading(false));
-        },
-        [handleHttpError, setLoading]
-    );
+    // const onProductSearch = useCallback(
+    //     (name) => {
+    //         ProductApiHelper.get()
+    //             .then((results) => {
+    //                 setAllProduct(results);
+    //                 setLoading(false);
+    //             })
+    //             .catch(handleHttpError)
+    //             .catch(() => setLoading(false));
+    //     },
+    //     [handleHttpError, setLoading]
+    // );
 
-    // useEffect(() => {
-    //     if (isModalVisible) {
-    //         onSearch('');
-    //     }
-    // }, [isModalVisible, form, setProduct, onSearch]);
+    const getProduct = () => {
+        ProductApiHelper.get()
+            .then((results) => {
+                setAllProduct(results);
+                setLoading(false);
+            })
+            .catch(handleHttpError)
+            .catch(() => setLoading(false));
+    };
+
+    // const onCategorySearch = useCallback(
+    //     (name) => {
+    //         CatalogueApiHelper.getAllCategory()
+    //             .then((results) => {
+    //                 setAllCategory(results);
+    //                 setLoading(false);
+    //             })
+    //             .catch(handleHttpError)
+    //             .catch(() => setLoading(false));
+    //     },
+    //     [handleHttpError, setLoading]
+    // );
+
+    useEffect(() => {
+        // if (isModalVisible) {
+        //     onSearch('');
+        // }
+        CatalogueApiHelper.getAllCategory()
+            .then((results) => {
+                setAllCategory(results);
+                getProduct();
+
+                setLoading(false);
+            })
+            .catch(handleHttpError)
+            .catch(() => setLoading(false));
+    }, [
+        isModalVisible,
+        form,
+        setProduct,
+        // onSearch
+    ]);
 
     function onCancel() {
         setIsModalVisible(false);
@@ -40,20 +79,20 @@ export default function NewCatalogueModal({ isModalVisible, setIsModalVisible, m
 
     async function handleSubmit() {
         try {
-            const values = await form.validateFields();
+            const menuItem = await form.validateFields();
+            console.log(menuItem);
             setLoading(true);
-            message.success('Catalogue successfully created!');
-            setLoading(false);
-            setIsModalVisible(false);
-            // CatalogueApiHelper.create(values)
-            //     .then(newChargedUnder => {
-            //         myCallback(newChargedUnder);
-            //         message.success('Catalogue successfully created!')
-            //         setLoading(false);
-            //         setIsModalVisible(false);
-            //     })
-            //     .catch(handleHttpError)
-            //     .catch(() => setLoading(false));
+
+            CatalogueApiHelper.createNewMenu(menuItem)
+                .then((newMenuItem) => {
+                    myCallback(newMenuItem);
+                    message.success('Catalogue successfully created!');
+                    setLoading(false);
+                    setIsModalVisible(false);
+                    form.resetFields();
+                })
+                .catch(handleHttpError)
+                .catch(() => setLoading(false));
         } catch (err) {}
     }
 
@@ -63,7 +102,7 @@ export default function NewCatalogueModal({ isModalVisible, setIsModalVisible, m
             title='Create a Catalogue'
             visible={isModalVisible}
             onOk={handleSubmit}
-            onCancel={() => setIsModalVisible(false)}
+            onCancel={() => onCancel()}
             destroyOnClose
             okButtonProps={{ loading: loading }}
         >
@@ -77,12 +116,7 @@ export default function NewCatalogueModal({ isModalVisible, setIsModalVisible, m
                         showSearch
                         options={allProduct.map((x) => ({ label: x.name, value: x.id }))}
                         placeholder='Search Product'
-                        onSearch={onSearch}
-                        onSelect={
-                            (_, option) => setProduct(option.label)
-                            // label: "陈阳 Signature Rosemary Roast Duck"
-                            // value: "c29f44a4-ad67-4b5d-8a7c-983697b12ab2"
-                        }
+                        onSelect={(_, option) => setProduct(option.label)}
                         filterOption={false}
                     />
                 </Form.Item>
@@ -90,14 +124,9 @@ export default function NewCatalogueModal({ isModalVisible, setIsModalVisible, m
                 <Form.Item rules={[REQUIRED]} label='Category' name='category_id'>
                     <Select
                         showSearch
-                        options={allProduct.map((x) => ({ label: x.name, value: x.id }))}
+                        options={allCategory?.map((x) => ({ label: x?.name, value: x?.id }))}
                         placeholder='Search Category'
-                        onSearch={onSearch}
-                        onSelect={
-                            (_, option) => setProduct(option.label)
-                            // label: "陈阳 Signature Rosemary Roast Duck"
-                            // value: "c29f44a4-ad67-4b5d-8a7c-983697b12ab2"
-                        }
+                        onSelect={(_, option) => setCategory(option.label)}
                         filterOption={false}
                     />
                 </Form.Item>
@@ -106,17 +135,10 @@ export default function NewCatalogueModal({ isModalVisible, setIsModalVisible, m
                     <Input.TextArea rows={4} />
                 </Form.Item>
 
-                <Form.Item label='Upload Image(s)' name='images' rules={[REQUIRED]}>
-                    <Upload.Dragger
-                        listType='picture'
-                        multiple
-                        action={'http://localhost:3001/catalogue/catalogues'}
-                        accept='.png,.jpeg,.svg'
-                        // beforeUpload={(file) => {
-                        //     console.log(file);
-                        // }}
-                    >
-                        Drag image(s) here OR
+                <Form.Item label='Upload Image' name='image'>
+                    <Upload.Dragger listType='picture' accept='.png,.jpeg,.svg' beforeUpload={() => false} maxCount={1}>
+                        Drag image here OR
+                        <br />
                         <br />
                         <Button icon={<UploadOutlined />}>Click to Upload</Button>
                     </Upload.Dragger>
