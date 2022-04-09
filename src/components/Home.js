@@ -17,8 +17,8 @@ export default function Home() {
                     <>
                         <Typography.Title level={4}>{x.icon} {x.title}</Typography.Title>
                         <Row gutter={[16, 16]} style={{ marginBottom: 20}}>
-                            {x.items.map(item => (
-                                <Col span={4}>
+                            {x.items.map((item, index) => (
+                                <Col span={4} key={index}>
                                     <Card hoverable style={{ border: '1px solid rgb(99 99 99 / 20%)' }} onClick={() => navigate(item.route)}>
                                         {item.name}
                                     </Card>

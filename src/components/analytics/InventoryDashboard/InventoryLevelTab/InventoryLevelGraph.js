@@ -38,6 +38,7 @@ function transformToChartData(results) {
 const chartConfig = {
     xField: 'product',
     yField: 'value',
+    color: '#ff4473',
     xAxis: {
         title: {
             text: "Product",
@@ -46,6 +47,10 @@ const chartConfig = {
                 fillOpacity: 0.5,
                 stroke: "black",
             },
+        },
+        label: {
+          autoHide: true,
+          autoRotate: true,
         },
     },
     yAxis: {

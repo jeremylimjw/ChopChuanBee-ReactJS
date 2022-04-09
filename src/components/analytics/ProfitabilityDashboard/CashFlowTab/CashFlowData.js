@@ -28,10 +28,8 @@ export default function CashFlowData({ oneYearAgo, currTime }) {
 
             setSelectedDateRange([start_date, end_date])
 
-            console.log(`Query from ${start_date.toDate().toDateString()} to ${end_date.toDate().toDateString()}`)
             AnalyticsApiHelper.getCashFlow(start_date, end_date)
                 .then(results => {
-                    console.log(results)
                     setData(transformToChartData(results))
                 })
         }
@@ -93,7 +91,7 @@ const chartConfig = {
      * Green: #62daab
      * Dark Blue: #657798
      */
-    color: ['#6395f9', '#ff4473', '#657798'],
+    color: ['#6395f9', '#657798', '#ff4473'],
     isGroup: true,
     xField: 'date',
     yField: 'value',
