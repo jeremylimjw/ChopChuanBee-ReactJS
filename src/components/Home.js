@@ -18,7 +18,7 @@ export default function Home() {
             <MyLayout breadcrumbs={breadcrumbs} bannerTitle='Dashboard' style={{ padding: 50 }}>
                 <div style={{ padding: '25px 35px' }}>
                     { menu.map(x => {
-                        if (x.role in user.access_rights) {
+                        if (user.role.name === 'Admin' || x.role in user.access_rights) {
                             return (
                                 <>
                                     <Typography.Title level={4}>{x.icon} {x.title}</Typography.Title>

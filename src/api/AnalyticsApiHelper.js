@@ -223,6 +223,11 @@ export class AnalyticsApiHelper {
     return axiosObject.get("/analytics/Minimum_Inventory_10")
       .then((res) => res.data)
   }
+  // All Inventory Level
+  static async getAllInventoryLevel() {
+    return axiosObject.get("/analytics/minimum_inventory_all")
+      .then((res) => res.data)
+  }
 
 
   // --- Profitability Dashboard
