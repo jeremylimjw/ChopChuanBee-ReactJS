@@ -76,7 +76,7 @@ export default function TodayPurchaseOrders(props) {
 
     return (<>
     <MyCard style={{ marginBottom: 0, width: "-webkit-fill-available" }} >
-        <MyToolbar title="List of Purchase Orders Created Today"></MyToolbar>
+        <MyToolbar title="Purchase Orders Created Today"></MyToolbar>
         <Table
             dataSource={data}
             columns={columns}
