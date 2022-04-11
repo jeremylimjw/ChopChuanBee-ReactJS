@@ -99,17 +99,17 @@ export default function Chat() {
 
             const newChannels = [...channels]
             const index = newChannels.findIndex(x => x.id === newText.channel_id);
+
+            // Update unread count and last text in channel list
+            if (index > -1) {
+                newChannels[index] = {
+                    ...newChannels[index], 
+                    unread_count: newChannels[index].unread_count+1,
+                    last_text: newText, 
+                }
+            }
             
             if (chat?.id !== newText.channel_id) {
-                // Update unread count and last text in channel list
-                if (index > -1) {
-                    newChannels[index] = {
-                        ...newChannels[index], 
-                        unread_count: newChannels[index].unread_count+1,
-                        last_text: newText, 
-                    }
-                }
-
                 // Update last received timestamp
                 socket.emit('update_last_received', {
                     employee_id: user.id,

@@ -109,7 +109,6 @@ export default function PO3ItemsTable({ purchaseOrder, setPurchaseOrder, loading
         }
 
         <Table
-            pagination={{ position: ['none', 'none'] }}
             columns={columns}
             dataSource={purchaseOrder.purchase_order_items}
             rowKey={() => Math.random()}

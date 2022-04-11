@@ -45,6 +45,11 @@ import ManageItinerarysPage from './components/dispatch/ManageItinerarysPage';
 import NewItineraryPage from './components/dispatch/NewItineraryPage';
 import ViewItineraryPage from './components/dispatch/ViewItineraryPage';
 import CompleteDeliveryPage from './components/CompleteDeliveryPage';
+import TodayDashboard from './components/analytics/TodayDashboard';
+import PaymentsDashboard from './components/analytics/PaymentsDashboard';
+import ProfitabilityDashboard from './components/analytics/ProfitabilityDashboard';
+import InventoryDashboard from './components/analytics/InventoryDashboard';
+import ProductDashboard from './components/analytics/ProductDashboard';
 import ManageCataloguePage from './components/catalogue/ManageCataloguePage';
 import ManageCategoryPage from './components/catalogue/ManageCategoryPage';
 import ViewCataloguePage from './components/catalogue/ViewCataloguePage';
@@ -263,6 +268,37 @@ const routes = [
     ]
   },
   {
+    path: '/analytics',
+    component: <Outlet />,
+    childRoutes: [
+      {
+        path: 'todayDashboard',
+        component: <TodayDashboard />,
+        viewAccess: View.ANALYTICS.name,
+      },
+      {
+        path: 'paymentsDashboard',
+        component: <PaymentsDashboard />,
+        viewAccess: View.ANALYTICS.name,
+      },
+      {
+        path: 'profitabilityDashboard',
+        component: <ProfitabilityDashboard />,
+        viewAccess: View.ANALYTICS.name,
+      },
+      {
+        path: 'inventoryDashboard',
+        component: <InventoryDashboard />,
+        viewAccess: View.ANALYTICS.name,
+      },
+      {
+        path: 'productDashboard',
+        component: <ProductDashboard />,
+        viewAccess: View.ANALYTICS.name,
+      },
+    ],
+  },
+  {
     path: '/catalogue',
     component: <Outlet />,
     childRoutes: [
@@ -287,7 +323,7 @@ const routes = [
         viewAccess: View.CATALOGUE.name,
       },
     ],
-  },
+  }
 ];
 
 function renderRoute(route, index) {

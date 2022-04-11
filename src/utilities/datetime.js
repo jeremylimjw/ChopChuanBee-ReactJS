@@ -9,7 +9,7 @@ export function parseDateTime(date) {
 }
 
 export function parseDateTimeSeconds(date) {
-    return moment(date).format('ddd D, YYYY h:mm:ss A');
+    return moment(date).format('MMM D, YYYY h:mm:ss A');
 }
 
 export function parseShortDateTime(date) {

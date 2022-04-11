@@ -109,7 +109,6 @@ export default function SO3ItemsTable({ salesOrder, setSalesOrder, loading, setL
             }
 
             <Table
-                pagination={{ position: ['none', 'none'] }}
                 columns={columns}
                 dataSource={salesOrder.sales_order_items}
                 rowKey={() => Math.random()}

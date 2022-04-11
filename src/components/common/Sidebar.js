@@ -1,7 +1,7 @@
 import React from 'react'
 import { Layout, Menu } from 'antd'
 import { Link } from 'react-router-dom'
-import { HomeOutlined, InboxOutlined, ShoppingOutlined, SolutionOutlined, TeamOutlined, UserOutlined, CarOutlined ,AccountBookOutlined, DesktopOutlined } from '@ant-design/icons/lib/icons'
+import { HomeOutlined, InboxOutlined, ShoppingOutlined, SolutionOutlined, TeamOutlined, UserOutlined, CarOutlined ,AccountBookOutlined, LineChartOutlined, DesktopOutlined } from '@ant-design/icons/lib/icons'
 import { useApp } from '../../providers/AppProvider'
 import { useLocation } from "react-router-dom";
 import { View } from '../../enums/View'
@@ -64,6 +64,18 @@ export const menu = [
       { route: '/accounting/incomeStatements', name: 'Income Statements' },
       { route: '/accounting/taxStatements', name: 'Tax Statements' },
     ]
+  },
+  {
+    role: 'ACCOUNTING',
+    title: 'Analytics',
+    icon: <LineChartOutlined />,
+    items: [
+      { route: '/analytics/todayDashboard', name: 'Today Dashboard' },
+      { route: '/analytics/profitabilityDashboard', name: 'Profitability Dashboard' },
+      { route: '/analytics/paymentsDashboard', name: 'Payments Dashboard' },        
+      { route: '/analytics/inventoryDashboard', name: 'Inventory Dashboard'},
+      { route: '/analytics/productDashboard', name: 'Product Dashboard'},
+    ],
   },
   {
     role: View.DISPATCH.name,
