@@ -91,27 +91,27 @@ export function Sidebar() {
     const location = useLocation();
 
     return (
-        <Layout.Sider theme='light' width={210} style={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}>
-            <Menu mode='inline' selectedKeys={[location.pathname]}>
-                <Menu.Item key='/' icon={<HomeOutlined />}>
-                    <Link to='/'>Home</Link>
-                </Menu.Item>
+      <Layout.Sider theme='light' width={210} style={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}>
+        <Menu mode='inline' selectedKeys={[location.pathname]}>
+          <Menu.Item key='/' icon={<HomeOutlined />}>
+            <Link to='/'>Home</Link>
+          </Menu.Item>
 
-                {menu.map((menuItem, index) => {
-                    if (hasViewAccessTo(menuItem.role)) {
-                        return (
-                            <Menu.SubMenu key={index} title={menuItem.title} icon={menuItem.icon}>
-                                {menuItem.items.map((subMenu, index2) => (
-                                    <Menu.Item key={subMenu.route}>
-                                        <Link to={subMenu.route}>{subMenu.name}</Link>
-                                    </Menu.Item>
-                                ))}
-                            </Menu.SubMenu>
-                        );
-                    }
-                    return null;
-                })}
-            </Menu>
-        </Layout.Sider>
+          {menu.map((menuItem, index) => {
+            if (hasViewAccessTo(menuItem.role)) {
+              return (
+                <Menu.SubMenu key={index} title={menuItem.title} icon={menuItem.icon}>
+                  {menuItem.items.map((subMenu, index2) => (
+                    <Menu.Item key={subMenu.route}>
+                      <Link to={subMenu.route}>{subMenu.name}</Link>
+                    </Menu.Item>
+                  ))}
+                </Menu.SubMenu>
+              );
+            }
+            return null;
+          })}
+        </Menu>
+      </Layout.Sider>
     );
 }

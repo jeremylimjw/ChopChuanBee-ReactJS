@@ -325,30 +325,23 @@ function renderRoute(route, index) {
 }
 
 ReactDOM.render(
-    <React.StrictMode>
-        <Router>
-            <AppProvider>
-                <Layout style={{ minHeight: '100vh' }}>
-                    <Routes>
-                        <Route path='/login' element={<LoginPage />} />
-                        <Route path='/activate' element={<ActivatePage />} />
-                        <Route path='/completeDelivery' element={<CompleteDeliveryPage />} />
-                        <Route
-                            path='/'
-                            element={
-                                <RequireAuth>
-                                    <App />
-                                </RequireAuth>
-                            }
-                        >
-                            {routes.map((route, index) => renderRoute(route, index))}
-                        </Route>
-                    </Routes>
-                </Layout>
-            </AppProvider>
-        </Router>
-    </React.StrictMode>,
-    document.getElementById('root')
+  <React.StrictMode>
+    <Router>
+      <AppProvider>
+        <Layout style={{ minHeight: '100vh' }}>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/activate" element={<ActivatePage />} />
+            <Route path="/completeDelivery" element={<CompleteDeliveryPage />} />
+            <Route path="/" element={<RequireAuth><App /></RequireAuth>}>
+              {routes.map((route, index) => renderRoute(route, index))}
+            </Route>
+          </Routes>
+        </Layout>
+      </AppProvider>
+    </Router>
+  </React.StrictMode>,
+  document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function
