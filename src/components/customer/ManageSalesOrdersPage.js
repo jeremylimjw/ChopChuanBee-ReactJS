@@ -1,6 +1,6 @@
 import { PlusOutlined, SearchOutlined, FileExcelOutlined } from '@ant-design/icons/lib/icons';
 import { Button, DatePicker, Form, Input, Progress, Select, Table } from 'antd';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 import { useApp } from '../../providers/AppProvider';
@@ -21,27 +21,26 @@ import { generateCSV } from '../../utilities/Report/ExcelExporter';
 const breadcrumbs = [
     { url: '/customer/sales', name: 'Customer' },
     { url: '/customer/sales', name: 'Sales' },
-]
+];
 
 export default function ManageSalesOrdersPage() {
-
     const { handleHttpError, hasWriteAccessTo } = useApp();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
-    const [salesOrders, setSalesOrders] = useState([])
+    const [salesOrders, setSalesOrders] = useState([]);
+    console.log(salesOrders);
     const [form] = Form.useForm();
 
     useEffect(() => {
         setLoading(true);
         SalesOrderApiHelper.get()
-            .then(results => {
-                setSalesOrders(results.map(x => new SalesOrder(x)));
+            .then((results) => {
+                setSalesOrders(results.map((x) => new SalesOrder(x)));
                 setLoading(false);
             })
             .catch(handleHttpError)
-            .catch(() => setLoading(false))
-    }, [handleHttpError, setLoading])
-
+            .catch(() => setLoading(false));
+    }, [handleHttpError, setLoading]);
 
     function onValuesChange(_, form) {
         let startDate, endDate;
@@ -55,7 +54,7 @@ export default function ManageSalesOrdersPage() {
                 setLoading(false);
             })
             .catch(handleHttpError)
-            .catch(() => setLoading(false))
+            .catch(() => setLoading(false));
     }
 
     function resetForm() {
@@ -92,30 +91,37 @@ export default function ManageSalesOrdersPage() {
     }
 
     return (
-        <MyLayout breadcrumbs={breadcrumbs} bannerTitle="Manage Sales Orders">
-
+        <MyLayout breadcrumbs={breadcrumbs} bannerTitle='Manage Sales Orders'>
             <MyCard>
-                <MyToolbar title="Sales Orders">
+                <MyToolbar title='Sales Orders'>
                     <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
-                        <Form.Item name="id">
-                            <Input placeholder='Search Order ID' style={{ width: 160 }} suffix={<SearchOutlined className='grey' />} />
+                        <Form.Item name='id'>
+                            <Input
+                                placeholder='Search Order ID'
+                                style={{ width: 160 }}
+                                suffix={<SearchOutlined className='grey' />}
+                            />
                         </Form.Item>
-                        <Form.Item name="customer_name">
-                            <Input placeholder='Search Customer' style={{ width: 160 }} suffix={<SearchOutlined className='grey' />} />
+                        <Form.Item name='customer_name'>
+                            <Input
+                                placeholder='Search Customer'
+                                style={{ width: 160 }}
+                                suffix={<SearchOutlined className='grey' />}
+                            />
                         </Form.Item>
-                        <Form.Item name="date">
+                        <Form.Item name='date'>
                             <DatePicker.RangePicker />
                         </Form.Item>
-                        <Form.Item name="payment_term_id">
-                            <Select style={{ width: 160 }} placeholder="Filter by Payment Term">
+                        <Form.Item name='payment_term_id'>
+                            <Select style={{ width: 160 }} placeholder='Filter by Payment Term'>
                                 <Select.Option value={null}>All</Select.Option>
                                 {Object.keys(PaymentTerm).map((key, idx) =>
                                     <Select.Option key={idx} value={PaymentTerm[key].id}>{PaymentTerm[key].name}</Select.Option>)
                                 }
                             </Select>
                         </Form.Item>
-                        <Form.Item name="sales_order_status_id">
-                            <Select style={{ width: 160 }} placeholder="Filter by Status">
+                        <Form.Item name='sales_order_status_id'>
+                            <Select style={{ width: 160 }} placeholder='Filter by Status'>
                                 <Select.Option value={null}>All</Select.Option>
                                 {Object.keys(POStatus).map((key, idx) =>
                                     <Select.Option key={idx} value={POStatus[key].id}>{POStatus[key].name}</Select.Option>)
@@ -135,7 +141,7 @@ export default function ManageSalesOrdersPage() {
             </MyCard>
 
         </MyLayout>
-    )
+    );
 }
 
 const tableColumns = [

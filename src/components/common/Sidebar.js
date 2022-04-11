@@ -1,7 +1,7 @@
 import React from 'react'
 import { Layout, Menu } from 'antd'
 import { Link } from 'react-router-dom'
-import { HomeOutlined, InboxOutlined, ShoppingOutlined, SolutionOutlined, TeamOutlined, UserOutlined, CarOutlined ,AccountBookOutlined } from '@ant-design/icons/lib/icons'
+import { HomeOutlined, InboxOutlined, ShoppingOutlined, SolutionOutlined, TeamOutlined, UserOutlined, CarOutlined ,AccountBookOutlined, DesktopOutlined } from '@ant-design/icons/lib/icons'
 import { useApp } from '../../providers/AppProvider'
 import { useLocation } from "react-router-dom";
 import { View } from '../../enums/View'
@@ -74,6 +74,15 @@ export const menu = [
       { route: '/dispatch/deliveryOrders', name: 'Manage Deliveries' },
     ]
   },
+  {
+    role: View.CATALOGUE.name,
+    title: 'Catalogue',
+    icon: <DesktopOutlined />,
+    items: [
+      { route: '/catalogue/menuItems', name: 'Manage Menu Items' },
+      { route: '/catalogue/categories', name: 'Manage Categories' },
+    ],
+  },
 ]
 
 export function Sidebar() {
@@ -105,4 +114,4 @@ export function Sidebar() {
         </Menu>
       </Layout.Sider>
     );
-};
+}
