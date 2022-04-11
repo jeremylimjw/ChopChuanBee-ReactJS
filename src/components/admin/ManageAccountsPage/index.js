@@ -22,7 +22,6 @@ const breadcrumbs = [
 ];
 
 export default function ManageAccountsPage() {
-
     const { handleHttpError, hasWriteAccessTo } = useApp();
 
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -31,24 +30,24 @@ export default function ManageAccountsPage() {
     const [form] = Form.useForm();
 
     useEffect(() => {
-      setLoading(true);
-      EmployeeApiHelper.get()
-        .then(results => {
-            setEmployees(results);
-            setLoading(false);
-        })
-        .catch(handleHttpError)
-        .catch(() => setLoading(false))
-    }, [handleHttpError, setLoading])
-
-    function onValuesChange(_, form) {
-        EmployeeApiHelper.get(form)
-            .then(results => {
+        setLoading(true);
+        EmployeeApiHelper.get()
+            .then((results) => {
                 setEmployees(results);
                 setLoading(false);
             })
             .catch(handleHttpError)
-            .catch(() => setLoading(false))
+            .catch(() => setLoading(false));
+    }, [handleHttpError, setLoading]);
+
+    function onValuesChange(_, form) {
+        EmployeeApiHelper.get(form)
+            .then((results) => {
+                setEmployees(results);
+                setLoading(false);
+            })
+            .catch(handleHttpError)
+            .catch(() => setLoading(false));
     }
 
     function resetForm() {
@@ -79,27 +78,39 @@ export default function ManageAccountsPage() {
             <MyCard>
                 <MyToolbar title='Accounts'>
                     <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
-                        <Form.Item name="name">
-                            <Input placeholder='Search Name' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
+                        <Form.Item name='name'>
+                            <Input
+                                placeholder='Search Name'
+                                style={{ width: 180 }}
+                                suffix={<SearchOutlined className='grey' />}
+                            />
                         </Form.Item>
-                        <Form.Item name="role_id">
-                            <Select style={{ width: 140 }} placeholder="Filter by Role">
+                        <Form.Item name='role_id'>
+                            <Select style={{ width: 140 }} placeholder='Filter by Role'>
                                 <Select.Option value={null}>All</Select.Option>
                                 {Object.keys(Role)
-                                    .filter(x => x !== 'ADMIN')
-                                    .map((key, idx) => <Select.Option key={idx} value={Role[key].id}>{Role[key].name}</Select.Option>)}
+                                    .filter((x) => x !== 'ADMIN')
+                                    .map((key, idx) => (
+                                        <Select.Option key={idx} value={Role[key].id}>
+                                            {Role[key].name}
+                                        </Select.Option>
+                                    ))}
                             </Select>
                         </Form.Item>
-                        <Form.Item name="view_id">
-                            <Select style={{ width: 180 }} placeholder="Filter by Access Right">
+                        <Form.Item name='view_id'>
+                            <Select style={{ width: 180 }} placeholder='Filter by Access Right'>
                                 <Select.Option value={null}>All</Select.Option>
                                 {Object.keys(View)
-                                    .filter(x => x !== 'ADMIN' && x !== 'GENERAL')
-                                    .map((key, idx) => <Select.Option key={idx} value={View[key].id}>{View[key].name}</Select.Option>)}
+                                    .filter((x) => x !== 'ADMIN' && x !== 'GENERAL')
+                                    .map((key, idx) => (
+                                        <Select.Option key={idx} value={View[key].id}>
+                                            {View[key].name}
+                                        </Select.Option>
+                                    ))}
                             </Select>
                         </Form.Item>
-                        <Form.Item name="status">
-                            <Select style={{ width: 140 }} placeholder="Filter by Status">
+                        <Form.Item name='status'>
+                            <Select style={{ width: 140 }} placeholder='Filter by Status'>
                                 <Select.Option value={null}>All</Select.Option>
                                 <Select.Option value={true}>Active</Select.Option>
                                 <Select.Option value={false}>Inactive</Select.Option>
@@ -107,24 +118,30 @@ export default function ManageAccountsPage() {
                         </Form.Item>
                         <Button onClick={resetForm}>Reset</Button>
                     </Form>
-                    { hasWriteAccessTo(View.ADMIN.name) && 
-                        <Button type='primary' icon={<PlusOutlined />} onClick={() => setIsModalVisible(true)}>New</Button>
-                    }
+                    {hasWriteAccessTo(View.ADMIN.name) && (
+                        <Button type='primary' icon={<PlusOutlined />} onClick={() => setIsModalVisible(true)}>
+                            New
+                        </Button>
+                    )}
                 </MyToolbar>
 
-                <Table 
-                    dataSource={employees.filter(filterData)} 
-                    columns={columns} 
-                    loading={loading} 
-                    rowKey="id" 
+                <Table
+                    dataSource={employees.filter(filterData)}
+                    columns={columns}
+                    loading={loading}
+                    rowKey='id'
                     pagination={{ showTotal: showTotal }}
                 />
             </MyCard>
 
-            <NewAccountModal isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} myCallback={myCallback} />
+            <NewAccountModal
+                isModalVisible={isModalVisible}
+                setIsModalVisible={setIsModalVisible}
+                myCallback={myCallback}
+            />
         </MyLayout>
     );
-};
+}
 
 const columns = [
     {
@@ -159,7 +176,8 @@ const columns = [
         dataIndex: 'access_rights',
         key: 'access_rights',
         ellipsis: true,
-        render: (access_rights) => access_rights?.map((accessRight, idx) => <span key={idx}>{getAccessRightTag(accessRight)}</span>),
+        render: (access_rights) =>
+            access_rights?.map((accessRight, idx) => <span key={idx}>{getAccessRightTag(accessRight)}</span>),
     },
     {
         title: 'Last Active',
@@ -167,7 +185,7 @@ const columns = [
         key: 'last_active',
         width: 200,
         ellipsis: true,
-        render: (last_active) => last_active ? parseDateTimeSeconds(last_active) : '-',
+        render: (last_active) => (last_active ? parseDateTimeSeconds(last_active) : '-'),
         sorter: (a, b) => sortByDate(a.last_active, b.last_active),
     },
     {
@@ -180,12 +198,12 @@ const columns = [
         render: (discharge_date) => getActiveTag(discharge_date),
         sorter: (a, b) => sortByNumber(a.discharge_date ? 1 : 0, b.discharge_date ? 1 : 0),
     },
-    { 
-        dataIndex: "id", 
-        title: "Action", 
-        key: "link", 
+    {
+        dataIndex: 'id',
+        title: 'Action',
+        key: 'link',
         width: 100,
         ellipsis: true,
-        render: (id) => <Link to={`./${id}`}>View</Link> 
-    }
+        render: (id) => <Link to={`./${id}`}>View</Link>,
+    },
 ];

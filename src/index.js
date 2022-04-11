@@ -45,11 +45,18 @@ import ManageItinerarysPage from './components/dispatch/ManageItinerarysPage';
 import NewItineraryPage from './components/dispatch/NewItineraryPage';
 import ViewItineraryPage from './components/dispatch/ViewItineraryPage';
 import CompleteDeliveryPage from './components/CompleteDeliveryPage';
+<<<<<<< HEAD
 import TodayDashboard from './components/analytics/TodayDashboard';
 import PaymentsDashboard from './components/analytics/PaymentsDashboard';
 import ProfitabilityDashboard from './components/analytics/ProfitabilityDashboard';
 import InventoryDashboard from './components/analytics/InventoryDashboard';
 import ProductDashboard from './components/analytics/ProductDashboard';
+=======
+import ManageCataloguePage from './components/catalogue/ManageCataloguePage';
+import ManageCategoryPage from './components/catalogue/ManageCategoryPage';
+import ViewCataloguePage from './components/catalogue/ViewCataloguePage';
+import ViewCategoryPage from './components/catalogue/ViewCategoryPage';
+>>>>>>> master
 import Home from './components/Home';
 
 // Add on more routes here
@@ -294,6 +301,32 @@ const routes = [
       },
     ],
   },
+  {
+    path: '/catalogue',
+    component: <Outlet />,
+    childRoutes: [
+      {
+        path: 'menuItems',
+        component: <ManageCataloguePage />,
+        viewAccess: View.CATALOGUE.name,
+      },
+      {
+        path: 'menuItems/:id',
+        component: <ViewCataloguePage />,
+        viewAccess: View.CATALOGUE.name,
+      },
+      {
+        path: 'categories',
+        component: <ManageCategoryPage />,
+        viewAccess: View.CATALOGUE.name,
+      },
+      {
+        path: 'categories/:id',
+        component: <ViewCategoryPage />,
+        viewAccess: View.CATALOGUE.name,
+      },
+    ],
+  }
 ];
 
 function renderRoute(route, index) {
