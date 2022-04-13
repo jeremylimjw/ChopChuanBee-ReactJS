@@ -94,6 +94,7 @@ export default function ViewProcurementPage() {
 
       const newPurchaseOrder = new PurchaseOrder({ ...purchaseOrder, ...values });
       newPurchaseOrder.convertToInvoice();
+      form.setFieldsValue({ has_gst: newPurchaseOrder.has_gst });
 
       setLoading(true);
       PurchaseOrderApiHelper.update(newPurchaseOrder)
@@ -137,10 +138,14 @@ export default function ViewProcurementPage() {
         message.error('Each order item must have a product selected.')
         return;
       }
+
       const newPurchaseOrder = { ...purchaseOrder, ...values, purchase_order_status_id: POStatus.CLOSED.id, closed_on: new Date() };
 
       setLoading(true);
-      PurchaseOrderApiHelper.closeOrder(newPurchaseOrder)
+      PurchaseOrderApiHelper.update(newPurchaseOrder)
+        .then(() => {
+          return PurchaseOrderApiHelper.closeOrder(newPurchaseOrder)
+        })
         .then(() => {
           message.success("Purchase Order successfully closed!");
           setPurchaseOrder(new PurchaseOrder({ ...newPurchaseOrder }))
