@@ -104,7 +104,7 @@ export default function Chat() {
             if (index > -1) {
                 newChannels[index] = {
                     ...newChannels[index], 
-                    unread_count: newChannels[index].unread_count+1,
+                    unread_count: (newChannels[index].unread_count || 0)+1,
                     last_text: newText, 
                 }
             }

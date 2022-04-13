@@ -191,22 +191,22 @@ const routes = [
       { 
         path: 'sales', 
         component: <ManageSalesOrdersPage />,
-        viewAccess: View.SCM.name,
+        viewAccess: View.CRM.name,
       },
       { 
         path: 'sales/new', 
         component: <NewSalesOrderPage />,
-        viewAccess: View.SCM.name,
+        viewAccess: View.CRM.name,
       },
       { 
         path: 'sales/:id', 
         component: <ViewSalesOrderPage />,
-        viewAccess: View.SCM.name,
+        viewAccess: View.CRM.name,
       },
       { 
         path: 'customers/SORA/:id', 
         component: <ViewSORAPage />,
-        viewAccess: View.SCM.name,
+        viewAccess: View.CRM.name,
       },
     ]
   },

@@ -1,5 +1,5 @@
 import { PlusOutlined, SearchOutlined, FileExcelOutlined } from '@ant-design/icons/lib/icons';
-import { Button, DatePicker, Form, Input, Progress, Select, Table } from 'antd';
+import { Button, DatePicker, Form, Input, InputNumber, Progress, Select, Table } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
@@ -100,7 +100,7 @@ export default function ManageProcurementsPage() {
                 <MyToolbar title="Procurements">
                     <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
                         <Form.Item name="id">
-                            <Input placeholder='Search Order ID' style={{ width: 160 }} suffix={<SearchOutlined className='grey' />} />
+                            <InputNumber placeholder='Search Order ID' style={{ width: 160 }} suffix={<SearchOutlined className='grey' />} min={0} />
                         </Form.Item>
                         <Form.Item name="supplier_name">
                             <Input placeholder='Search Supplier' style={{ width: 160 }} suffix={<SearchOutlined className='grey' />} />

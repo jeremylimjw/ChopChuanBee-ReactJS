@@ -23,7 +23,7 @@ export default function PO4PaymentsTable({ purchaseOrder, setPurchaseOrder, load
         
             { purchaseOrder.isStatus(POStatus.ACCEPTED) && 
                 <MyToolbar title="Payments">
-                    {hasWriteAccessTo(View.SCM.id) &&
+                    {hasWriteAccessTo(View.SCM.name) &&
                     <>
                         <Button icon={<UndoOutlined />} disabled={loading} onClick={() => setIsModalVisible(2)}>Refund</Button>
                         <Button type="primary" icon={<PlusOutlined />} disabled={loading} onClick={() => setIsModalVisible(1)}>Add Payment</Button>

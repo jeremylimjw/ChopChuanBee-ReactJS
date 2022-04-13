@@ -167,7 +167,7 @@ const columns = [
     width: 100,
     align: 'center',
     ellipsis: true,
-    render: (ar) => `$${(-ar).toFixed(2)}`,
+    render: (ar) => `$${(-ar || 0).toFixed(2)}`,
     sorter: (a, b) => sortByNumber(a.ar, b.ar),
   },
   {

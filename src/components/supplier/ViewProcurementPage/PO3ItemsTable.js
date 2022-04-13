@@ -33,7 +33,7 @@ export default function PO3ItemsTable({ purchaseOrder, setPurchaseOrder, loading
   columns[4].sorter = (a, b) => sortByNumber(+myPrices[a.product?.id] || 0, +myPrices[b.product?.id] || 0);
   columns[5].onCell = (record) => ({ type: 'input_number', field: 'quantity', record, handleSave })
   columns[6].onCell = (record) => ({ type: 'input_number', field: 'unit_cost', currency: 'true', record, handleSave })
-  columns[8].render = (_, record) => <Button shape="circle" icon={<DeleteOutlined />} onClick={() => handleDeleteRow(record)} disabled={!hasWriteAccessTo(View.SCM.id) || !purchaseOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL, POStatus.SENT_TEXT)} />
+  columns[8].render = (_, record) => <Button shape="circle" icon={<DeleteOutlined />} onClick={() => handleDeleteRow(record)} disabled={!hasWriteAccessTo(View.SCM.name) || !purchaseOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL, POStatus.SENT_TEXT)} />
   
   useEffect(() => {
     if (purchaseOrder.supplier != null) {

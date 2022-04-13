@@ -89,7 +89,7 @@ export default function ManageAccountsPage() {
                             <Select style={{ width: 140 }} placeholder='Filter by Role'>
                                 <Select.Option value={null}>All</Select.Option>
                                 {Object.keys(Role)
-                                    .filter((x) => x !== 'ADMIN')
+                                    .filter(x => x !== 'ADMIN')
                                     .map((key, idx) => (
                                         <Select.Option key={idx} value={Role[key].id}>
                                             {Role[key].name}
@@ -102,6 +102,7 @@ export default function ManageAccountsPage() {
                                 <Select.Option value={null}>All</Select.Option>
                                 {Object.keys(View)
                                     .filter((x) => x !== 'ADMIN' && x !== 'GENERAL')
+                                    .filter(x => x !== 'SALES')
                                     .map((key, idx) => (
                                         <Select.Option key={idx} value={View[key].id}>
                                             {View[key].name}

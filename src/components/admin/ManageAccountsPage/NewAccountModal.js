@@ -49,7 +49,7 @@ export default function NewAccountModal({ isModalVisible, setIsModalVisible, myC
 function MyForm({ form, accessRightsForm }) {
     return (
         <>
-            <Tabs defaultActiveKey="1">
+            <Tabs defaultActiveKey="1" type="card">
 
                 <Tabs.TabPane tab="Personal Details" key="1">
                     <Form form={form} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }} autoComplete="off" labelAlign="left">

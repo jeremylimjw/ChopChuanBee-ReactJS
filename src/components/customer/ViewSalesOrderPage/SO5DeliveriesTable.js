@@ -20,7 +20,7 @@ export default function SO5DeliveriesTable({ salesOrder, setSalesOrder, loading,
         
             { salesOrder.isStatus(SOStatus.COMPLETED) && 
                 <MyToolbar title="Sent Items">
-                    {hasWriteAccessTo(View.CRM.id) &&
+                    {hasWriteAccessTo(View.CRM.name) &&
                     <>
                         <Button icon={<UndoOutlined />} disabled={loading} onClick={() => setIsModalVisible(2)}>Return</Button>
                         {/* <Button type="primary" icon={<PlusOutlined />} disabled={loading} onClick={() => setIsModalVisible(1)}>Receive New Delivery</Button> */}

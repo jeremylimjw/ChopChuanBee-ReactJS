@@ -155,7 +155,7 @@ export default function ViewProcurementPage() {
   function cancelOrder() {
     const payment = {
       purchase_order_id: purchaseOrder.id,
-      amount: purchaseOrder.isPaymentTerm(PaymentTerm.CREDIT) ? -purchaseOrder.getPaymentsTotal() : +purchaseOrder.getPaymentsTotal(),
+      amount: +purchaseOrder.getPaymentsTotal(),
       movement_type_id: MovementType.REFUND.id,
       accounting_type_id: purchaseOrder.isPaymentTerm(PaymentTerm.CREDIT) ? 1 : null,
       payment_method_id: PaymentMethod.CASH.id,

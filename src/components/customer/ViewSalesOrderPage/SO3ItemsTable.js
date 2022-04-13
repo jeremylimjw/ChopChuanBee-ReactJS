@@ -33,7 +33,7 @@ export default function SO3ItemsTable({ salesOrder, setSalesOrder, loading, setL
     columns[4].sorter = (a, b) => sortByNumber(+myPrices[a.product?.id] || 0, +myPrices[b.product?.id] || 0);
     columns[5].onCell = (record) => ({ type: 'input_number', field: 'quantity', record, handleSave })
     columns[6].onCell = (record) => ({ type: 'input_number', field: 'unit_price', currency: 'true', record, handleSave })
-    columns[8].render = (_, record) => <Button shape="circle" icon={<DeleteOutlined />} onClick={() => handleDeleteRow(record)} disabled={!hasWriteAccessTo(View.CRM.id) || !salesOrder.isStatus(SOStatus.PENDING)} />
+    columns[8].render = (_, record) => <Button shape="circle" icon={<DeleteOutlined />} onClick={() => handleDeleteRow(record)} disabled={!hasWriteAccessTo(View.CRM.name) || !salesOrder.isStatus(SOStatus.PENDING)} />
     
     useEffect(() => {
         if (salesOrder.customer != null) {

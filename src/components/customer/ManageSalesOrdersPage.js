@@ -1,5 +1,5 @@
 import { PlusOutlined, SearchOutlined, FileExcelOutlined } from '@ant-design/icons/lib/icons';
-import { Button, DatePicker, Form, Input, Progress, Select, Table } from 'antd';
+import { Button, DatePicker, Form, Input, InputNumber, Progress, Select, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
@@ -28,7 +28,6 @@ export default function ManageSalesOrdersPage() {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [salesOrders, setSalesOrders] = useState([]);
-    console.log(salesOrders);
     const [form] = Form.useForm();
 
     useEffect(() => {
@@ -96,10 +95,11 @@ export default function ManageSalesOrdersPage() {
                 <MyToolbar title='Sales Orders'>
                     <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
                         <Form.Item name='id'>
-                            <Input
+                            <InputNumber
                                 placeholder='Search Order ID'
                                 style={{ width: 160 }}
                                 suffix={<SearchOutlined className='grey' />}
+                                min={0}
                             />
                         </Form.Item>
                         <Form.Item name='customer_name'>

@@ -142,7 +142,7 @@ export default function PO2Form({ form, purchaseOrder, setPurchaseOrder, loading
                     }
                 </Form.Item>
 
-                { (hasWriteAccessTo(View.SCM.id) && purchaseOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED)) &&
+                { (hasWriteAccessTo(View.SCM.name) && purchaseOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED)) &&
                 <Form.Item wrapperCol={{ offset: 6 }}>
                     <Button icon={<SaveOutlined />} disabled={loading} onClick={saveForLater}>Save for later</Button>
                 </Form.Item>

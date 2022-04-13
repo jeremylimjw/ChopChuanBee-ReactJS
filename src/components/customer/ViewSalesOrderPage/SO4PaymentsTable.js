@@ -23,7 +23,7 @@ export default function SO4PaymentsTable({ salesOrder, setSalesOrder, loading })
         
             { salesOrder.isStatus(SOStatus.COMPLETED) && 
                 <MyToolbar title="Payments">
-                    {hasWriteAccessTo(View.CRM.id) &&
+                    {hasWriteAccessTo(View.CRM.name) &&
                     <>
                         <Button icon={<UndoOutlined />} disabled={loading} onClick={() => setIsModalVisible(2)}>Refund</Button>
                         <Button type="primary" icon={<PlusOutlined />} disabled={loading} onClick={() => setIsModalVisible(1)}>Add Payment</Button>

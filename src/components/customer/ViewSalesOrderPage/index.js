@@ -273,23 +273,23 @@ export default function ViewSalesOrderPage() {
 
                     <Button icon={<RedoOutlined />} onClick={navigateToCreateForm}>Reorder</Button>
 
-                    {salesOrder.isStatus(SOStatus.PENDING, SOStatus.COMPLETED) &&
+                    {salesOrder.isStatus(SOStatus.PENDING, SOStatus.COMPLETED, SOStatus.SENT) &&
                       <Popconfirm title="Are you sure? This action cannot be undone." onConfirm={cancelOrder} disabled={loading}>
                         <Button icon={<StopOutlined />} disabled={loading}>Cancel Order</Button>
                       </Popconfirm>
                     }
 
-                    {salesOrder.isStatus(SOStatus.PENDING, SOStatus.COMPLETED) &&
+                    {salesOrder.isStatus(SOStatus.PENDING, SOStatus.COMPLETED, SOStatus.SENT) &&
                       <Button icon={<SaveOutlined />} disabled={loading} onClick={saveForLater}>Save for later</Button>
                     }
 
-                    {salesOrder.isStatus(SOStatus.PENDING) &&
+                    {salesOrder.isStatus(SOStatus.PENDING, SOStatus.SENT) &&
                       <Popconfirm title="Are you sure?" onConfirm={confirmOrder} disabled={loading}>
                         <Button type="primary" icon={<FileTextOutlined />} disabled={loading}>Confirm Order</Button>
                       </Popconfirm>
                     }
 
-                    {salesOrder.isStatus(SOStatus.COMPLETED) &&
+                    {salesOrder.isStatus(SOStatus.COMPLETED, SOStatus.SENT) &&
                       <Popconfirm title="Are you sure?" onConfirm={closeOrder} disabled={loading}>
                         <Button type="primary" icon={<FileDoneOutlined />} disabled={loading}>Close Invoice</Button>
                       </Popconfirm>

@@ -20,7 +20,7 @@ export default function PO5DeliveriesTable({ purchaseOrder, setPurchaseOrder, lo
         
             { purchaseOrder.isStatus(POStatus.ACCEPTED) && 
                 <MyToolbar title="Received Items">
-                    {hasWriteAccessTo(View.SCM.id) &&
+                    {hasWriteAccessTo(View.SCM.name) &&
                     <>
                         <Button icon={<UndoOutlined />} disabled={loading} onClick={() => setIsModalVisible(2)}>Return</Button>
                         <Button type="primary" icon={<PlusOutlined />} disabled={loading} onClick={() => setIsModalVisible(1)}>Receive New Delivery</Button>

@@ -101,16 +101,16 @@ export default function SO2Form({ form, salesOrder, setSalesOrder, loading, save
 
                 {showGstRate &&
                 <>
-                    <Form.Item label="GST Rate" name="gst_rate" rules={salesOrder.isStatus(POStatus.PENDING) ? [REQUIRED] : []}>
-                        {salesOrder.isStatus(POStatus.PENDING) ? 
+                    <Form.Item label="GST Rate" name="gst_rate" rules={salesOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL, POStatus.SENT_TEXT) ? [REQUIRED] : []}>
+                        {salesOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL, POStatus.SENT_TEXT) ? 
                             <InputNumber min={0} addonAfter="%" style={{ width: 100 }} />
                         :
                             <Typography.Text>{salesOrder.gst_rate} %</Typography.Text>
                         }
                     </Form.Item>
 
-                    <Form.Item label="Show GST" name="show_gst" rules={salesOrder.isStatus(POStatus.PENDING) ? [REQUIRED] : []}>
-                        {salesOrder.isStatus(POStatus.PENDING) ? 
+                    <Form.Item label="Show GST" name="show_gst" rules={salesOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL, POStatus.SENT_TEXT) ? [REQUIRED] : []}>
+                        {salesOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL, POStatus.SENT_TEXT) ? 
                             <Radio.Group>
                                 <Radio value={false}>No</Radio>
                                 <Radio value={true}>Yes</Radio>
@@ -122,8 +122,8 @@ export default function SO2Form({ form, salesOrder, setSalesOrder, loading, save
                 </>
                 }
 
-                <Form.Item label="Payment Term" name="payment_term_id" rules={salesOrder.isStatus(POStatus.PENDING) ? [REQUIRED] : []}>
-                    {salesOrder.isStatus(POStatus.PENDING) ? 
+                <Form.Item label="Payment Term" name="payment_term_id" rules={salesOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL, POStatus.SENT_TEXT) ? [REQUIRED] : []}>
+                    {salesOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL, POStatus.SENT_TEXT) ? 
                         <Radio.Group>
                             {Object.keys(PaymentTerm).map((key, idx) => <Radio key={idx} value={PaymentTerm[key].id}>{PaymentTerm[key].name}</Radio>)}
                         </Radio.Group>
@@ -133,8 +133,8 @@ export default function SO2Form({ form, salesOrder, setSalesOrder, loading, save
                 </Form.Item>
 
                 {showPaymentMethod &&
-                    <Form.Item label="Payment Method" name="payment_method_id" rules={salesOrder.isStatus(POStatus.PENDING) ? [REQUIRED] : []}>
-                        {salesOrder.isStatus(POStatus.PENDING) ? 
+                    <Form.Item label="Payment Method" name="payment_method_id" rules={salesOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL, POStatus.SENT_TEXT) ? [REQUIRED] : []}>
+                        {salesOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL, POStatus.SENT_TEXT) ? 
                             <Select style={{ width: 150 }}>
                                 {Object.keys(PaymentMethod).map((key, idx) => <Select.Option key={idx} value={PaymentMethod[key].id}>{PaymentMethod[key].name}</Select.Option>)}
                             </Select>
@@ -145,7 +145,7 @@ export default function SO2Form({ form, salesOrder, setSalesOrder, loading, save
                 }
 
                 <Form.Item label="Remarks" name="remarks">
-                    {salesOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED) ? 
+                    {salesOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED, POStatus.SENT_EMAIL, POStatus.SENT_TEXT) ? 
                         <TextArea />
                     :
                         <Typography.Text>{salesOrder.remarks || '-'}</Typography.Text>
@@ -155,8 +155,8 @@ export default function SO2Form({ form, salesOrder, setSalesOrder, loading, save
                 <Typography.Title level={5}>Delivery Details</Typography.Title>
                 <Divider/>
 
-                <Form.Item label="Delivery Required" name="has_delivery" rules={salesOrder.isStatus(POStatus.PENDING) ? [REQUIRED] : []}>
-                    {salesOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED) ? 
+                <Form.Item label="Delivery Required" name="has_delivery" rules={salesOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL, POStatus.SENT_TEXT) ? [REQUIRED] : []}>
+                    {salesOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED, POStatus.SENT_EMAIL, POStatus.SENT_TEXT) ? 
                         <Radio.Group>
                             <Radio value={false}>No</Radio>
                             <Radio value={true}>Yes</Radio>
@@ -168,16 +168,16 @@ export default function SO2Form({ form, salesOrder, setSalesOrder, loading, save
 
                 {showDelivery &&
                     <>
-                        <Form.Item label="Address" name="delivery_address" rules={salesOrder.isStatus(POStatus.PENDING) ? [REQUIRED] : []}>
-                            {salesOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED) ? 
+                        <Form.Item label="Address" name="delivery_address" rules={salesOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL, POStatus.SENT_TEXT) ? [REQUIRED] : []}>
+                            {salesOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED, POStatus.SENT_EMAIL, POStatus.SENT_TEXT) ? 
                                 <Input />
                             :
                                 <Typography.Text>{salesOrder.delivery_address}</Typography.Text>
                             }
                         </Form.Item>
 
-                        <Form.Item label="Postal Code" name="delivery_postal_code" rules={salesOrder.isStatus(POStatus.PENDING) ? [REQUIRED] : []}>
-                            {salesOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED) ? 
+                        <Form.Item label="Postal Code" name="delivery_postal_code" rules={salesOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL, POStatus.SENT_TEXT) ? [REQUIRED] : []}>
+                            {salesOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED, POStatus.SENT_EMAIL, POStatus.SENT_TEXT) ? 
                                 <Input />
                             :
                                 <Typography.Text>{salesOrder.delivery_postal_code}</Typography.Text>
@@ -185,7 +185,7 @@ export default function SO2Form({ form, salesOrder, setSalesOrder, loading, save
                         </Form.Item>
 
                         <Form.Item label="Remarks" name="delivery_remarks">
-                            {salesOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED) ? 
+                            {salesOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED, POStatus.SENT_EMAIL, POStatus.SENT_TEXT) ? 
                                 <TextArea />
                             :
                                 <Typography.Text>{salesOrder.delivery_remarks || '-'}</Typography.Text>
@@ -194,7 +194,7 @@ export default function SO2Form({ form, salesOrder, setSalesOrder, loading, save
                     </>
                 }
 
-                { (hasWriteAccessTo(View.CRM.id) && salesOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED)) &&
+                { (hasWriteAccessTo(View.CRM.name) && salesOrder.isStatus(POStatus.PENDING, POStatus.ACCEPTED, POStatus.SENT_EMAIL, POStatus.SENT_TEXT)) &&
                 <Form.Item wrapperCol={{ offset: 6 }}>
                     <Button icon={<SaveOutlined />} disabled={loading} onClick={saveForLater}>Save for later</Button>
                 </Form.Item>

@@ -53,6 +53,7 @@ export default function A2Form({ employee, setEmployee }) {
             <Form form={form} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }} autoComplete="off" labelAlign="left" initialValues={initialValues}>
                 { Object.keys(View)
                     .filter(x => x !== 'ADMIN' && x !== 'GENERAL')
+                    .filter(x => x !== 'SALES')
                     .map((key, idx) => <Form.Item key={idx} label={View[key].name} name={View[key].id} initialValue={undefined}>
                             <Radio.Group disabled={!editing}>
                                 <Radio value={undefined}>None</Radio>

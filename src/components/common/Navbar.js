@@ -17,10 +17,6 @@ export default function Navbar() {
   return (
     <Header style={styles.header}>
       <Menu mode='horizontal' theme="dark" style={{float: 'right'}} selectedKeys={[location.pathname]}>
-
-        <Menu.Item key="/analytics" icon={<LineChartOutlined />}>
-          Analytics
-        </Menu.Item>
         
         <Menu.SubMenu key="subMenu" icon={<UserOutlined />} title={user?.name} style={{ width: 100 }}>
             <Menu.Item key="/myProfile" onClick={() => navigate('/myProfile')} icon={<UserOutlined />}>My Profile</Menu.Item>

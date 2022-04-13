@@ -31,6 +31,7 @@ export default function AddDeliveryModal({ isModalVisible, setIsModalVisible, my
             onOk={handleOk} 
             onCancel={handleClose} 
             okButtonProps={{ loading: loading }}
+            bodyStyle={{ height: "60vh", overflowY: "auto" }}
             destroyOnClose
         >
             
@@ -99,7 +100,7 @@ function ModalContent({ selectedOrders, setSelectedOrders }) {
                 rowSelection={{ type: 'checkbox', onChange: handleRowSelect, selectedRowKeys: selectedOrders.map(x => x.id) }}
                 columns={columns}
                 dataSource={orders}
-                pagination={{ showTotal: showTotal }}
+                pagination={{ showTotal: showTotal, pageSize: 6 }}
                 rowKey="id"
             />
         </>

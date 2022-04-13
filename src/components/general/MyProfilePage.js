@@ -98,7 +98,7 @@ export default function MyProfilePage() {
                         
                         <Form.Item label="NOK Name" name="nok_name">
                             {!editing ? 
-                                <Typography>{user.contact_number || '-'}</Typography>
+                                <Typography>{user.nok_name || '-'}</Typography>
                             :
                                 <Input />
                             }

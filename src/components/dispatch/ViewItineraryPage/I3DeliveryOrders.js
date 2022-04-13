@@ -122,7 +122,7 @@ export default function I3DeliveryOrders({ itinerary, setItinerary, loading, set
                         <Button icon={<PrinterOutlined />} onClick={printItinerary}>Print</Button>
                     </Space>
 
-                    {hasWriteAccessTo(View.DISPATCH.id) &&
+                    {hasWriteAccessTo(View.DISPATCH.name) &&
                         <div style={{ marginLeft: 'auto' }}>
                             <Space size="middle">
                                 <Button icon={<ReloadOutlined />} onClick={optimizeRoutes} loading={loading}>Optimize</Button>

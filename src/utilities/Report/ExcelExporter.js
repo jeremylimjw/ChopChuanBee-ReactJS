@@ -8,9 +8,9 @@ export const generateCSV = (data, headers, fileName) => {
     row.forEach((str) => {
       let newStr
       if (typeof str === 'string') {
-        newStr = str.replace(',', ' ')
+        newStr = str?.replace(',', ' ')
       } else {
-        newStr = str.toString().replace(',', ' ')
+        newStr = str?.toString()?.replace(',', ' ')
       }
       csvFile += newStr + ','
     })
