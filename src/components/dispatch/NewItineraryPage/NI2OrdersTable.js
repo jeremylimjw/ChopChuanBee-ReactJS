@@ -1,5 +1,5 @@
 import { SearchOutlined } from '@ant-design/icons/lib/icons';
-import { Button, Form, Input, Table } from 'antd';
+import { Button, Form, Input, InputNumber, message, Table } from 'antd';
 import debounce from 'lodash.debounce';
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
@@ -50,11 +50,37 @@ export default function NI2OrdersTable({ itinerary, setItinerary, selectedOrders
     setSelectedOrders(selectedRows);
   }
 
+  async function nextStep() {
+    setLoading(true);
+    DeliveryApiHelper.optimizeRoutes({ longitude: itinerary.longitude, latitude: itinerary.latitude }, selectedOrders)
+      .then(waypoint_order => {
+        const newOrders = [];
+        for (let index of waypoint_order) {
+            newOrders.push(selectedOrders[index]);
+        }
+        
+        setSelectedOrders(newOrders);
+
+        message.success('Delivery orders successfully optimized!');
+
+        setLoading(false);
+        setStep(step+1);
+      })
+      .catch(handleHttpError)
+      .catch(() => {
+        setLoading(false);
+        setStep(step+1);
+      })
+  }
+
   return (
     <>
       <MyCard>
         <MyToolbar title="Outstanding Delivery Orders">
           <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
+            <Form.Item name="sales_order_id">
+              <InputNumber min={0} placeholder='Search Sales Order ID' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
+            </Form.Item>
             <Form.Item name="customer_company_name">
               <Input placeholder='Search Company' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
             </Form.Item>
@@ -74,14 +100,14 @@ export default function NI2OrdersTable({ itinerary, setItinerary, selectedOrders
         />
 
         <MyToolbar style={{ marginTop: 15 }}>
-          <Button onClick={() => setStep(step-1)}>Back</Button>
-          <Button type="primary" onClick={() => setStep(step+1)} disabled={selectedOrders.length === 0}>Optimize</Button>
+          <Button onClick={() => setStep(step - 1)}>Back</Button>
+          <Button type="primary" onClick={nextStep} disabled={selectedOrders.length === 0} loading={loading}>Optimize</Button>
         </MyToolbar>
       </MyCard>
     </>
   )
 }
-  
+
 const columns = [
   {
     title: 'Created At',

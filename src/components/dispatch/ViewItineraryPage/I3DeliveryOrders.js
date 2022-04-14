@@ -10,6 +10,7 @@ import { View } from '../../../enums/View'
 import { useApp } from '../../../providers/AppProvider'
 import { parseDateTimeSeconds } from '../../../utilities/datetime'
 import { generatePdf } from '../../../utilities/Report/ReportExporter'
+import { sortByString } from '../../../utilities/sorters'
 import DraggableTableRow from '../../common/DraggableTableRow'
 import MyCard from '../../common/MyCard'
 import MyToolbar from '../../common/MyToolbar'
@@ -23,7 +24,7 @@ export default function I3DeliveryOrders({ itinerary, setItinerary, loading, set
     const [showDeliveryOrder, setShowDeliveryOrder] = useState();
     const [showAddOrder, setShowAddOrder] = useState(false);
 
-    columns[7].render = (_, record) => <Button type="link" style={{ paddingLeft: 0 }} onClick={() => setShowDeliveryOrder(record)}>View</Button>;
+    columns[8].render = (_, record) => <Button type="link" style={{ paddingLeft: 0 }} onClick={() => setShowDeliveryOrder(record)}>View</Button>;
 
     function moveRow(dragIndex, hoverIndex) {
         const dragRow = itinerary.delivery_orders[dragIndex];
@@ -203,6 +204,15 @@ const columns = [
         align: 'center',
         ellipsis: true,
         render: (delivery_status_id) => getDeliveryStatusTag(delivery_status_id),
+    },
+    {
+      title: 'Remarks',
+      dataIndex: 'remarks',
+      key: 'remarks',
+      width: '20%',
+      ellipsis: true,
+      render: (remarks) => remarks || '-',
+      sorter: (a, b) => sortByString(a.remarks, b.remarks),
     },
     {
         title: "Action",
