@@ -30,27 +30,27 @@ export default function IncomeStatementObject({ income, setIncome }) {
     income.totalExpenses = totalExpenses.toString();
     income.profit = profit.toString();
 
-    const formatExcel = () => {
-        income.revenue = parseFloat(income.revenue);
-        income.less_cost_of_goods_sold = parseFloat(income.less_cost_of_goods_sold);
-        income.less_customer_sales_return = parseFloat(income.less_customer_sales_return);
-        income.gain_on_sale_of_asset = parseFloat(income.gain_on_sale_of_asset);
-        income.other_income_1 = parseFloat(income.other_income_1);
-        income.other_income_2 = parseFloat(income.other_income_2);
+    const formatData = () => {
+        income.revenue = parseFloat(income.revenue).toFixed('2');
+        income.less_cost_of_goods_sold = parseFloat(income.less_cost_of_goods_sold).toFixed('2');
+        income.less_customer_sales_return = parseFloat(income.less_customer_sales_return).toFixed('2');
+        income.gain_on_sale_of_asset = parseFloat(income.gain_on_sale_of_asset).toFixed('2');
+        income.other_income_1 = parseFloat(income.other_income_1).toFixed('2');
+        income.other_income_2 = parseFloat(income.other_income_2).toFixed('2');
 
         income.totalRevenue = parseFloat(totalRevenue.toFixed('2'));;
 
-        income.damaged_inventory = parseFloat(income.damaged_inventory);
-        income.salary_expense = parseFloat(income.salary_expense);
-        income.interest_expense = parseFloat(income.interest_expense);
-        income.tax_expense = parseFloat(income.tax_expense);
-        income.warranty_expense = parseFloat(income.warranty_expense);
-        income.rental_expense = parseFloat(income.rental_expense);
-        income.advertising_expense = parseFloat(income.advertising_expense);
-        income.commissions_expense = parseFloat(income.commissions_expense);
-        income.loss_on_sale_of_asset = parseFloat(income.loss_on_sale_of_asset);
-        income.other_expense_1 = parseFloat(income.other_expense_1);
-        income.other_expense_2 = parseFloat(income.other_expense_2);
+        income.damaged_inventory = parseFloat(income.damaged_inventory).toFixed('2');
+        income.salary_expense = parseFloat(income.salary_expense).toFixed('2');
+        income.interest_expense = parseFloat(income.interest_expense).toFixed('2');
+        income.tax_expense = parseFloat(income.tax_expense).toFixed('2');
+        income.warranty_expense = parseFloat(income.warranty_expense).toFixed('2');
+        income.rental_expense = parseFloat(income.rental_expense).toFixed('2');
+        income.advertising_expense = parseFloat(income.advertising_expense).toFixed('2');
+        income.commissions_expense = parseFloat(income.commissions_expense).toFixed('2');
+        income.loss_on_sale_of_asset = parseFloat(income.loss_on_sale_of_asset).toFixed('2');
+        income.other_expense_1 = parseFloat(income.other_expense_1).toFixed('2');
+        income.other_expense_2 = parseFloat(income.other_expense_2).toFixed('2');
 
         income.totalExpenses = parseFloat(totalExpenses.toFixed('2'));
 
@@ -92,7 +92,7 @@ export default function IncomeStatementObject({ income, setIncome }) {
     }
 
     const exportReport = (action) => {
-        formatExcel()
+        formatData()
         let data = income
         if (action === 'EXCEL') {
             let headers = ['Income Statement', 'Chop Chuan Bee']

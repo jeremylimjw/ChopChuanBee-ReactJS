@@ -57,62 +57,62 @@ export default function BalanceSheetObject({ BalanceSheet, setBalanceSheet }) {
     }
 
     const formatData = () => {
-        BalanceSheet.cash_sales_of_goods = parseFloat(BalanceSheet.cash_sales_of_goods);
-        BalanceSheet.cash_others = parseFloat(BalanceSheet.cash_others);
-        BalanceSheet.account_receivable = parseFloat(BalanceSheet.account_receivable);
-        BalanceSheet.inventory = parseFloat(BalanceSheet.inventory);
-        BalanceSheet.supplies = parseFloat(BalanceSheet.supplies);
-        BalanceSheet.prepaid_insurance = parseFloat(BalanceSheet.prepaid_insurance);
-        BalanceSheet.prepaid_rent = parseFloat(BalanceSheet.prepaid_rent);
-        BalanceSheet.other_current_asset_1 = parseFloat(BalanceSheet.other_current_asset_1);
-        BalanceSheet.other_current_asset_2 = parseFloat(BalanceSheet.other_current_asset_1);
-        BalanceSheet.other_current_asset_2 = parseFloat(BalanceSheet.other_current_asset_1);
-        BalanceSheet.totalCurrentAssets = totalCurrentAssets;
+        BalanceSheet.cash_sales_of_goods = parseFloat(BalanceSheet.cash_sales_of_goods).toFixed('2');
+        BalanceSheet.cash_others = parseFloat(BalanceSheet.cash_others).toFixed('2');
+        BalanceSheet.account_receivable = parseFloat(BalanceSheet.account_receivable).toFixed('2');
+        BalanceSheet.inventory = parseFloat(BalanceSheet.inventory).toFixed('2');
+        BalanceSheet.supplies = parseFloat(BalanceSheet.supplies).toFixed('2');
+        BalanceSheet.prepaid_insurance = parseFloat(BalanceSheet.prepaid_insurance).toFixed('2');
+        BalanceSheet.prepaid_rent = parseFloat(BalanceSheet.prepaid_rent).toFixed('2');
+        BalanceSheet.other_current_asset_1 = parseFloat(BalanceSheet.other_current_asset_1).toFixed('2');
+        BalanceSheet.other_current_asset_2 = parseFloat(BalanceSheet.other_current_asset_1).toFixed('2');
+        BalanceSheet.other_current_asset_2 = parseFloat(BalanceSheet.other_current_asset_1).toFixed('2');
+        BalanceSheet.totalCurrentAssets = parseFloat(totalCurrentAssets).toFixed('2');
 
-        BalanceSheet.land = parseFloat(BalanceSheet.land);
-        BalanceSheet.less_accumulated_depreciation_land = parseFloat(BalanceSheet.less_accumulated_depreciation_land);
-        BalanceSheet.building = parseFloat(BalanceSheet.building);
-        BalanceSheet.less_accumulated_depreciation_building = parseFloat(BalanceSheet.less_accumulated_depreciation_building);
-        BalanceSheet.equipments = parseFloat(BalanceSheet.equipments);
-        BalanceSheet.less_accumulated_depreciation_equipments = parseFloat(BalanceSheet.less_accumulated_depreciation_equipments);
-        BalanceSheet.other_non_current_asset_1 = parseFloat(BalanceSheet.other_non_current_asset_1);
-        BalanceSheet.other_non_current_asset_2 = parseFloat(BalanceSheet.other_non_current_asset_2);
-        BalanceSheet.totalNonCurrentAssets = totalNonCurrentAssets;
+        BalanceSheet.land = parseFloat(BalanceSheet.land).toFixed('2');
+        BalanceSheet.less_accumulated_depreciation_land = parseFloat(BalanceSheet.less_accumulated_depreciation_land).toFixed('2');
+        BalanceSheet.building = parseFloat(BalanceSheet.building).toFixed('2');
+        BalanceSheet.less_accumulated_depreciation_building = parseFloat(BalanceSheet.less_accumulated_depreciation_building).toFixed('2');
+        BalanceSheet.equipments = parseFloat(BalanceSheet.equipments).toFixed('2');
+        BalanceSheet.less_accumulated_depreciation_equipments = parseFloat(BalanceSheet.less_accumulated_depreciation_equipments).toFixed('2');
+        BalanceSheet.other_non_current_asset_1 = parseFloat(BalanceSheet.other_non_current_asset_1).toFixed('2');
+        BalanceSheet.other_non_current_asset_2 = parseFloat(BalanceSheet.other_non_current_asset_2).toFixed('2');
+        BalanceSheet.totalNonCurrentAssets = parseFloat(totalNonCurrentAssets).toFixed('2');
 
-        BalanceSheet.goodwill = parseFloat(BalanceSheet.goodwill);
-        BalanceSheet.trade_names = parseFloat(BalanceSheet.trade_names);
-        BalanceSheet.other_intangible_asset_1 = parseFloat(BalanceSheet.other_intangible_asset_1);
-        BalanceSheet.other_intangible_asset_2 = parseFloat(BalanceSheet.other_intangible_asset_2);
-        BalanceSheet.totalIntangibleAssets = totalIntangibleAssets;
+        BalanceSheet.goodwill = parseFloat(BalanceSheet.goodwill).toFixed('2');
+        BalanceSheet.trade_names = parseFloat(BalanceSheet.trade_names).toFixed('2');
+        BalanceSheet.other_intangible_asset_1 = parseFloat(BalanceSheet.other_intangible_asset_1).toFixed('2');
+        BalanceSheet.other_intangible_asset_2 = parseFloat(BalanceSheet.other_intangible_asset_2).toFixed('2');
+        BalanceSheet.totalIntangibleAssets = parseFloat(totalIntangibleAssets).toFixed('2');
 
-        BalanceSheet.totalAssets = totalAssets;
+        BalanceSheet.totalAssets = parseFloat(totalAssets).toFixed('2');
 
-        BalanceSheet.account_payable = parseFloat(BalanceSheet.account_payable);
-        BalanceSheet.salary_payable = parseFloat(BalanceSheet.salary_payable);
-        BalanceSheet.interest_payable = parseFloat(BalanceSheet.interest_payable);
-        BalanceSheet.taxes_payable = parseFloat(BalanceSheet.taxes_payable);
-        BalanceSheet.warranty_payable = parseFloat(BalanceSheet.warranty_payable);
-        BalanceSheet.rental_payable = parseFloat(BalanceSheet.rental_payable);
-        BalanceSheet.other_current_liability_1 = parseFloat(BalanceSheet.other_current_liability_1);
-        BalanceSheet.other_current_liability_2 = parseFloat(BalanceSheet.other_current_liability_2);
-        BalanceSheet.totalCurrentLiabilities = totalCurrentLiabilities;
+        BalanceSheet.account_payable = parseFloat(BalanceSheet.account_payable).toFixed('2');
+        BalanceSheet.salary_payable = parseFloat(BalanceSheet.salary_payable).toFixed('2');
+        BalanceSheet.interest_payable = parseFloat(BalanceSheet.interest_payable).toFixed('2');
+        BalanceSheet.taxes_payable = parseFloat(BalanceSheet.taxes_payable).toFixed('2');
+        BalanceSheet.warranty_payable = parseFloat(BalanceSheet.warranty_payable).toFixed('2');
+        BalanceSheet.rental_payable = parseFloat(BalanceSheet.rental_payable).toFixed('2');
+        BalanceSheet.other_current_liability_1 = parseFloat(BalanceSheet.other_current_liability_1).toFixed('2');
+        BalanceSheet.other_current_liability_2 = parseFloat(BalanceSheet.other_current_liability_2).toFixed('2');
+        BalanceSheet.totalCurrentLiabilities = parseFloat(totalCurrentLiabilities).toFixed('2');
 
-        BalanceSheet.notes_payable = parseFloat(BalanceSheet.notes_payable);
-        BalanceSheet.bonds_payable = parseFloat(BalanceSheet.bonds_payable);
-        BalanceSheet.other_non_current_liability_1 = parseFloat(BalanceSheet.other_non_current_liability_1);
-        BalanceSheet.other_non_current_liability_2 = parseFloat(BalanceSheet.other_non_current_liability_2);
-        BalanceSheet.totalNonCurrentLiabilities = totalNonCurrentLiabilities;
+        BalanceSheet.notes_payable = parseFloat(BalanceSheet.notes_payable).toFixed('2');
+        BalanceSheet.bonds_payable = parseFloat(BalanceSheet.bonds_payable).toFixed('2');
+        BalanceSheet.other_non_current_liability_1 = parseFloat(BalanceSheet.other_non_current_liability_1).toFixed('2');
+        BalanceSheet.other_non_current_liability_2 = parseFloat(BalanceSheet.other_non_current_liability_2).toFixed('2');
+        BalanceSheet.totalNonCurrentLiabilities = parseFloat(totalNonCurrentLiabilities).toFixed('2');
 
-        BalanceSheet.totalLiabilities = totalLiabilities;
+        BalanceSheet.totalLiabilities = parseFloat(totalLiabilities).toFixed('2');
 
-        BalanceSheet.share_capital = parseFloat(BalanceSheet.share_capital);
-        BalanceSheet.less_withdrawal = parseFloat(BalanceSheet.less_withdrawal);
-        BalanceSheet.retained_earning = parseFloat(BalanceSheet.retained_earning);
-        BalanceSheet.other_equity_1 = parseFloat(BalanceSheet.other_equity_1);
-        BalanceSheet.other_equity_2 = parseFloat(BalanceSheet.other_equity_2);
-        BalanceSheet.totalEquities = totalEquities;
+        BalanceSheet.share_capital = parseFloat(BalanceSheet.share_capital).toFixed('2');
+        BalanceSheet.less_withdrawal = parseFloat(BalanceSheet.less_withdrawal).toFixed('2');
+        BalanceSheet.retained_earning = parseFloat(BalanceSheet.retained_earning).toFixed('2');
+        BalanceSheet.other_equity_1 = parseFloat(BalanceSheet.other_equity_1).toFixed('2');
+        BalanceSheet.other_equity_2 = parseFloat(BalanceSheet.other_equity_2).toFixed('2');
+        BalanceSheet.totalEquities = parseFloat(totalEquities).toFixed('2');
 
-        BalanceSheet.totalLiabilitiesAndEquities = totalLiabilitiesAndEquities;
+        BalanceSheet.totalLiabilitiesAndEquities = parseFloat(totalLiabilitiesAndEquities).toFixed('2');
     }
 
     const handleExportPDF = () => {
