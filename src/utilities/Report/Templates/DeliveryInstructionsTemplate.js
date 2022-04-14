@@ -46,10 +46,10 @@ const constructRoutesTable = (data) => {
     data.delivery_orders.map((order) => {
       let arr = []
       arr.push(PDFTools.formatText(order.sequence + 1, 'tableContent'))
-      arr.push(PDFTools.formatText(order?.sales_order.customer.company_name, 'tableContent'))
-      arr.push(PDFTools.formatText(order?.sales_order.customer.p1_name, 'tableContent'))
-      arr.push(PDFTools.formatText(order?.sales_order.customer.p1_phone_number, 'tableContent'))
-      arr.push(PDFTools.formatText(order?.sales_order.id, 'tableContent'))
+      arr.push(PDFTools.formatText(order?.sales_order?.customer?.company_name, 'tableContent'))
+      arr.push(PDFTools.formatText(order?.sales_order?.customer?.p1_name, 'tableContent'))
+      arr.push(PDFTools.formatText(order?.sales_order?.customer?.p1_phone_number, 'tableContent'))
+      arr.push(PDFTools.formatText(order?.sales_order?.id, 'tableContent'))
       arr.push(PDFTools.formatText(order.address, 'tableContent'))
       arr.push(PDFTools.formatText(order.postal_code, 'tableContent'))
       arr.push(PDFTools.formatText(order.remarks, 'tableContent'))

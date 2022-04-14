@@ -47,7 +47,7 @@ export default function ManageDeliveriesPage() {
     DeliveryApiHelper.getOrders(form)
       .then(results => {
         setOrders(results);
-          setLoading(false);
+        setLoading(false);
       })
       .catch(handleHttpError)
       .catch(() => setLoading(false))
@@ -67,6 +67,9 @@ export default function ManageDeliveriesPage() {
       <MyCard>
         <MyToolbar title="Delivery Orders">
           <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
+            <Form.Item name="sales_order_id">
+              <Input placeholder='Search Sales Order ID' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
+            </Form.Item>
             <Form.Item name="customer_company_name">
                 <Input placeholder='Search Company' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
             </Form.Item>

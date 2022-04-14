@@ -55,6 +55,9 @@ export default function NI2OrdersTable({ itinerary, setItinerary, selectedOrders
       <MyCard>
         <MyToolbar title="Outstanding Delivery Orders">
           <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
+            <Form.Item name="sales_order_id">
+              <Input placeholder='Search Sales Order ID' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
+            </Form.Item>
             <Form.Item name="customer_company_name">
               <Input placeholder='Search Company' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
             </Form.Item>
@@ -74,14 +77,14 @@ export default function NI2OrdersTable({ itinerary, setItinerary, selectedOrders
         />
 
         <MyToolbar style={{ marginTop: 15 }}>
-          <Button onClick={() => setStep(step-1)}>Back</Button>
-          <Button type="primary" onClick={() => setStep(step+1)} disabled={selectedOrders.length === 0}>Optimize</Button>
+          <Button onClick={() => setStep(step - 1)}>Back</Button>
+          <Button type="primary" onClick={() => setStep(step + 1)} disabled={selectedOrders.length === 0}>Optimize</Button>
         </MyToolbar>
       </MyCard>
     </>
   )
 }
-  
+
 const columns = [
   {
     title: 'Created At',
