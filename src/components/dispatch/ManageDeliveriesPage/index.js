@@ -1,4 +1,4 @@
-import { Button, Table, Input, Select, Form } from "antd";
+import { Button, Table, Input, Select, Form, InputNumber } from "antd";
 import React, { useEffect, useState } from "react";
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons/lib/icons";
 import debounce from "lodash.debounce";
@@ -68,7 +68,7 @@ export default function ManageDeliveriesPage() {
         <MyToolbar title="Delivery Orders">
           <Form form={form} onValuesChange={debounce(onValuesChange, 300)} layout='inline' autoComplete='off'>
             <Form.Item name="sales_order_id">
-              <Input placeholder='Search Sales Order ID' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
+              <InputNumber min={0} placeholder='Search Sales Order ID' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
             </Form.Item>
             <Form.Item name="customer_company_name">
                 <Input placeholder='Search Company' style={{ width: 180 }} suffix={<SearchOutlined className='grey' />} />
