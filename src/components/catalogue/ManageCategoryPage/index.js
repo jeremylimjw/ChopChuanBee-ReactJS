@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Form, Table, Typography } from 'antd';
+import { Button, Table, Typography } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
-import debounce from 'lodash.debounce';
 import { useApp } from '../../../providers/AppProvider';
 import { CatalogueApiHelper } from '../../../api/CatalogueApiHelper';
 import MyLayout from '../../common/MyLayout';
@@ -85,7 +84,6 @@ const columns = [
         title: 'Name',
         dataIndex: 'name',
         key: 'name',
-        width: '18%',
         ellipsis: true,
         sorter: (a, b) => sortByString(a.name, b.name),
     },

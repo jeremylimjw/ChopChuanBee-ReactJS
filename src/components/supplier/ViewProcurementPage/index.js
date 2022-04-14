@@ -217,7 +217,7 @@ export default function ViewProcurementPage() {
   }
 
   async function handlePrintPDF() {
-    const pdf = await generatePdf(purchaseOrder, 'PO');
+    await generatePdf(purchaseOrder, 'PO');
   }
 
   return (
@@ -319,7 +319,7 @@ export default function ViewProcurementPage() {
 
           </MyCard>
 
-          {!purchaseOrder.isStatus(POStatus.PENDING) &&
+          {!purchaseOrder.isStatus(POStatus.PENDING, POStatus.SENT_EMAIL, POStatus.SENT_TEXT) &&
             <div className='flex-side-by-side'>
 
               <PO4PaymentsTable

@@ -91,9 +91,15 @@ export default function I3DeliveryOrders({ itinerary, setItinerary, loading, set
             setLoading(false);
         }
     }
-
+    
     function printItinerary() {
-        generatePdf(itinerary, 'ITINERARY')
+        DeliveryApiHelper.getItinerarys({ id: itinerary.id })
+            .then(result => {
+                if (result.length > 0) {
+                    generatePdf(result[0], 'ITINERARY')
+                }
+            })
+            .catch(handleHttpError)
     }
 
     return (

@@ -96,7 +96,7 @@ export default function ViewCataloguePage(props) {
             title: 'Created At',
             dataIndex: 'created_at',
             key: 'created_at',
-            width: 50,
+            width: 150,
             ellipsis: true,
             render: (created_at) => parseDate(created_at),
             sorter: (a, b) => sortByDate(a.created_at, b.created_at),
@@ -106,7 +106,6 @@ export default function ViewCataloguePage(props) {
             title: 'Name',
             dataIndex: 'name',
             key: 'name',
-            width: 100,
             ellipsis: true,
             sorter: (a, b) => sortByString(a.name, b.name),
             render: (product, record) => <Link to={`../menuItems/${record.id}`}>{product}</Link>,
@@ -115,7 +114,7 @@ export default function ViewCataloguePage(props) {
             dataIndex: 'id',
             key: 'link',
             align: 'center',
-            width: 20,
+            width: 100,
             render: (id, record) => (
                 <Popconfirm
                     title='Confirm delete?'
@@ -131,7 +130,7 @@ export default function ViewCataloguePage(props) {
     return (
         <>
             <MyLayout breadcrumbs={breadcrumbs} bannerTitle={`${category?.name}`} bannerRight={renderDeletionButton()}>
-                <MyCard>
+                <MyCard style={{ width: 750 }}>
                     <MyToolbar title='Menu Items'></MyToolbar>
                     <Table
                         dataSource={filteredCatalogue}

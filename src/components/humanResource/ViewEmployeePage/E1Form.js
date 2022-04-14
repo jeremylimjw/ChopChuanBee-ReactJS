@@ -25,7 +25,7 @@ export default function E1Form({ employee, setEmployee }) {
                 .then(() => {
                     setLoading(false);
                     setEmployee({...employee, ...values });
-                    message.success('Supplier successfully updated!');
+                    message.success('Employee successfully updated!');
                     setEditing(false);
                 })
                 .catch(handleHttpError)
