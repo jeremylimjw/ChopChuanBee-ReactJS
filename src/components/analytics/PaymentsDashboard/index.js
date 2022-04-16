@@ -19,22 +19,23 @@ export default function PaymentsDashboard() {
     return (
         <MyLayout bannerTitle='Payments Dashboard'>
             <Tabs defaultActiveKey="1" type="card" style={{ margin: '24px' }}>
-                <TabPane tab="Payable Insights" key="1">
+
+                <TabPane tab="Payable Trends" key="1">
+                    <APTrendsGraph />
+                </TabPane>
+
+                <TabPane tab="Payable Insights" key="2">
                     <PayableCard currTime={currTime} />
                     <PayableGraph />
                 </TabPane>
 
-                <TabPane tab="Payable Trends" key="2">
-                    <APTrendsGraph />
+                <TabPane tab="Receivable Trends" key="3">
+                    <ARTrendsGraph />
                 </TabPane>
 
-                <TabPane tab="Receivable Insights" key="3">
+                <TabPane tab="Receivable Insights" key="4">
                     <ReceivableCard currTime={currTime} />
                     <ReceivableGraph />
-                </TabPane>
-
-                <TabPane tab="Receivable Trends" key="4">
-                    <ARTrendsGraph />
                 </TabPane>
 
                 <TabPane tab="Aging Receivables" key="5">

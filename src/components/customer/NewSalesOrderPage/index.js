@@ -44,7 +44,7 @@ export default function NewSalesOrderPage() {
       customer_id: selectedCustomer.id,
       sales_order_status_id: 1,
       sales_order_items: selectedProducts.filter(x => x.product != null).map(x => ({ product_id: x.product.id, quantity: x.quantity })),
-      has_gst: selectedCustomer.charged_under?.gst_rate ? 3 : 1,
+      has_gst: selectedCustomer.charged_under?.gst_rate ? 2 : 1,
       gst_rate: selectedCustomer.charged_under?.gst_rate || 0,
       charged_under_id: selectedCustomer.charged_under?.id,
       show_gst: selectedCustomer.gst_show,
