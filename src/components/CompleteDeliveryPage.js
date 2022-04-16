@@ -48,7 +48,7 @@ function Success({ id }) {
     return <Result
         status="success"
         title="Successfully completed Delivery Order!"
-        subTitle={`Order number: ${id} Cloud server configuration takes 1-5 minutes, please wait.`}
+        subTitle={`Delivery Order number: ${id}`}
     />
 }
 
